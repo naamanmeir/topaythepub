@@ -12,6 +12,10 @@ $('#return-to-top').click(function() {
     }, 500);
 });
 
+// VARIABLES
+var item1,item2,item3,item4;
+var id = 26;
+
 // FUNCTIONS TO RUN SERVER ACTIONS
 async function placeOrder(id,d1,d2,d3,d4){
     var textbox = document.getElementById("menu");
@@ -26,14 +30,12 @@ async function placeOrder(id,d1,d2,d3,d4){
     })
 };
 
-var item1,item2,item3,item4;
-
 function add(item){    
     const count1 = document.getElementById("count1");
     const count2 = document.getElementById("count2");
     const count3 = document.getElementById("count3");
     const count4 = document.getElementById("count4");
-    const orderDiv = document.getElementById("order");
+    const buttonsDiv = document.getElementById("buttons");
     if(item==1){
         if(item1==null){
             item1 = 1;
@@ -81,8 +83,9 @@ function add(item){
         count4.innerText = "";
     }
     if(item==100){
-        var answer = window.confirm("שלום שם מומצא האם אתה בטוח שתה רוצה לרכוש את הבירות הללו בכרטיס תושב ש'ך?");
+        var answer = window.confirm(msg1);
         if (answer) {
+            placeOrder(id,item1,item2,item3,item4)
             add(101);
         }
         else {
@@ -92,6 +95,9 @@ function add(item){
     }
 }
 
+async function getName(id){
+    
+}
 
 function searchBox(){
     // var autoClose;

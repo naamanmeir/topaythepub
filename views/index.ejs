@@ -13,7 +13,7 @@
 
     <%- include('./partials/header'); %>
     
-    <input type="search" name="searchBoxName" id="searchBox" onkeyup="searchBox()" placeholder=" מה שמך">
+    <input type="search" name="searchBoxName" id="menu" onkeyup="searchBox()" placeholder=" מה שמך">
 
     <div id="emptySearch"></div>
 
@@ -22,30 +22,31 @@
         </div> -->
 
     <div class="grid">
+        <div class="items">
             <div class="item" onclick="add(1)">
-                <p>בירה חצי</p>                
+                <p><%=item1%></p>                
                 <img src="img/beer-large.png">
                 <count id="count1"></count>
             </div>
             <div class="item" onclick="add(2)">
-                <p>בירה שליש</p>                
+                <p><%=item2%></p>                
                 <img src="img/beer-small.png">
                 <count id="count2"></count>
             </div>
             <div class="item" onclick="add(3)">
-                <p>כוס משקה</p>                
+                <p><%=item3%></p>                
                 <img src="img/drinks.png">
                 <count id="count3"></count>
             </div>
             <div class="item" onclick="add(4)">
-                <p>פטריה</p>                
+                <p><%=item4%></p>                
                 <img src="img/mushroom.png">
                 <count id="count4"></count>
             </div>
-        </div>          
+        </div>
     </div>
 
-    <div class="order" id="order">
+    <div class="buttons" id="buttons">
         <button id="cancel" onclick="add(101)"> בטל</button>
         <button id="placeOrder" onclick="add(100)">בצע תשלום</button>
     </div>
@@ -55,7 +56,9 @@
     <a href="javascript:" id="return-to-top"><i class="icon-chevron-up"></i></a>
     
     <script src="js/script.js"></script>
-
+    <script>
+        var msg1 = ("<%= (msg1) %>");        
+    </script>
     <%- include('./partials/footer'); %>
     
 </body>

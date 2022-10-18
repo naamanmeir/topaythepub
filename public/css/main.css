@@ -18,17 +18,6 @@ body {
     flex-direction: column;
 }
 
-h1 {
-    color: black;
-    text-align: center;
-    right: 10%;
-    font-size: 2rem;
-    line-height: 0.5rem;
-    margin: 0px;
-    padding: 0px;
-    padding-top: 3%;
-}
-
 img{
     width: 7rem;
     height: 7rem;
@@ -43,16 +32,21 @@ video{
 }
 
 .grid {
-    height: 70%;
+    height: 100%;
     background-image: none;
     background-color: RGBA(0,0,0,0);
     max-width: 1200px;
     /* margin: auto; */
     float: center;
-    display: grid;    
-    grid-template-columns: auto auto;    
-    gap: 0px 0px;
-    grid-template-areas: auto auto;
+    display: grid;
+    grid-template-areas: 
+    'header header'
+    'menu menu'
+    'item item'
+    'buttons buttons'
+    'footer footer'
+    ;    
+    gap: 0px 0px;    
     transition: background-color 0.8s ease;
 }
 
@@ -60,15 +54,76 @@ video{
     position: relative;
 }
 
+.header{
+    grid-area: header;
+    text-align: center;
+    right: 10%;
+    margin: 0px;
+    padding: 0px;
+    padding-top: 1%;
+}
+
+.header p{
+    color: blue;
+    font-size: 2rem;
+    line-height: 0.5rem;
+    margin: 0px;
+    padding: 0px;
+    padding-top: 3%;
+}
+
+#menu {
+    grid-area: menu;
+    /* background-image: url('searchicon.png'); */
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 3rem;
+    width: 100%;
+    font-size: 2.2rem;
+    padding: 20Spx 30px 20px 30px;
+    border: 2px solid #ddd;    
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+#emptyMenu{
+    color: red;        
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 50%;
+    font-size: 16px;
+    padding: 6px 5px 6px 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+.items{
+    grid-area: item;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    /* border: 2px ridge rgb(240, 152, 0); */
+    /* position: absolute; */
+    margin: auto;
+    margin-top: 0px;
+    padding: 0px;
+    float: center;
+    display: grid;
+    gap: 2%;
+    grid-template-columns: repeat(2, auto);
+    transition: background-color 0.8s ease;  }
+
 .item{
-    height: 80%;
+    /* grid-area: item; */
+    height: 100%;
     width: 80%;
     border: 2px ridge rgb(240, 152, 0);
-    position: relative;
+    /* position: relative; */
     margin: auto;
-    float: right;
-    display: grid;
-    grid-template-areas: auto auto;
+    float: center;
+    text-align: center;
     transition: background-color 0.8s ease;    
 }
 
@@ -97,7 +152,8 @@ video{
     text-shadow: 12px 12px 15px #000000;   
 }
 
-.order{
+.buttons{
+    grid-area: buttons;
     display: flex;
     flex-direction: row;
     height: 3rem;
@@ -107,7 +163,7 @@ video{
     text-align:center;    
 }
 
-.order button{
+.buttons button{
     margin: auto;
     width: 100%;
     height: 100%;
@@ -124,33 +180,7 @@ video{
     background-color: green;
 }
 
-#searchBox {
-    top: 1px;
-    position: sticky;
-    z-index: 2500;
-    /* background-image: url('searchicon.png'); */
-    background-position: left;
-    background-repeat: no-repeat;
-    background-size: contain;
-    height: 3rem;
-    width: 100%;
-    font-size: 2.2rem;
-    padding: 20Spx 30px 20px 30px;
-    border: 2px solid #ddd;
-    /* margin-bottom: 22px; */
-}
 
-#emptySearch{
-    color: red;        
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    width: 50%;
-    font-size: 16px;
-    padding: 6px 5px 6px 10px;
-    border: 1px solid #ddd;
-    margin-bottom: 12px;
-}
 
 #return-to-top {
     position: fixed;
@@ -205,7 +235,7 @@ video{
     padding-bottom: 0px;
     padding-top: 10px;
     margin: 0px 0px 0px 0px;    
-    margin-bottom: 0px;
+    margin-bottom: 3%;
 }
 /* demo */
 #textbox { 

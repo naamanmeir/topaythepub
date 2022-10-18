@@ -9,14 +9,11 @@ const fs = require('fs');
 const functions = require('./functions.js');
 const db = require('./db.js');
 const { Script } = require("node:vm");
+const msg = require('./strings.js');
 
 //consts
 const app = express();
 const port = 3090;
-
-//vars
-// var thumbList = []
-var userName = 'niva';
 
 // Static Files
 app.use(express.static(__dirname + 'public'));
@@ -30,21 +27,26 @@ app.set('view engine', 'ejs');
 
 // ------------------------  MAIN INDEX  ----------------------- //
 app.get('', async function(req, res) {    
-    res.render('index', {})
+    res.render('index', {
+        item1 : msg.NAME_ITEM1,
+        item2 : msg.NAME_ITEM2,
+        item3 : msg.NAME_ITEM3,
+        item4 : msg.NAME_ITEM4,
+        msg1 : msg.MSG_ORDER_VALIDATE
+    })
 });
 
 // PAY BY ID
-app.get('/score/:data', async function(req,res,next) {
+app.get('/order/:data', async function(req,res,next) {
+    console.log(req+" "+req.data)
     await getName(req,res,next);
     // RESPONSE FROM LAST FUNCION IN SERIAL
 });
 
-async function scoreId(req,res,next) {
+async function getName(req,res,next) {
     var id = req.params.data;
-    // await functions.dbAddScoreById(id);
-    setTimeout(async function(){
-        await appGetVideoDataById(req,res,next);
-    },100)
+    console.log("get name"+req)
+    // get names from db;
 };
 
 // LAST SERIAL => RESPONSE
@@ -64,4 +66,4 @@ appGetNumberOfVideos = async function() {
 };
 
 //-------------------------SERVER-----------------------------------//
-app.listen(port, () => console.info(`App listening on port ${port}`));
+app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));

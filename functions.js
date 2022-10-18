@@ -1,5 +1,5 @@
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs');
 const db = require('./db');
 const app = require('./app');
 
@@ -37,22 +37,6 @@ exports.buildArrayFromDb = async function(){
 exports.dbGetLength = async function(){    
     var numberOfMoviesInDb = await db.dbAskLength();    
     return (numberOfMoviesInDb);
-};
-
-exports.dbGetVideoDataById = async function (id)  {
-    const videoData = await db.dbAskVideoData(id);
-    // console.log("FUNCTIONS GOT VIDEO ROW: ID: "+videoData[0]+" NAME: "+videoData[1]+" SCORE: "+videoData[2]+" PLAYED: "+videoData[3]);
-    return (videoData);
-};
-
-exports.dbAddScoreById = async function (id) {
-    await db.dbInsertScore(id);
-    return await db.dbAskVideoData(id);
-};
-
-exports.passDataToFront = function(data) {
-    // console.log("FUNCTION: PASS DATA TO FRONT: "+data);
-    app.passToFront(data);
 };
 
 exports.getUserTime = function () {
