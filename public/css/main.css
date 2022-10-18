@@ -1,0 +1,227 @@
+html,
+body,
+.grid {
+    width: 98%;
+    height: 98%;
+    left: 1%;
+    right: 1%;
+    /* margin: 0.5%; */
+    background-color: rgb(221, 233, 251);
+    direction: rtl;
+    user-select: none;
+    scroll-behavior: smooth;
+    float: center;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    color: black;
+    text-align: center;
+    right: 10%;
+    font-size: 2rem;
+    line-height: 0.5rem;
+    margin: 0px;
+    padding: 0px;
+    padding-top: 3%;
+}
+
+img{
+    width: 7rem;
+    height: 7rem;
+    padding: 0px;
+    margin: auto auto;
+    float: center;
+}
+
+video{
+    width: 100%;
+    height: 100%;
+}
+
+.grid {
+    height: 70%;
+    background-image: none;
+    background-color: RGBA(0,0,0,0);
+    max-width: 1200px;
+    /* margin: auto; */
+    float: center;
+    display: grid;    
+    grid-template-columns: auto auto;    
+    gap: 0px 0px;
+    grid-template-areas: auto auto;
+    transition: background-color 0.8s ease;
+}
+
+.grid * {
+    position: relative;
+}
+
+.item{
+    height: 80%;
+    width: 80%;
+    border: 2px ridge rgb(240, 152, 0);
+    position: relative;
+    margin: auto;
+    float: right;
+    display: grid;
+    grid-template-areas: auto auto;
+    transition: background-color 0.8s ease;    
+}
+
+.item p{
+    padding: 0px;
+    margin: 0px;
+    font-size: 2rem;
+}
+
+.item count{    
+    z-index: 2500;
+    width: auto;
+    height: 100%;
+    display: block;
+    transition: 1s;
+    position: absolute;
+    margin: auto;
+    top: 50%;
+    left: 50%;
+    bottom: 30%;
+    right: 10%;
+    font-size: 7rem;
+    color: rgb(0, 255, 55);
+    font-style: oblique;
+    font-family: fantasy;
+    text-shadow: 12px 12px 15px #000000;   
+}
+
+.order{
+    display: flex;
+    flex-direction: row;
+    height: 3rem;
+    float:center;
+    margin: 0px;
+    padding: auto;
+    text-align:center;    
+}
+
+.order button{
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    color: black;
+    font-size: 2rem;
+    text-shadow: 3px 3px 17px #ffffff;
+}
+
+#cancel {
+    background-color: red;
+}
+
+#placeOrder {
+    background-color: green;
+}
+
+#searchBox {
+    top: 1px;
+    position: sticky;
+    z-index: 2500;
+    /* background-image: url('searchicon.png'); */
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 3rem;
+    width: 100%;
+    font-size: 2.2rem;
+    padding: 20Spx 30px 20px 30px;
+    border: 2px solid #ddd;
+    /* margin-bottom: 22px; */
+}
+
+#emptySearch{
+    color: red;        
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 50%;
+    font-size: 16px;
+    padding: 6px 5px 6px 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+#return-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.7);
+    width: 50px;
+    height: 50px;
+    display: block;
+    text-decoration: none;
+    -webkit-border-radius: 35px;
+    -moz-border-radius: 35px;
+    border-radius: 35px;
+    display: none;
+    -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+#return-to-top i {
+    color: #fff;
+    margin: 0;
+    position: relative;
+    left: -15px;
+    top: 13px;
+    font-size: 19px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+#return-to-top:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+#return-to-top:hover i {
+    color: #fff;
+    top: 5px;
+}
+
+.footer{
+    color: black;    
+    position: sticky;
+    text-align: center;
+    font-size: x-small;
+    /* line-height: 50px; */
+    height: 1px;
+    bottom: 0px;    
+    padding: 0px 0px 0px 0px;
+    padding-bottom: 0px;
+    padding-top: 10px;
+    margin: 0px 0px 0px 0px;    
+    margin-bottom: 0px;
+}
+/* demo */
+#textbox { 
+    position: fixed;
+    z-index: 1000;
+    top: 20px;    
+    color: white;
+    width: auto;
+    height: fit-content;
+    background-color: rgba(0, 0, 0, 0.52);    
+    font-size: normal;
+    display: block;
+    text-decoration: none;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: solid 2px;
+    transition: 1s;
+}
