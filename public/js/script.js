@@ -12,22 +12,29 @@ $('#return-to-top').click(function() {
     }, 500);
 });
 
+var xhttp = new XMLHttpRequest();
+
 // VARIABLES
-var item1,item2,item3,item4;
+var item1 = 0;
+var item2 = 0;
+var item3 = 0;
+var item4 = 0;
 var id = 26;
+var name;
 
 // FUNCTIONS TO RUN SERVER ACTIONS
-async function placeOrder(id,d1,d2,d3,d4){
-    var textbox = document.getElementById("menu");
-    var name = "";
-    $.get('./order/'+id+d1+d2+d3+d4, async function (response) {
-        //place order at server
-    }).then( function (response) {
-        document.getElementById('searchBox').value = "";
-        searchBox();        
-    }).catch(function (error){
-        console.log(error);
-    })
+async function placeOrder(orderPack){  
+    xhttp.open("GET", "./order/"+orderPack, true);
+    xhttp.send();    
+
+    // $.get('./order/'+orderPack, async function (response) {
+    //     //place order at server
+    // }).then( function (response) {
+    //     document.getElementById('searchBox').value = "";
+    //     searchBox();        
+    // }).catch(function (error){
+    //     console.log(error);
+    // })
 };
 
 function add(item){    
@@ -36,42 +43,27 @@ function add(item){
     const count3 = document.getElementById("count3");
     const count4 = document.getElementById("count4");
     const buttonsDiv = document.getElementById("buttons");
-    if(item==1){
-        if(item1==null){
-            item1 = 1;
-            count1.innerText = item1;
-        }else{
+    if(item==1){        
             item1 = item1+1;
             count1.innerText = item1;
         }        
-    }
-    if(item==2){
-        if(item2==null){
-            item2 = 1;
-            count2.innerText = item2;
-        }else{
+    
+    if(item==2){        
             item2 = item2+1;
             count2.innerText = item2;
         }
-    }
-    if(item==3){
-        if(item3==null){
-            item3 = 1;
-            count3.innerText = item3;
-        }else{
+    
+    if(item==3){        
             item3 = item3+1;
             count3.innerText = item3;
         }
-    }
+    
     if(item==4){
-        if(item4==null){
-            item4 = 1;
-            count4.innerText = item4;
-        }else{
+
             item4 = item4+1;
             count4.innerText = item4;
         }
-    }
+    
     if(item==101){
         item1 = 0;
         item2 = 0;
@@ -85,13 +77,14 @@ function add(item){
     if(item==100){
         var answer = window.confirm(msg1);
         if (answer) {
-            placeOrder(id,item1,item2,item3,item4)
+            var orderPack = [];
+            orderPack.push([id,item1,item2,item3,item4]);
+            placeOrder(orderPack);
             add(101);
         }
         else {
             add(101);
         }
-
     }
 }
 
@@ -99,7 +92,44 @@ async function getName(id){
     
 }
 
+var limit = 0;
 function searchBox(){
+    const searchBox = document.getElementById("searchBox");
+    let searchText = searchBox.value;
+    searchText = searchText.replace(/\\/g, '');
+    searchText = searchText.replace(/\//g, '');
+    searchText = searchText.replace(/[0-9]/g, '');
+    searchText = searchText.replace(/\./g, '');
+    searchText = searchText.replace(/\,/g, '');
+    searchText = searchText.substring(0,42);    
+    searchBox.value = searchText;
+    if(limit == 0){
+        limit = 1;
+        // console.log("you typed: "+searchText);
+        setTimeout(() => {
+            limit = 0;
+            searchQuery(JSON.stringify(searchText));
+        },50);
+    }
+};
+
+function searchQuery(query){
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+        }
+      };
+    xhttp.open("POST", "./searchName/"+query, true);
+    xhttp.send();
+
+    // $.get('./searchName/'+query, function (response) {
+    // console.log("RESPNSE FROM SERVER: "+response);
+    // console.log("CALL QUERY");
+    // })
+};
+
+
+function searchBoxDemo(){
     // var autoClose;
     // clearTimeout(autoClose);
     var input, filter, divContainer, divList, p2, i, txtValue;

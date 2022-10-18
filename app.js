@@ -36,18 +36,49 @@ app.get('', async function(req, res) {
     })
 });
 
-// PAY BY ID
+// PLACE ORDER BY ID
 app.get('/order/:data', async function(req,res,next) {
-    console.log(req+" "+req.data)
-    await getName(req,res,next);
+    console.log("SOMEONE PRESSED THE ORDER BUTTON");
+    console.log(req.params.data);
+    const orderData = req.params.data.split(',');
+    var id = (orderData[0]);
+    var item1 = (orderData[1]);
+    var item2 = (orderData[2]);
+    var item3 = (orderData[3]);
+    var item4 = (orderData[4]);
+    console.log(id+" "+item1+" "+item2+" "+item3+" "+item4);
+    // await getName(req,res,next);
     // RESPONSE FROM LAST FUNCION IN SERIAL
 });
 
-async function getName(req,res,next) {
-    var id = req.params.data;
-    console.log("get name"+req)
-    // get names from db;
+// GET REQUEST FOR SEARCH FOR NAME IN DB BY QUERY
+app.post('/searchName/:data', function(req,res,next){
+    console.log(req.params.data);
+    getNames(req,res,next);    
+})
+
+async function getNames(req,res,next) {
+    var query = req.params.data;
+    var names = await db.dbGetNameBySearch(query)
+    // console.log(await names[0])
+    const promise1 = Promise.resolve(names);
+    console.log(promise1);
+    promise1.then(names => {
+        console.log("sssss"+names)
+      })
+      .catch(err => {
+        console.log("---------------ERROR READING FROM DB---------------");
+        console.log(err);
+       }) 
+    returnNames(req,res,names,next);
 };
+
+async function returnNames(req,res,names,next){
+    // names = ["gog","ads","fas"];
+    console.log("get names "+names);
+
+    res.send(names);
+}
 
 // LAST SERIAL => RESPONSE
 async function appGetVideoDataById(req,res, next) {

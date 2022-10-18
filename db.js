@@ -11,7 +11,22 @@ const pool = mariadb.createPool({
 
 const table = process.env.MYSQL_TABLE;
 
-//--------------------INSERT NAME BY ID----------------//
+//--------------------GET LENGTH OF DB----------------//
+exports.dbAskLength = async function(){
+  let value;
+  const numberOfVideos = pool.query("SELECT COUNT(*) AS videos FROM "+table+";")
+  .then(res => {
+    value = (res[0].videos);    
+    // console.log("DB SELECT COUNT OF videos ROWS: "+value);
+    return value;
+  })
+  .catch(err => {
+    console.log(err);
+  })  
+  return numberOfVideos;
+};
+
+//--------------------INSERT NEW NAME AND ID TO DB----------------//
 exports.dbInsertName = function(id,name){        
   pool.getConnection().then(conn => {
     // console.log("INSERT INTO "+table+" (id,name,score,played) VALUES ("+(id)+",'"+name+"',0,0);");    
@@ -36,28 +51,8 @@ exports.dbInsertName = function(id,name){
 });
 };
 
-exports.dbGetAllVideos = async function() {
-  const result = await pool.query("SELECT * FROM "+table+" ORDER BY score asc;")
-  // console.log(result);
-  return result;
-};
-
-exports.dbAskLength = async function(){
-  let value;
-  const numberOfVideos = pool.query("SELECT COUNT(*) AS videos FROM "+table+";")
-  .then(res => {
-    value = (res[0].videos);    
-    // console.log("DB SELECT COUNT OF videos ROWS: "+value);
-    return value;
-  })
-  .catch(err => {
-    console.log(err);
-  })  
-  return numberOfVideos;
-};
-
-//--------------------INSERT SCORE BY ID----------------//
-exports.dbInsertScore = async function(id){  
+//--------------------INSERT ORDER BY ID----------------//
+exports.dbInsertOrder = async function(id){  
   pool.query("UPDATE "+table+" SET SCORE = SCORE+1 WHERE id = "+(id)+";")
   .then((res) => function(){
     console.log(res)
@@ -68,45 +63,21 @@ exports.dbInsertScore = async function(id){
   })
 };
 
-//-----------------------GET VIDEO DATA FROM DB----------------------//
-exports.dbAskVideoData = async function(id) {  
-  let name;
-  let score;
-  let played;
-  var videoRow = [];
-  const result = pool.query("SELECT id,name,score,played FROM "+table+" WHERE id = "+id+";")
-  .then(res => {
-    name = (res[0].name);
-    score = (res[0].score);
-    played = (res[0].played);
-    videoRow = [id,name,score,played];      
-   return videoRow;
+//-----------------------GET NAME FROM DB BY SEARCH----------------------//
+exports.dbGetNameBySearch = async function(query) {
+  
+  const result = pool.query("SELECT * FROM "+table+" WHERE name LIKE '"+query+"%' collate utf8mb4_general_ci;")
+  .then(result => {
+    // console.log(result.name)
+    return result;
   })
   .catch(err => {
     console.log("---------------ERROR READING FROM DB---------------");
     console.log(err);
    })   
-  //  console.log("Total connections: ", pool.totalConnections());
-  //  console.log("Active connections: ", pool.activeConnections());
-  //  console.log("Idle connections: ", pool.idleConnections());
-   return result;
-};
-
-//-----------------------GET SCORE BY ID FROM DB----------------------//
-exports.dbAskScore = async function(id) {
-  let score;
-  var videoRow = [];
-  const result = pool.query("SELECT score FROM "+table+" WHERE id = "+id+";")
-  .then(res => {    
-    score = (res[0].score);
-   return score;
-  })
-  .catch(err => {
-    console.log("---------------ERROR READING FROM DB---------------");
-    console.log(err);
-   })   
-  //  console.log("Total connections: ", pool.totalConnections());
-  //  console.log("Active connections: ", pool.activeConnections());
-  //  console.log("Idle connections: ", pool.idleConnections());
+   console.log("Total connections: ", pool.totalConnections());
+   console.log("Active connections: ", pool.activeConnections());
+   console.log("Idle connections: ", pool.idleConnections());
+  //  console.log(await result);
    return result;
 };

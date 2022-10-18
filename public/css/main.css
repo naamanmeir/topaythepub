@@ -72,7 +72,7 @@ video{
     padding-top: 3%;
 }
 
-#menu {
+#searchBox {
     grid-area: menu;
     /* background-image: url('searchicon.png'); */
     background-position: left;
