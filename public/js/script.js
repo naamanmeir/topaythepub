@@ -19,22 +19,13 @@ var item1 = 0;
 var item2 = 0;
 var item3 = 0;
 var item4 = 0;
-var id = 26;
-var name;
+var id = 999;
+var clientName;
 
 // FUNCTIONS TO RUN SERVER ACTIONS
 async function placeOrder(orderPack){  
     xhttp.open("GET", "./order/"+orderPack, true);
-    xhttp.send();    
-
-    // $.get('./order/'+orderPack, async function (response) {
-    //     //place order at server
-    // }).then( function (response) {
-    //     document.getElementById('searchBox').value = "";
-    //     searchBox();        
-    // }).catch(function (error){
-    //     console.log(error);
-    // })
+    xhttp.send();
 };
 
 function add(item){    
@@ -46,24 +37,20 @@ function add(item){
     if(item==1){        
             item1 = item1+1;
             count1.innerText = item1;
-        }        
-    
+        }    
     if(item==2){        
             item2 = item2+1;
             count2.innerText = item2;
-        }
-    
+        }    
     if(item==3){        
             item3 = item3+1;
             count3.innerText = item3;
-        }
-    
+        }    
     if(item==4){
 
             item4 = item4+1;
             count4.innerText = item4;
-        }
-    
+        }    
     if(item==101){
         item1 = 0;
         item2 = 0;
@@ -75,16 +62,24 @@ function add(item){
         count4.innerText = "";
     }
     if(item==100){
-        var answer = window.confirm(msg1);
-        if (answer) {
-            var orderPack = [];
-            orderPack.push([id,item1,item2,item3,item4]);
-            placeOrder(orderPack);
-            add(101);
-        }
-        else {
-            add(101);
-        }
+        // var answer = window.confirm(msg1);
+        if(clientName!=null){
+        const message = document.getElementById("textbox");
+        var orderPack = [];
+        orderPack.push([id,item1,item2,item3,item4]);
+        message.innerText = (" היי   "+clientName+" רשמנו לך הזמנה כזאת האם סבבה "+orderPack); 
+        placeOrder(orderPack);
+        autoCloseTextBox(message);
+        add(101);
+    }
+        // if (answer) {
+            
+            
+            
+        // }
+        // else {
+            // add(101);
+        // }
     }
 }
 
@@ -115,24 +110,33 @@ function searchBox(){
             limit = 0;
             searchQuery(searchText,searchBox);
         },250);
-    }
+    };
 };
 
 function searchQuery(query,dest){
+    let clients;
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-        //   console.log(this.response);
-          let clients = JSON.parse(this.response);
-        //   console.log(clients);
+            if(this.response == (JSON.stringify("clear"))){
+                console.log("CLEAR AUTOSEARCH");
+                clients = null;
+                clearAutoComplete(document.getElementById("autoComplete"));
+                return;
+            }        
+        clients = JSON.parse(this.response);        
         if(clients[0] != null){
             foundNames(query,clients,dest);
-        }          
-        }
+            }
+        };
       };
     if(query != ""){
+        query = JSON.stringify(query);
         xhttp.open("POST", "./searchName/"+query, true);
         xhttp.send();
-    }    
+    }else{
+        clients = null;
+        clearAutoComplete(document.getElementById("autoComplete"));
+    };
 };
 
 function foundNames(query,clients,dest){    
@@ -140,20 +144,60 @@ function foundNames(query,clients,dest){
     names = [];
     for(i=0;i<clients.length;i++){
         names.push(clients[i].name);
-    }
-    console.log(names)
-    dest.value = names[0];
+    };
     autoComplete(names);
-}
+};
 
 function autoComplete(names){
     const autoDiv = document.getElementById("autoComplete");
+    clearAutoComplete(autoDiv);
+    autoDiv.className = "autoCompleteSuggestions";
+    for(i=0;i<names.length && i<5;i++){
+        const para = document.createElement("p");
+        para.className = "autocomplete-items";
+        para.innerText = names[i];        
+        autoDiv.appendChild(para);
+        para.onclick = function () {
+            copyTextToSearchBox(para.innerText);
+            login(para.innerText);
+            clearAutoComplete(autoDiv);            
+        }
+    };
+};
+
+function clearAutoComplete(autoDiv){
+    autoDiv.className = "autoCompleteNone";
     while (autoDiv.hasChildNodes()) {
         autoDiv.removeChild(autoDiv.firstChild);
-      }
-    for(i=0;i<names.length;i++){
-        const para = document.createElement("p");
-        para.innerText = names[i];
-        autoDiv.appendChild(para);
+      };
+};
+
+function copyTextToSearchBox(text){
+    const searchBox = document.getElementById("searchBox");
+    searchBox.value = text;
+};
+
+function login(name){
+    console.log(name);
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+        login = JSON.parse(this.response);
+        console.log(login);
+        clientName = login[0].name;
+        id = login[0].id;
+        console.log("id: "+id+" name: "+clientName);
+      };
     };
+    if(name != ""){
+        name = JSON.stringify(name);
+        xhttp.open("POST", "./searchName/"+name, true);
+        xhttp.send();
+    };
+}
+
+function autoCloseTextBox(message){
+    setTimeout(function(){
+        message.innerText = "";
+    }, 5000);
 }

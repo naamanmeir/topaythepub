@@ -10,20 +10,15 @@
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 </head>
 <body>
-
-    <%- include('./partials/header'); %>
-    
-    <input type="search" name="searchBoxName" id="searchBox" onkeyup="searchBox()" placeholder=" מה שמך">
-
-    <div class="autoCompleteSuggestions" id="autoComplete">
-        <p></p>
-    </div>
-
-    <!-- <div id="greeting">
-        <p>שלום שם מומצא! , מה לקחת ?</p>
-        </div> -->
-
     <div class="grid">
+
+        <%- include('./partials/header'); %>
+
+        <input type="search" name="searchBoxName" id="searchBox" onkeyup="searchBox()" placeholder=" מה שמך">
+
+        <div class="autoCompleteNone" id="autoComplete">
+        </div>
+
         <div class="items">
             <div class="item" onclick="add(1)">
                 <p><%=item1%></p>                

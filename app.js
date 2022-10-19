@@ -57,9 +57,14 @@ app.get('/order/:data', async function(req,res,next) {
 });
 
 // GET REQUEST FOR SEARCH FOR NAME IN DB BY QUERY
-
 app.post('/searchName/:data', async (req,res) => {
     var query = (req.params.data).replace(/\"/g,'');
+    console.log(query);
+    if(query == "-"){
+        console.log("clear");        
+        res.send(JSON.stringify("clear"));
+        return;
+    };
     let names = [];
     names = (await db.dbGetNameBySearch(query));    
     res.send(names);
