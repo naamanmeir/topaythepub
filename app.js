@@ -10,10 +10,14 @@ const functions = require('./functions.js');
 const db = require('./db.js');
 const { Script } = require("node:vm");
 const msg = require('./strings.js');
+const { createPool } = require("mariadb");
 
 //consts
 const app = express();
 const port = 3090;
+
+var now = new Date();
+
 
 // Static Files
 app.use(express.static(__dirname + 'public'));
@@ -38,7 +42,8 @@ app.get('', async function(req, res) {
 
 // PLACE ORDER BY ID
 app.get('/order/:data', async function(req,res,next) {
-    console.log("SOMEONE PRESSED THE ORDER BUTTON");
+    console.log(now.toUTCString());
+    console.log("ORDER: ");
     console.log(req.params.data);
     const orderData = req.params.data.split(',');
     var id = (orderData[0]);
@@ -52,31 +57,38 @@ app.get('/order/:data', async function(req,res,next) {
 });
 
 // GET REQUEST FOR SEARCH FOR NAME IN DB BY QUERY
-app.post('/searchName/:data', function(req,res,next){
-    console.log(req.params.data);
-    getNames(req,res,next);    
-})
+
+app.post('/searchName/:data', async (req,res) => {
+    var query = (req.params.data).replace(/\"/g,'');
+    let names = [];
+    names = (await db.dbGetNameBySearch(query));    
+    res.send(names);
+});
+
+// app.post('/searchName/:data', function(req,res,next){
+//     console.log(req.params.data);
+//     getNames(req,res,next);    
+// })
 
 async function getNames(req,res,next) {
     var query = req.params.data;
-    var names = await db.dbGetNameBySearch(query)
-    // console.log(await names[0])
-    const promise1 = Promise.resolve(names);
-    console.log(promise1);
+    // var names = await db.dbGetNameBySearch(query)
+    // console.log(names);
+    const promise1 = Promise.resolve(await db.dbGetNameBySearch(query))    
     promise1.then(names => {
-        console.log("sssss"+names)
+        console.log("APP:"+names)
+        returnNames(req,res,names,next)
       })
       .catch(err => {
         console.log("---------------ERROR READING FROM DB---------------");
         console.log(err);
        }) 
-    returnNames(req,res,names,next);
+    // returnNames(req,res,names,next);
 };
 
 async function returnNames(req,res,names,next){
     // names = ["gog","ads","fas"];
     console.log("get names "+names);
-
     res.send(names);
 }
 

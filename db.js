@@ -63,21 +63,7 @@ exports.dbInsertOrder = async function(id){
   })
 };
 
-//-----------------------GET NAME FROM DB BY SEARCH----------------------//
-exports.dbGetNameBySearch = async function(query) {
-  
-  const result = pool.query("SELECT * FROM "+table+" WHERE name LIKE '"+query+"%' collate utf8mb4_general_ci;")
-  .then(result => {
-    // console.log(result.name)
-    return result;
-  })
-  .catch(err => {
-    console.log("---------------ERROR READING FROM DB---------------");
-    console.log(err);
-   })   
-   console.log("Total connections: ", pool.totalConnections());
-   console.log("Active connections: ", pool.activeConnections());
-   console.log("Idle connections: ", pool.idleConnections());
-  //  console.log(await result);
-   return result;
+//-----------------------GET ID AND NAME FROM DB BY SEARCH----------------------//
+exports.dbGetNameBySearch = function(query) {
+  return pool.query("SELECT id,name FROM "+table+" WHERE name LIKE '%"+query+"%' collate utf8mb4_general_ci;");
 };

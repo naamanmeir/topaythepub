@@ -101,71 +101,59 @@ function searchBox(){
     searchText = searchText.replace(/[0-9]/g, '');
     searchText = searchText.replace(/\./g, '');
     searchText = searchText.replace(/\,/g, '');
+    searchText = searchText.replace(/\'/g, '');
+    searchText = searchText.replace(/\`/g, '');
+    searchText = searchText.replace(/\"/g, '');
     searchText = searchText.substring(0,42);    
     searchBox.value = searchText;
+    if(searchText == ""){
+        searchText = "-";
+    };
     if(limit == 0){
-        limit = 1;
-        // console.log("you typed: "+searchText);
+        limit = 1;        
         setTimeout(() => {
             limit = 0;
-            searchQuery(JSON.stringify(searchText));
-        },50);
+            searchQuery(searchText,searchBox);
+        },250);
     }
 };
 
-function searchQuery(query){
+function searchQuery(query,dest){
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-          console.log(this.responseText);
+        //   console.log(this.response);
+          let clients = JSON.parse(this.response);
+        //   console.log(clients);
+        if(clients[0] != null){
+            foundNames(query,clients,dest);
+        }          
         }
       };
-    xhttp.open("POST", "./searchName/"+query, true);
-    xhttp.send();
-
-    // $.get('./searchName/'+query, function (response) {
-    // console.log("RESPNSE FROM SERVER: "+response);
-    // console.log("CALL QUERY");
-    // })
+    if(query != ""){
+        xhttp.open("POST", "./searchName/"+query, true);
+        xhttp.send();
+    }    
 };
 
+function foundNames(query,clients,dest){    
+    console.log(clients);
+    names = [];
+    for(i=0;i<clients.length;i++){
+        names.push(clients[i].name);
+    }
+    console.log(names)
+    dest.value = names[0];
+    autoComplete(names);
+}
 
-function searchBoxDemo(){
-    // var autoClose;
-    // clearTimeout(autoClose);
-    var input, filter, divContainer, divList, p2, i, txtValue;
-    var ifEmpty = 0;
-    input = document.getElementById('searchBox');
-    filter = input.value.toUpperCase();
-    divContainer = document.getElementById("grid-container");
-    divList = document.getElementsByClassName("grid-item");
-    for (i = 1; i < divList.length; i++) {
-        p2 = divList[i].getElementsByClassName("p2")[0];
-        txtValue = p2.textContent || p2.innerText;        
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            divList[i].style.display = "";
-            ifEmpty = ifEmpty-1;
-          } else {
-            divList[i].style.display = "none";
-            ifEmpty = ifEmpty+1;            
-          }
-        if (ifEmpty == divList.length-1){            
-            var emptyBox = document.getElementById("emptySearch");
-            emptyBox.innerHTML = ("לא נמצאו תוצאות");
-            emptyBox.innerText = ("לא נמצאו תוצאות");
-          } else {
-            var emptyBox = document.getElementById("emptySearch");
-            emptyBox.innerHTML = ("");
-          }
-        // clearTimeout(autoClose);
+function autoComplete(names){
+    const autoDiv = document.getElementById("autoComplete");
+    while (autoDiv.hasChildNodes()) {
+        autoDiv.removeChild(autoDiv.firstChild);
+      }
+    for(i=0;i<names.length;i++){
+        const para = document.createElement("p");
+        para.innerText = names[i];
+        autoDiv.appendChild(para);
     };
-
-    input.addEventListener("search", function(event){
-        searchBox();
-    })
-
-    // autoClose = setTimeout(function(){
-    //     input.value = "";
-    //     console.log("AUTO CLOSE");
-    //     searchBox();
-    // },15000);
-};
+}
