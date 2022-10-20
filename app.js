@@ -29,6 +29,11 @@ app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
+// ------------------------  MANAGE VIEW  ----------------------- //
+app.get('/manage', async function(req, res) {    
+    res.render('manage', {})
+});
+
 // ------------------------  MAIN INDEX  ----------------------- //
 app.get('', async function(req, res) {    
     res.render('index', {

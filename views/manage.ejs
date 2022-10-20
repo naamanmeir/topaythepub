@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>ניהול</title>
+    <link rel="stylesheet" href="css/manage.css">
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+</head>
+<body>
+    <div class="grid">
+
+        <%- include('./partials/header'); %>
+
+        <div id="getName">
+            <p>מציאת שם במאגר</p>
+            <input type="search" name="getName" id="getName" onkeyup="searchBox()" placeholder=" הכנס שם">
+            <div class="autoCompleteNone" id="autoComplete">
+            </div>
+        </div>
+
+        <div class="insertName">
+            <p>הכנסת שם למאגר</p>
+        </div>
+
+        <div class="deleteName">
+            <p>מחיקת שם מהמאגר</p>
+        </div>
+
+        <div class="getDbData">
+            <p>הצגת כל הנתונים</p>
+        </div>
+
+        <div class="resetDbData">
+            <p>איפוס נתונים לאחר קריאה</p>
+        </div>
+
+        <div class="items">
+
+        </div>
+    </div>
+    
+    <script src="js/script-manage.js"></script>
+    
+    <%- include('./partials/footer'); %>
+    
+</body>
+</html>
