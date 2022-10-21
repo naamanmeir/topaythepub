@@ -1,26 +1,4 @@
-// ===== Scroll to Top ==== 
-$(window).scroll(function() {
-    if ($(this).scrollTop() >= 50) {
-        $('#return-to-top').fadeIn(400);
-    } else {
-        $('#return-to-top').fadeOut(400);
-    }
-});
-$('#return-to-top').click(function() {
-    $('body,html').animate({
-        scrollTop : 0
-    }, 500);
-});
-
 var xhttp = new XMLHttpRequest();
-
-// VARIABLES
-var item1 = 0;
-var item2 = 0;
-var item3 = 0;
-var item4 = 0;
-var id = 999;
-var clientName;
 
 // FUNCTIONS TO RUN SERVER ACTIONS
 async function placeOrder(orderPack){  
@@ -28,66 +6,60 @@ async function placeOrder(orderPack){
     xhttp.send();
 };
 
-function add(item){    
-    const count1 = document.getElementById("count1");
-    const count2 = document.getElementById("count2");
-    const count3 = document.getElementById("count3");
-    const count4 = document.getElementById("count4");
-    const buttonsDiv = document.getElementById("buttons");
-    if(item==1){        
-            item1 = item1+1;
-            count1.innerText = item1;
-        }    
-    if(item==2){        
-            item2 = item2+1;
-            count2.innerText = item2;
-        }    
-    if(item==3){        
-            item3 = item3+1;
-            count3.innerText = item3;
-        }    
-    if(item==4){
+function getName(){
 
-            item4 = item4+1;
-            count4.innerText = item4;
-        }    
-    if(item==101){
-        item1 = 0;
-        item2 = 0;
-        item3 = 0;
-        item4 = 0;
-        count1.innerText = "";
-        count2.innerText = "";
-        count3.innerText = "";
-        count4.innerText = "";
-    }
-    if(item==100){
-        // var answer = window.confirm(msg1);
-        if(clientName!=null){
-        const message = document.getElementById("textbox");
-        var orderPack = [];
-        orderPack.push([id,item1,item2,item3,item4]);
-        message.innerText = (" היי   "+clientName+" רשמנו לך הזמנה כזאת האם סבבה "+orderPack); 
-        placeOrder(orderPack);
-        autoCloseTextBox(message);
-        add(101);
-    }
-        // if (answer) {
-            
-            
-            
-        // }
-        // else {
-            // add(101);
-        // }
-    }
+};
+
+let nameInsert;
+function createName(){
+    let text = document.getElementById("insertNameText");     
+    nameInsert = text.value;
+    // console.log(nameInsert);
 }
 
-async function getName(id){
-    
+function insertName(){
+    nameInsert = JSON.stringify(nameInsert);
+    xhttp.open("POST", "./insertName/"+nameInsert, true);
+    xhttp.send();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);                
+            return;
+            }        
+        };
+};
+
+function deleteName(){
+
+};
+
+function getDbData(){
+
+};
+
+function resetDbData(){
+
+};
+
+function defineInputFields(){
+let inputElements = document.getElementsByClassName("textbox");
+for (i=0;i<inputElements.length;i++){
+    inputElements[i].addEventListener('input', inputFilter);
+    // console.log(inputElements[i]);    
+}
+};
+
+defineInputFields();
+
+function inputFilter(e){
+    let t = e.target;
+    // let goodValues = /^[a-z\u05D0-\u05EA]+$/i; // HEBREW REGEX
+    let badValues = /[\d/\/.,'"``;~./\[/\]/\-=+?!\d|/\\/#$%@^&*()]/gi;
+    t.value = t.value.replace(badValues, '');
+    return t;
 }
 
-var limit = 0;
 function searchBox(){
     const searchBox = document.getElementById("searchBox");
     let searchText = searchBox.value;
@@ -139,15 +111,6 @@ function searchQuery(query,dest){
     };
 };
 
-function foundNames(query,clients,dest){    
-    console.log(clients);
-    names = [];
-    for(i=0;i<clients.length;i++){
-        names.push(clients[i].name);
-    };
-    autoComplete(names);
-};
-
 function autoComplete(names){
     const autoDiv = document.getElementById("autoComplete");
     clearAutoComplete(autoDiv);
@@ -194,10 +157,4 @@ function login(name){
         xhttp.open("POST", "./searchName/"+name, true);
         xhttp.send();
     };
-}
-
-function autoCloseTextBox(message){
-    setTimeout(function(){
-        message.innerText = "";
-    }, 5000);
 }

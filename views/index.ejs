@@ -10,7 +10,23 @@
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 </head>
 <body>
-    <div class="grid">
+    <!-- <div class="menu" >
+        <input type="button" value="1" onclick="bgSelect(1)">רקע 1</input>
+        <input type="button" value="2" onclick="bgSelect(2)">רקע 2</input>
+        <input type="button" value="3" onclick="bgSelect(3)">רקע 3</input> 
+    </div> -->
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">⋘</a>
+        <a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)">רקע 1</a>
+        <a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)">רקע 2</a>
+        <a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)">רקע 3</a>
+        <a href="#">אפשרות</a>
+      </div>
+
+      <span class="elementOpen" onclick="openNav()">⋙</span>
+
+    <div class="grid" id="gridContent">
 
         <%- include('./partials/header'); %>
 
@@ -45,7 +61,7 @@
 
     <div class="buttons" id="buttons">
         <button id="cancel" onclick="add(101)"> בטל</button>
-        <button id="placeOrder" onclick="add(100)">בצע תשלום</button>
+        <button id="placeOrder" onclick="add(100)">בצע רישום</button>
     </div>
 
     <div id="textbox"></div>    
@@ -57,6 +73,59 @@
         var msg1 = ("<%= (msg1) %>");        
     </script>
     <%- include('./partials/footer'); %>
+
+    <div class="background1" id="backgroundPanel">
+        <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+     </div>
     
 </body>
 </html>

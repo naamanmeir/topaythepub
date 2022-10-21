@@ -14,32 +14,39 @@
 
         <%- include('./partials/header'); %>
 
-        <div id="getName">
+        <div class="function" id="getName" >
             <p>מציאת שם במאגר</p>
-            <input type="search" name="getName" id="getName" onkeyup="searchBox()" placeholder=" הכנס שם">
-            <div class="autoCompleteNone" id="autoComplete">
-            </div>
-        </div>
+            <input type="search" class="textbox" id="getName" onkeyup="getName()" placeholder=" הכנס שם">            
+            <button>מצא שם קיים</button>
+            <reply></reply>
+        </div>        
 
-        <div class="insertName">
+        <div class="function" id="insertName">
             <p>הכנסת שם למאגר</p>
-        </div>
+            <input type="search" class="textbox" id="insertNameText" onkeyup="createName()" placeholder="...">            
+            <button onclick="insertName()">הכנס שם חדש</button>
+            <reply></reply>
+        </div>        
 
-        <div class="deleteName">
+        <div class="function" id="deleteName">
             <p>מחיקת שם מהמאגר</p>
+            <input type="search" class="textbox" id="deleteNameText" onkeyup="deleteName()" placeholder="...">
+            <button>מחק שם קיים</button>
+            <reply></reply>
         </div>
 
-        <div class="getDbData">
+        <div class="function" id="getDbData">
             <p>הצגת כל הנתונים</p>
+            <input type="search" class="textbox" id="getDbDataText" onkeyup="getDbData()" placeholder="...">
+            <button>הצגת כל נתוני המאגר</button>
         </div>
 
-        <div class="resetDbData">
+        <div class="function" id="resetDbData">
             <p>איפוס נתונים לאחר קריאה</p>
+            <input type="search" class="textbox" id="resetDbDataText" onkeyup="resetDbData()" placeholder="...">
+            <button>איפוס נתונים לאחר קריאה</button>
         </div>
 
-        <div class="items">
-
-        </div>
     </div>
     
     <script src="js/script-manage.js"></script>

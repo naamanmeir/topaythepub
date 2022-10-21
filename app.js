@@ -11,12 +11,14 @@ const db = require('./db.js');
 const { Script } = require("node:vm");
 const msg = require('./strings.js');
 const { createPool } = require("mariadb");
+const { response } = require("express");
 
 //consts
 const app = express();
 const port = 3090;
 
-var now = new Date();
+var now = new Date().toLocaleString("en-IL", {timeZone: "Asia/Jerusalem"});
+console.log("System Startup Time :"+now);
 
 
 // Static Files
@@ -34,8 +36,21 @@ app.get('/manage', async function(req, res) {
     res.render('manage', {})
 });
 
-// ------------------------  MAIN INDEX  ----------------------- //
-app.get('', async function(req, res) {    
+app.post('/insertName/:data', async (req,res,next) => {
+    let newName = JSON.parse(req.params.data);
+    // console.log("APP: ADD NEW NAME: "+newName);
+    var response;
+    response = await db.dbInsertName(newName).then((res) => console.log("RES : "+res));    
+    res.send(response);    
+});
+
+function sendBackAddedName(req,res,message,next){
+
+}
+
+// ------------------------  CLIENT VIEW  ----------------------- //
+app.get('', async function(req, res) {  
+    console.log("User Requested Index: "+now);  
     res.render('index', {
         item1 : msg.NAME_ITEM1,
         item2 : msg.NAME_ITEM2,
@@ -46,17 +61,17 @@ app.get('', async function(req, res) {
 });
 
 // PLACE ORDER BY ID
-app.get('/order/:data', async function(req,res,next) {
-    console.log(now.toUTCString());
+app.get('/order/:data', async function(req,res,next) {    
     console.log("ORDER: ");
-    console.log(req.params.data);
+    console.log(now);
+    // console.log(req.params.data);
     const orderData = req.params.data.split(',');
     var id = (orderData[0]);
     var item1 = (orderData[1]);
     var item2 = (orderData[2]);
     var item3 = (orderData[3]);
     var item4 = (orderData[4]);
-    console.log(id+" "+item1+" "+item2+" "+item3+" "+item4);
+    console.log("id: "+id+" ,item1: "+item1+" ,item2:"+item2+" ,item3: "+item3+" ,item4: "+item4);
     // await getName(req,res,next);
     // RESPONSE FROM LAST FUNCION IN SERIAL
 });
@@ -101,15 +116,6 @@ async function returnNames(req,res,names,next){
     console.log("get names "+names);
     res.send(names);
 }
-
-// LAST SERIAL => RESPONSE
-async function appGetVideoDataById(req,res, next) {
-    var id = req.params.data;
-    var getNewData = await functions.dbGetVideoDataById(id);
-    // console.log(`APP: getScore:ID: ${getNewData[0]} name: ${getNewData[1]} score: ${getNewData[2]}`);
-    res.send(getNewData);
-    // console.log("SENT RESPONSE FROM appGetDataById");
-};
 
 // GET NUMBER OF CLIENTS IN DB
 appGetNumberOfVideos = async function() {

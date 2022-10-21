@@ -26,29 +26,30 @@ exports.dbAskLength = async function(){
   return numberOfVideos;
 };
 
-//--------------------INSERT NEW NAME AND ID TO DB----------------//
-exports.dbInsertName = function(id,name){        
-  pool.getConnection().then(conn => {
-    // console.log("INSERT INTO "+table+" (id,name,score,played) VALUES ("+(id)+",'"+name+"',0,0);");    
-    conn.query(
-      "INSERT INTO "+table+
-    " (id,name,score,played) VALUES ("
-    +(id)+",'"+name+
-    "',0,0);")
-    .then((rows) => {
-    // console.log(rows);
-  })
-  .then((res)=> {
-    // console.log(res);
+//--------------------INSERT NEW NAME TO DB----------------//
+exports.dbInsertName = async function(name){
+  let ifExist = await this.dbGetExactName(name);  
+  let newId;
+  let messageReturn;
+  if(ifExist.length != 0){
+    console.log("name exist");
+    return ("NAME ALLREADY EXIST IN DATABASE");
+  }else{
+    console.log("name dont exist");    
+    pool.getConnection().then(conn => {conn.query("INSERT INTO "+table+" (name) VALUES ('"+name+"');")
+      .then((rows) => {
+        // console.log(rows);
+        conn.end();
+        return (rows);
+    }).then((res) => {  
+      console.log(res);
     conn.end();
-  })
-  .catch(err =>{
-    // console.log(err);
-    conn.end();
-  })
-}).catch(err => {
-  console.log("CONNECTION Error: " + err)
-});
+    messageReturn = "HO MY";
+    });    
+  console.log(messageReturn)
+  });
+  return ("INSERTED INTO DATABASE -- NO PROOF YET");
+};
 };
 
 //--------------------INSERT ORDER BY ID----------------//
@@ -63,7 +64,17 @@ exports.dbInsertOrder = async function(id){
   })
 };
 
+//-----------------------GET EXACT NAME FROM DB ----------------------//
+exports.dbGetExactName = function(query) {
+  return pool.query("SELECT name FROM "+table+
+  " WHERE name LIKE '"+query+
+  "' collate utf8mb4_general_ci;");
+};
+
+
 //-----------------------GET ID AND NAME FROM DB BY SEARCH----------------------//
 exports.dbGetNameBySearch = function(query) {
-  return pool.query("SELECT id,name FROM "+table+" WHERE name LIKE '%"+query+"%' collate utf8mb4_general_ci;");
+  return pool.query("SELECT id,name FROM "+table+
+  " WHERE name LIKE '%"+query+
+  "%' collate utf8mb4_general_ci;");
 };

@@ -22,13 +22,16 @@ var item4 = 0;
 var id = 999;
 var clientName;
 
+var sideMenu = false;
+
 // FUNCTIONS TO RUN SERVER ACTIONS
 async function placeOrder(orderPack){  
     xhttp.open("GET", "./order/"+orderPack, true);
     xhttp.send();
 };
 
-function add(item){    
+function add(item){
+    if(sideMenu){return};
     const count1 = document.getElementById("count1");
     const count2 = document.getElementById("count2");
     const count3 = document.getElementById("count3");
@@ -67,19 +70,12 @@ function add(item){
         const message = document.getElementById("textbox");
         var orderPack = [];
         orderPack.push([id,item1,item2,item3,item4]);
-        message.innerText = (" היי   "+clientName+" רשמנו לך הזמנה כזאת האם סבבה "+orderPack); 
+        message.innerText = (" היי   "+clientName+" רשמנו לך הזמנה"+
+        " כזאת האם סבבה "+orderPack); 
         placeOrder(orderPack);
         autoCloseTextBox(message);
         add(101);
-    }
-        // if (answer) {
-            
-            
-            
-        // }
-        // else {
-            // add(101);
-        // }
+        }
     }
 }
 
@@ -122,7 +118,7 @@ function searchQuery(query,dest){
                 clients = null;
                 clearAutoComplete(document.getElementById("autoComplete"));
                 return;
-            }        
+            }
         clients = JSON.parse(this.response);        
         if(clients[0] != null){
             foundNames(query,clients,dest);
@@ -201,3 +197,43 @@ function autoCloseTextBox(message){
         message.innerText = "";
     }, 5000);
 }
+
+function bgSelect(set){
+    const background = document.getElementById("backgroundPanel");
+    const textBackground = document.getElementsByClassName('textBackground1 textBackground2 textBackground3');
+    let bg = ("background"+set);
+    let tbg = ("textBackground"+set);    
+    for(i=0;i<textBackground.length;i++){        
+        console.log(textBackground[i]);
+        textBackground[i].className = (tbg);
+        console.log(textBackground[i].classList);
+    };    
+    background.className = (bg);    
+}
+
+// var tcm;
+function openNav() {
+    sideMenu = true;
+    const sideNav = document.getElementById("mySidenav");
+    sideNav.style.width = "10rem";
+    const out = document.getElementById("gridContent");
+    out.onclick =  (function(){
+        if(sideNav.style.width == "10rem"){
+            closeNav();
+        }
+    });
+    // clearTimeout(tcm);
+    // tcm = setTimeout(function(){closeNav();},4444);
+    // autoCloseSideMenu();    
+}
+
+// function autoCloseSideMenu(){    
+//     timerCloseMenu = setTimeout(function(){
+//         closeNav();
+//     }, 4444);
+// }
+  
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+    sideMenu = false;
+}   
