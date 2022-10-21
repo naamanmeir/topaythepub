@@ -1,17 +1,3 @@
-// ===== Scroll to Top ==== 
-$(window).scroll(function() {
-    if ($(this).scrollTop() >= 50) {
-        $('#return-to-top').fadeIn(400);
-    } else {
-        $('#return-to-top').fadeOut(400);
-    }
-});
-$('#return-to-top').click(function() {
-    $('body,html').animate({
-        scrollTop : 0
-    }, 500);
-});
-
 var xhttp = new XMLHttpRequest();
 
 // VARIABLES
@@ -24,7 +10,6 @@ var clientName;
 
 var sideMenu = false;
 
-// FUNCTIONS TO RUN SERVER ACTIONS
 async function placeOrder(orderPack){  
     xhttp.open("GET", "./order/"+orderPack, true);
     xhttp.send();
@@ -91,12 +76,12 @@ function searchBox(){
     searchText = searchText.replace(/\//g, '');
     searchText = searchText.replace(/[0-9]/g, '');
     searchText = searchText.replace(/\./g, '');
-    searchText = searchText.replace(/\,/g, '');
-    searchText = searchText.replace(/\'/g, '');
+    searchText = searchText.replace(/\,/g, '');    
     searchText = searchText.replace(/\`/g, '');
     searchText = searchText.replace(/\"/g, '');
     searchText = searchText.substring(0,42);    
     searchBox.value = searchText;
+    searchText = searchText.replace(/\'/g, "''");
     if(searchText == ""){
         searchText = "-";
     };
@@ -148,7 +133,7 @@ function autoComplete(names){
     const autoDiv = document.getElementById("autoComplete");
     clearAutoComplete(autoDiv);
     autoDiv.className = "autoCompleteSuggestions";
-    for(i=0;i<names.length && i<5;i++){
+    for(i=0;i<names.length && i<15;i++){
         const para = document.createElement("p");
         para.className = "autocomplete-items";
         para.innerText = names[i];        
@@ -156,7 +141,7 @@ function autoComplete(names){
         para.onclick = function () {
             copyTextToSearchBox(para.innerText);
             login(para.innerText);
-            clearAutoComplete(autoDiv);            
+            clearAutoComplete(autoDiv);
         }
     };
 };
@@ -186,17 +171,18 @@ function login(name){
       };
     };
     if(name != ""){
+        name = name.replace(/\'/g, "''");
         name = JSON.stringify(name);
         xhttp.open("POST", "./searchName/"+name, true);
         xhttp.send();
     };
-}
+};
 
 function autoCloseTextBox(message){
     setTimeout(function(){
         message.innerText = "";
     }, 5000);
-}
+};
 
 function bgSelect(set){
     const background = document.getElementById("backgroundPanel");
@@ -209,31 +195,21 @@ function bgSelect(set){
         console.log(textBackground[i].classList);
     };    
     background.className = (bg);    
-}
+};
 
-// var tcm;
 function openNav() {
     sideMenu = true;
-    const sideNav = document.getElementById("mySidenav");
+    const sideNav = document.getElementById("sideNav");
     sideNav.style.width = "10rem";
     const out = document.getElementById("gridContent");
     out.onclick =  (function(){
         if(sideNav.style.width == "10rem"){
             closeNav();
         }
-    });
-    // clearTimeout(tcm);
-    // tcm = setTimeout(function(){closeNav();},4444);
-    // autoCloseSideMenu();    
-}
-
-// function autoCloseSideMenu(){    
-//     timerCloseMenu = setTimeout(function(){
-//         closeNav();
-//     }, 4444);
-// }
+});
+};
   
 function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("sideNav").style.width = "0";
     sideMenu = false;
-}   
+};

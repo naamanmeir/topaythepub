@@ -10,13 +10,8 @@
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 </head>
 <body>
-    <!-- <div class="menu" >
-        <input type="button" value="1" onclick="bgSelect(1)">רקע 1</input>
-        <input type="button" value="2" onclick="bgSelect(2)">רקע 2</input>
-        <input type="button" value="3" onclick="bgSelect(3)">רקע 3</input> 
-    </div> -->
 
-    <div id="mySidenav" class="sidenav">
+    <div id="sideNav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">⋘</a>
         <a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)">רקע 1</a>
         <a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)">רקע 2</a>
@@ -29,7 +24,7 @@
     <div class="grid" id="gridContent">
 
         <%- include('./partials/header'); %>
-
+        
         <input type="search" name="searchBoxName" id="searchBox" onkeyup="searchBox()" placeholder=" שלום נא להכניס שם ">
 
         <div class="autoCompleteNone" id="autoComplete">

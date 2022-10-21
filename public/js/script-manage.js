@@ -18,6 +18,7 @@ function createName(){
 }
 
 function insertName(){
+    nameInsert = nameInsert.replace(/\'/g, "''");
     nameInsert = JSON.stringify(nameInsert);
     xhttp.open("POST", "./insertName/"+nameInsert, true);
     xhttp.send();
@@ -55,7 +56,7 @@ defineInputFields();
 function inputFilter(e){
     let t = e.target;
     // let goodValues = /^[a-z\u05D0-\u05EA]+$/i; // HEBREW REGEX
-    let badValues = /[\d/\/.,'"``;~./\[/\]/\-=+?!\d|/\\/#$%@^&*()]/gi;
+    let badValues = /[\d/\/.,"``;~./\[/\]/\-=+?!\d|/\\/#$%@^&*()]/gi;
     t.value = t.value.replace(badValues, '');
     return t;
 }
@@ -68,11 +69,11 @@ function searchBox(){
     searchText = searchText.replace(/[0-9]/g, '');
     searchText = searchText.replace(/\./g, '');
     searchText = searchText.replace(/\,/g, '');
-    searchText = searchText.replace(/\'/g, '');
     searchText = searchText.replace(/\`/g, '');
     searchText = searchText.replace(/\"/g, '');
     searchText = searchText.substring(0,42);    
     searchBox.value = searchText;
+    searchText = searchText.replace(/\'/g, "''");
     if(searchText == ""){
         searchText = "-";
     };
