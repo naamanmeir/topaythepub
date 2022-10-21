@@ -62,16 +62,17 @@ function add(item){
         add(101);
         }
     }
-}
+};
 
-async function getName(id){
-    
-}
+const searchBox1 = document.getElementById("searchBox");
+searchBox1.addEventListener('input',function(){
+    searchBox(searchBox1.value);
+});
 
 var limit = 0;
-function searchBox(){
-    const searchBox = document.getElementById("searchBox");
-    let searchText = searchBox.value;
+function searchBox(text){
+    // const searchBox = document.getElementById("searchBox");
+    let searchText = text;
     searchText = searchText.replace(/\\/g, '');
     searchText = searchText.replace(/\//g, '');
     searchText = searchText.replace(/[0-9]/g, '');
@@ -80,9 +81,10 @@ function searchBox(){
     searchText = searchText.replace(/\`/g, '');
     searchText = searchText.replace(/\"/g, '');
     searchText = searchText.substring(0,42);    
-    searchBox.value = searchText;
+    searchBox1.value = searchText;
     searchText = searchText.replace(/\'/g, "''");
     if(searchText == ""){
+        userSearchMessage(0);
         searchText = "-";
     };
     if(limit == 0){
@@ -94,20 +96,31 @@ function searchBox(){
     };
 };
 
+function searchBoxClear(){
+    const searchBox = document.getElementById("searchBox");
+    if(searchBox.value == ""){
+        userSearchMessage(0);
+    }
+};
+
 function searchQuery(query,dest){
     let clients;
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             if(this.response == (JSON.stringify("clear"))){
-                console.log("CLEAR AUTOSEARCH");
+                // console.log("CLEAR AUTOSEARCH");
                 clients = null;
                 clearAutoComplete(document.getElementById("autoComplete"));
                 return;
-            }
-        clients = JSON.parse(this.response);        
+            };
+        clients = JSON.parse(this.response);
+        if(clients[0] == null){
+            userSearchMessage(1);
+            };
         if(clients[0] != null){
+            userSearchMessage(2);
             foundNames(query,clients,dest);
-            }
+            };
         };
       };
     if(query != ""){
@@ -121,7 +134,7 @@ function searchQuery(query,dest){
 };
 
 function foundNames(query,clients,dest){    
-    console.log(clients);
+    // console.log(clients);
     names = [];
     for(i=0;i<clients.length;i++){
         names.push(clients[i].name);
@@ -139,11 +152,17 @@ function autoComplete(names){
         para.innerText = names[i];        
         autoDiv.appendChild(para);
         para.onclick = function () {
-            copyTextToSearchBox(para.innerText);
-            login(para.innerText);
+            copyTextToSearchBox(para.innerText);            
+            loginFunction(para.innerText);
             clearAutoComplete(autoDiv);
         }
     };
+    if(names[0] == searchBox1.value){
+        clearAutoComplete(autoDiv);        
+        userSearchMessage(3);
+        searchBox1.blur();
+        loginFunction(names[0]);
+        };
 };
 
 function clearAutoComplete(autoDiv){
@@ -158,24 +177,61 @@ function copyTextToSearchBox(text){
     searchBox.value = text;
 };
 
-function login(name){
-    console.log(name);
-
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-        login = JSON.parse(this.response);
-        console.log(login);
-        clientName = login[0].name;
-        id = login[0].id;
-        console.log("id: "+id+" name: "+clientName);
-      };
-    };
+function loginFunction(name){
+    // console.log("LOGIN FUNCTION NAME: "+name);
     if(name != ""){
         name = name.replace(/\'/g, "''");
         name = JSON.stringify(name);
         xhttp.open("POST", "./searchName/"+name, true);
         xhttp.send();
     };
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+        login = JSON.parse(this.response);        
+        clientName = login[0].name;
+        id = login[0].id;
+        // console.log("USER LOGGED IN: "+"id: "+id+" name: "+clientName);
+        userLogged();
+      };
+    };
+};
+
+function userLogged(){
+    userSearchMessage(3);
+    searchBox1.style.backgroundColor = ("RGBA(255,100,255,0.5");
+};
+
+function userSearchMessage(select){    
+    let textBox = document.getElementById("searchBox");
+    let userIndic = document.getElementById("userStateIndicator");
+    if(select == 0){
+        userIndic.classList.remove("userStateIndicatorNotOk");
+        userIndic.classList.remove("userStateIndicatorOk");
+        userIndic.classList.remove("userStateIndicatorSelect");
+        userIndic.innerText = ("");
+        searchBox1.style.backgroundColor = ("RGBA(255,255,255,1");
+
+    }
+    if(select == 1){
+    userIndic.innerText = ("👎 שם לא סבבה 👎");
+    userIndic.classList.remove("userStateIndicatorOk");
+    userIndic.classList.remove("userStateIndicatorSelect");
+    userIndic.classList.add("userStateIndicatorNotOk");
+    searchBox1.style.backgroundColor = ("RGBA(255,255,255,1");
+    }    
+    if(select == 2){
+        userIndic.innerText = ("☟ ☟ לבחור שם מהמאגר ☟ ☟");
+        userIndic.classList.remove("userStateIndicatorNotOk");
+        userIndic.classList.remove("userStateIndicatorOk");
+        userIndic.classList.add("userStateIndicatorSelect");
+        searchBox1.style.backgroundColor = ("RGBA(255,255,255,1");
+    }
+    if(select == 3){
+        userIndic.innerText = ("👍 מה המצב");
+        userIndic.classList.remove("userStateIndicatorNotOk");        
+        userIndic.classList.remove("userStateIndicatorSelect");
+        userIndic.classList.add("userStateIndicatorOk");
+    }
 };
 
 function autoCloseTextBox(message){

@@ -25,10 +25,12 @@
 
         <%- include('./partials/header'); %>
         
-        <input type="search" name="searchBoxName" id="searchBox" onkeyup="searchBox()" placeholder=" שלום נא להכניס שם ">
-
+        <input type="search" name="searchBoxName" class="searchBox" id="searchBox" placeholder=" שלום נא להכניס שם ">
+        <!-- <div class="searchBoxClear">✖</div> -->
         <div class="autoCompleteNone" id="autoComplete">
         </div>
+
+        <div class="userStateIndicator" id="userStateIndicator"></div>
 
         <div class="items">
             <div class="item" onclick="add(1)">
@@ -59,9 +61,7 @@
         <button id="placeOrder" onclick="add(100)">בצע רישום</button>
     </div>
 
-    <div id="textbox"></div>    
-
-    <a href="javascript:" id="return-to-top"><i class="icon-chevron-up"></i></a>
+    <div id="textbox"></div>
     
     <script src="js/script.js"></script>
     <script>

@@ -35,7 +35,7 @@ exports.dbInsertName = async function(name){
     console.log("name exist");
     return ("NAME ALLREADY EXIST IN DATABASE");
   }else{
-    console.log("name dont exist");    
+    console.log("NAME DONT EXIST");    
     pool.getConnection().then(conn => {conn.query("INSERT INTO "+table+" (name) VALUES ('"+name+"');")
       .then((rows) => {
         // console.log(rows);
@@ -70,7 +70,6 @@ exports.dbGetExactName = function(query) {
   " WHERE name LIKE '"+query+
   "' collate utf8mb4_general_ci;");
 };
-
 
 //-----------------------GET ID AND NAME FROM DB BY SEARCH----------------------//
 exports.dbGetNameBySearch = function(query) {

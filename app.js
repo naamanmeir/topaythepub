@@ -79,9 +79,9 @@ app.get('/order/:data', async function(req,res,next) {
 // GET REQUEST FOR SEARCH FOR NAME IN DB BY QUERY
 app.post('/searchName/:data', async (req,res) => {
     var query = (req.params.data).replace(/\"/g,'');
-    console.log(query);
+    // console.log(query);
     if(query == "-"){
-        console.log("clear");        
+        // console.log("clear");
         res.send(JSON.stringify("clear"));
         return;
     };
@@ -89,11 +89,6 @@ app.post('/searchName/:data', async (req,res) => {
     names = (await db.dbGetNameBySearch(query));    
     res.send(names);
 });
-
-// app.post('/searchName/:data', function(req,res,next){
-//     console.log(req.params.data);
-//     getNames(req,res,next);    
-// })
 
 async function getNames(req,res,next) {
     var query = req.params.data;
@@ -113,15 +108,8 @@ async function getNames(req,res,next) {
 
 async function returnNames(req,res,names,next){
     // names = ["gog","ads","fas"];
-    console.log("get names "+names);
+    // console.log("get names "+names);
     res.send(names);
-}
-
-// GET NUMBER OF CLIENTS IN DB
-appGetNumberOfVideos = async function() {
-    let numberOfVideosInDb = await functions.dbGetLength();
-    // console.log("APP: NUMBER OF VIDEOS: "+numberOfVideosInDb);
-    return numberOfVideosInDb;
 };
 
 //-------------------------SERVER-----------------------------------//
