@@ -414,18 +414,15 @@ input[type=submit] {
 @keyframes anim3 {
     0% {
         opacity: 0;
-        transform: scale(150);
-        /* transform: rotate(0deg); */
+        transform: scale(150);        
     }
     50% {
         opacity: 100;
         transform: scale(0);
-        /* transform: rotate(180deg); */
     }
     100% {
         opacity: 0;
         transform: scale(122);
-        /* transform: rotate(720deg); */
     }    
 }
 .animation4{
@@ -445,21 +442,15 @@ input[type=submit] {
 @keyframes anim4 {
     0% {
         opacity: 0;
-        transform: scale(0);
-        /* transform: skew(55deg); */
-        /* transform: rotate(0deg); */
+        transform: scale(0);        
     }
     50% {
         opacity: 100;
         transform: scale(1000);
-        /* transform: skew(255deg); */
-        /* transform: rotate(180deg); */
     }
     100% {
         opacity: 0;
-        transform: scale(0);
-        /* transform: skew(145deg); */
-        /* transform: rotate(720deg); */
+        transform: scale(0);        
     }    
 } 
 /* demo */
