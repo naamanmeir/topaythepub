@@ -20,7 +20,15 @@ searchBox1.addEventListener('input',function(){
 });
 
 function orderAccepted(){
-    //animated heart RANDOM ANIMATED EACH TIME
+    //animated heart RANDOM ANIMATED EACH TIME    
+    const holder = document.createElement('img');
+    holder.src = 'img/thank_beer_1.png';
+    holder.width = '10%'
+    holder.height = '10%'
+    document.body.appendChild(holder);
+    // holder.classList.add("animation1");
+    holder.className = ("animation1");
+    // setTimeout(holder.classList.add("animation1Play"),1000);
 }
 
 async function placeOrder(orderPack){
@@ -267,7 +275,7 @@ function userLogout(){
     searchBox1.style.backgroundColor = ("RGBA(255,255,255,1");
     userSearchMessage(0);
     add(101);
-    clientName = "";
+    clientName = null;
     var empty = [0,0,0,0,0];
     orderConfirm(empty,true);
     timeOut = (60000*5);

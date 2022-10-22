@@ -341,6 +341,36 @@ input[type=submit] {
     margin: 0px 0px 0px 0px;    
     margin-bottom: 3%;    
 }
+.animation1{
+    /* background-image: url('../img/thank_beer_1.png'); */
+    opacity: 0;
+    z-index: 2500;
+    position: fixed;
+    margin: auto;
+    top: 50%;
+    bottom: 50%;
+    left: 50%;
+    right: 50%;
+    transition: all 5s;
+    width: 50px;
+    height: 50px;
+    /* background-color: purple; */
+    animation: anim1 5s ease;
+}
+@keyframes anim1 {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 100;
+        transform: scale(15);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1000);
+    }    
+} 
 /* demo */
 #textbox { 
     position: absolute;    
@@ -854,7 +884,7 @@ input[type=submit] {
     height: 100vh;
     top: 0;
     left: 0;
-    background: #22182f;
+    background: #000000;
     overflow: hidden;
 }
 .background3 span {
