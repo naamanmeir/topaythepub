@@ -19,16 +19,14 @@ searchBox1.addEventListener('input',function(){
     searchBox(searchBox1.value);
 });
 
-function orderAccepted(){
-    //animated heart RANDOM ANIMATED EACH TIME    
+function orderAccepted(){    
     const holder = document.createElement('img');
-    holder.src = 'img/thank_beer_1.png';
-    holder.width = '10%'
-    holder.height = '10%'
-    document.body.appendChild(holder);
-    // holder.classList.add("animation1");
-    holder.className = ("animation1");
-    // setTimeout(holder.classList.add("animation1Play"),1000);
+    let rnd = Math.floor(Math.random() * (20 - 1) + 1);
+    rnd = ('0'+rnd).slice(-2);
+    const imgRnd = ("img/thank_"+rnd+".png");    
+    holder.src = imgRnd;
+    document.body.appendChild(holder);    
+    holder.className = ("animation1");    
 }
 
 async function placeOrder(orderPack){
@@ -282,10 +280,10 @@ function userLogout(){
 };
 
 function userAutoLogout(reset){
-    if(reset != 0){
-        clearTimeout(timerLogout);
+    if(reset != 0){        
         timeOut = reset;
-    };    
+    };
+    clearTimeout(timerLogout);
     timerLogout = setTimeout(() => {
         userLogout();
     },timeOut);
