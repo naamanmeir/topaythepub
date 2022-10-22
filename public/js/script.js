@@ -1,6 +1,10 @@
 var xhttp = new XMLHttpRequest();
 
 // VARIABLES
+var timeOut = 60000*5;
+// var timeOut = 5000;
+let timerLogout;
+
 var item1 = 0;
 var item2 = 0;
 var item3 = 0;
@@ -10,21 +14,70 @@ var clientName;
 
 var sideMenu = false;
 
-async function placeOrder(orderPack){  
+const searchBox1 = document.getElementById("searchBox");
+searchBox1.addEventListener('input',function(){
+    searchBox(searchBox1.value);
+});
+
+function orderAccepted(){
+    //animated heart RANDOM ANIMATED EACH TIME
+}
+
+async function placeOrder(orderPack){
+    orderAccepted();
     xhttp.open("GET", "./order/"+orderPack, true);
     xhttp.send();
+    userLogout();
 };
 
-function orderConfirm(orderPack){
-    // var answer = window.confirm(msg1);    
-    const message = document.getElementById("messageBox");
-    message.innerText = (" היי   "+clientName+" רשמנו לך הזמנה"+
-        " כזאת האם סבבה "+orderPack);
-    message.classList.add("messageBoxOn");
-    autoCloseTextBox(message);
-    placeOrder(orderPack);
+function cancelOrder(message){
+    message.innerHTML = ("");
+    message.classList.remove("messageBoxOn");
+};
 
-}
+function orderConfirm(orderPack,abort){
+    userAutoLogout(60000); // LOGOUT AFTER ONE MINUTE
+    const message = document.getElementById("messageBox");
+    if(abort){message.innerHTML=("");message.classList.remove("messageBoxOn");return};
+    let buttonYes = document.createElement("button");
+    let buttonNo = document.createElement("button");
+    buttonYes.className = ("confirmButtons");
+    buttonNo.className = ("confirmButtons");
+    buttonYes.classList.add("confirmButtonsYes");
+    buttonNo.classList.add("confirmButtonsNo");
+    buttonYes.textContent = 'אשר רישום בכרטיס המיסים';
+    buttonNo.textContent = 'בטל הזמנה בטל הכל לברוח לברוח';
+    let i1 = orderPack[0][1];
+    let i2 = orderPack[0][2];
+    let i3 = orderPack[0][3];
+    let i4 = orderPack[0][4];
+    let price = (i1+i2+i3+i4)*10;
+    message.innerHTML = ("   היי  "+clientName);
+    message.innerHTML += ("<br>");
+    message.innerHTML += ("נרשמה הזמנה המכילה :");
+    message.innerHTML += ("<br>");
+    if(i1!=0){message.innerHTML += ("בירה חצי "+i1);message.innerHTML += ("<br>");}
+    if(i2!=0){message.innerHTML += ("בירה שליש "+i2);message.innerHTML += ("<br>");}
+    if(i3!=0){message.innerHTML += ("כוס משקה "+i3);message.innerHTML += ("<br>");}
+    if(i4!=0){message.innerHTML += ("פטריה "+i4);message.innerHTML += ("<br>");}
+    message.innerHTML += ("<br>");
+    if(price!=0){message.innerHTML += ("וסך הכל בשקלים זה: "+price);message.innerHTML += ("<br>");}
+    message.innerHTML += ("האם אתה מאשר לרשום גביה");message.innerHTML += ("<br>");
+    message.innerHTML += ("של סכום זה בכרטיס המיסים שלך? ");message.innerHTML += ("<br>");message.innerHTML += ("<br>");
+    message.appendChild(buttonYes);
+    message.appendChild(buttonNo);
+    buttonYes.addEventListener("click",function(){
+        placeOrder(orderPack);
+        message.innerHTML = ("");
+        message.classList.remove("messageBoxOn");
+    });
+    buttonNo.addEventListener("click",function(){
+        message.innerHTML = ("");
+        message.classList.remove("messageBoxOn");
+        userLogout();
+    });
+    message.classList.add("messageBoxOn");   
+};
 
 function add(item){
     if(sideMenu){return};
@@ -72,16 +125,11 @@ function add(item){
         if(clientName!=null){
         var orderPack = [];
         orderPack.push([id,item1,item2,item3,item4]);
-        orderConfirm(orderPack);
+        orderConfirm(orderPack,false);
         add(101);
         }
     }
 };
-
-const searchBox1 = document.getElementById("searchBox");
-searchBox1.addEventListener('input',function(){
-    searchBox(searchBox1.value);
-});
 
 var limit = 0;
 function searchBox(text){
@@ -192,7 +240,6 @@ function copyTextToSearchBox(text){
 };
 
 function loginFunction(name){
-    // console.log("LOGIN FUNCTION NAME: "+name);
     if(name != ""){
         name = name.replace(/\'/g, "''");
         name = JSON.stringify(name);
@@ -204,7 +251,6 @@ function loginFunction(name){
         login = JSON.parse(this.response);        
         clientName = login[0].name;
         id = login[0].id;
-        // console.log("USER LOGGED IN: "+"id: "+id+" name: "+clientName);
         userLogged();
       };
     };
@@ -213,6 +259,28 @@ function loginFunction(name){
 function userLogged(){
     userSearchMessage(3);
     searchBox1.style.backgroundColor = ("RGBA(255,100,255,0.5");
+    userAutoLogout(0);
+};
+
+function userLogout(){
+    searchBox1.value = ("");
+    searchBox1.style.backgroundColor = ("RGBA(255,255,255,1");
+    userSearchMessage(0);
+    add(101);
+    clientName = "";
+    var empty = [0,0,0,0,0];
+    orderConfirm(empty,true);
+    timeOut = (60000*5);
+};
+
+function userAutoLogout(reset){
+    if(reset != 0){
+        clearTimeout(timerLogout);
+        timeOut = reset;
+    };    
+    timerLogout = setTimeout(() => {
+        userLogout();
+    },timeOut);
 };
 
 function userSearchMessage(select){    

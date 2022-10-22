@@ -1,6 +1,7 @@
 html,
 body,
 .grid {
+    overscroll-behavior: contain;
     width: 98%;
     height: 98%;
     left: 1%;
@@ -8,6 +9,10 @@ body,
     /* margin: 0.5%; */
     background-color: rgb(221, 233, 251, 0);
     direction: rtl;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;    
     user-select: none;
     scroll-behavior: smooth;
     float: center;
@@ -208,14 +213,24 @@ input[type=submit] {
 }
 .item{
     /* grid-area: item; */
-    height: 100%;
+    height: 95%;
     width: 80%;
-    border: 2px ridge rgb(240, 152, 0);
+    border: 4px outset rgb(240, 152, 0);
     position: relative;
     margin: auto;
     float: center;
     text-align: center;
-    transition: background-color 0.8s ease;    
+    transition: background-color 0.5s ease;
+}
+.item img{
+    margin-bottom: 0px;
+    bottom: 0px;
+    padding-bottom: 0px;
+}
+.item:active{
+    border: 4px inset rgb(240, 152, 0);
+    background-color: rgb(240, 152, 0,0.6);
+    transition: none;
 }
 .item p{
     padding: 0px;
@@ -234,12 +249,13 @@ input[type=submit] {
     top: 50%;
     left: 50%;
     bottom: 30%;
-    right: 10%;
+    right: 7%;
     font-size: 7rem;
     color: rgb(0, 255, 55);
     font-style: oblique;
     font-family: fantasy;
-    text-shadow: 12px 12px 15px #000000;   
+    text-shadow: 12px 12px 15px #000000;
+    pointer-events: none;
 }
 .buttons{
     grid-area: buttons;
@@ -265,24 +281,38 @@ input[type=submit] {
 #placeOrder {
     background-color: green;
 }
-.messageBox{    
+.messageBox{
     display: none;
     z-index: 2500;
     position: absolute;
-    grid-area: item;    
+    grid-area: item;
     height: 50%;
     width: 75%;
-    font-size: xx-large;    
+    font-size: 1rem;
     background-color: green;
-    border: 5px groove orange;
+    border: 2px groove orange;
     top:25%;
-    right: 10%;    
+    right: 10%;
 }
 .messageBoxOn{
     display: block;
 }
+.confirmButtons{
+    z-index: 3000;
+    position: relative;
+    grid-area: item;
+    width: 100%;
+    height: 2rem;
+    color: black;
+}
+.confirmButtonsYes{
+    background-color: greenyellow;
+}
+.confirmButtonsNo{
+    background-color: red;
+}
 .errorMessage{    
-    z-index: 2500;
+    z-index: -10;
     display: none;
     position: fixed;
     background-color: black;
@@ -294,6 +324,7 @@ input[type=submit] {
     right: 55%;
 }
 .errorMessageOn{
+    z-index: 2500;
     display: block;
 }
 .footer{
@@ -354,7 +385,7 @@ input[type=submit] {
     z-index: 2500;
     top: 0;
     right: 0;
-    background-color: rgb(11, 49, 58);
+    background-color: rgba(11, 49, 58, 0.778);
     overflow-x: hidden;
     padding-top: 60px;
     transition: 0.5s;
@@ -1303,7 +1334,7 @@ input[type=submit] {
     height: 100vh;
     top: 0;
     left: 0;
-    background: #113435;
+    background: #000000;
     overflow: hidden;
 }
 .background4 span {
@@ -1318,44 +1349,44 @@ input[type=submit] {
     animation-iteration-count: infinite;
 }
 .background4 span:nth-child(0) {
-    color: #d8db32;
+    color: #db9a32;
     top: 50%;
     left: 96%;
-    animation-duration: 13s;
+    animation-duration: 93s;
     animation-delay: -87s;
     transform-origin: 3vw -15vh;
     box-shadow: 40vmin 0 5.183883016882582vmin currentColor;
 }
 .background4 span:nth-child(1) {
-    color: #dadd1c;
+    color: #ddb01c;
     top: 36%;
     left: 53%;
-    animation-duration: 57s;
+    animation-duration: 97s;
     animation-delay: -51s;
     transform-origin: -9vw 17vh;
     box-shadow: 40vmin 0 5.691683435177346vmin currentColor;
 }
 .background4 span:nth-child(2) {
-    color: #bec10d;
+    color: #e1b224c0;
     top: 61%;
     left: 88%;
-    animation-duration: 56s;
+    animation-duration: 86s;
     animation-delay: -39s;
     transform-origin: -17vw 5vh;
-    box-shadow: -40vmin 0 5.421600798369472vmin currentColor;
+    box-shadow: -40vmin 0 5.921600798369472vmin currentColor;
 }
 .background4 span:nth-child(3) {
-    color: #360a82;
+    color: #ed2310d3;
     top: 91%;
     left: 68%;
-    animation-duration: 71s;
+    animation-duration: 61s;
     animation-delay: -70s;
     transform-origin: -13vw -14vh;
-    box-shadow: -40vmin 0 5.662044721413497vmin currentColor;
+    box-shadow: -40vmin 0 5.962044721413497vmin currentColor;
 }
 .background4 span:nth-child(4) {
-    color: #230654;
-    top: 28%;
+    color: #f4a91496;
+    top: 18%;
     left: 19%;
     animation-duration: 91s;
     animation-delay: -78s;
@@ -1363,28 +1394,28 @@ input[type=submit] {
     box-shadow: -40vmin 0 5.529312920458274vmin currentColor;
 }
 .background4 span:nth-child(5) {
-    color: #3f108f;
+    color: #ac640b;
     top: 17%;
     left: 55%;
-    animation-duration: 70s;
+    animation-duration: 90s;
     animation-delay: -66s;
     transform-origin: 16vw 10vh;
     box-shadow: 40vmin 0 5.968933920866371vmin currentColor;
 }
 .background4 span:nth-child(6) {
-    color: #0c8387;
+    color: #e46910;
     top: 71%;
     left: 90%;
-    animation-duration: 14s;
+    animation-duration: 104s;
     animation-delay: -37s;
     transform-origin: -1vw -21vh;
     box-shadow: 40vmin 0 5.848451583504677vmin currentColor;
 }
 .background4 span:nth-child(7) {
-    color: #7b7d0e;
+    color: #e0b312db;
     top: 79%;
     left: 38%;
-    animation-duration: 33s;
+    animation-duration: 53s;
     animation-delay: -89s;
     transform-origin: 18vw 21vh;
     box-shadow: -40vmin 0 5.829243410273872vmin currentColor;
@@ -1399,10 +1430,10 @@ input[type=submit] {
     box-shadow: -40vmin 0 5.74342229211393vmin currentColor;
 }
 .background4 span:nth-child(9) {
-    color: #e2e458;
+    color: #dcbc3ee3;
     top: 73%;
     left: 27%;
-    animation-duration: 9s;
+    animation-duration: 59s;
     animation-delay: -42s;
     transform-origin: -13vw 12vh;
     box-shadow: 40vmin 0 5.565887697806728vmin currentColor;
@@ -1411,7 +1442,7 @@ input[type=submit] {
     color: #a4750f;
     top: 70%;
     left: 41%;
-    animation-duration: 36s;
+    animation-duration: 46s;
     animation-delay: -49s;
     transform-origin: -2vw -1vh;
     box-shadow: 40vmin 0 5.3164666115362476vmin currentColor;
@@ -1426,7 +1457,7 @@ input[type=submit] {
     box-shadow: 40vmin 0 5.936470684994058vmin currentColor;
 }
 .background4 span:nth-child(12) {
-    color: #941883a2;
+    color: #c66011a2;
     top: 21%;
     left: 18%;
     animation-duration: 50s;
@@ -1453,7 +1484,7 @@ input[type=submit] {
     box-shadow: 40vmin 0 5.11317815404602vmin currentColor;
 }
 .background4 span:nth-child(15) {
-    color: #961b86;
+    color: #c9670b;
     top: 47%;
     left: 96%;
     animation-duration: 46s;
@@ -1462,7 +1493,7 @@ input[type=submit] {
     box-shadow: -40vmin 0 5.302887582729587vmin currentColor;
 }
 .background4 span:nth-child(16) {
-    color: #3e1682;
+    color: #e66b13;
     top: 10%;
     left: 4%;
     animation-duration: 83s;
@@ -1480,8 +1511,8 @@ input[type=submit] {
     box-shadow: 40vmin 0 5.220321902225424vmin currentColor;
 }
 .background4 span:nth-child(18) {
-    color: #ba23a6af;
-    top: 30%;
+    color: #d5660aaf;
+    top: 70%;
     left: 48%;
     animation-duration: 91s;
     animation-delay: -25s;
@@ -1489,7 +1520,7 @@ input[type=submit] {
     box-shadow: -40vmin 0 5.941494141343195vmin currentColor;
 }
 .background4 span:nth-child(19) {
-    color: #583C87;
+    color: #ed4802;
     top: 59%;
     left: 61%;
     animation-duration: 73s;

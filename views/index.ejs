@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 </head>
-<body>
+
+<body oncontextmenu="return false;">
 
     <div id="sideNav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">⋘</a>
@@ -29,29 +30,28 @@
         <%- include('./partials/header'); %>
         
         <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false" placeholder=" שלום נא להכניס שם ">
-        <!-- <div class="searchBoxClear">✖</div> -->
         <div class="autoCompleteNone" id="autoComplete">
         </div>
 
         <div class="userStateIndicator" id="userStateIndicator"></div>
 
         <div class="items">
-            <div class="item" onclick="add(1)">
+            <div class="item" onpointerup="add(1)">
                 <p><%=item1%></p>                
                 <img src="img/beer-large.png">
                 <count id="count1"></count>
             </div>
-            <div class="item" onclick="add(2)">
+            <div class="item" onpointerup="add(2)">
                 <p><%=item2%></p>                
                 <img src="img/beer-small.png">
                 <count id="count2"></count>
             </div>
-            <div class="item" onclick="add(3)">
+            <div class="item" onpointerup="add(3)">
                 <p><%=item3%></p>                
                 <img src="img/drinks.png">
                 <count id="count3"></count>
             </div>
-            <div class="item" onclick="add(4)">
+            <div class="item" onpointerup="add(4)">
                 <p><%=item4%></p>                
                 <img src="img/mushroom.png">
                 <count id="count4"></count>
@@ -67,12 +67,8 @@
     </div>
 
     <div class="messageBox" id="messageBox"></div>    
-
-    <!-- <div id="textbox"></div> -->
     
-    <script src="js/script.js"></script>
-
-    <script>var msg1 = ("<%= (msg1) %>");</script>
+    <script src="js/script.js"></script>    
 
     <%- include('./partials/footer'); %>
 
