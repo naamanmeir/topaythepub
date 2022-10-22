@@ -15,6 +15,17 @@ async function placeOrder(orderPack){
     xhttp.send();
 };
 
+function orderConfirm(orderPack){
+    // var answer = window.confirm(msg1);    
+    const message = document.getElementById("messageBox");
+    message.innerText = (" היי   "+clientName+" רשמנו לך הזמנה"+
+        " כזאת האם סבבה "+orderPack);
+    message.classList.add("messageBoxOn");
+    autoCloseTextBox(message);
+    placeOrder(orderPack);
+
+}
+
 function add(item){
     if(sideMenu){return};
     const count1 = document.getElementById("count1");
@@ -50,15 +61,18 @@ function add(item){
         count4.innerText = "";
     }
     if(item==100){
-        // var answer = window.confirm(msg1);
+        if(clientName==null){
+            errorMessage(1);
+            return;
+        }
+        if(item1+item2+item3+item4 == 0){
+            errorMessage(2);
+            return;
+        }
         if(clientName!=null){
-        const message = document.getElementById("textbox");
         var orderPack = [];
         orderPack.push([id,item1,item2,item3,item4]);
-        message.innerText = (" היי   "+clientName+" רשמנו לך הזמנה"+
-        " כזאת האם סבבה "+orderPack); 
-        placeOrder(orderPack);
-        autoCloseTextBox(message);
+        orderConfirm(orderPack);
         add(101);
         }
     }
@@ -234,8 +248,30 @@ function userSearchMessage(select){
     }
 };
 
-function autoCloseTextBox(message){
+function errorMessage(value){
+    const message = document.getElementById("errorMessage");
+    if(value == 1){
+        message.innerText = ("לא הכנסת שם");
+        message.classList.add("errorMessageOn");
+        closeErrorMessage(message);
+    };
+    if(value == 2){
+        message.innerText = ("לא שתית כלום");
+        message.classList.add("errorMessageOn");
+        closeErrorMessage(message);
+    };
+};
+
+function closeErrorMessage(message){
+    setTimeout(() => {
+        message.innerText = ("");
+        message.classList.remove("errorMessageOn");
+    },3000);
+};
+
+function autoCloseTextBox(message){    
     setTimeout(function(){
+        message.classList.remove("messageBoxOn");
         message.innerText = "";
     }, 5000);
 };

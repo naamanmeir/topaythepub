@@ -16,7 +16,10 @@
         <a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)">רקע 1</a>
         <a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)">רקע 2</a>
         <a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)">רקע 3</a>
-        <a href="#">אפשרות</a>
+        <a href="#" onclick="bgSelect(4)" onclick="clearTimeout(window.tcm)">רקע 4</a>
+        <a href="#" onclick="bgSelect(5)" onclick="clearTimeout(window.tcm)">רקע 5</a>
+        <br>
+        <a href="#">שמירת<br> נתונים</a>
       </div>
 
       <span class="elementOpen" onclick="openNav()">⋙</span>
@@ -25,7 +28,7 @@
 
         <%- include('./partials/header'); %>
         
-        <input type="search" name="searchBoxName" class="searchBox" id="searchBox" placeholder=" שלום נא להכניס שם ">
+        <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false" placeholder=" שלום נא להכניס שם ">
         <!-- <div class="searchBoxClear">✖</div> -->
         <div class="autoCompleteNone" id="autoComplete">
         </div>
@@ -56,20 +59,24 @@
         </div>
     </div>
 
+    <div class="errorMessage" id="errorMessage"></div>
+
     <div class="buttons" id="buttons">
         <button id="cancel" onclick="add(101)"> בטל</button>
         <button id="placeOrder" onclick="add(100)">בצע רישום</button>
     </div>
 
-    <div id="textbox"></div>
+    <div class="messageBox" id="messageBox"></div>    
+
+    <!-- <div id="textbox"></div> -->
     
     <script src="js/script.js"></script>
-    <script>
-        var msg1 = ("<%= (msg1) %>");        
-    </script>
+
+    <script>var msg1 = ("<%= (msg1) %>");</script>
+
     <%- include('./partials/footer'); %>
 
-    <div class="background1" id="backgroundPanel">
+    <div class="background3" id="backgroundPanel">
         <span></span>
     <span></span>
     <span></span>
