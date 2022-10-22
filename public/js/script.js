@@ -21,12 +21,14 @@ searchBox1.addEventListener('input',function(){
 
 function orderAccepted(){    
     const holder = document.createElement('img');
-    let rnd = Math.floor(Math.random() * (20 - 1) + 1);
-    rnd = ('0'+rnd).slice(-2);
-    const imgRnd = ("img/thank_"+rnd+".png");    
+    let rnd1 = Math.floor(Math.random() * (20 - 1) + 1);
+    let rnd2 = Math.floor(Math.random() * (4 - 1) + 1);
+    rnd1 = ('0'+rnd1).slice(-2);
+    const imgRnd = ("img/thank_"+rnd1+".png");
+    const animRnd = ("animation"+rnd2)
     holder.src = imgRnd;
     document.body.appendChild(holder);    
-    holder.className = ("animation1");    
+    holder.className = (animRnd);
 }
 
 async function placeOrder(orderPack){

@@ -342,7 +342,6 @@ input[type=submit] {
     margin-bottom: 3%;    
 }
 .animation1{
-    /* background-image: url('../img/thank_beer_1.png'); */
     opacity: 0;
     z-index: 2500;
     position: fixed;
@@ -354,7 +353,6 @@ input[type=submit] {
     transition: all 5s;
     width: 50px;
     height: 50px;
-    /* background-color: purple; */
     animation: anim1 5s ease;
 }
 @keyframes anim1 {
@@ -369,6 +367,99 @@ input[type=submit] {
     100% {
         opacity: 0;
         transform: scale(1000);
+    }    
+}
+.animation2{
+    opacity: 0;
+    z-index: 2500;
+    position: fixed;
+    margin: auto;
+    top: 50%;
+    bottom: 50%;
+    left: 50%;
+    right: 50%;
+    transition: all 5s;
+    width: 50px;
+    height: 50px;
+    animation: anim2 5s ease-out;
+}
+@keyframes anim2 {
+    0% {
+        opacity: 0;
+        transform: scale(250);
+    }
+    50% {
+        opacity: 100;
+        transform: scale(15);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0);
+    }    
+}
+.animation3{
+    opacity: 0;
+    z-index: 2500;
+    position: fixed;
+    margin: auto;
+    top: 50%;
+    bottom: 50%;
+    left: 50%;
+    right: 50%;
+    transition: all 5s;
+    width: 50px;
+    height: 50px;    
+    animation: anim3 5s ease-out;
+}
+@keyframes anim3 {
+    0% {
+        opacity: 0;
+        transform: scale(150);
+        /* transform: rotate(0deg); */
+    }
+    50% {
+        opacity: 100;
+        transform: scale(0);
+        /* transform: rotate(180deg); */
+    }
+    100% {
+        opacity: 0;
+        transform: scale(122);
+        /* transform: rotate(720deg); */
+    }    
+}
+.animation4{
+    opacity: 0;
+    z-index: 2500;
+    position: fixed;
+    margin: auto;
+    top: 50%;
+    bottom: 50%;
+    left: 50%;
+    right: 50%;
+    transition: all 5s;
+    width: 50px;
+    height: 50px;    
+    animation: anim4 5s ease;
+}
+@keyframes anim4 {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+        /* transform: skew(55deg); */
+        /* transform: rotate(0deg); */
+    }
+    50% {
+        opacity: 100;
+        transform: scale(1000);
+        /* transform: skew(255deg); */
+        /* transform: rotate(180deg); */
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0);
+        /* transform: skew(145deg); */
+        /* transform: rotate(720deg); */
     }    
 } 
 /* demo */
