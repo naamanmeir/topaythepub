@@ -19,13 +19,14 @@ searchBox1.addEventListener('input',function(){
     searchBox(searchBox1.value);
 });
 
-function orderAccepted(){    
+function orderAccepted(){
     const holder = document.createElement('img');
     let rnd1 = Math.floor(Math.random() * (20 - 1) + 1);
-    let rnd2 = Math.floor(Math.random() * (4 - 1) + 1);
+    let rnd2 = Math.floor(Math.random() * (6 - 1) + 1);
     rnd1 = ('0'+rnd1).slice(-2);
     const imgRnd = ("img/thank_"+rnd1+".png");
-    const animRnd = ("animation"+rnd2)
+    const animRnd = ("animation"+rnd2);
+    // const animRnd = ("animation1");
     holder.src = imgRnd;
     document.body.appendChild(holder);    
     holder.className = (animRnd);
@@ -54,27 +55,37 @@ function orderConfirm(orderPack,abort){
     buttonYes.classList.add("confirmButtonsYes");
     buttonNo.classList.add("confirmButtonsNo");
     buttonYes.textContent = 'אשר רישום בכרטיס המיסים';
-    buttonNo.textContent = 'בטל הזמנה בטל הכל לברוח לברוח';
+    buttonNo.textContent = 'בטל הזמנה';
     let i1 = orderPack[0][1];
     let i2 = orderPack[0][2];
     let i3 = orderPack[0][3];
     let i4 = orderPack[0][4];
     let price = (i1+i2+i3+i4)*10;
-    message.innerHTML = ("   היי  "+clientName);
+    message.innerHTML = ("<p2>   היי </p2>");
     message.innerHTML += ("<br>");
-    message.innerHTML += ("נרשמה הזמנה המכילה :");
+    message.innerHTML += ("<p5>"+clientName+"</p5>");
     message.innerHTML += ("<br>");
-    if(i1!=0){message.innerHTML += ("בירה חצי "+i1);message.innerHTML += ("<br>");}
-    if(i2!=0){message.innerHTML += ("בירה שליש "+i2);message.innerHTML += ("<br>");}
-    if(i3!=0){message.innerHTML += ("כוס משקה "+i3);message.innerHTML += ("<br>");}
-    if(i4!=0){message.innerHTML += ("פטריה "+i4);message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
-    if(price!=0){message.innerHTML += ("וסך הכל בשקלים זה: "+price);message.innerHTML += ("<br>");}
-    message.innerHTML += ("האם אתה מאשר לרשום גביה");message.innerHTML += ("<br>");
-    message.innerHTML += ("של סכום זה בכרטיס המיסים שלך? ");message.innerHTML += ("<br>");message.innerHTML += ("<br>");
+    message.innerHTML += ("<p1>נרשמה הזמנה המכילה :</p1>");
+    message.innerHTML += ("<br>");
+    message.innerHTML += ("<br>");
+    if(i1!=0){message.innerHTML += ("<p2>בירה חצי: </p2><p3>"+i1+"</p3>")};//message.innerHTML += ("<br>");}
+    if(i2!=0){message.innerHTML += ("<p2>בירה שליש: </p2><p3>"+i2+"</p3>");message.innerHTML += ("<br>");}
+    if(i3!=0){message.innerHTML += ("<p2>כוס משקה: </p2><p3>"+i3+"</p3>")};//message.innerHTML += ("<br>");}
+    if(i4!=0){message.innerHTML += ("<p2>פטריה: </p2><p3>"+i4+"</p3>");message.innerHTML += ("<br>");}
+    message.innerHTML += ("<br>");
+    if(price!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+price+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
+    message.innerHTML += ("<br>");
+    message.innerHTML += ("<p1>האם אתה מאשר לרשום גביה</p1>");message.innerHTML += ("<br>");
+    message.innerHTML += ("<p1>של "+price+" שקלים בכרטיס המיסים שלך? </p1>");message.innerHTML += ("<br>");message.innerHTML += ("<br>");
     message.appendChild(buttonYes);
     message.appendChild(buttonNo);
     buttonYes.addEventListener("click",function(){
+        placeOrder(orderPack);
+        message.innerHTML = ("");
+        message.classList.remove("messageBoxOn");
+    });
+    buttonYes.addEventListener("touchend",function(){
         placeOrder(orderPack);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
@@ -84,33 +95,39 @@ function orderConfirm(orderPack,abort){
         message.classList.remove("messageBoxOn");
         userLogout();
     });
+    buttonNo.addEventListener("touchend",function(){
+        message.innerHTML = ("");
+        message.classList.remove("messageBoxOn");
+        userLogout();
+    });
     message.classList.add("messageBoxOn");   
 };
 
 function add(item){
     if(sideMenu){return};
+    searchBox1.blur();
     const count1 = document.getElementById("count1");
     const count2 = document.getElementById("count2");
     const count3 = document.getElementById("count3");
     const count4 = document.getElementById("count4");
     const buttonsDiv = document.getElementById("buttons");
-    if(item==1){        
+    if(item==1){
             item1 = item1+1;
             count1.innerText = item1;
-        }    
-    if(item==2){        
+        }
+    if(item==2){
             item2 = item2+1;
             count2.innerText = item2;
-        }    
-    if(item==3){        
+        }
+    if(item==3){
             item3 = item3+1;
             count3.innerText = item3;
-        }    
+            searchBox1.blur();
+        }
     if(item==4){
-
             item4 = item4+1;
             count4.innerText = item4;
-        }    
+        }
     if(item==101){
         item1 = 0;
         item2 = 0;
@@ -266,6 +283,7 @@ function loginFunction(name){
 
 function userLogged(){
     userSearchMessage(3);
+    searchBox1.blur();
     searchBox1.style.backgroundColor = ("RGBA(255,100,255,0.5");
     userAutoLogout(0);
 };

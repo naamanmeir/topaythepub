@@ -102,6 +102,7 @@ video{
     padding-top: 0;
     padding-bottom: 0;
     margin-bottom: 0px;
+    user-select: none;
 }
 .autoCompleteNone{
     display: none;
@@ -213,6 +214,7 @@ input[type=submit] {
 }
 .item{
     /* grid-area: item; */
+    z-index: 1;
     height: 95%;
     width: 80%;
     border: 4px outset rgb(240, 152, 0);
@@ -226,19 +228,24 @@ input[type=submit] {
     margin-bottom: 0px;
     bottom: 0px;
     padding-bottom: 0px;
+    user-select: none;
+    pointer-events: none;
 }
 .item:active{
     border: 4px inset rgb(240, 152, 0);
     background-color: rgb(240, 152, 0,0.6);
     transition: none;
+    user-select: none;
 }
 .item p{
     padding: 0px;
     margin: 0px;
     font-size: 2rem;
     background-color: rgb(240, 152, 0,0.7);
+    user-select: none;
+    pointer-events: none;
 }
-.item count{    
+.item count{
     z-index: 500;
     width: auto;
     height: 100%;
@@ -256,6 +263,7 @@ input[type=submit] {
     font-family: fantasy;
     text-shadow: 12px 12px 15px #000000;
     pointer-events: none;
+    user-select: none;
 }
 .buttons{
     grid-area: buttons;
@@ -286,13 +294,36 @@ input[type=submit] {
     z-index: 2500;
     position: absolute;
     grid-area: item;
-    height: 50%;
-    width: 75%;
-    font-size: 1rem;
-    background-color: green;
+    height: fit-content;
+    width: 96%;
+    font-size: 100%;
+    background-color: black;
     border: 2px groove orange;
-    top:25%;
-    right: 10%;
+    top:7%;
+    right: 2%;
+    text-align: center;
+    align-content: center;
+}
+.messageBox p1{
+    color: whitesmoke;
+    font-size: 100%;
+}
+.messageBox p2{
+    color: whitesmoke;
+    font-size: 110%;
+}
+.messageBox p3{
+    font-size: xx-large;
+    color: orange;
+}
+.messageBox p4{
+    font-size: 300%;
+    color: orangered;
+}
+.messageBox p5{
+    font-size: xx-large;
+    max-width: 100%;
+    color: rgb(255, 0, 255);
 }
 .messageBoxOn{
     display: block;
@@ -302,16 +333,25 @@ input[type=submit] {
     position: relative;
     grid-area: item;
     width: 100%;
-    height: 2rem;
+    height: 4rem;
     color: black;
+    border: 3px outset orange;
+    font-size: x-large;
+}
+.confirmButtons:active{
+    font-size: xx-large;
+    border: 3px inset orange;
 }
 .confirmButtonsYes{
+    margin-top: 1rem;
     background-color: greenyellow;
 }
 .confirmButtonsNo{
+    margin-top: 4rem;
+    margin-bottom: 2rem;
     background-color: red;
 }
-.errorMessage{    
+.errorMessage{
     z-index: -10;
     display: none;
     position: fixed;
@@ -362,11 +402,11 @@ input[type=submit] {
     }
     50% {
         opacity: 100;
-        transform: scale(15);
+        transform: scale(8);
     }
     100% {
         opacity: 0;
-        transform: scale(1000);
+        transform: scale(22) rotate(700deg);
     }    
 }
 .animation2{
@@ -386,15 +426,15 @@ input[type=submit] {
 @keyframes anim2 {
     0% {
         opacity: 0;
-        transform: scale(250);
+        transform: scale(12);
     }
     50% {
         opacity: 100;
-        transform: scale(15);
+        transform: scale(3);
     }
     100% {
         opacity: 0;
-        transform: scale(0);
+        transform: scale(0) rotate(700deg);
     }    
 }
 .animation3{
@@ -406,7 +446,7 @@ input[type=submit] {
     bottom: 50%;
     left: 50%;
     right: 50%;
-    transition: all 5s;
+    transition: all 3s;
     width: 50px;
     height: 50px;    
     animation: anim3 5s ease-out;
@@ -414,15 +454,15 @@ input[type=submit] {
 @keyframes anim3 {
     0% {
         opacity: 0;
-        transform: scale(150);        
+        transform: scale(0);
     }
     50% {
         opacity: 100;
-        transform: scale(0);
+        transform: scale(6);
     }
     100% {
         opacity: 0;
-        transform: scale(122);
+        transform: scale(15);
     }    
 }
 .animation4{
@@ -437,7 +477,7 @@ input[type=submit] {
     transition: all 5s;
     width: 50px;
     height: 50px;    
-    animation: anim4 5s ease;
+    animation: anim4 5s ease-in;
 }
 @keyframes anim4 {
     0% {
@@ -446,13 +486,77 @@ input[type=submit] {
     }
     50% {
         opacity: 100;
-        transform: scale(1000);
+        transform: scale(7);
+    }
+    80% {
+        opacity: 100;
+        transform: scale(10);
     }
     100% {
         opacity: 0;
         transform: scale(0);        
     }    
-} 
+}
+.animation5{
+    opacity: 0;
+    z-index: 2500;
+    position: fixed;
+    margin: auto;
+    top: 50%;
+    bottom: 50%;
+    left: 50%;
+    right: 50%;
+    transition: all 5s;
+    width: 50px;
+    height: 50px;    
+    animation: anim5 5s ease;
+}
+@keyframes anim5 {
+    0% {
+        opacity: 0;
+        transform: scale(12);        
+    }
+    50% {
+        opacity: 100;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(15) rotate(-700deg);
+    }    
+}
+.animation6{
+    opacity: 0;
+    z-index: 2500;
+    position: fixed;
+    margin: auto;
+    top: 50%;
+    bottom: 50%;
+    left: 50%;
+    right: 50%;
+    transition: all 5s;
+    width: 50px;
+    height: 50px;    
+    animation: anim6 5s ease-in-out;
+}
+@keyframes anim6 {
+    0% {
+        opacity: 0;
+        transform: scale(0);        
+    }
+    50% {
+        opacity: 100;
+        transform: scale(4);
+    }
+    75% {
+        opacity: 75;
+        transform: scale(12) rotate(720deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1) rotate(-1440deg);
+    }
+}
 /* demo */
 #textbox { 
     position: absolute;    
