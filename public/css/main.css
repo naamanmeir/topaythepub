@@ -260,7 +260,7 @@ input[type=submit] {
     font-size: 7rem;
     color: rgb(0, 255, 55);
     font-style: oblique;
-    font-family: fantasy;
+    /* font-family: fantasy; */
     text-shadow: 12px 12px 15px #000000;
     pointer-events: none;
     user-select: none;
@@ -273,7 +273,7 @@ input[type=submit] {
     float:center;
     margin: 0px;
     padding: auto;
-    text-align:center;    
+    text-align:center;
 }
 .buttons button{
     margin: auto;
@@ -281,13 +281,23 @@ input[type=submit] {
     height: 100%;
     color: black;
     font-size: 2rem;
-    text-shadow: 3px 3px 17px #ffffff;
+    text-shadow: 5px 3px 17px #ffffff;
+    border: 3px outset grey;
+}
+.buttons button:active{
+    border: 3px inset grey;
 }
 #cancel {
     background-color: red;
 }
 #placeOrder {
     background-color: green;
+}
+.pointerNone{
+    pointer-events: none;
+}
+.pointerAll{
+    pointer-events:all;
 }
 .messageBox{
     display: none;
@@ -339,7 +349,6 @@ input[type=submit] {
     font-size: x-large;
 }
 .confirmButtons:active{
-    font-size: xx-large;
     border: 3px inset orange;
 }
 .confirmButtonsYes{

@@ -2,7 +2,6 @@ var xhttp = new XMLHttpRequest();
 
 // VARIABLES
 var timeOut = 60000*5;
-// var timeOut = 5000;
 let timerLogout;
 
 var item1 = 0;
@@ -30,6 +29,7 @@ function orderAccepted(){
     holder.src = imgRnd;
     document.body.appendChild(holder);    
     holder.className = (animRnd);
+    pointerEnableIn(3000);
 }
 
 async function placeOrder(orderPack){
@@ -46,10 +46,18 @@ function cancelOrder(message){
 
 function orderConfirm(orderPack,abort){
     userAutoLogout(60000); // LOGOUT AFTER ONE MINUTE
-    const message = document.getElementById("messageBox");
+    const message = document.getElementById("messageBox");    
     if(abort){message.innerHTML=("");message.classList.remove("messageBoxOn");return};
     let buttonYes = document.createElement("button");
     let buttonNo = document.createElement("button");
+    const body = document.body;
+    pointerNone(body);
+    pointerAll(message)
+    const items = document.getElementsByClassName("item");
+    var itemsArray = Array.from(items);
+    itemsArray.forEach(pointerNone);    
+    buttonYes.classList.add("enable-click");
+    buttonNo.classList.add("enable-click");
     buttonYes.className = ("confirmButtons");
     buttonNo.className = ("confirmButtons");
     buttonYes.classList.add("confirmButtonsYes");
@@ -297,6 +305,7 @@ function userLogout(){
     var empty = [0,0,0,0,0];
     orderConfirm(empty,true);
     timeOut = (60000*5);
+    pointerEnableIn(3000);
 };
 
 function userAutoLogout(reset){
@@ -399,3 +408,23 @@ function closeNav() {
     document.getElementById("sideNav").style.width = "0";
     sideMenu = false;
 };
+
+function pointerAll(element){
+    element.classList.remove("pointerNone");
+    element.classList.add("pointerAll")
+};
+
+function pointerNone(element){
+    element.classList.remove("pointerAll");
+    element.classList.add("pointerNone")
+};
+
+function pointerEnableIn(i){
+    setTimeout(() => {
+        const body = document.body;
+        pointerAll(body);
+        const items = document.getElementsByClassName("item");
+        var itemsArray = Array.from(items);
+        itemsArray.forEach(pointerAll); 
+    },i);
+}
