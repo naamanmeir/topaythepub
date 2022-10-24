@@ -13,18 +13,15 @@ var clientName;
 
 var sideMenu = false;
 
-// window.addEventListener("click" ,function(){
-//     setTimeout(function(){
-//         console.log("A");
-//         document.documentElement.requestFullscreen();
-//         window.scrollTo(0,200);
-//     },200);
-//     setTimeout(function(){
-//         console.log("A");
-//         // document.body.requestFullscreen();
-//         window.scrollTo(0,1);
-//     },800);
-// });
+window.addEventListener("click" ,function(){
+    setTimeout(function(){
+        document.body.requestFullscreen();
+        window.scrollTo(0,200);
+    },100);
+    setTimeout(function(){        
+        window.scrollTo(0,1);
+    },200);
+});
 
 const searchBox1 = document.getElementById("searchBox");
 searchBox1.addEventListener('input',function(){
@@ -75,8 +72,8 @@ function orderConfirm(orderPack,abort){
     buttonNo.className = ("confirmButtons");
     buttonYes.classList.add("confirmButtonsYes");
     buttonNo.classList.add("confirmButtonsNo");
-    buttonYes.textContent = 'אשר רישום בכרטיס המיסים';
-    buttonNo.textContent = 'בטל הזמנה';
+    buttonYes.textContent = 'אשר רישום';
+    buttonNo.textContent = 'בטל רישום';
     let i1 = orderPack[0][1];
     let i2 = orderPack[0][2];
     let i3 = orderPack[0][3];
@@ -86,10 +83,10 @@ function orderConfirm(orderPack,abort){
     message.innerHTML += ("<br>");
     message.innerHTML += ("<p5>"+clientName+"</p5>");
     message.innerHTML += ("<br>");
+    // message.innerHTML += ("<br>");
+    message.innerHTML += ("<p1> ההזמנה מכילה :</p1>");
     message.innerHTML += ("<br>");
-    message.innerHTML += ("<p1>נרשמה הזמנה המכילה :</p1>");
-    message.innerHTML += ("<br>");
-    message.innerHTML += ("<br>");
+    // message.innerHTML += ("<br>");
     if(i1!=0){message.innerHTML += ("<p2>בירה חצי: </p2><p3>"+i1+"</p3>")};//message.innerHTML += ("<br>");}
     if(i2!=0){message.innerHTML += ("<p2>בירה שליש: </p2><p3>"+i2+"</p3>");message.innerHTML += ("<br>");}
     if(i3!=0){message.innerHTML += ("<p2>כוס משקה: </p2><p3>"+i3+"</p3>")};//message.innerHTML += ("<br>");}
@@ -97,8 +94,7 @@ function orderConfirm(orderPack,abort){
     message.innerHTML += ("<br>");
     if(price!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+price+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
-    message.innerHTML += ("<p1>האם אתה מאשר לרשום גביה</p1>");message.innerHTML += ("<br>");
-    message.innerHTML += ("<p1>של "+price+" שקלים בכרטיס המיסים שלך? </p1>");message.innerHTML += ("<br>");message.innerHTML += ("<br>");
+    message.innerHTML += ("<p1>האם לרשום גביה של "+price+" שקלים בכרטיס המיסים ? </p1>");message.innerHTML += ("<br>");message.innerHTML += ("<br>");
     message.appendChild(buttonYes);
     message.appendChild(buttonNo);
     buttonYes.addEventListener("click",function(){

@@ -1,12 +1,12 @@
 html,
+body {
+    height: 98%;
+    width: 98%;
+}
+html,
 body,
 .grid {
     overscroll-behavior: contain;
-    width: 98%;
-    height: 98%;
-    left: 1%;
-    right: 1%;
-    /* margin: 0.5%; */
     background-color: rgb(221, 233, 251, 0);
     direction: rtl;
     -webkit-user-select: none;
@@ -33,6 +33,10 @@ video{
     height: 100%;
 }
 .grid {    
+    height: 98%;
+    width: 98%;
+    left: 1%;
+    right: 1%;
     background-image: none;
     background-color: RGBA(0,0,0,0);
     max-width: 800px;
@@ -55,19 +59,19 @@ video{
 }
 @media screen and (orientation:landscape) {
     .html{
-        height: 100%;
+        height: 98%;
         top: 0px;
         margin-top: 0px;
         padding-top: 0px;
     }
     .body{
-        height: 100%;
+        height: 98%;
         top: 0px;
         margin-top: 0px;
         padding-top: 0px;
     }
     .grid {
-        height: 100%;
+        height: 98%;
         top: 0px;
         margin-top: 0px;
         padding-top: 0px;
@@ -89,7 +93,8 @@ video{
     right: 0px;
     margin: 0px;
     padding: 0px;
-    padding-top: 1%;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 .header p{
     color: rgb(211, 234, 243);
@@ -104,7 +109,6 @@ video{
 .menu{
     grid-area: header;
     z-index: 3000;
-    /* background-image: linear-gradient(to right, rgba(0,0,0,0) , rgba(2, 140, 246, 0.826), rgba(2, 140, 246, 0.826),rgba(0,0,0,0)); */
     top: 0px;
     right:0px;
     margin: 0px;
@@ -115,18 +119,17 @@ video{
 }
 .searchBox {
     grid-area: name;
-    /* background-image: url('searchicon.png'); */
     background-position: left;
     background-repeat: no-repeat;
     background-size: contain;
     height: 2.5rem;
     width: 90%;
     font-size: 1.2rem;
-    /* padding: 20Spx 30px 20px 30px; */
     border: 2px solid #ddd;
     margin: auto;
     padding-top: 0;
     padding-bottom: 0;
+    margin-top: 0px;
     margin-bottom: 0px;
     user-select: none;
 }
@@ -143,7 +146,6 @@ video{
     margin: auto;
     top:0px;
     margin-top: 2px;
-    /* padding-top: 2rem; */
     margin-bottom: 0px;
     padding-bottom: 0px;
 }
@@ -163,14 +165,11 @@ input[type=submit] {
 }
 .autocomplete-items {
     grid-area: name;
-    /* position: relative;     */
     z-index: 1000;    
-    /* top: 1.5rem; */
     left: 0;
     right:0;
     padding: 0px;
     margin: 0px;
-    /* margin-bottom: 0px; */
     background-color: #d4d4d4;
 }
 .autocomplete-items:hover {    
@@ -183,7 +182,6 @@ input[type=submit] {
     border-bottom: 1px solid #d4d4d4;
 }  
 .autocomplete-active {
-    /*when navigating through the items using the arrow keys:*/
     background-color: DodgerBlue !important;
     color: #ffffff;
 }  
@@ -191,14 +189,14 @@ input[type=submit] {
     pointer-events: none;
     grid-area: name; 
     height: 1rem;
-    line-height: 0.2rem;
+    line-height: 0.5rem;
     width: fit-content;
     font-size: 90%;
     margin: auto;
     margin-left: 10%;
     padding-top: 0;
-    padding-bottom: 0;
-    margin-bottom: 0px;  
+    padding-bottom: 10px;
+    margin-bottom: 10px;  
     left: 0px;
     float: left;    
 }
@@ -227,7 +225,6 @@ input[type=submit] {
     height: 100%;
     width: 100%;
     top: 0px;
-    /* border: 2px ridge rgb(240, 152, 0); */
     position: static;
     margin: auto;
     margin-top: 0px;
@@ -239,7 +236,6 @@ input[type=submit] {
     transition: background-color 0.8s ease;  
 }
 .item{
-    /* grid-area: item; */
     z-index: 1;
     height: 95%;
     width: 80%;
@@ -287,7 +283,6 @@ input[type=submit] {
     font-size: 7rem;
     color: rgb(0, 255, 55);
     font-style: oblique;
-    /* font-family: fantasy; */
     text-shadow: 12px 12px 15px #000000;
     pointer-events: none;
     user-select: none;
@@ -335,7 +330,7 @@ input[type=submit] {
     height: fit-content;
     width: 96%;
     font-size: 100%;
-    background-color: rgba(0, 0, 0, 0.882);
+    background-color: rgba(0, 0, 0, 0.96);
     border: 2px groove orange;
     top:7%;
     right: 2%;
@@ -344,23 +339,23 @@ input[type=submit] {
 }
 .messageBox p1{
     color: whitesmoke;
-    font-size: 100%;
+    font-size: 1rem;
 }
-.messageBox p2{
+.messageBox p2{    
     color: whitesmoke;
-    font-size: 110%;
+    font-size: 1.2rem;
 }
-.messageBox p3{
+.messageBox p3{    
     font-size: xx-large;
     color: orange;
 }
-.messageBox p4{
-    font-size: 300%;
+.messageBox p4{    
+    font-size: 3rem;
     color: orangered;
 }
 .messageBox p5{
     font-size: xx-large;
-    max-width: 100%;
+    max-width: 1rem;
     color: rgb(255, 0, 255);
 }
 .messageBoxOn{
@@ -410,7 +405,6 @@ input[type=submit] {
     position: sticky;
     text-align: center;
     font-size: x-small;
-    /* line-height: 50px; */
     height: 1px;
     bottom: 0px;    
     padding: 0px 0px 0px 0px;
@@ -468,30 +462,33 @@ input[type=submit] {
         margin: 0px;
     }
     .messageBox {
-        height: 95%;
-        width: 90%;
-        top: 1%;
+        height: fit-content;
+        width: 85%;
+        top: 2%;
         text-align: right;
+        margin: 0px;
+        padding-top: 0.5rem;
         padding-right: 2rem;
         padding-left: 1rem;
+        padding-bottom: 0.2rem;
+        border: 5px groove orange;
     }
     .confirmButtons{
-        width:50%;
-        height: 4rem;
+        width:40%;
+        height: 5rem;
         align-self: left;
         float: left;
         padding: 0px;
         margin: 0px;
-        /* margin-left: 5%; */
     }
     .confirmButtonsYes{
         position: fixed;
-        bottom: 30%;
+        bottom: 15%;
         left: 5%;
     }
     .confirmButtonsNo{
         position: fixed;
-        top: 5%;
+        top: 25%;
         left: 5%;
     }
 }
@@ -504,10 +501,10 @@ input[type=submit] {
     bottom: 50%;
     left: 50%;
     right: 50%;
-    transition: all 5s;
+    transition: all 3s;
     width: 50px;
     height: 50px;
-    animation: anim1 5s ease;
+    animation: anim1 3s ease;
 }
 @keyframes anim1 {
     0% {
@@ -532,10 +529,10 @@ input[type=submit] {
     bottom: 50%;
     left: 50%;
     right: 50%;
-    transition: all 5s;
+    transition: all 3s;
     width: 50px;
     height: 50px;
-    animation: anim2 5s ease-out;
+    animation: anim2 3s ease-out;
 }
 @keyframes anim2 {
     0% {
@@ -563,7 +560,7 @@ input[type=submit] {
     transition: all 3s;
     width: 50px;
     height: 50px;    
-    animation: anim3 5s ease-out;
+    animation: anim3 3s ease-out;
 }
 @keyframes anim3 {
     0% {
@@ -588,10 +585,10 @@ input[type=submit] {
     bottom: 50%;
     left: 50%;
     right: 50%;
-    transition: all 5s;
+    transition: all 3s;
     width: 50px;
     height: 50px;    
-    animation: anim4 5s ease-in;
+    animation: anim4 3s ease-in;
 }
 @keyframes anim4 {
     0% {
@@ -620,10 +617,10 @@ input[type=submit] {
     bottom: 50%;
     left: 50%;
     right: 50%;
-    transition: all 5s;
+    transition: all 3s;
     width: 50px;
     height: 50px;    
-    animation: anim5 5s ease;
+    animation: anim5 3s ease;
 }
 @keyframes anim5 {
     0% {
@@ -648,10 +645,10 @@ input[type=submit] {
     bottom: 50%;
     left: 50%;
     right: 50%;
-    transition: all 5s;
+    transition: all 3s;
     width: 50px;
     height: 50px;    
-    animation: anim6 5s ease-in-out;
+    animation: anim6 3s ease-in-out;
 }
 @keyframes anim6 {
     0% {
@@ -716,7 +713,7 @@ input[type=submit] {
     z-index: 2500;
     top: 0;
     right: 0;
-    background-color: rgba(11, 49, 58, 0.778);
+    background-color: rgba(11, 49, 58, 0.86);
     overflow-x: hidden;
     padding-top: 60px;
     transition: 0.5s;
@@ -975,7 +972,7 @@ input[type=submit] {
     height: 100vh;
     top: 0;
     left: 0;
-    background: #113435;
+    background: #4c130440;
     overflow: hidden;
 }
 .background2 span {
@@ -1189,8 +1186,8 @@ input[type=submit] {
     overflow: hidden;
 }
 .background3 span {
-    width: 1vmin;
-    height: 1vmin;
+    width: 1.4vmin;
+    height: 1.4vmin;
     border-radius: 1vmin;
     backface-visibility: hidden;
     position: absolute;
@@ -1200,10 +1197,10 @@ input[type=submit] {
     animation-iteration-count: infinite;
 }
 .background3 span:nth-child(0) {
-    color: #a5838d;
+    color: #97480f;
     top: 93%;
     left: 39%;
-    animation-duration: 143s;
+    animation-duration: 140s;
     animation-delay: -73s;
     transform-origin: 24vw 24vh;
     box-shadow: -2vmin 0 0.3183560514052415vmin currentColor;
@@ -1212,7 +1209,7 @@ input[type=submit] {
     color: #2f4b6f;
     top: 40%;
     left: 95%;
-    animation-duration: 155s;
+    animation-duration: 120s;
     animation-delay: -48s;
     transform-origin: -2vw 20vh;
     box-shadow: -2vmin 0 1.2006191486592814vmin currentColor;
