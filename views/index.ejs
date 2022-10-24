@@ -57,20 +57,22 @@
                 <count id="count4"></count>
             </div>
         </div>
+        
+        <div class="buttons" id="buttons">
+            <button id="cancel" onclick="add(101)"> בטל</button>
+            <button id="placeOrder" onclick="add(100)">בצע רישום</button>
+        </div>
+
+        <%- include('./partials/footer'); %>
+
+
     </div>
 
     <div class="errorMessage" id="errorMessage"></div>
 
-    <div class="buttons" id="buttons">
-        <button id="cancel" onclick="add(101)"> בטל</button>
-        <button id="placeOrder" onclick="add(100)">בצע רישום</button>
-    </div>
-
     <div class="messageBox" id="messageBox"></div>    
     
-    <script src="js/script.js"></script>    
-
-    <%- include('./partials/footer'); %>
+    <script src="js/script.js"></script>
 
     <div class="background3" id="backgroundPanel">
         <span></span>
