@@ -13,6 +13,19 @@ var clientName;
 
 var sideMenu = false;
 
+// window.addEventListener("click" ,function(){
+//     setTimeout(function(){
+//         console.log("A");
+//         document.documentElement.requestFullscreen();
+//         window.scrollTo(0,200);
+//     },200);
+//     setTimeout(function(){
+//         console.log("A");
+//         // document.body.requestFullscreen();
+//         window.scrollTo(0,1);
+//     },800);
+// });
+
 const searchBox1 = document.getElementById("searchBox");
 searchBox1.addEventListener('input',function(){
     searchBox(searchBox1.value);

@@ -1,7 +1,7 @@
 const NAME_ITEM1='בירה חצי';
 const NAME_ITEM2="בירה שליש"
 const NAME_ITEM3="כוס משקה"
-const NAME_ITEM4="כוס משקה"
+const NAME_ITEM4="פטריה"
 
 const MSG_ORDER_VALIDATE=("שורה ארוכה בעברית")
 

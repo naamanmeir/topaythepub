@@ -53,7 +53,7 @@ video{
     gap: 0px 0px;    
     transition: background-color 0.8s ease;
 }
-@media only screen and (max-height: 450px) {
+@media screen and (orientation:landscape) {
     .html{
         height: 100%;
         top: 0px;
@@ -238,7 +238,6 @@ input[type=submit] {
     grid-template-columns: repeat(2, auto);
     transition: background-color 0.8s ease;  
 }
-
 .item{
     /* grid-area: item; */
     z-index: 1;
@@ -251,7 +250,6 @@ input[type=submit] {
     text-align: center;
     transition: background-color 0.5s ease;
 }
-
 .item img{
     margin: 0px;
     bottom: 0px;
@@ -305,7 +303,6 @@ input[type=submit] {
     padding: auto;
     text-align:center;
 }
-
 .buttons button{
     margin: auto;
     width: 100%;
@@ -338,7 +335,7 @@ input[type=submit] {
     height: fit-content;
     width: 96%;
     font-size: 100%;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.882);
     border: 2px groove orange;
     top:7%;
     right: 2%;
@@ -367,7 +364,7 @@ input[type=submit] {
     color: rgb(255, 0, 255);
 }
 .messageBoxOn{
-    display: block;
+    display:block;
 }
 .confirmButtons{
     z-index: 3000;
@@ -422,7 +419,7 @@ input[type=submit] {
     margin: 0px 0px 0px 0px;    
     margin-bottom: 3%;    
 }
-@media only screen and (max-height: 450px) {
+@media screen and (orientation:landscape) {
     .header{
         top: 0px;
         padding-top: 0px;
@@ -469,7 +466,34 @@ input[type=submit] {
     .footer p{
         padding: 0px;
         margin: 0px;
-    }   
+    }
+    .messageBox {
+        height: 95%;
+        width: 90%;
+        top: 1%;
+        text-align: right;
+        padding-right: 2rem;
+        padding-left: 1rem;
+    }
+    .confirmButtons{
+        width:50%;
+        height: 4rem;
+        align-self: left;
+        float: left;
+        padding: 0px;
+        margin: 0px;
+        /* margin-left: 5%; */
+    }
+    .confirmButtonsYes{
+        position: fixed;
+        bottom: 30%;
+        left: 5%;
+    }
+    .confirmButtonsNo{
+        position: fixed;
+        top: 5%;
+        left: 5%;
+    }
 }
 .animation1{
     opacity: 0;
@@ -721,7 +745,7 @@ input[type=submit] {
     transition: margin-left .5s;
     padding: 20px;
 }  
-@media screen and (max-height: 450px) {
+@media only screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
 }
