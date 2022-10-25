@@ -15,6 +15,8 @@ var sideMenu = false;
 
 var fs = false;
 
+var limit = 0; // throttle limiter for db
+
 function fullScreen(){
     if(!fs){
         setTimeout(function(){
@@ -67,7 +69,7 @@ function orderAccepted(){
     holder.className = (animRnd);
     pointerEnableIn(3000);
     allElements(1);
-}
+};
 
 async function placeOrder(orderPack){
     orderAccepted();
@@ -199,7 +201,6 @@ function add(item){
     }
 };
 
-var limit = 0;
 function searchBox(text){
     // const searchBox = document.getElementById("searchBox");
     let searchText = text;
@@ -452,7 +453,6 @@ function allElements(action){
     var sidenav = Array.from(document.getElementsByClassName("sidenav"));    
     var elementOpen = Array.from(document.getElementsByClassName("elementOpen"));
     var classes = searchBox.concat(items,buttons,sidenav,elementOpen);
-    console.log(classes);
     if (action == 0){
         classes.forEach(elementOff);
     }

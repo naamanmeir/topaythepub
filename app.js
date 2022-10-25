@@ -46,7 +46,13 @@ app.post('/insertName/:data', async (req,res,next) => {
 
 function sendBackAddedName(req,res,message,next){
 
-}
+};
+
+app.post('/getAllData/', async (req,res) => {
+    let dbData;
+    dbData =  await db.dbGetAllClientsData().then((dbData) => {return (dbData)});
+    res.send(dbData)
+});
 
 // ------------------------  CLIENT VIEW  ----------------------- //
 app.get('', async function(req, res) {  
@@ -71,9 +77,12 @@ app.get('/order/:data', async function(req,res,next) {
     var item2 = (orderData[2]);
     var item3 = (orderData[3]);
     var item4 = (orderData[4]);
-    console.log("id: "+id+" ,item1: "+item1+" ,item2:"+item2+" ,item3: "+item3+" ,item4: "+item4);
-    // await getName(req,res,next);
-    // RESPONSE FROM LAST FUNCION IN SERIAL
+    var orderDate = now;
+    var orderTime = now;
+    console.log("date: "+orderDate+" time: "+orderTime+" id: "+id+" ,item1: "+item1+" ,item2:"+item2+" ,item3: "+item3+" ,item4: "+item4);
+    let orderResult;
+    orderResult = await db.dbInsertOrder(orderTime,id,item1,item2,item3,item4).then((orderResult) => {return (orderResult)});
+    res.send(orderResult);    
 });
 
 // GET REQUEST FOR SEARCH FOR NAME IN DB BY QUERY

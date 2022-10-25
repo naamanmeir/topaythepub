@@ -14,6 +14,13 @@
 
         <%- include('./partials/header'); %>
 
+        <div class="function" id="editRow" >
+            <p> עריכת שורה </p>
+            <input type="search" class="textbox" id="getName" onkeyup="getName()" spellcheck="false" placeholder=" הכנס שם">            
+            <button>שגר פקודה </button>
+            <reply></reply>
+        </div>    
+
         <div class="function" id="getName" >
             <p>מציאת שם במאגר</p>
             <input type="search" class="textbox" id="getName" onkeyup="getName()" spellcheck="false" placeholder=" הכנס שם">            
@@ -37,13 +44,13 @@
 
         <div class="function" id="getDbData">
             <p>הצגת כל הנתונים</p>
-            <input type="search" class="textbox" id="getDbDataText" onkeyup="getDbData()" spellcheck="false" placeholder="...">
-            <button>הצגת כל נתוני המאגר</button>
+            <!-- <input type="search" class="textbox" id="getDbDataText" onkeyup="getAllData()" spellcheck="false" placeholder="..."> -->
+            <button onclick="getAllData()">הצגת כל נתוני המאגר</button>
         </div>
 
         <div class="function" id="resetDbData">
             <p>איפוס נתונים לאחר קריאה</p>
-            <input type="search" class="textbox" id="resetDbDataText" onkeyup="resetDbData()" spellcheck="false" placeholder="...">
+            <!-- <input type="search" class="textbox" id="resetDbDataText" onkeyup="resetDbData()" spellcheck="false" placeholder="..."> -->
             <button>איפוס נתונים לאחר קריאה</button>
         </div>
 

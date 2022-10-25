@@ -35,8 +35,52 @@ function deleteName(){
 
 };
 
-function getDbData(){
+function getAllData(){
+    xhttp.open("POST", "./getAllData/", true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            // console.log(this.response);
+            showDataTable(JSON.parse(this.response));
+            return;
+            }
+        };
+};
 
+function showDataTable(data){    
+    const table = document.createElement("table");
+    const tableBody = document.createElement("tbody");
+    const TR = document.createElement("tr");
+    TR.innerHTML = ("<th>ID</th><th>Name</th><th>Date Time</th><th>Item1</th><th>Item2</th><th>Item3</th><th>Item4</th><th>ignore</th><th>Shkalim</th>");    
+    tableBody.appendChild(TR);
+    for(let i = 0;i < data.length; i++){
+        const row = document.createElement("tr");
+        let clientRow = Object.values(data[i]);
+        let sum = 0;
+        for (let j = 0; j < clientRow.length; j++) {
+            if(j>2&&j<7){
+                sum += clientRow[j];                
+            }
+            const cell = document.createElement("td");
+            const cellText = document.createTextNode(clientRow[j]);
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+        }
+        const cell = document.createElement("td");
+        const cellText = document.createTextNode(sum*10);
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+        if(i % 2 === 0  ){row.setAttribute("style", "background-color:lightblue;")}
+    tableBody.appendChild(row);    
+    }
+    table.appendChild(tableBody);  
+    table.setAttribute("border", "1");
+    table.setAttribute("align", "center");
+    table.setAttribute("style", "font-size:larger");
+    table.setAttribute("class", "tableStyle");
+    var tableWindow = window.open("", "MsgWindow", "width=1200, height=800");    
+    tableWindow.document.write();
+    tableWindow.document.appendChild(table);
 };
 
 function resetDbData(){
@@ -45,6 +89,13 @@ function resetDbData(){
 
 function defineInputFields(){
 let inputElements = document.getElementsByClassName("textbox");
+const inputs = document.querySelectorAll('input');
+inputs.forEach(input => {
+//   input.setAttribute('autocomplete', 'off')
+  input.setAttribute('autocorrect', 'off');
+  input.setAttribute('autocapitalize', 'off');
+  input.setAttribute('spellcheck', false);
+});
 for (i=0;i<inputElements.length;i++){
     inputElements[i].addEventListener('input', inputFilter);
     // console.log(inputElements[i]);    

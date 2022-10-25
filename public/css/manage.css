@@ -26,19 +26,9 @@ body {
     float: center;
     left: 50%;
     right: 50%;
-    margin: auto;    
-    display: grid;
-    grid-template-areas: 
-    'header'
-    'menu'
-    'getName'
-    'insertName'
-    'deleteName'
-    'getDbData'
-    'resetDbData'
-    'extra'
-    'footer'
-    ;    
+    margin: auto; 
+    display: flex;   
+    flex-direction: column;
     gap: 10px 10px;    
     transition: background-color 0.8s ease;
 }
@@ -63,23 +53,23 @@ body {
 }
 
 #getName{
-    grid-area: getName;
+    
 }
 
 #insertName{
-    grid-area: insertName;
+    
 }
 
 #deleteName{
-    grid-area: deleteName;
+    
 }
 
 #getDbData{
-    grid-area: getDbData;
+    
 }
 
 #resetDbData{
-    grid-area: resetDbData;
+    
 }
 
 .function{
@@ -89,6 +79,13 @@ body {
 .textbox {
     width: 66%;
     height: 2rem;
+}
+
+.tableStyle{
+    font-size: x-large;
+    color: aqua;
+    background-color: rgb(223, 14, 14);
+    color: lightblue;
 }
 
 .button {

@@ -35,7 +35,7 @@ exports.dbInsertName = async function(name){
     return ("NAME ALLREADY EXIST IN DATABASE");
   }else{
     console.log("NAME DONT EXIST");    
-    messageReturn = await pool.getConnection().then(conn => {conn.query("INSERT INTO "+table+" (name) VALUES ('"+name+"');")
+    messageReturn = await pool.getConnection().then(conn => {conn.query(`INSERT INTO ${table} (datetime,name,item1,item2,item3,item4,realName) VALUES ((now()),'${name}',0,0,0,0,1);`)
       .then((rows) => {
         conn.end();
         return (rows);
@@ -52,11 +52,16 @@ exports.dbInsertName = async function(name){
 };
 
 //--------------------INSERT ORDER BY ID----------------//
-exports.dbInsertOrder = async function(id){  
-  pool.query("UPDATE "+table+" SET SCORE = SCORE+1 WHERE id = "+(id)+";")
+exports.dbInsertOrder = async function(orderTime,id,item1,item2,item3,item4){  
+  pool.query(`UPDATE ${table} SET datetime = (NOW()),
+   item1 = item1+${item1},
+   item2 = item2+${item2},
+   item3 = item3+${item3},
+   item4 = item4+${item4}
+   WHERE id = ${id};`)
   .then((res) => function(){
     console.log(res)
-    return ("DB: inserted a score to: "+id+" score is now: ");
+    return (`MADE ORDER TO ID: ${id}`);
   })
   .catch(err =>{
     console.log("CONNECTION Error: " + err)
@@ -76,3 +81,9 @@ exports.dbGetNameBySearch = function(query) {
   " WHERE name LIKE '%"+query+
   "%' collate utf8mb4_general_ci;");
 };
+
+exports.dbGetAllClientsData = async function(query) {
+  data = await pool.query(`SELECT * FROM ${table};`);
+  // console.log(await data);
+  return data;
+}
