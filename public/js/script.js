@@ -379,7 +379,7 @@ function userSearchMessage(select){
         searchBox1.style.backgroundColor = ("RGBA(255,255,255,1");
     }
     if(select == 3){
-        userIndic.innerText = ("👍 מה המצב");
+        userIndic.innerText = ("👍 שם סבבה");
         userIndic.classList.remove("userStateIndicatorNotOk");        
         userIndic.classList.remove("userStateIndicatorSelect");
         userIndic.classList.add("userStateIndicatorOk");

@@ -28,12 +28,12 @@
     <div class="grid" id="gridContent">
 
         <%- include('./partials/header'); %>
-        
-        <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false" placeholder=" שלום,     נא להכניס שם ">
-        <div class="autoCompleteNone" id="autoComplete">
-        </div>
 
+        <div class="searchBox">
+        <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false" placeholder=" שלום,     נא להכניס שם ">
         <div class="userStateIndicator" id="userStateIndicator"></div>
+        <div class="autoCompleteNone" id="autoComplete"></div>
+        </div>
 
         <div class="items" id="items">
             <div class="item" onpointerup="add(1)">
