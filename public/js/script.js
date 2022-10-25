@@ -13,15 +13,41 @@ var clientName;
 
 var sideMenu = false;
 
-window.addEventListener("click" ,function(){
-    setTimeout(function(){
-        document.body.requestFullscreen();
-        window.scrollTo(0,200);
-    },100);
-    setTimeout(function(){        
-        window.scrollTo(0,1);
-    },200);
-});
+var fs = false;
+
+function fullScreen(){
+    if(!fs){
+        setTimeout(function(){
+            document.getElementById("fs_mark").style.backgroundImage="url(img/fs1.png)";
+            document.getElementById("fs_mark").innerText=("חלון");
+            document.body.requestFullscreen();
+            window.scrollTo(0,200);
+            fs = true;
+        },100);
+    }
+    if(fs){
+        setTimeout(function(){
+            document.getElementById("fs_mark").style.backgroundImage="url(img/fs2.png)";
+            document.getElementById("fs_mark").innerText=("מסך מלא");
+            document.exitFullscreen();
+            window.scrollTo(0,200);
+            fs = false;
+        },100);
+    }
+
+}
+
+function fullScreenOff(){
+    window.addEventListener("click" ,function(){
+        setTimeout(function(){
+            document.body.requestFullscreen();
+            window.scrollTo(0,200);
+        },100);
+        setTimeout(function(){        
+            window.scrollTo(0,1);
+        },200);
+    });
+};
 
 const searchBox1 = document.getElementById("searchBox");
 searchBox1.addEventListener('input',function(){

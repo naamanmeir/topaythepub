@@ -57,7 +57,7 @@ video{
     gap: 0px 0px;    
     transition: background-color 0.8s ease;
 }
-@media screen and (orientation:landscape) {
+@media only screen and (orientation:landscape) {
     .html{
         height: 98%;
         top: 0px;
@@ -413,7 +413,7 @@ input[type=submit] {
     margin: 0px 0px 0px 0px;    
     margin-bottom: 3%;    
 }
-@media screen and (orientation:landscape) {
+@media only screen and (orientation:landscape) {
     .header{
         top: 0px;
         padding-top: 0px;
@@ -741,10 +741,20 @@ input[type=submit] {
 #main {
     transition: margin-left .5s;
     padding: 20px;
-}  
+}
 @media only screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
+}
+#fs_mark{
+    background-image: url("../img/fs2.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left;
+    filter: invert(0.6);
+}
+#fs_mark:hover{
+    filter: invert(0);
 }
 /* ----------------------BACKGROUND1-----------------*/
 .textBackground1{
