@@ -17,7 +17,6 @@ exports.dbAskLength = async function(){
   const numberOfVideos = pool.query("SELECT COUNT(*) AS videos FROM "+table+";")
   .then(res => {
     value = (res[0].videos);    
-    // console.log("DB SELECT COUNT OF videos ROWS: "+value);
     return value;
   })
   .catch(err => {
@@ -36,19 +35,19 @@ exports.dbInsertName = async function(name){
     return ("NAME ALLREADY EXIST IN DATABASE");
   }else{
     console.log("NAME DONT EXIST");    
-    pool.getConnection().then(conn => {conn.query("INSERT INTO "+table+" (name) VALUES ('"+name+"');")
+    messageReturn = await pool.getConnection().then(conn => {conn.query("INSERT INTO "+table+" (name) VALUES ('"+name+"');")
       .then((rows) => {
-        // console.log(rows);
         conn.end();
         return (rows);
-    }).then((res) => {  
+      }).then((res) => {  
       console.log(res);
-    conn.end();
-    messageReturn = "HO MY";
-    });    
-  console.log(messageReturn)
+       conn.end();
+        messageReturn = "HO MY";
+       return (res);
+      });
+  console.log("message ruturn: "+messageReturn)
   });
-  return ("INSERTED INTO DATABASE -- NO PROOF YET");
+  return ("INSERTED INTO DATABASE -- NO PROOF YET"+messageReturn);
 };
 };
 

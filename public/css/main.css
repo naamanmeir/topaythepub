@@ -125,9 +125,9 @@ video{
     border: 2px solid #ddd;
     margin: auto;
     padding-top: 0;
-    padding-bottom: 0;
+    padding-bottom: 0px;
     margin-top: 0px;
-    margin-bottom: 1rem;
+    margin-bottom: 0.2rem;
     user-select: none;
 }
 .autoCompleteNone{
@@ -144,6 +144,7 @@ video{
     margin-top: 0px;
     margin-bottom: 0px;
     padding-bottom: 0px;
+    padding-top: 0px;
 }
 input {
     border: 1px solid transparent;
@@ -221,7 +222,7 @@ input[type=submit] {
     top: 0px;
     position: relative;
     margin: auto;
-    margin-top: 0px;
+    margin-top: 7px;
     margin-bottom: 0px;
     padding: 0px;
     float: center;
@@ -324,15 +325,17 @@ input[type=submit] {
     z-index: 2500;
     position: absolute;
     grid-area: item;
-    height: fit-content;
-    width: 96%;
+    height: 80%;
+    width: 80%;
     font-size: 100%;
     background-color: rgba(0, 0, 0, 0.96);
     border: 2px groove orange;
-    top:7%;
-    right: 2%;
+    margin: auto;
+    top:10%;
+    right: 10%;
+    left: 10%;    
     text-align: center;
-    align-content: center;
+    /* align-content: center; */
 }
 .messageBox p1{
     color: whitesmoke;
@@ -460,8 +463,9 @@ input[type=submit] {
     }
     .messageBox {
         height: fit-content;
-        width: 85%;
-        top: 2%;
+        width: fit-content;
+        grid-area: auto;
+        top: 5%;
         text-align: right;
         margin: 0px;
         padding-top: 0.5rem;
@@ -752,6 +756,14 @@ input[type=submit] {
 }
 #fs_mark:hover{
     filter: invert(0);
+}
+.opacityOff {
+    transition: opacity 2s ease-out;
+    opacity: 0;
+}
+.opacityOn {
+    transition: opacity 5s ease;
+    opacity: 100;
 }
 /* ----------------------BACKGROUND1-----------------*/
 .textBackground1{

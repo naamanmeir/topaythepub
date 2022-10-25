@@ -66,6 +66,7 @@ function orderAccepted(){
     document.body.appendChild(holder);    
     holder.className = (animRnd);
     pointerEnableIn(3000);
+    allElements(1);
 }
 
 async function placeOrder(orderPack){
@@ -91,7 +92,8 @@ function orderConfirm(orderPack,abort){
     pointerAll(message)
     const items = document.getElementsByClassName("item");
     var itemsArray = Array.from(items);
-    itemsArray.forEach(pointerNone);    
+    itemsArray.forEach(pointerNone);
+    allElements(0);
     buttonYes.classList.add("enable-click");
     buttonNo.classList.add("enable-click");
     buttonYes.className = ("confirmButtons");
@@ -108,14 +110,12 @@ function orderConfirm(orderPack,abort){
     message.innerHTML = ("<p2>   היי </p2>");
     message.innerHTML += ("<br>");
     message.innerHTML += ("<p5>"+clientName+"</p5>");
-    message.innerHTML += ("<br>");
-    // message.innerHTML += ("<br>");
+    message.innerHTML += ("<br>");    
     message.innerHTML += ("<p1> ההזמנה מכילה :</p1>");
-    message.innerHTML += ("<br>");
-    // message.innerHTML += ("<br>");
-    if(i1!=0){message.innerHTML += ("<p2>בירה חצי: </p2><p3>"+i1+"</p3>")};//message.innerHTML += ("<br>");}
+    message.innerHTML += ("<br>");    
+    if(i1!=0){message.innerHTML += ("<p2>בירה חצי: </p2><p3>"+i1+"</p3>")};
     if(i2!=0){message.innerHTML += ("<p2>בירה שליש: </p2><p3>"+i2+"</p3>");message.innerHTML += ("<br>");}
-    if(i3!=0){message.innerHTML += ("<p2>כוס משקה: </p2><p3>"+i3+"</p3>")};//message.innerHTML += ("<br>");}
+    if(i3!=0){message.innerHTML += ("<p2>כוס משקה: </p2><p3>"+i3+"</p3>")};
     if(i4!=0){message.innerHTML += ("<p2>פטריה: </p2><p3>"+i4+"</p3>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
     if(price!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+price+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
@@ -341,6 +341,7 @@ function userLogout(){
     orderConfirm(empty,true);
     timeOut = (60000*5);
     pointerEnableIn(3000);
+    allElements(1);
 };
 
 function userAutoLogout(reset){
@@ -444,6 +445,30 @@ function closeNav() {
     sideMenu = false;
 };
 
+function allElements(action){
+    var searchBox = Array.from(document.getElementsByClassName("searchBox"));
+    var items = Array.from(document.getElementsByClassName("items"));
+    var buttons = Array.from(document.getElementsByClassName("buttons"));    
+    var sidenav = Array.from(document.getElementsByClassName("sidenav"));    
+    var elementOpen = Array.from(document.getElementsByClassName("elementOpen"));
+    var classes = searchBox.concat(items,buttons,sidenav,elementOpen);
+    console.log(classes);
+    if (action == 0){
+        classes.forEach(elementOff);
+    }
+    if (action == 1){
+        classes.forEach(elementOn);
+    }    
+};
+
+function elementOff(element){
+    element.classList.add("opacityOff");
+};
+
+function elementOn(element){
+    element.classList.add("opacityOn");
+};
+
 function pointerAll(element){
     element.classList.remove("pointerNone");
     element.classList.add("pointerAll")
@@ -462,4 +487,4 @@ function pointerEnableIn(i){
         var itemsArray = Array.from(items);
         itemsArray.forEach(pointerAll); 
     },i);
-}
+};

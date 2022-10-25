@@ -38,9 +38,9 @@ app.get('/manage', async function(req, res) {
 
 app.post('/insertName/:data', async (req,res,next) => {
     let newName = JSON.parse(req.params.data);
-    // console.log("APP: ADD NEW NAME: "+newName);
+    console.log("APP: ADD NEW NAME: "+newName);
     var response;
-    response = await db.dbInsertName(newName).then((res) => console.log("RES : "+res));    
+    response = await db.dbInsertName(newName).then((res) => {return (res)})
     res.send(response);    
 });
 
