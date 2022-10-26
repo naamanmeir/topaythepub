@@ -432,13 +432,14 @@ function bgSelect(set){
 function openNav() {
     sideMenu = true;
     const sideNav = document.getElementById("sideNav");
+    sideNav.style.transition = "all 0.5s";
     sideNav.style.width = "10rem";
     const out = document.getElementById("gridContent");
     out.onclick =  (function(){
         if(sideNav.style.width == "10rem"){
             closeNav();
         }
-});
+    });
 };
   
 function closeNav() {
@@ -462,10 +463,12 @@ function allElements(action){
 };
 
 function elementOff(element){
+    element.classList.remove("opacityOn");
     element.classList.add("opacityOff");
 };
 
 function elementOn(element){
+    element.classList.remove("opacityOff");
     element.classList.add("opacityOn");
 };
 

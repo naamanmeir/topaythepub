@@ -44,6 +44,14 @@ app.post('/insertName/:data', async (req,res,next) => {
     res.send(response);    
 });
 
+app.post('/deleteName/:data', async (req,res,next) => {
+    let deleteName = JSON.parse(req.params.data);
+    console.log("APP: DELETE NAME: "+deleteName);
+    var response;
+    response = await db.dbDeleteName(deleteName).then((res) => {return (res)})
+    res.send(response);    
+});
+
 function sendBackAddedName(req,res,message,next){
 
 };
@@ -53,6 +61,23 @@ app.post('/getAllData/', async (req,res) => {
     dbData =  await db.dbGetAllClientsData().then((dbData) => {return (dbData)});
     res.send(dbData)
 });
+
+let limit = false;
+app.post('/backupTable/', async (req,res) => {
+    if(!limit){
+        limit = true;
+        let dbBackup;
+        dbBackup = await db.dbBackupTable(now).then((dbBackup) => {return (dbBackup)});
+        console.log(dbBackup);
+        const limiter = setTimeout(releaseLimit,5000);
+        res.send("dbBackup ok at: "+dbBackup);
+    }else{
+        res.send("dbBackup limit rate wait a few seconds ha");
+    }    
+});
+function releaseLimit(){
+    (limit=false);
+};
 
 // ------------------------  CLIENT VIEW  ----------------------- //
 app.get('', async function(req, res) {  

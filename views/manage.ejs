@@ -10,7 +10,7 @@
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 </head>
 <body>
-    <div class="grid">
+    <div class="content column">
 
         <%- include('./partials/header'); %>
 
@@ -37,28 +37,38 @@
 
         <div class="function" id="deleteName">
             <p>מחיקת שם מהמאגר</p>
-            <input type="search" class="textbox" id="deleteNameText" onkeyup="deleteName()" spellcheck="false" placeholder="...">
-            <button>מחק שם קיים</button>
+            <input type="search" class="textbox" id="deleteNameText" onkeyup="createNameForDelete()" spellcheck="false" placeholder="...">
+            <button onclick="deleteName()">מחק שם קיים</button>
             <reply></reply>
         </div>
 
-        <div class="function" id="getDbData">
-            <p>הצגת כל הנתונים</p>
-            <!-- <input type="search" class="textbox" id="getDbDataText" onkeyup="getAllData()" spellcheck="false" placeholder="..."> -->
-            <button onclick="getAllData()">הצגת כל נתוני המאגר</button>
-        </div>
-
-        <div class="function" id="resetDbData">
-            <p>איפוס נתונים לאחר קריאה</p>
-            <!-- <input type="search" class="textbox" id="resetDbDataText" onkeyup="resetDbData()" spellcheck="false" placeholder="..."> -->
-            <button>איפוס נתונים לאחר קריאה</button>
+        <div class="function" id="removeLastAction">
+            <p>מחיקת פעולה אחרונה של משתמש </p>
+            <input type="search" class="textbox" id="deleteNameText" onkeyup="removeLastAction()" spellcheck="false" placeholder="...">
+            <button>מחק פעולה אחרונה</button>
+            <reply></reply>
         </div>
 
     </div>
-    
-    <script src="js/script-manage.js"></script>
+    <div class="content row">
+
+        <div class="function" id="getDbData">
+            <button onclick="getAllData()">הצגת כל נתוני המאגר</button>
+        </div>
+
+        <div class="function" id="backupTable">
+            <button onclick="backupTable()">גיבוי הטבלה במאגר</button>
+        </div>
+
+        <div class="function" id="resetDbData">
+            <button>איפוס נתונים לאחר קריאה</button>
+        </div>
+
+    </div>    
     
     <%- include('./partials/footer'); %>
+
+    <script src="js/script-manage.js"></script>
     
 </body>
 </html>

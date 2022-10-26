@@ -2,7 +2,7 @@ html,
 body,
 .grid {
     width: 95%;
-    height: 98%;
+    height: fit-content;
     left: 1%;
     right: 1%;
     background-color: rgb(221, 233, 251);
@@ -10,27 +10,6 @@ body,
     user-select: none;
     scroll-behavior: smooth;
     float: center;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-}
-
-.grid {
-    height: 100%;
-    background-image: none;
-    background-color: RGBA(0,0,0,0);
-    max-width: 1200px;
-    /* margin: auto; */
-    float: center;
-    left: 50%;
-    right: 50%;
-    margin: auto; 
-    display: flex;   
-    flex-direction: column;
-    gap: 10px 10px;    
-    transition: background-color 0.8s ease;
 }
 
 .header{
@@ -52,24 +31,27 @@ body {
     padding-bottom: 3%;
 }
 
-#getName{
-    
+body {
 }
 
-#insertName{
-    
+.content {
+    height: fit-content;        
+    max-width: 1200px;
+    float: center;
+    left: 50%;
+    right: 50%;    
+    display: flex;
+    margin: auto;
+    gap: 10px 10px;    
 }
 
-#deleteName{
-    
+.column{
+    flex-direction: column;
 }
 
-#getDbData{
-    
-}
-
-#resetDbData{
-    
+.row{
+    padding-top: 5%;
+    flex-direction: row;
 }
 
 .function{

@@ -217,8 +217,8 @@ input[type=submit] {
 }
 .items{
     grid-area: item;
-    height: 100%;
-    width: 100%;
+    height: fit-content;
+    width: fit-content;
     top: 0px;
     position: relative;
     margin: auto;
@@ -227,31 +227,32 @@ input[type=submit] {
     padding: 0px;
     float: center;
     display: grid;
-    gap: 2%;
+    gap: 10px;
     grid-template-columns: repeat(2, auto);
     transition: background-color 0.8s ease;  
 }
 .item{
     z-index: 1;
-    height: 100%;
-    width: 80%;
+    height: fit-content;
+    width: fit-content;
     border: 4px outset rgb(240, 152, 0);
     position: relative;
     margin: auto;
     margin-top: 0px;
     top: 0px;
+    /* padding: 1rem; */
     float: center;
     text-align: center;
     transition: background-color 0.5s ease;
 }
-.item img{
+/* .item img{
     margin: 0px;
     bottom: 0px;
     padding: 0px;
-    padding-top: 0px;
+    padding-top: 2rem;    
     user-select: none;
     pointer-events: none;
-}
+} */
 .item:active{
     border: 4px inset rgb(240, 152, 0);
     background-color: rgb(240, 152, 0,0.6);
@@ -385,14 +386,14 @@ input[type=submit] {
 }
 .errorMessage{
     z-index: -10;
-    display: none;
-    position: fixed;
+    display: none;    
+    position: fixed;    
     background-color: black;
     border: 2px solid red;
     color: red;
     font-size: larger;
     width: fit-content;
-    top: 85%;
+    top: 60%;
     right: 55%;
 }
 .errorMessageOn{
