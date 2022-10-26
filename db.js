@@ -110,8 +110,13 @@ exports.dbGetNameBySearch = function(query) {
   "%' collate utf8mb4_general_ci;");
 };
 
-exports.dbGetAllClientsData = async function(query) {
-  data = await pool.query(`SELECT * FROM ${table};`);
+exports.dbGetAllClientsData = async function(scope) {
+  if (scope==1){
+    data = await pool.query(`SELECT * FROM ${table};`);
+  };
+  if (scope==2){
+    data = await pool.query(`SELECT sum,account,name FROM ${table};`);
+  };  
   // console.log(await data);
   return data;
 };

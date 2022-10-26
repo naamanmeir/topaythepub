@@ -18,24 +18,23 @@
         <a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)">רקע 2</a>
         <a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)">רקע 3</a>
         <a href="#" onclick="bgSelect(4)" onclick="clearTimeout(window.tcm)">רקע 4</a>
-        <a href="#" onclick="bgSelect(5)" onclick="clearTimeout(window.tcm)">רקע 5</a>        
-        <a href="#">שמירת<br> נתונים</a>        
+        <a href="#" onclick="bgSelect(5)" onclick="clearTimeout(window.tcm)">רקע 5</a>
         <a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a>        
       </div>
 
       <span class="elementOpen" onclick="openNav()">⋙</span>
 
-    <div class="grid" id="gridContent">
+    <div class="content" id="content">
 
         <%- include('./partials/header'); %>
 
         <div class="searchBox">
-        <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false" placeholder=" שלום,     נא להכניס שם ">
         <div class="userStateIndicator" id="userStateIndicator"></div>
+        <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false" placeholder=" שלום,     נא להכניס שם ">
         <div class="autoCompleteNone" id="autoComplete"></div>
         </div>
 
-        <div class="messageBox" id="messageBox"></div>
+        <div class="messageBox column" id="messageBox"></div>
 
         <div class="items" id="items">
             <div class="item" onpointerup="add(1)">
@@ -43,34 +42,32 @@
                 <img src="img/beer-large.png">
                 <count id="count1"></count>
             </div>
-            <!-- <div class="item" onpointerup="add(2)">
+            <div class="item" onpointerup="add(2)">
                 <p><%=item2%></p>                
                 <img src="img/beer-small.png">
                 <count id="count2"></count>
             </div>
-            <div class="item" onpointerup="add(3)">
+            <div class="item itemNotActive" onpointerup="add(3)">
                 <p><%=item3%></p>                
                 <img src="img/drinks.png">
                 <count id="count3"></count>
             </div>
-            <div class="item" onpointerup="add(4)">
+            <div class="item itemNotActive" onpointerup="add(4)">
                 <p><%=item4%></p>                
                 <img src="img/mushroom.png">
                 <count id="count4"></count>
-            </div> -->
+            </div>
         </div>
         
         <div class="buttons" id="buttons">
+            <div class="errorMessage" id="errorMessage"></div>
             <button id="cancel" onclick="add(101)"> בטל</button>
             <button id="placeOrder" onclick="add(100)">בצע רישום</button>
         </div>
 
         <%- include('./partials/footer'); %>
 
-
     </div>
-
-    <div class="errorMessage" id="errorMessage"></div>
     
     <script src="js/script.js"></script>
 

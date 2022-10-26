@@ -5,7 +5,7 @@ body {
 }
 html,
 body,
-.content {
+.grid {
     overscroll-behavior: contain;
     background-color: rgb(221, 233, 251, 0);
     direction: rtl;
@@ -18,7 +18,7 @@ body,
     float: center;
 }
 body {
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
 }
 img{
@@ -32,21 +32,28 @@ video{
     width: 100%;
     height: 100%;
 }
-.content {    
+.grid {    
     height: 100%;
     width: 98%;
     left: 1%;
     right: 1%;
-    margin-top: 1em;
+    margin-top: 1rem;
     background-image: none;
-    background-color: RGBA(0,0,0,0);    
+    background-color: RGBA(0,0,0,0);
+    max-width: 800px;
     float: center;
     left: 50%;
     right: 50%;
     margin: auto; 
-    display: flex;
-    flex-direction: column;    
-    max-width: 800px;
+    display: grid;
+    grid-template-areas: 
+    'header header'
+    'name name'
+    'item item'
+    'buttons buttons'
+    'footer footer'
+    ;    
+    gap: 0px 0px;    
     transition: background-color 0.8s ease;
 }
 @media only screen and (orientation:landscape) and (hover: none) and (pointer: coarse){
@@ -62,20 +69,29 @@ video{
         margin-top: 0px;
         padding-top: 0px;
     }
-    .content {
-        height: 100%;
-        width: 100%;
+    .grid {
+        height: 98%;
         top: 0px;
         margin-top: 0px;
-        padding-top: 0px;     
+        padding-top: 0px;
+        grid-template-areas: 
+        'header header'
+        'name name'
+        'item buttons'
+        'item buttons'
+        'footer footer';
     }
 }
-.header{    
+.grid * {
+    position: relative;
+}
+.header{
+    grid-area: header;
     text-align: center;
     right: 0px;
     margin: 0px;
     padding: 0px;
-    padding-bottom: 1em;
+    padding-bottom: 15px;
 }
 .header p{
     color: rgb(211, 234, 243);
@@ -87,7 +103,8 @@ video{
     padding-top: 3%;
     padding-bottom: 3%;
 }
-.menu{    
+.menu{
+    grid-area: header;
     z-index: 3000;
     top: 0px;
     right:0px;
@@ -97,7 +114,8 @@ video{
     float: right;
     position: relative;
 }
-.searchBox {    
+.searchBox {
+    grid-area: name;
     background-position: left;
     background-repeat: no-repeat;
     background-size: contain;
@@ -117,7 +135,6 @@ video{
     height: 0;
 }
 .autoCompleteSuggestions {
-    z-index: 1000;
     position: relative;
     display: inline-block;
     height: 1rem;
@@ -143,7 +160,8 @@ input[type=submit] {
     background-color: DodgerBlue;
     color: #fff;
 }
-.autocomplete-items {    
+.autocomplete-items {
+    grid-area: name;
     z-index: 1000;    
     left: 0;
     right:0;
@@ -165,14 +183,17 @@ input[type=submit] {
     color: #ffffff;
 }  
 .userStateIndicator {
-    pointer-events: none;    
+    pointer-events: none;
+    grid-area: name; 
     position: absolute;
-    width: 90%;
-    font-size: 100%;    
+    width: fit-content;
+    font-size: 100%;
     margin: auto;
-    margin-top: 0.5rem;    
-    text-align: left;
-    align-self: left;    
+    top: 5%;
+    margin-left: 1%;
+    padding-top: 1%;
+    left: 1%;
+    float: left;    
 }
 .userStateIndicatorNotOk {
     color: red;
@@ -194,53 +215,44 @@ input[type=submit] {
     border: 1px solid #ddd;
     margin-bottom: 12px;
 }
-.row {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-  }  
-.column {
-    display: flex;
-    flex-direction: column;
-    flex-basis: 100%;
-    flex: 1;
-}
-.items{    
+.items{
+    grid-area: item;
     height: fit-content;
-    width: fit-content;    
+    width: fit-content;
+    top: 0px;
     position: relative;
     margin: auto;
-    margin-top: 2rem;    
+    margin-top: 7px;
+    margin-bottom: 0px;
     padding: 0px;
     float: center;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    flex: 1;     
-    justify-content: space-evenly;
-    flex-grow: 1;
-    flex-shrink: 1;
-    transition: background-color 0.8s ease; 
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, auto);
+    transition: background-color 0.8s ease;  
 }
 .item{
     z-index: 1;
     height: fit-content;
     width: fit-content;
-    flex-grow: 1;
-    flex-shrink: 1;
     border: 4px outset rgb(240, 152, 0);
     position: relative;
-    margin: 2rem;
-    margin-top: 0px;    
+    margin: auto;
+    margin-top: 0px;
+    top: 0px;
+    /* padding: 1rem; */
     float: center;
     text-align: center;
     transition: background-color 0.5s ease;
 }
-.item img{
+/* .item img{
+    margin: 0px;
+    bottom: 0px;
+    padding: 0px;
+    padding-top: 2rem;    
     user-select: none;
     pointer-events: none;
-}
+} */
 .item:active{
     border: 4px inset rgb(240, 152, 0);
     background-color: rgb(240, 152, 0,0.6);
@@ -250,7 +262,7 @@ input[type=submit] {
 .item p{
     padding: 0px;
     margin: 0px;
-    font-size: 2em;
+    font-size: 2rem;
     background-color: rgb(240, 152, 0,0.7);
     user-select: none;
     pointer-events: none;
@@ -278,11 +290,13 @@ input[type=submit] {
     display: none;
 }
 .buttons{
+    grid-area: buttons;
     display: flex;
     flex-direction: row;
-    height: 4em;
+    height: 3rem;
     float:center;
-    margin: 0px;    
+    margin: 0px;
+    margin-top: 2rem;
     padding: auto;
     text-align:center;
 }
@@ -314,6 +328,7 @@ input[type=submit] {
     display: none;
     z-index: 2500;
     position: absolute;
+    grid-area: item;
     height: 80%;
     width: 80%;
     font-size: 100%;
@@ -324,6 +339,7 @@ input[type=submit] {
     right: 10%;
     left: 10%;    
     text-align: center;
+    /* align-content: center; */
 }
 .messageBox p1{
     color: whitesmoke;
@@ -352,6 +368,7 @@ input[type=submit] {
 .confirmButtons{
     z-index: 3000;
     position: relative;
+    grid-area: item;
     width: 100%;
     height: 4rem;
     color: black;
@@ -373,12 +390,13 @@ input[type=submit] {
 .errorMessage{
     z-index: -10;
     display: none;    
-    position: absolute;    
+    position: fixed;    
     background-color: black;
     border: 2px solid red;
     color: red;
-    font-size: x-large;
-    width: fit-content;    
+    font-size: larger;
+    width: fit-content;
+    top: 60%;
     right: 55%;
 }
 .errorMessageOn{
@@ -386,6 +404,7 @@ input[type=submit] {
     display: block;
 }
 .footer{
+    grid-area: footer;
     color: black;    
     position: sticky;
     text-align: center;
@@ -411,24 +430,32 @@ input[type=submit] {
         line-height: 0.4rem;
     }
     .items{
-        flex-direction: row;
+        display: flex;
         margin: 0px;
-        padding: 0px;        
+        padding: 0px;
+        height: 75%;
     }
     .item{
         padding-top: 0px;
         margin-top: 0px;
         padding-bottom: 0px;
-        margin-bottom: 0px;        
+        margin-bottom: 0px;
+        height: 100%;
     }
-    .buttons{        
-        display: block;
-        position: fixed;
-        width: fit-content;
-        height: 3.5em;        
-        left: 1em;
-        top: 40vh;
-    }
+    .buttons{
+        flex-direction: column-reverse;
+        float: left;
+        text-align: left;
+        width: 75%;
+        height: 80%;
+        padding-top: 0px;
+        padding-left: 0px;
+        padding-right: 20%;
+        margin-top: 0px;
+        margin-left: 0px;
+        left: 0px;
+        top: 0px;
+        }
     .footer{
         padding: 0px;
         margin: 0px;
@@ -441,6 +468,7 @@ input[type=submit] {
     .messageBox {
         height: fit-content;
         width: fit-content;
+        grid-area: auto;
         top: 5%;
         text-align: right;
         margin: 0px;
@@ -647,11 +675,16 @@ input[type=submit] {
 }
 /* demo */
 #textbox { 
-    position: absolute;
+    position: absolute;    
+    grid-area: item;
     z-index: 2000;
     top: 0px;
     left: 50%;
     right: 50%;
+    /* word-wrap: break-word;
+    white-space: nowrap; */
+    /* bottom: 50%; */
+    /* margin: auto; */
     color: white;
     width: fit-content;
     height: auto;
@@ -714,9 +747,9 @@ input[type=submit] {
     transition: margin-left .5s;
     padding: 20px;
 }
-@media only screen and (orientation:landscape) and (hover: none) and (pointer: coarse){
+@media only screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}    
+    .sidenav a {font-size: 18px;}
 }
 #fs_mark{
     background-image: url("../img/fs2.png");

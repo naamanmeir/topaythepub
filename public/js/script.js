@@ -79,8 +79,10 @@ async function placeOrder(orderPack){
 };
 
 function cancelOrder(message){
+    allElements(1);
     message.innerHTML = ("");
     message.classList.remove("messageBoxOn");
+    userLogout();
 };
 
 function orderConfirm(orderPack,abort){
@@ -136,11 +138,13 @@ function orderConfirm(orderPack,abort){
         message.classList.remove("messageBoxOn");
     });
     buttonNo.addEventListener("click",function(){
+        cancelOrder(message);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
         userLogout();
     });
     buttonNo.addEventListener("touchend",function(){
+        cancelOrder(message);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
         userLogout();
@@ -381,7 +385,7 @@ function userSearchMessage(select){
         searchBox1.style.backgroundColor = ("RGBA(255,255,255,1");
     }
     if(select == 3){
-        userIndic.innerText = ("👍 שם סבבה");
+        userIndic.innerText = ("👍 👍 ");
         userIndic.classList.remove("userStateIndicatorNotOk");        
         userIndic.classList.remove("userStateIndicatorSelect");
         userIndic.classList.add("userStateIndicatorOk");
@@ -391,12 +395,12 @@ function userSearchMessage(select){
 function errorMessage(value){
     const message = document.getElementById("errorMessage");
     if(value == 1){
-        message.innerText = ("לא הכנסת שם");
+        message.innerText = ("צריך לכתוב קודם את השם שלכם");
         message.classList.add("errorMessageOn");
         closeErrorMessage(message);
     };
     if(value == 2){
-        message.innerText = ("לא שתית כלום");
+        message.innerText = ("צריך לסמן כמה משקאות לקחתם");
         message.classList.add("errorMessageOn");
         closeErrorMessage(message);
     };
@@ -434,7 +438,7 @@ function openNav() {
     const sideNav = document.getElementById("sideNav");
     sideNav.style.transition = "all 0.5s";
     sideNav.style.width = "10rem";
-    const out = document.getElementById("gridContent");
+    const out = document.getElementById("content");
     out.onclick =  (function(){
         if(sideNav.style.width == "10rem"){
             closeNav();

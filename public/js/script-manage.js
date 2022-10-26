@@ -52,13 +52,19 @@ function deleteName(){
         };
 };
 
-function getAllData(){
-    xhttp.open("POST", "./getAllData/", true);
+function getAllData(scope){
+    console.log(scope);
+    xhttp.open("POST", "./getAllData/"+scope, true);
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             // console.log(this.response);
-            showDataTable(JSON.parse(this.response));
+            if(scope==1){
+                showDataTable(JSON.parse(this.response));
+            }
+            if(scope==2){
+                showAccountTable(JSON.parse(this.response));
+            }            
             return;
             }
         };
@@ -68,12 +74,13 @@ function showDataTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>ID</th><th>Listed</th><th>LastAtion</th><th>Item1</th><th>Item2</th><th>Item3</th><th>Item4</th><th>Sum</th><th>Name</th>");    
+    TR.innerHTML = ("<th>ID</th><th>נרשם בתאריך</th><th>מוצר1</th><th>מוצר2</th><th>מוצר3</th><th>מוצר4</th><th>סך הכל</th><th>חשבון</th><th>שם</th>");    
     tableBody.appendChild(TR);
     for(let i = 0;i < data.length; i++){
         const row = document.createElement("tr");
         let clientRow = Object.values(data[i]);        
         for (let j = 0; j < clientRow.length; j++) {
+            if(j == 2){clientRow[j] = clientRow[j]};
             const cell = document.createElement("td");
             const cellText = document.createTextNode(clientRow[j]);
             cell.appendChild(cellText);
@@ -88,8 +95,38 @@ function showDataTable(data){
     table.setAttribute("align", "center");
     table.setAttribute("style", "font-size:larger");
     table.setAttribute("class", "tableStyle");
-    var tableWindow = window.open("", "טבלת חיובים", "width=1200, height=800, dir=rtl");    
-    tableWindow.document.write();
+    var tableWindow = window.open("", "טבלת חיובים", "width=800, height=800, dir=rtl");    
+    tableWindow.document.write();    
+    tableWindow.document.appendChild(table);
+};
+
+function showAccountTable(data){    
+    const table = document.createElement("table");
+    const tableBody = document.createElement("tbody");
+    const TR = document.createElement("tr");
+    TR.innerHTML = ("<th>סכום</th><th>מספר חשבון</th><th>שם</th>");    
+    tableBody.appendChild(TR);
+    for(let i = 0;i < data.length; i++){
+        const row = document.createElement("tr");
+        let clientRow = Object.values(data[i]);        
+        for (let j = 0; j < clientRow.length; j++) {
+            if(j == 2){clientRow[j] = clientRow[j]};
+            const cell = document.createElement("td");
+            const cellText = document.createTextNode(clientRow[j]);
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+        }
+        row.setAttribute("dir","rtl");
+        if(i % 2 === 0  ){row.setAttribute("style", "background-color:lightblue;")}
+    tableBody.appendChild(row);    
+    }
+    table.appendChild(tableBody);  
+    table.setAttribute("border", "1");
+    table.setAttribute("align", "center");
+    table.setAttribute("style", "font-size:larger");
+    table.setAttribute("class", "tableStyle");
+    var tableWindow = window.open("", "טבלת חיובים", "width=800, height=800, dir=rtl");    
+    tableWindow.document.write();    
     tableWindow.document.appendChild(table);
 };
 

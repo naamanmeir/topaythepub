@@ -56,9 +56,10 @@ function sendBackAddedName(req,res,message,next){
 
 };
 
-app.post('/getAllData/', async (req,res) => {
+app.post('/getAllData/:data', async (req,res) => {
+    let scope = JSON.parse(req.params.data);
     let dbData;
-    dbData =  await db.dbGetAllClientsData().then((dbData) => {return (dbData)});
+    dbData =  await db.dbGetAllClientsData(scope).then((dbData) => {return (dbData)});
     res.send(dbData)
 });
 
