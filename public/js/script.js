@@ -322,7 +322,7 @@ function loginFunction(name){
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
         login = JSON.parse(this.response);        
-        clientName = login[0].name;
+        clientName = login[0].nick;
         id = login[0].id;
         userLogged();
       };

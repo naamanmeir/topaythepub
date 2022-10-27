@@ -84,7 +84,7 @@ function deleteName(){
 };
 
 function getAllData(scope){
-    console.log(scope);
+    // console.log(scope);
     xhttp.open("POST", "./getAllData/"+scope, true);
     xhttp.send();
     xhttp.onreadystatechange = function() {
@@ -199,7 +199,7 @@ function inputFilter(e){
     let badValues = /[\d/\/.,"``;~./\[/\]/\-=+?!\d|/\\/#$%@^&*()]/gi;
     t.value = t.value.replace(badValues, '');
     return t;
-}
+};
 
 function searchBox(){
     const searchBox = document.getElementById("searchBox");
@@ -299,3 +299,16 @@ function login(name){
         xhttp.send();
     };
 }
+
+// LOG CONSOLE TO SCREEN ------------------------------
+if (typeof console  != "undefined") 
+  if (typeof console.log != 'undefined')
+    console.olog = console.log;
+else
+  console.olog = function() {};
+
+console.log = function(message) {
+  console.olog(message);
+  $('#console').append('<p>' + message + '</p>');
+};
+console.error = console.debug = console.info =  console.log;
