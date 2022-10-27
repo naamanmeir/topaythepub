@@ -137,9 +137,8 @@ exports.dbGetExactName = function(name,nick,account) {
 
 //-----------------------GET ID AND NAME FROM DB BY SEARCH----------------------//
 exports.dbGetNameBySearch = function(query) {
-  return pool.query("SELECT id,name FROM "+table+
-  " WHERE nick LIKE '%"+query+
-  "%' collate utf8mb4_general_ci;");
+  return pool.query("SELECT id,nick FROM "+table+
+  " WHERE nick LIKE '%"+query+"%';");
 };
 
 exports.dbGetAllClientsData = async function(scope) {

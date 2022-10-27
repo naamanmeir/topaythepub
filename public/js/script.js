@@ -272,7 +272,7 @@ function foundNames(query,clients,dest){
     // console.log(clients);
     names = [];
     for(i=0;i<clients.length;i++){
-        names.push(clients[i].name);
+        names.push(clients[i].nick);
     };
     autoComplete(names);
 };
