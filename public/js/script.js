@@ -24,6 +24,7 @@ function fullScreen(){
             document.getElementById("fs_mark").innerText=("חלון");
             document.body.requestFullscreen();
             window.scrollTo(0,200);
+            closeNav();
             fs = true;
         },100);
     }
@@ -33,6 +34,7 @@ function fullScreen(){
             document.getElementById("fs_mark").innerText=("מסך מלא");
             document.exitFullscreen();
             window.scrollTo(0,200);
+            closeNav();
             fs = false;
         },100);
     }
@@ -117,8 +119,8 @@ function orderConfirm(orderPack,abort){
     message.innerHTML += ("<br>");    
     message.innerHTML += ("<p1> ההזמנה מכילה :</p1>");
     message.innerHTML += ("<br>");    
-    if(i1!=0){message.innerHTML += ("<p2>בירה חצי: </p2><p3>"+i1+"</p3>")};
-    if(i2!=0){message.innerHTML += ("<p2>בירה שליש: </p2><p3>"+i2+"</p3>");message.innerHTML += ("<br>");}
+    if(i1!=0){message.innerHTML += ("<p2>משקה ב10 שקלים: </p2><p3>"+i1+"</p3>")};
+    if(i2!=0){message.innerHTML += ("<p2>משקה ב10 שמקל: </p2><p3>"+i2+"</p3>");message.innerHTML += ("<br>");}
     if(i3!=0){message.innerHTML += ("<p2>כוס משקה: </p2><p3>"+i3+"</p3>")};
     if(i4!=0){message.innerHTML += ("<p2>פטריה: </p2><p3>"+i4+"</p3>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");

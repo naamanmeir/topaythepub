@@ -1,5 +1,5 @@
-const NAME_ITEM1='בירה חצי';
-const NAME_ITEM2="בירה שליש"
+const NAME_ITEM1='משקה ב10 שקלים';
+const NAME_ITEM2="משקה ב10 שמקל"
 const NAME_ITEM3="כוס משקה"
 const NAME_ITEM4="פטריה"
 

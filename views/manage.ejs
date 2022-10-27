@@ -14,21 +14,13 @@
     <%- include('./partials/header'); %>
 
     <!-- TEXT FIELDS -->
-    <div class="content column">        
+    <div class="content column">
 
-        <!-- <div class="function" id="editRow" >
-            <p> עריכת שורה </p>
-            <input type="search" class="textbox" id="getName" onkeyup="getName()" spellcheck="false" placeholder=" הכנס שם">            
-            <button>שגר פקודה </button>
-            <reply></reply>
-        </div> -->
-
-        <div class="editUser">
-            <p>פעולות משתמש</p>
+        <div class="editUser">            
             <div class="function">
                 <p>עריכת משתמש קיים</p>
-                <input type="search" class="textbox" id="getName" spellcheck="false" placeholder=" הכנס שם">
-                <button onclick="getName()">בחר</button>                
+                <input type="search" class="textbox" id="getUserByName" spellcheck="false" placeholder=" הכנס שם">
+                <button onclick="getUserDetailsByFields('getUserByName','editNick','editNumber','editName')">בקש נתונים</button>
             </div>
             <div class="row">
                 <input type="search" class="textboxShort" id="editName" spellcheck="false" placeholder=" ערוך שם חדש">
@@ -41,6 +33,7 @@
                 <button onclick="editNumber()">עריכת מספר</button>
                 <button class="left red" onclick="deleteName()">מחיקת משתמש</button>
             </div>
+            <p>מחיקת פעולה אחרונה</p>
         </div>
 
         <br>
@@ -59,11 +52,38 @@
 
         <br>
 
-        <div class="console" id="console">
-            <p></p>
+            <!-- BUTTONS -->
+    <div class="content row">
+
+        <div class="function" id="getDbData">
+            <button onclick="getAllData(1)">הצגת כל נתוני המאגר</button>
         </div>
         
 
+        <div class="function" id="getAccounData">
+            <button onclick="getAllData(2)">הצגת נתונים לדו"ח</button>
+        </div>
+
+        <div class="function" id="backupTable">
+            <button onclick="backupTable()">גיבוי הטבלה במאגר</button>
+        </div>
+
+        <div class="function" id="resetDbData">
+            <button>איפוס נתונים לאחר קריאה</button>
+        </div>
+
+        <div class="createTablefunction">
+            <button onclick="createTable()">צור טבלה נדרשת</button>
+        </div>
+
+    </div>  
+
+        <br>
+        <div class="clear">
+            <button onclick="clearConsole()">clear console</button>
+        </div>
+        <div class="console" id="console">
+        </div>
 
         <br>
 
@@ -93,30 +113,7 @@
     <br>    
     <br>
 
-    <!-- BUTTONS -->
-    <div class="content row">
-
-        <div class="function" id="getDbData">
-            <button onclick="getAllData(1)">הצגת כל נתוני המאגר</button>
-        </div>
-
-        <div class="function" id="getAccounData">
-            <button onclick="getAllData(2)">הצגת נתונים לדו"ח</button>
-        </div>
-
-        <div class="function" id="backupTable">
-            <button onclick="backupTable()">גיבוי הטבלה במאגר</button>
-        </div>
-
-        <div class="function" id="resetDbData">
-            <button>איפוס נתונים לאחר קריאה</button>
-        </div>
-
-        <div class="createTablefunction">
-            <button onclick="createTable()">צור טבלה נדרשת</button>
-        </div>
-
-    </div>    
+  
     
     <%- include('./partials/footer'); %>
 

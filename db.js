@@ -129,7 +129,13 @@ exports.dbInsertOrder = async function(orderTime,id,item1,item2,item3,item4){
   })
 };
 
-//-----------------------GET EXACT NAME FROM DB ----------------------//
+//-----------------------GET ALL CLIENT DETAILS BY NAME OR NICK OR NUMBER----------------------//
+exports.dbGetClientDetails = function(name,nick,account) {
+  return pool.query("SELECT * FROM "+table+
+  " WHERE name LIKE '"+name+"' OR nick LIKE '"+nick+"' OR account LIKE '"+account+"';");
+};
+
+//-----------------------GET EXACT NAME FROM DB----------------------//
 exports.dbGetExactName = function(name,nick,account) {
   return pool.query("SELECT name FROM "+table+
   " WHERE name LIKE '"+name+"' OR nick LIKE '"+nick+"' OR account LIKE '"+account+"';");

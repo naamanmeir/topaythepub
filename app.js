@@ -42,6 +42,18 @@ app.get('/retable/', async function(req,res){
     res.send(table);
 })
 
+app.post('/getUserDetails/:data', async (req,res,next) => {
+    let getClient = JSON.parse(req.params.data);
+    console.log("APP: GET DETAILS BY NAME: "+getClient);
+    let getName = getClient[0];
+    let getNick = getClient[1];
+    let getNumber = getClient[2];
+    console.log(getName,getNick,getNumber)
+    var response;
+    response = await db.dbGetClientDetails(getName,getNick,getNumber).then((res) => {return (res)})
+    res.send(response);    
+});
+
 app.post('/insertClient/:data', async (req,res,next) => {
     let newClient = JSON.parse(req.params.data);
     // console.log("APP: ADD NEW NAME: "+newClient);

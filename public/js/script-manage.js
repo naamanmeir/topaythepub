@@ -18,63 +18,48 @@ async function createTable(){
         };
 }
 
-function getName(){
-
+function getUserDetailsByFields(nameField,nickField,numberField,nameFieldSmall){
+    let name = document.getElementById(nameField).value;
+    let nick = document.getElementById(nickField).value;
+    let number = document.getElementById(numberField).value;
+    let getData = [name,nick,number];
+    // console.log(getData);
+    getData = JSON.stringify(getData);
+    // console.log(getData);
+    xhttp.open("POST", "./getUserDetails/"+getData, true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            // console.log(this.response);
+            editClientFields(this.response,nickField,numberField,nameFieldSmall);
+            return;
+            }
+        };
 };
 
-let nameInsert;
-function createName(){
-    let text = document.getElementById("insertNameText");     
-    nameInsert = text.value;
-    // console.log(nameInsert);
+function editClientFields(data,destNick,destNumber,destSmallName){
+    destName = document.getElementById(destSmallName);
+    destNick = document.getElementById(destNick);
+    destNumber = document.getElementById(destNumber);    
+    data = JSON.parse(data);
+    console.log(data[0].name);
+    let gotName = data[0].name;
+    let gotNick = data[0].nick;
+    let gotNumber = data[0].account;    
+    console.log(gotName,gotNick,gotNumber);
+    destName.value = gotName;
+    destNick.value = gotNick;
+    destNumber.value = gotNumber;
 }
 
-function createNameForDelete(){
-    let text = document.getElementById("deleteNameText");     
-    nameRemove = text.value;
-    // console.log(nameInsert);
-}
-
-function insertName(name,nick,number){
-    newName = document.getElementById(name).value;
-    nick = document.getElementById(nick).value;
-    number = document.getElementById(number).value;
-    console.log(newName+nick+number);
-    let newData = [newName,nick,number];    
-    console.log(newData);
-    newData = JSON.stringify(newData);
-    console.log(newData);
+function insertName(nameField,nickField,numberField){
+    let newName = document.getElementById(nameField).value;
+    let newNick = document.getElementById(nickField).value;
+    let newNumber = document.getElementById(numberField).value;    
+    let newData = [newName,newNick,newNumber];
+    newData = JSON.stringify(newData);    
     xhttp.open("POST", "./insertClient/"+newData, true);
     xhttp.send();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);                
-            return;
-            }        
-        };
-};
-
-function insertNameOld(){
-    nameInsert = nameInsert.replace(/\'/g, "''");
-    nameInsert = JSON.stringify(nameInsert);
-    xhttp.open("POST", "./insertName/"+nameInsert, true);
-    xhttp.send();
-
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);                
-            return;
-            }        
-        };
-};
-
-let nameRemove;
-function deleteName(){
-    nameRemove = nameRemove.replace(/\'/g, "''");
-    nameRemove = JSON.stringify(nameRemove);
-    xhttp.open("POST", "./deleteName/"+nameRemove, true);
-    xhttp.send();
-
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             console.log(this.response);                
@@ -196,7 +181,7 @@ defineInputFields();
 function inputFilter(e){
     let t = e.target;
     // let goodValues = /^[a-z\u05D0-\u05EA]+$/i; // HEBREW REGEX
-    let badValues = /[\d/\/.,"``;~./\[/\]/\-=+?!\d|/\\/#$%@^&*()]/gi;
+    let badValues = /[\d/\/.,"``;~./\[/\]/\-=+?{}<>":!\d|/\\/#$%@^&*()]/gi;
     t.value = t.value.replace(badValues, '');
     return t;
 };
@@ -300,7 +285,50 @@ function login(name){
     };
 }
 
+// OLD FUNCTIONS FOR ADD REMOVE --------------------------
+let nameInsert;
+function createName(){
+    let text = document.getElementById("insertNameText");     
+    nameInsert = text.value;
+    // console.log(nameInsert);
+}
+function insertNameOld(){
+    nameInsert = nameInsert.replace(/\'/g, "''");
+    nameInsert = JSON.stringify(nameInsert);
+    xhttp.open("POST", "./insertName/"+nameInsert, true);
+    xhttp.send();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);                
+            return;
+            }        
+        };
+};
+function createNameForDelete(){
+    let text = document.getElementById("deleteNameText");     
+    nameRemove = text.value;
+    // console.log(nameInsert);
+}
+let nameRemove;
+function deleteName(){
+    nameRemove = nameRemove.replace(/\'/g, "''");
+    nameRemove = JSON.stringify(nameRemove);
+    xhttp.open("POST", "./deleteName/"+nameRemove, true);
+    xhttp.send();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);                
+            return;
+            }        
+        };
+};
+
 // LOG CONSOLE TO SCREEN ------------------------------
+function clearConsole(){
+    document.getElementById("console").innerHTML ="";
+};
 if (typeof console  != "undefined") 
   if (typeof console.log != 'undefined')
     console.olog = console.log;
