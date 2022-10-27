@@ -6,6 +6,18 @@ async function placeOrder(orderPack){
     xhttp.send();
 };
 
+async function createTable(){    
+    xhttp.open("GET", "./retable/", true);
+    xhttp.send();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);                
+            return;
+            }        
+        };
+}
+
 function getName(){
 
 };
@@ -23,7 +35,26 @@ function createNameForDelete(){
     // console.log(nameInsert);
 }
 
-function insertName(){
+function insertName(name,nick,number){
+    newName = document.getElementById(name).value;
+    nick = document.getElementById(nick).value;
+    number = document.getElementById(number).value;
+    console.log(newName+nick+number);
+    let newData = [newName,nick,number];    
+    console.log(newData);
+    newData = JSON.stringify(newData);
+    console.log(newData);
+    xhttp.open("POST", "./insertClient/"+newData, true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);                
+            return;
+            }        
+        };
+};
+
+function insertNameOld(){
     nameInsert = nameInsert.replace(/\'/g, "''");
     nameInsert = JSON.stringify(nameInsert);
     xhttp.open("POST", "./insertName/"+nameInsert, true);
@@ -74,15 +105,14 @@ function showDataTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>ID</th><th>נרשם בתאריך</th><th>מוצר1</th><th>מוצר2</th><th>מוצר3</th><th>מוצר4</th><th>סך הכל</th><th>חשבון</th><th>שם</th>");    
+    TR.innerHTML = ("<th>ID</th><th>נרשם בתאריך</th><th>מוצר1</th><th>מוצר2</th><th>מוצר3</th><th>מוצר4</th><th>סך הכל</th><th>מספר חשבון</th><th>שם רשום</th><th>כינוי</th>");
     tableBody.appendChild(TR);
     for(let i = 0;i < data.length; i++){
         const row = document.createElement("tr");
         let clientRow = Object.values(data[i]);        
-        for (let j = 0; j < clientRow.length; j++) {
-            if(j == 2){clientRow[j] = clientRow[j]};
+        for (let j = 0; j < clientRow.length; j++) {            
             const cell = document.createElement("td");
-            const cellText = document.createTextNode(clientRow[j]);
+            let cellText = document.createTextNode(clientRow[j]);            
             cell.appendChild(cellText);
             row.appendChild(cell);
         }

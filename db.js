@@ -10,19 +10,52 @@ const pool = mariadb.createPool({
 });
 
 const table = process.env.MYSQL_TABLE;
+let testovich = "testovich";
 
-//--------------------GET LENGTH OF DB----------------//
-exports.dbAskLength = async function(){
-  let value;
-  const numberOfVideos = pool.query("SELECT COUNT(*) AS videos FROM "+table+";")
-  .then(res => {
-    value = (res[0].videos);    
-    return value;
-  })
-  .catch(err => {
-    console.log(err);
-  })  
-  return numberOfVideos;
+exports.dbCreateTable = async function() {
+  let createTable;
+  createTable = await pool.getConnection()
+  .then(conn => {conn.query("CREATE TABLE IF NOT EXISTS `"+table+
+  "`(`id` INT NOT NULL AUTO_INCREMENT,"+
+  "`last_action` DATETIME NOT NULL DEFAULT (now()),"+
+  "`item1` INT NOT NULL DEFAULT '0',"+
+  "`item2` INT NOT NULL DEFAULT '0',"+
+  "`item3` INT NOT NULL DEFAULT '0',"+
+  "`item4` INT NOT NULL DEFAULT '0',"+
+  "`sum` INT NOT NULL DEFAULT '0',"+
+  "`account` INT NOT NULL DEFAULT '1',"+
+  "`name` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,"+
+  "`nick` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,"+
+  "PRIMARY KEY (`id`));"
+  )
+  .then((results) => {console.log(results);return results})
+  .catch((err) => {console.log(err)})});
+  return createTable;
+};
+
+//--------------------INSERT NEW CLIENT TO DB----------------//
+exports.dbInsertClient = async function(newClient){
+  // console.log(newClient);
+  let name = newClient[0];
+  let nick = newClient[1];
+  let number = newClient[2];
+  let ifExist = await this.dbGetExactName(name,nick,number);
+  let messageReturn;
+  if(ifExist.length != 0){
+    console.log("CLIENT EXIST");
+    return ("NAME ALLREADY EXIST IN DATABASE");
+  }else{
+    console.log("NAME DONT EXIST");    
+    messageReturn = await pool.query("INSERT INTO "+table+
+    " (name,nick,account) VALUES ('"+name+"','"+nick+"',"+number+");")
+    .catch((err) => {
+      console.log(err)
+    }).then((res) => {        
+        return (res);
+      });
+  console.log("message ruturn: "+  messageReturn)
+  return ("INSERTED INTO DATABASE -- NO PROOF YET"+ messageReturn);
+  };  
 };
 
 //--------------------INSERT NEW NAME TO DB----------------//
@@ -97,16 +130,15 @@ exports.dbInsertOrder = async function(orderTime,id,item1,item2,item3,item4){
 };
 
 //-----------------------GET EXACT NAME FROM DB ----------------------//
-exports.dbGetExactName = function(query) {
+exports.dbGetExactName = function(name,nick,account) {
   return pool.query("SELECT name FROM "+table+
-  " WHERE name LIKE '"+query+
-  "' collate utf8mb4_general_ci;");
+  " WHERE name LIKE '"+name+"' OR nick LIKE '"+nick+"' OR account LIKE '"+account+"';");
 };
 
 //-----------------------GET ID AND NAME FROM DB BY SEARCH----------------------//
 exports.dbGetNameBySearch = function(query) {
   return pool.query("SELECT id,name FROM "+table+
-  " WHERE name LIKE '%"+query+
+  " WHERE nick LIKE '%"+query+
   "%' collate utf8mb4_general_ci;");
 };
 

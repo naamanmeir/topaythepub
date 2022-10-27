@@ -10,28 +10,58 @@
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 </head>
 <body>
-    <div class="content column">
 
-        <%- include('./partials/header'); %>
+    <%- include('./partials/header'); %>
 
-        <div class="function" id="editRow" >
+    <!-- TEXT FIELDS -->
+    <div class="content column">        
+
+        <!-- <div class="function" id="editRow" >
             <p> עריכת שורה </p>
             <input type="search" class="textbox" id="getName" onkeyup="getName()" spellcheck="false" placeholder=" הכנס שם">            
             <button>שגר פקודה </button>
             <reply></reply>
-        </div>    
+        </div> -->
 
-        <div class="function" id="getName" >
-            <p>מציאת שם במאגר</p>
-            <input type="search" class="textbox" id="getName" onkeyup="getName()" spellcheck="false" placeholder=" הכנס שם">            
-            <button>מצא שם קיים</button>
-            <reply></reply>
-        </div>        
+        <div class="editUser">
+            <p>פעולות משתמש</p>
+            <div class="function">
+                <p>עריכת משתמש קיים</p>
+                <input type="search" class="textbox" id="getName" spellcheck="false" placeholder=" הכנס שם">
+                <button onclick="getName()">בחר</button>                
+            </div>
+            <div class="row">
+                <input type="search" class="textboxShort" id="editName" spellcheck="false" placeholder=" ערוך שם חדש">
+                <button onclick="editName()">עריכת שם</button>
+                <input type="search" class="textboxShort" id="editNick" spellcheck="false" placeholder=" ערוך כינוי חדש ">
+                <button onclick="editNick()">עריכת כינוי</button>
+            </div>
+            <div class="row">
+                <input type="number" class="textboxShort" id="editNumber" spellcheck="false" placeholder=" ערוך מספר חשבון חדש">
+                <button onclick="editNumber()">עריכת מספר</button>
+                <button class="left red" onclick="deleteName()">מחיקת משתמש</button>
+            </div>
+        </div>
 
-        <div class="function" id="insertName">
-            <p>הכנסת שם למאגר</p>
+        <br>
+
+        <div class="function">
+            <div class="function column">
+                <p>הכנסת משתמש חדש</p>
+                <p>שם משתמש : <input type="search" class="textbox" id="insertName" spellcheck="false" placeholder=" הכנס שם"></p>
+                <p>כינוי : <input type="search" class="textbox" id="insertNick" spellcheck="false" placeholder=" הכנס כינוי "></p>
+                <p>מספר חשבון : <input type="text" class="textboxShort" id="insertNumber" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מספר חשבון ">
+                <button onclick="insertName('insertName','insertNick','insertNumber')">הכנס משתמש</button>
+                </p>
+            </div>
+            <br>
+            <br>
+            <br>
+                
+            <!-- old -->
+            <p>הכנסת שם למאגר OLD DONT USE</p>
             <input type="search" class="textbox" id="insertNameText" onkeyup="createName()" spellcheck="false" placeholder="...">            
-            <button onclick="insertName()">הכנס שם חדש</button>
+            <button onclick="insertNameOld()">הכנס שם חדש</button>
             <reply></reply>
         </div>        
 
@@ -48,8 +78,12 @@
             <button>מחק פעולה אחרונה</button>
             <reply></reply>
         </div>
-
     </div>
+
+    <br>
+    <br>
+
+    <!-- BUTTONS -->
     <div class="content row">
 
         <div class="function" id="getDbData">
@@ -66,6 +100,10 @@
 
         <div class="function" id="resetDbData">
             <button>איפוס נתונים לאחר קריאה</button>
+        </div>
+
+        <div class="createTablefunction">
+            <button onclick="createTable()">צור טבלה נדרשת</button>
         </div>
 
     </div>    

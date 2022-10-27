@@ -12,6 +12,11 @@ body,
     float: center;
 }
 
+p1{
+    margin: 0px;
+    padding: 0px;
+}
+
 .header{
     grid-area: header;
     text-align: center;
@@ -42,7 +47,7 @@ body {
     right: 50%;    
     display: flex;
     margin: auto;
-    gap: 10px 10px;    
+    /* gap: 10px 10px; */
 }
 
 .column{
@@ -50,7 +55,7 @@ body {
 }
 
 .row{
-    padding-top: 5%;
+    padding-top: 1%;
     flex-direction: row;
 }
 
@@ -61,6 +66,21 @@ body {
 .textbox {
     width: 66%;
     height: 2rem;
+}
+.textboxShort{
+    width: auto;
+}
+input:valid {
+    color: green;
+  }
+  input:invalid {
+    color: red;
+  }
+.red{
+    background-color: red;
+}
+.left{    
+    float: left;     
 }
 
 .tableStyle{

@@ -36,6 +36,20 @@ app.get('/manage', async function(req, res) {
     res.render('manage', {})
 });
 
+app.get('/retable/', async function(req,res){
+    let table;
+    table = await db.dbCreateTable().then((res) => {return (res)});
+    res.send(table);
+})
+
+app.post('/insertClient/:data', async (req,res,next) => {
+    let newClient = JSON.parse(req.params.data);
+    // console.log("APP: ADD NEW NAME: "+newClient);
+    var response;
+    response = await db.dbInsertClient(newClient).then((res) => {return (res)})
+    res.send(response);    
+});
+
 app.post('/insertName/:data', async (req,res,next) => {
     let newName = JSON.parse(req.params.data);
     console.log("APP: ADD NEW NAME: "+newName);
