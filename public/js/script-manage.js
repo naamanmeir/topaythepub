@@ -31,13 +31,13 @@ function getUserDetailsByFields(nameField,nickField,numberField,nameFieldSmall){
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             // console.log(this.response);
-            editClientFields(this.response,nickField,numberField,nameFieldSmall);
+            displayClientFields(this.response,nickField,numberField,nameFieldSmall);
             return;
             }
         };
 };
 
-function editClientFields(data,destNick,destNumber,destSmallName){
+function displayClientFields(data,destNick,destNumber,destSmallName){
     destName = document.getElementById(destSmallName);
     destNick = document.getElementById(destNick);
     destNumber = document.getElementById(destNumber);    
@@ -51,6 +51,19 @@ function editClientFields(data,destNick,destNumber,destSmallName){
     destNick.value = gotNick;
     destNumber.value = gotNumber;
 }
+
+function editClientFields(field,value){
+    value = document.getElementById(value).value;
+    let data = [field,value];
+    xhttp.open("POST", "./editClientFields/"+data, true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);                
+            return;
+            }        
+        };
+};
 
 function insertName(nameField,nickField,numberField){
     let newName = document.getElementById(nameField).value;

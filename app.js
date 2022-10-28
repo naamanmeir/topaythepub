@@ -62,6 +62,25 @@ app.post('/insertClient/:data', async (req,res,next) => {
     res.send(response);    
 });
 
+app.post('/editClientFields/:data', async (req,res,next) => {
+    let newFields = (req.params.data).split(",");
+    console.log("APP: EDIT FIELD : "+newFields);
+    let field = newFields[0];
+    let value = newFields[1];        
+    if(field==1){
+        field = "name";        
+    }
+    if(field==2){
+        field = "nick";        
+    }
+    if(field==3){
+        field = "account";        
+    }
+    var response;
+    response = await db.dbEditClient(field,value).then((res) => {return (res)})
+    res.send(response);    
+});
+
 app.post('/insertName/:data', async (req,res,next) => {
     let newName = JSON.parse(req.params.data);
     console.log("APP: ADD NEW NAME: "+newName);

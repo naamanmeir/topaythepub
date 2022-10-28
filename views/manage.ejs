@@ -24,13 +24,13 @@
             </div>
             <div class="row">
                 <input type="search" class="textboxShort" id="editName" spellcheck="false" placeholder=" ערוך שם חדש">
-                <button onclick="editName()">עריכת שם</button>
+                <button onclick="editClientFields(1,'editName')">עריכת שם</button>
                 <input type="search" class="textboxShort" id="editNick" spellcheck="false" placeholder=" ערוך כינוי חדש ">
-                <button onclick="editNick()">עריכת כינוי</button>
+                <button onclick="editClientFields(2,'editNick')">עריכת כינוי</button>
             </div>
             <div class="row">
                 <input type="number" class="textboxShort" id="editNumber" spellcheck="false" placeholder=" ערוך מספר חשבון חדש">
-                <button onclick="editNumber()">עריכת מספר</button>
+                <button onclick="editClientFields(3,'editNumber')">עריכת מספר</button>
                 <button class="left red" onclick="deleteName()">מחיקת משתמש</button>
             </div>
             <p>מחיקת פעולה אחרונה</p>

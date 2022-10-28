@@ -58,6 +58,20 @@ exports.dbInsertClient = async function(newClient){
   };  
 };
 
+//--------------------EDIT CLIENT FIELDS----------------//
+exports.dbEditClient = async function(field,value){    
+    messageReturn = await pool.query("UPDATE "+table+
+    " SET "+field+" = '"+value+"';")
+    .catch((err) => {
+      console.log(err)
+    }).then((res) => {        
+        return (res);
+      });
+  console.log("message EFTER EDIT FIELDS: "+  messageReturn)
+  return ("EDITED FIELDS IN DATABASE -- NO PROOF YET"+ messageReturn);
+};  
+
+
 //--------------------INSERT NEW NAME TO DB----------------//
 exports.dbInsertName = async function(name){
   let ifExist = await this.dbGetExactName(name);  

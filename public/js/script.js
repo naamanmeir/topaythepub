@@ -54,6 +54,12 @@ function fullScreenOff(){
 };
 
 const searchBox1 = document.getElementById("searchBox");
+searchBox1.addEventListener('focus',function(){
+    searchBox1.placeholder=("");
+});
+searchBox1.addEventListener('blur',function(){
+    searchBox1.placeholder=("לכתוב פה את השם שלכם✍👉👉");
+});
 searchBox1.addEventListener('input',function(){
     searchBox(searchBox1.value);
 });
@@ -188,6 +194,7 @@ function add(item){
         count2.innerText = "";
         count3.innerText = "";
         count4.innerText = "";
+        userLogout();
     }
     if(item==100){
         if(clientName==null){
@@ -333,8 +340,9 @@ function loginFunction(name){
 
 function userLogged(){
     userSearchMessage(3);
-    searchBox1.blur();
-    searchBox1.style.backgroundColor = ("RGBA(255,100,255,0.5");
+    searchBox1.blur();    
+    searchBox1.classList.add("searchBoxLogged");
+
     userAutoLogout(0);
 };
 
@@ -377,20 +385,22 @@ function userSearchMessage(select){
     userIndic.classList.remove("userStateIndicatorOk");
     userIndic.classList.remove("userStateIndicatorSelect");
     userIndic.classList.add("userStateIndicatorNotOk");
-    searchBox1.style.backgroundColor = ("RGBA(255,255,255,1");
+    searchBox1.classList.add("searchBoxNotLogged");
+    userIndic.placeholder=("");
     }    
     if(select == 2){
         userIndic.innerText = ("☟ ☟ לבחור שם מהמאגר ☟ ☟");
         userIndic.classList.remove("userStateIndicatorNotOk");
         userIndic.classList.remove("userStateIndicatorOk");
         userIndic.classList.add("userStateIndicatorSelect");
-        searchBox1.style.backgroundColor = ("RGBA(255,255,255,1");
+        userIndic.placeholder=("");
     }
     if(select == 3){
-        userIndic.innerText = ("👍 👍 ");
+        userIndic.innerHTML = ("<p11>👍</p11><p12>👍</p12>");
         userIndic.classList.remove("userStateIndicatorNotOk");        
         userIndic.classList.remove("userStateIndicatorSelect");
         userIndic.classList.add("userStateIndicatorOk");
+        userIndic.placeholder=("");
     }
 };
 

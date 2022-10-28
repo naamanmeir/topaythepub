@@ -38,7 +38,7 @@ video{
     left: 1%;
     right: 1%;    
     background-image: none;
-    background-color: RGBA(0,0,0,0);    
+    background-color: RGBA(0,0,0,0);
     float: center;
     left: 50%;
     right: 50%;
@@ -76,16 +76,42 @@ video{
     padding: 0px;
     margin-top: 0.5em ;
     padding-bottom: 1em;
+    background-image: linear-gradient(to right, rgba(0,0,0,0) , rgba(2, 140, 246, 0.826), rgba(2, 140, 246, 0.826),rgba(0,0,0,0));
+    background-size: 250% auto;
+    animation-direction: normal;
+    animation: shine 29s ease-in infinite running;    
 }
 .header p{
-    color: rgb(211, 234, 243);
-    background-image: linear-gradient(to right, rgba(0,0,0,0) , rgba(2, 140, 246, 0.826), rgba(2, 140, 246, 0.826),rgba(0,0,0,0));
+    color: rgb(243, 211, 211);
+    background-image: linear-gradient(to right, rgba(0,0,0,0) , rgba(2, 140, 246, 0.826), rgba(2, 140, 246, 0.826),rgba(0,0,0,0));    
     font-size: 2rem;
     line-height: 0.5rem;
     margin: 0px;
+    margin-bottom: 1rem;
     padding: 0px;
     padding-top: 3%;
     padding-bottom: 3%;
+    animation-direction: normal;    
+}
+.header anim1{
+    transition: all 12s;
+    animation-direction: normal;
+    animation: shine 23s ease-in-out infinite running;
+}
+@keyframes shine {
+    0% {
+      background-position: 0% right;
+      filter: hue-rotate(280deg);
+    }
+    50% {
+        background-position: 100% center;
+        background-size: 450% auto;
+        filter: hue-rotate(110deg) saturate(8);
+      }
+    100% {
+        background-position: 200% right;
+        filter: hue-rotate(0deg);
+    }
 }
 .menu{    
     z-index: 3000;
@@ -101,16 +127,25 @@ video{
     background-position: left;
     background-repeat: no-repeat;
     background-size: contain;
-    height: 2.2em;
+    height: 2em;
     width: 100%;
-    font-size: 1.2rem;
-    border: 2px solid #ddd;
+    font-size: 1.2em;
+    word-wrap: none;
+    /* border: 2px solid #ddd; */
     margin: auto;
     padding-top: 0;
     padding-bottom: 0px;
     margin-top: 0px;
     margin-bottom: 0.2em;
     user-select: none;
+}
+.searchBoxLogged{
+    font-size: 1.2rem;
+    background-color: #a8ffb2;
+}
+.searchBoxNotLogged{
+    font-size: 1.2rem;
+    background-color: #ffc8a8;
 }
 .autoCompleteNone{
     display: none;
@@ -120,9 +155,9 @@ video{
     z-index: 1000;
     position: relative;
     display: inline-block;
-    height: 1rem;
+    height: 3rem;
     width: 100%;
-    font-size: 1rem;    
+    font-size: 2.2rem;    
     margin: auto;
     margin-top: 0px;
     margin-bottom: 0px;
@@ -132,16 +167,11 @@ video{
 input {
     border: 1px solid transparent;
     background-color: #f1f1f1;
-    padding: 10px;
-    font-size: 16px;
+    padding: 1px;
+    font-size: 2em;
 }
-input[type=text] {
-    background-color: #f1f1f1;
+input[type=text] {    
     width: 100%;
-}
-input[type=submit] {
-    background-color: DodgerBlue;
-    color: #fff;
 }
 .autocomplete-items {    
     z-index: 1000;    
@@ -167,18 +197,61 @@ input[type=submit] {
 .userStateIndicator {
     pointer-events: none;    
     position: absolute;
-    width: 90%;
-    font-size: 100%;    
+    width: 90%;    
     margin: auto;
     margin-top: 0.5rem;    
     text-align: left;
     align-self: left;    
 }
 .userStateIndicatorNotOk {
+    font-size: 100%;
+    margin-left: 45%;
     color: red;
+    animation: blink 2s infinite;
+    transition: all 1s;
+}
+@keyframes blink {
+    0% {
+        filter: invert(0);
+    }
+    50% {        
+        filter: invert(1) hue-rotate(100deg);        
+    }
+    100% {        
+        filter: invert(0);
+    }
 }
 .userStateIndicatorOk {
-    color: rgb(109, 195, 109);
+    font-size: 200%;
+    color: rgb(109, 195, 109);    
+}
+.userStateIndicatorOk p11{
+    animation: blink1 12s infinite;
+}
+.userStateIndicatorOk p12{
+    animation: blink2 12s infinite;
+}
+@keyframes blink1 {
+    0% {
+        filter: invert(0.3);
+    }
+    50% {        
+        filter: invert(0) hue-rotate(-100deg);        
+    }
+    100% {        
+        filter: invert(0.3);
+    }
+}
+@keyframes blink2 {
+    0% {
+        filter: invert(0);
+    }
+    50% {        
+        filter: invert(0.3) hue-rotate(-100deg);        
+    }
+    100% {        
+        filter: invert(0);
+    }
 }
 .userStateIndicatorSelect {
     color: black;
@@ -413,18 +486,18 @@ input[type=submit] {
     .items{
         flex-direction: row;
         margin: 0px;
-        padding: 0px;        
+        padding: 4px;
     }
     .item{
-        padding-top: 0px;
-        margin-top: 0px;
-        padding-bottom: 0px;
-        margin-bottom: 0px;        
+        font-size: small;        
+        margin: auto;     
     }
     .buttons{        
         display: block;
         position: fixed;
         width: fit-content;
+        padding: 0px;
+        margin-top: 5px;
         height: 3.5em;        
         left: 1em;
         top: 40vh;
@@ -487,14 +560,17 @@ input[type=submit] {
     0% {
         opacity: 0;
         transform: scale(0);
+        filter: saturate(0);
     }
     50% {
         opacity: 100;
         transform: scale(8);
+        filter: saturate(8);
     }
     100% {
         opacity: 0;
         transform: scale(22) rotate(700deg);
+        filter: saturate(18);
     }    
 }
 .animation2{
@@ -515,14 +591,17 @@ input[type=submit] {
     0% {
         opacity: 0;
         transform: scale(12);
+        filter: saturate(8);
     }
     50% {
         opacity: 100;
         transform: scale(3);
+        filter: saturate(18);
     }
     100% {
         opacity: 0;
         transform: scale(0) rotate(700deg);
+        filter: saturate(8) hue-rotate(45deg);
     }    
 }
 .animation3{
@@ -1176,14 +1255,14 @@ input[type=submit] {
     overflow: hidden;
 }
 .background3 span {
-    width: 1.4vmin;
-    height: 1.4vmin;
-    border-radius: 1vmin;
+    width: 2.2vmin;
+    height: 2.2vmin;
+    border-radius: 2vmin;
     backface-visibility: hidden;
     position: absolute;
     animation: move;
-    animation-duration: 30;
-    animation-timing-function: linear;
+    animation-duration: 50;
+    animation-timing-function: ease;
     animation-iteration-count: infinite;
 }
 .background3 span:nth-child(0) {
@@ -1208,7 +1287,7 @@ input[type=submit] {
     color: #a5838d;
     top: 60%;
     left: 95%;
-    animation-duration: 36s;
+    animation-duration: 136s;
     animation-delay: -9s;
     transform-origin: 0vw -14vh;
     box-shadow: -2vmin 0 0.8602021731645801vmin currentColor;
@@ -1262,7 +1341,7 @@ input[type=submit] {
     color: #4edfa7;
     top: 95%;
     left: 27%;
-    animation-duration: 36s;
+    animation-duration: 136s;
     animation-delay: -119s;
     transform-origin: -16vw -1vh;
     box-shadow: -2vmin 0 0.5919857086507103vmin currentColor;
@@ -1289,7 +1368,7 @@ input[type=submit] {
     color: #4edfa7;
     top: 53%;
     left: 21%;
-    animation-duration: 39s;
+    animation-duration: 139s;
     animation-delay: -47s;
     transform-origin: -13vw 24vh;
     box-shadow: 2vmin 0 0.9637413568848834vmin currentColor;
@@ -1317,7 +1396,7 @@ input[type=submit] {
     top: 21%;
     left: 2%;
     animation-duration: 24s;
-    animation-delay: -23s;
+    animation-delay: -123s;
     transform-origin: -19vw 25vh;
     box-shadow: -2vmin 0 0.5347905974589318vmin currentColor;
 }
@@ -1325,7 +1404,7 @@ input[type=submit] {
     color: #2f4b6f;
     top: 16%;
     left: 92%;
-    animation-duration: 19s;
+    animation-duration: 95s;
     animation-delay: -50s;
     transform-origin: 10vw -3vh;
     box-shadow: -2vmin 0 1.1974675871852352vmin currentColor;
@@ -1334,7 +1413,7 @@ input[type=submit] {
     color: #a5838d;
     top: 72%;
     left: 63%;
-    animation-duration: 39s;
+    animation-duration: 99s;
     animation-delay: -109s;
     transform-origin: -17vw -22vh;
     box-shadow: -2vmin 0 0.8206758190278896vmin currentColor;
@@ -1361,7 +1440,7 @@ input[type=submit] {
     color: #4edfa7;
     top: 76%;
     left: 70%;
-    animation-duration: 42s;
+    animation-duration: 82s;
     animation-delay: -133s;
     transform-origin: -4vw -13vh;
     box-shadow: -2vmin 0 0.8924378122966397vmin currentColor;
@@ -1370,7 +1449,7 @@ input[type=submit] {
     color: #4edfa7;
     top: 36%;
     left: 77%;
-    animation-duration: 22s;
+    animation-duration: 122s;
     animation-delay: -73s;
     transform-origin: -18vw -4vh;
     box-shadow: -2vmin 0 1.0950039120434392vmin currentColor;
@@ -1406,7 +1485,7 @@ input[type=submit] {
     color: #a5838d;
     top: 63%;
     left: 96%;
-    animation-duration: 8s;
+    animation-duration: 88s;
     animation-delay: -109s;
     transform-origin: 22vw 8vh;
     box-shadow: -2vmin 0 0.3308111842684547vmin currentColor;
@@ -1433,7 +1512,7 @@ input[type=submit] {
     color: #4edfa7;
     top: 93%;
     left: 84%;
-    animation-duration: 28s;
+    animation-duration: 128s;
     animation-delay: -149s;
     transform-origin: -15vw 16vh;
     box-shadow: 2vmin 0 0.7090488182339323vmin currentColor;
@@ -1460,7 +1539,7 @@ input[type=submit] {
     color: #a5838d;
     top: 59%;
     left: 60%;
-    animation-duration: 13s;
+    animation-duration: 113s;
     animation-delay: -47s;
     transform-origin: -21vw -1vh;
     box-shadow: -2vmin 0 0.9353948554214422vmin currentColor;
@@ -1469,7 +1548,7 @@ input[type=submit] {
     color: #4edfa7;
     top: 59%;
     left: 81%;
-    animation-duration: 74s;
+    animation-duration: 124s;
     animation-delay: -40s;
     transform-origin: 20vw 8vh;
     box-shadow: 2vmin 0 0.2836678339096925vmin currentColor;
@@ -1496,7 +1575,7 @@ input[type=submit] {
     color: #4edfa7;
     top: 38%;
     left: 75%;
-    animation-duration: 45s;
+    animation-duration: 105s;
     animation-delay: -70s;
     transform-origin: -13vw -1vh;
     box-shadow: 2vmin 0 1.1319005089965388vmin currentColor;
@@ -1505,7 +1584,7 @@ input[type=submit] {
     color: #4edfa7;
     top: 35%;
     left: 48%;
-    animation-duration: 32s;
+    animation-duration: 132s;
     animation-delay: -90s;
     transform-origin: -17vw 25vh;
     box-shadow: 2vmin 0 1.0847269356441072vmin currentColor;
@@ -1568,7 +1647,7 @@ input[type=submit] {
     color: #4edfa7;
     top: 45%;
     left: 33%;
-    animation-duration: 39s;
+    animation-duration: 139s;
     animation-delay: -157s;
     transform-origin: -18vw 12vh;
     box-shadow: -2vmin 0 1.1594844216283222vmin currentColor;
@@ -1586,7 +1665,7 @@ input[type=submit] {
     color: #2f4b6f;
     top: 47%;
     left: 19%;
-    animation-duration: 56s;
+    animation-duration: 156s;
     animation-delay: -11s;
     transform-origin: -11vw 5vh;
     box-shadow: 2vmin 0 1.0633027569902134vmin currentColor;
@@ -1604,7 +1683,7 @@ input[type=submit] {
     color: #a5838d;
     top: 91%;
     left: 93%;
-    animation-duration: 44s;
+    animation-duration: 144s;
     animation-delay: -110s;
     transform-origin: 21vw 20vh;
     box-shadow: -2vmin 0 0.26778543716304504vmin currentColor;
