@@ -37,9 +37,11 @@ app.get('/manage', async function(req, res) {
 });
 
 app.get('/retable/', async function(req,res){
-    let table;
-    table = await db.dbCreateTable().then((res) => {return (res)});
-    res.send(table);
+    let createTableCLients;
+    let createTableOrders;
+    createTableCLients = await db.dbCreateTableClients().then((res) => {return (res)});
+    createTableOrders = await db.dbCreateTableOrders().then((res) => {return (res)});    
+    res.send(createTableOrders);
 })
 
 app.post('/getUserDetails/:data', async (req,res,next) => {
@@ -104,7 +106,7 @@ function sendBackAddedName(req,res,message,next){
 app.post('/getAllData/:data', async (req,res) => {
     let scope = JSON.parse(req.params.data);
     let dbData;
-    dbData =  await db.dbGetAllClientsData(scope).then((dbData) => {return (dbData)});
+    dbData =  await db.dbGetDataByScope(scope).then((dbData) => {return (dbData)});
     res.send(dbData)
 });
 
@@ -151,17 +153,15 @@ app.get('/order/:data', async function(req,res,next) {
     var orderDate = now;
     var orderTime = now;
     console.log("date: "+orderDate+" time: "+orderTime+" id: "+id+" ,item1: "+item1+" ,item2:"+item2+" ,item3: "+item3+" ,item4: "+item4);
-    let orderResult;
-    orderResult = await db.dbInsertOrder(orderTime,id,item1,item2,item3,item4).then((orderResult) => {return (orderResult)});
-    res.send(orderResult);    
+    let orderResult;    
+    orderResult = await db.dbInsertOrderToOrders(orderTime,id,item1,item2,item3,item4).then((orderResult) => {return (orderResult)});    
+    res.send(orderResult);
 });
 
 // GET REQUEST FOR SEARCH FOR NAME IN DB BY QUERY
 app.post('/searchName/:data', async (req,res) => {
-    var query = (req.params.data).replace(/\"/g,'');
-    // console.log(query);
-    if(query == "-"){
-        // console.log("clear");
+    var query = (req.params.data).replace(/\"/g,'');    
+    if(query == "-"){        
         res.send(JSON.stringify("clear"));
         return;
     };

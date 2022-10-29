@@ -75,15 +75,17 @@ video{
     margin: 0px;
     padding: 0px;
     margin-top: 0.5em ;
-    padding-bottom: 1em;
-    background-image: linear-gradient(to right, rgba(0,0,0,0) , rgba(2, 140, 246, 0.826), rgba(2, 140, 246, 0.826),rgba(0,0,0,0));
-    background-size: 250% auto;
-    animation-direction: normal;
-    animation: shine 29s ease-in infinite running;    
+    padding-bottom: 0.2em;
+    border-radius: 1em;
+    /* background-image: linear-gradient(to right, rgba(0,0,0,0) , rgba(2, 140, 246, 0.826), rgba(2, 140, 246, 0.826),rgba(0,0,0,0)); */
+    background-size: 250% auto;  
 }
 .header p{
+    border-radius: 2rem;
     color: rgb(243, 211, 211);
-    background-image: linear-gradient(to right, rgba(0,0,0,0) , rgba(2, 140, 246, 0.826), rgba(2, 140, 246, 0.826),rgba(0,0,0,0));    
+    background-image: linear-gradient(to right, rgba(0,0,0,0) , rgb(2, 140, 246, 0.526), rgba(2, 140, 246, 0.526),rgba(0,0,0,0));    
+    background-size: 800%;
+    background-repeat: repeat-x;
     font-size: 2rem;
     line-height: 0.5rem;
     margin: 0px;
@@ -91,29 +93,23 @@ video{
     padding: 0px;
     padding-top: 3%;
     padding-bottom: 3%;
-    animation-direction: normal;    
-}
-.header anim1{
-    transition: all 12s;
+    animation-fill-mode: backwards;    
+    transition: background-position 4;
     animation-direction: normal;
-    animation: shine 23s ease-in-out infinite running;
+    animation: move1 90s ease-in-out infinite running; 
 }
-@keyframes shine {
+@keyframes move1 {
     0% {
-      background-position: 0% right;
-      filter: hue-rotate(280deg);
+      background-position: 400% right;      
     }
     50% {
-        background-position: 100% center;
-        background-size: 450% auto;
-        filter: hue-rotate(110deg) saturate(8);
+        background-position: 400% center;        
       }
     100% {
-        background-position: 200% right;
-        filter: hue-rotate(0deg);
+        background-position: 400% right;        
     }
 }
-.menu{    
+.menu{
     z-index: 3000;
     top: 0px;
     right:0px;
@@ -123,28 +119,34 @@ video{
     float: right;
     position: relative;
 }
-.searchBox {    
-    background-position: left;
-    background-repeat: no-repeat;
-    background-size: contain;
+.searchBoxDiv{
+    margin-top: 1em;
+}
+.searchBox {
+    /* background-image: linear-gradient(to right, blue,rgba(2,2,240,0.8),rgba(2,30,240,0.7),rgba(2,100,230,0.6),rgba(2,150,240,0.5),rgba(25,180,240,0.4),rgba(125,222,240,0.3),rgba(2,250,250,0.25),rgba(100,250,250,0.2),rgba(150,255,255,0.1),rgba(100,255,255,0.1),rgba(255,255,255,0.02),rgba(255,255,255,0.0),rgba(255,255,255,0.0),rgba(255,255,255,0.0)); */
+    border-radius: 25px;
+    border: 2px double orange;
     height: 2em;
     width: 100%;
     font-size: 1.2em;
-    word-wrap: none;
-    /* border: 2px solid #ddd; */
+    word-wrap: none;    
     margin: auto;
+    margin-top: 1em;
     padding-top: 0;
+    padding-right: 1em;
+    padding-left: 1em;
     padding-bottom: 0px;
     margin-top: 0px;
     margin-bottom: 0.2em;
     user-select: none;
 }
 .searchBoxLogged{
-    font-size: 1.2rem;
+    font-size: 1.2em;
     background-color: #a8ffb2;
+    transition: all 3s;
 }
 .searchBoxNotLogged{
-    font-size: 1.2rem;
+    font-size: 1.2em;
     background-color: #ffc8a8;
 }
 .autoCompleteNone{
@@ -152,12 +154,11 @@ video{
     height: 0;
 }
 .autoCompleteSuggestions {
-    z-index: 1000;
+    z-index: 3000;
     position: relative;
-    display: inline-block;
+    /* display: inline-block;  ---  causes down carousele */
     height: 3rem;
     width: 100%;
-    font-size: 2.2rem;    
     margin: auto;
     margin-top: 0px;
     margin-bottom: 0px;
@@ -166,20 +167,25 @@ video{
 }
 input {
     border: 1px solid transparent;
-    background-color: #f1f1f1;
+    border-radius: 1rem;
     padding: 1px;
-    font-size: 2em;
 }
 input[type=text] {    
-    width: 100%;
+    width: 50%;
 }
-.autocomplete-items {    
-    z-index: 1000;    
+.autocomplete-items {
+    z-index: 3000;    
     left: 0;
     right:0;
     padding: 0px;
     margin: 0px;
+    font-size: 2.4rem;
+    color: rgb(20, 20, 20);
     background-color: #d4d4d4;
+    border: 2px solid black;
+}
+.autocomplete-itemsEven{    
+    background-color: #9f9d9d;
 }
 .autocomplete-items:hover {    
     background-color: #e9e9e9;
@@ -195,22 +201,24 @@ input[type=text] {
     color: #ffffff;
 }  
 .userStateIndicator {
+    z-index: 4000;
     pointer-events: none;    
     position: absolute;
     width: 90%;    
     margin: auto;
     margin-top: 0.5rem;    
     text-align: left;
-    align-self: left;    
+    align-self: left;
+    transition: all 1s;
 }
 .userStateIndicatorNotOk {
     font-size: 100%;
     margin-left: 45%;
     color: red;
-    animation: blink 2s infinite;
+    animation: userIndicatorNotOk 2s infinite;
     transition: all 1s;
 }
-@keyframes blink {
+@keyframes userIndicatorNotOk {
     0% {
         filter: invert(0);
     }
@@ -226,12 +234,12 @@ input[type=text] {
     color: rgb(109, 195, 109);    
 }
 .userStateIndicatorOk p11{
-    animation: blink1 12s infinite;
+    animation: userStateIndicatorOk1 12s infinite;
 }
 .userStateIndicatorOk p12{
-    animation: blink2 12s infinite;
+    animation: userStateIndicatorOk2 12s infinite;
 }
-@keyframes blink1 {
+@keyframes userStateIndicatorOk1 {
     0% {
         filter: invert(0.3);
     }
@@ -242,7 +250,7 @@ input[type=text] {
         filter: invert(0.3);
     }
 }
-@keyframes blink2 {
+@keyframes userStateIndicatorOk2 {
     0% {
         filter: invert(0);
     }
@@ -254,7 +262,90 @@ input[type=text] {
     }
 }
 .userStateIndicatorSelect {
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 1;
+    width: fit-content;
+    transition: none;
+    text-align: center;
     color: black;
+    margin: 0px;
+    padding: 0px;
+    padding-top: 0.5em;
+    left: 4em;
+}
+.userStateIndicator p{    
+    top: 0px;
+    margin: 0px;
+    padding: 0px;
+    font-size: large;
+}
+.userStateIndicatorSelect img{    
+    flex-direction: row;
+    transition: all 1s;
+    text-align: center;    
+    width: 2rem;
+    height: 2rem;    
+    padding: -10px;
+    margin: -10px;
+    margin: auto;
+    opacity: 0.8;
+}
+.userStateIndicatorSelectimg1{    
+    animation: upDown1 1.5s ease 0s infinite;
+}
+@keyframes upDown1 {
+    0% {   
+        transform: translateY(0px);
+    }
+    30% {
+        transform: translateY(1rem);
+    }    
+    100% {
+        transform: translateY(0px);
+    }
+}
+.userStateIndicatorSelectimg2{    
+    animation: upDown2 1.5s linear 0.25s infinite;
+}
+@keyframes upDown2 {
+    0% {   
+        transform: translateY(0px);
+    }
+    40% {
+        transform: translateY(1rem);
+    }    
+    100% {
+        transform: translateY(0px);
+    }
+}
+.userStateIndicatorSelectimg3{    
+    animation: upDown3 1.5s ease 0.75s infinite;
+}
+@keyframes upDown3 {
+    0% {   
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(1rem);
+    }    
+    100% {
+        transform: translateY(0px);
+    }
+}
+.userStateIndicatorSelectimg4{    
+    animation: upDown4 1.5s linear 1s infinite;
+}
+@keyframes upDown4 {
+    0% {   
+        transform: translateY(0px);
+    }
+    60% {
+        transform: translateY(1rem);
+    }    
+    100% {
+        transform: translateY(0px);
+    }
 }
 #emptyMenu{
     color: red;        
@@ -283,8 +374,9 @@ input[type=text] {
     height: fit-content;
     width: fit-content;    
     position: relative;
+    top: 0px;
     margin: auto;
-    margin-top: 2rem;    
+    margin-top: 2em;    
     padding: 0px;
     float: center;
     display: flex;
@@ -304,10 +396,12 @@ input[type=text] {
     flex-shrink: 1;
     border: 4px outset rgb(240, 152, 0);
     position: relative;
-    margin: 2rem;
+    margin: 2em;
     margin-top: 0px;    
     float: center;
     text-align: center;
+    padding: 0px;
+    box-shadow: 1px 4px 8px 2 rgba(0, 0, 0, 0.964), 2px 6px 20px 1 rgba(0, 0, 0, 0.736);
     transition: background-color 0.5s ease;
 }
 .item img{
@@ -323,7 +417,7 @@ input[type=text] {
 .item p{
     padding: 0px;
     margin: 0px;
-    font-size: 2em;
+    font-size: 1.6em;
     background-color: rgb(240, 152, 0,0.7);
     user-select: none;
     pointer-events: none;
@@ -343,7 +437,7 @@ input[type=text] {
     font-size: 7rem;
     color: rgb(0, 255, 55);
     font-style: oblique;
-    text-shadow: 12px 12px 15px #000000;
+    text-shadow: 5px 7px 7px #000000,3px 3px 0px black,1px 2px 0px black;
     pointer-events: none;
     user-select: none;
 }
@@ -458,9 +552,46 @@ input[type=text] {
     z-index: 2500;
     display: block;
 }
+.finaleMessageBox{
+    /* display: none; */
+    z-index: 2500;
+    position: absolute;
+    height: fit-content;
+    width: 70%;    
+    background-color: rgba(43, 40, 40, 0.236);
+    border: 2px groove orange;
+    border-radius: 2rem;
+    margin: auto;
+    top:25%;
+    right: 15%;
+    left: 15%;    
+    text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    animation: confirmAnim1 3s ease-in-out 2s; 
+    animation-iteration-count: 1
+}
+.finaleMessageBoxText{
+    color: rgb(201, 138, 3);
+    font-size: 2.4rem;
+    text-shadow: 2px 2px 5px rgb(0, 0, 0);
+}
+@keyframes confirmAnim1 {
+    0% {
+        opacity: 100;
+        transform: scale(1);        
+    }
+    50% {
+        opacity: 70;
+        transform: scale(0.5);        
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0);        
+    }    
+}
 .footer{
     color: black;    
-    position: sticky;
+    /* position: sticky; */
     text-align: center;
     font-size: x-small;
     height: 1px;
@@ -492,10 +623,10 @@ input[type=text] {
         font-size: small;        
         margin: auto;     
     }
-    .buttons{        
+    .buttons{
         display: block;
         position: fixed;
-        width: fit-content;
+        width: fit-content;        
         padding: 0px;
         margin-top: 5px;
         height: 3.5em;        
@@ -505,16 +636,19 @@ input[type=text] {
     .footer{
         padding: 0px;
         margin: 0px;
-        top: 0px;
+        padding-bottom: 0px;
+        margin-bottom: -5em;
     }
     .footer p{
         padding: 0px;
         margin: 0px;
+        bottom: 0px;
     }
     .messageBox {
         height: fit-content;
         width: fit-content;
         top: 5%;
+        right: 5%;
         text-align: right;
         margin: 0px;
         padding-top: 0.5rem;
@@ -524,7 +658,8 @@ input[type=text] {
         border: 5px groove orange;
     }
     .confirmButtons{
-        width:40%;
+        width:fit-content;
+        min-width: 6em;
         height: 5rem;
         align-self: left;
         float: left;
@@ -532,13 +667,19 @@ input[type=text] {
         margin: 0px;
     }
     .confirmButtonsYes{
+        margin: 0px;
+        margin-top: 2em;
         position: fixed;
-        bottom: 15%;
+        padding: 0px;
+        bottom: 5%;
         left: 5%;
     }
     .confirmButtonsNo{
+        margin: 0px;
+        margin-bottom: 2em;
         position: fixed;
-        top: 25%;
+        padding: 0px;
+        top: 35%;
         left: 5%;
     }
 }

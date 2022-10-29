@@ -1,7 +1,7 @@
-const NAME_ITEM1='משקה ב10 שקלים';
-const NAME_ITEM2="משקה ב10 שמקל"
-const NAME_ITEM3="כוס משקה"
-const NAME_ITEM4="פטריה"
+const NAME_ITEM1='תשלום של 10 שקלים';
+const NAME_ITEM2="תשלום של 12 שקלים"
+const NAME_ITEM3="תשלום של 14 שקלים"
+const NAME_ITEM4="תשלום של 09 שקלים"
 
 const MSG_ORDER_VALIDATE=("שורה ארוכה בעברית")
 

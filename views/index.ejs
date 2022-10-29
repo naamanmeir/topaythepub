@@ -28,7 +28,7 @@
 
         <%- include('./partials/header'); %>
 
-        <div class="searchBox">
+        <div class="searchBoxDiv" id="searchBoxDiv">
         <div class="userStateIndicator" id="userStateIndicator"></div>
         <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false" placeholder="לכתוב פה את השם שלכם✍👉👉">
         <div class="autoCompleteNone" id="autoComplete"></div>
@@ -39,12 +39,12 @@
         <div class="items" id="items">
             <div class="item" onpointerup="add(1)">
                 <p><%=item1%></p>                
-                <img src="img/beer-large.png">
+                <img src="img/beer-small.png">
                 <count id="count1"></count>
             </div>
             <div class="item" onpointerup="add(2)">
                 <p><%=item2%></p>                
-                <img src="img/beer-small.png">
+                <img src="img/beer-large.png">
                 <count id="count2"></count>
             </div>
             <div class="item itemNotActive" onpointerup="add(3)">
@@ -70,12 +70,16 @@
     </div>
 
     <script>
+        const itemName1 = "<%=item1%>";
+        const itemName2 = "<%=item2%>";
+        const itemName3 = "<%=item3%>";
+        const itemName4 = "<%=item4%>";
      </script>
 
     <script src="js/script.js"></script>
 
-    <div class="background3" id="backgroundPanel">
-        <span></span>
+    <div class="background4" id="backgroundPanel">
+    <span></span>
     <span></span>
     <span></span>
     <span></span>

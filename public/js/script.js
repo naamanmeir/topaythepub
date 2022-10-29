@@ -10,6 +10,7 @@ var item3 = 0;
 var item4 = 0;
 var id = 999;
 var clientName;
+var clientNick;
 
 var sideMenu = false;
 
@@ -55,16 +56,22 @@ function fullScreenOff(){
 
 const searchBox1 = document.getElementById("searchBox");
 searchBox1.addEventListener('focus',function(){
-    searchBox1.placeholder=("");
+    searchBoxClear();
+    if(searchBox1.value.length==0){userSearchMessage(0);};
+    if(searchBox1.value.length>0){searchBox1.placeholder=("");};
 });
 searchBox1.addEventListener('blur',function(){
+    searchBoxClear();
     searchBox1.placeholder=("לכתוב פה את השם שלכם✍👉👉");
 });
 searchBox1.addEventListener('input',function(){
-    searchBox(searchBox1.value);
+    searchBoxClear();    
+    if(searchBox1.value.length==0){userSearchMessage(0);};
+    if(searchBox1.value.length>0){searchBox1.placeholder=("");};
+    searchBox(searchBox1.value);    
 });
 
-function orderAccepted(){
+function afterOrderAnimation(){
     const holder = document.createElement('img');
     let rnd1 = Math.floor(Math.random() * (20 - 1) + 1);
     let rnd2 = Math.floor(Math.random() * (6 - 1) + 1);
@@ -75,15 +82,36 @@ function orderAccepted(){
     holder.src = imgRnd;
     document.body.appendChild(holder);    
     holder.className = (animRnd);
+    userLogout();
     pointerEnableIn(3000);
-    allElements(1);
+    allElements(1);    
+};
+
+function orderSubmitted(data){
+    const window = document.createElement('div');
+    const text = document.createElement('p');    
+    text.innerHTML = (data.replace(/,/g,"<br>"))    
+    text.classList = ("finaleMessageBoxText");    
+    window.className = ("finaleMessageBox");    
+    window.appendChild(text);
+    document.body.appendChild(window);
+    setTimeout(() => {
+        text.remove();
+        window.remove();
+        afterOrderAnimation();
+    },5000)
 };
 
 async function placeOrder(orderPack){
-    orderAccepted();
+    
     xhttp.open("GET", "./order/"+orderPack, true);
     xhttp.send();
-    userLogout();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+        // console.log("ORDER PASSED AND RESPONDED: "+this.response);
+        orderSubmitted(this.response);
+      };
+    };    
 };
 
 function cancelOrder(message){
@@ -125,10 +153,10 @@ function orderConfirm(orderPack,abort){
     message.innerHTML += ("<br>");    
     message.innerHTML += ("<p1> ההזמנה מכילה :</p1>");
     message.innerHTML += ("<br>");    
-    if(i1!=0){message.innerHTML += ("<p2>משקה ב10 שקלים: </p2><p3>"+i1+"</p3>")};
-    if(i2!=0){message.innerHTML += ("<p2>משקה ב10 שמקל: </p2><p3>"+i2+"</p3>");message.innerHTML += ("<br>");}
-    if(i3!=0){message.innerHTML += ("<p2>כוס משקה: </p2><p3>"+i3+"</p3>")};
-    if(i4!=0){message.innerHTML += ("<p2>פטריה: </p2><p3>"+i4+"</p3>");message.innerHTML += ("<br>");}
+    if(i1!=0){message.innerHTML += ("<p2>"+itemName1+": </p2><p3>"+i1+"</p3>")};
+    if(i2!=0){message.innerHTML += ("<p2>"+itemName2+": </p2><p3>"+i2+"</p3>");message.innerHTML += ("<br>");}
+    if(i3!=0){message.innerHTML += ("<p2>"+itemName3+": </p2><p3>"+i3+"</p3>")};
+    if(i4!=0){message.innerHTML += ("<p2>"+itemName4+": </p2><p3>"+i4+"</p3>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
     if(price!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+price+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
@@ -194,10 +222,10 @@ function add(item){
         count2.innerText = "";
         count3.innerText = "";
         count4.innerText = "";
-        userLogout();
+        // userLogout();
     }
     if(item==100){
-        if(clientName==null){
+        if(clientNick==null){
             errorMessage(1);
             return;
         }
@@ -205,7 +233,7 @@ function add(item){
             errorMessage(2);
             return;
         }
-        if(clientName!=null){
+        if(clientNick!=null){
         var orderPack = [];
         orderPack.push([id,item1,item2,item3,item4]);
         orderConfirm(orderPack,false);
@@ -236,15 +264,14 @@ function searchBox(text){
         setTimeout(() => {
             limit = 0;
             searchQuery(searchText,searchBox);
-        },250);
+        },150);
     };
 };
 
 function searchBoxClear(){
     const searchBox = document.getElementById("searchBox");
-    if(searchBox.value == ""){
-        userSearchMessage(0);
-    }
+    if(searchBox1.value.length==0){userSearchMessage(0);};
+    if(searchBox.value == ""){userSearchMessage(0);};
 };
 
 function searchQuery(query,dest){
@@ -257,7 +284,8 @@ function searchQuery(query,dest){
                 clearAutoComplete(document.getElementById("autoComplete"));
                 return;
             };
-        clients = JSON.parse(this.response);
+        clients = JSON.parse(this.response);        
+        if(searchBox1.value.length==0){userSearchMessage(0);};
         if(clients[0] == null){
             userSearchMessage(1);
             };
@@ -293,6 +321,7 @@ function autoComplete(names){
     for(i=0;i<names.length && i<15;i++){
         const para = document.createElement("p");
         para.className = "autocomplete-items";
+        if(i % 2 === 0){para.classList.add("autocomplete-itemsEven");}
         para.innerText = names[i];        
         autoDiv.appendChild(para);
         para.onclick = function () {
@@ -307,6 +336,8 @@ function autoComplete(names){
         searchBox1.blur();
         loginFunction(names[0]);
         };
+    if(searchBox1.value.length==0){userSearchMessage(0);};
+    if(searchBox1.value == ""){clearAutoComplete(autoDiv);}    
 };
 
 function clearAutoComplete(autoDiv){
@@ -322,16 +353,17 @@ function copyTextToSearchBox(text){
 };
 
 function loginFunction(name){
-    if(name != ""){
+    if(name != ""){        
         name = name.replace(/\'/g, "''");
-        name = JSON.stringify(name);
+        name = JSON.stringify(name);        
         xhttp.open("POST", "./searchName/"+name, true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-        login = JSON.parse(this.response);        
-        clientName = login[0].nick;
+        if (this.readyState == 4 && this.status == 200) {        
+        login = JSON.parse(this.response);
+        clientNick = login[0].nick;
+        clientName = login[0].name;        
         id = login[0].id;
         userLogged();
       };
@@ -352,6 +384,8 @@ function userLogout(){
     userSearchMessage(0);
     add(101);
     clientName = null;
+    clientNick = null;
+    id = null;
     var empty = [0,0,0,0,0];
     orderConfirm(empty,true);
     timeOut = (60000*5);
@@ -389,7 +423,12 @@ function userSearchMessage(select){
     userIndic.placeholder=("");
     }    
     if(select == 2){
-        userIndic.innerText = ("☟ ☟ לבחור שם מהמאגר ☟ ☟");
+        userIndic.innerHTML = ("<img class='userStateIndicatorSelectimg1' "+
+        "src='img/anim/finger_down.png'></img>"+
+        "<img class='userStateIndicatorSelectimg2' src='img/anim/finger_down.png'>"+
+        "</img><p>לבחור שם</p><img class='userStateIndicatorSelectimg3' "+
+        "src='img/anim/finger_down.png'></img><img class='userStateIndicatorSelectimg4' "+
+        "src='img/anim/finger_down.png'></img>");        
         userIndic.classList.remove("userStateIndicatorNotOk");
         userIndic.classList.remove("userStateIndicatorOk");
         userIndic.classList.add("userStateIndicatorSelect");
@@ -465,11 +504,12 @@ function closeNav() {
 
 function allElements(action){
     var searchBox = Array.from(document.getElementsByClassName("searchBox"));
+    var userStateIndicator = Array.from(document.getElementsByClassName("userStateIndicator"))
     var items = Array.from(document.getElementsByClassName("items"));
     var buttons = Array.from(document.getElementsByClassName("buttons"));    
     var sidenav = Array.from(document.getElementsByClassName("sidenav"));    
     var elementOpen = Array.from(document.getElementsByClassName("elementOpen"));
-    var classes = searchBox.concat(items,buttons,sidenav,elementOpen);
+    var classes = searchBox.concat(items,buttons,sidenav,elementOpen,userStateIndicator);
     if (action == 0){
         classes.forEach(elementOff);
     }
