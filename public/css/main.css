@@ -21,8 +21,8 @@ body,
 body {
     display: flex;
     flex-direction: column;
-    flex-shrink: 0;
-    flex-grow: 0;
+    flex-shrink: 1;
+    flex-grow: 1;
 }
 img{
     width: 7rem;
@@ -126,7 +126,6 @@ video{
     margin-top: 1em;
 }
 .searchBox {
-    /* background-image: linear-gradient(to right, blue,rgba(2,2,240,0.8),rgba(2,30,240,0.7),rgba(2,100,230,0.6),rgba(2,150,240,0.5),rgba(25,180,240,0.4),rgba(125,222,240,0.3),rgba(2,250,250,0.25),rgba(100,250,250,0.2),rgba(150,255,255,0.1),rgba(100,255,255,0.1),rgba(255,255,255,0.02),rgba(255,255,255,0.0),rgba(255,255,255,0.0),rgba(255,255,255,0.0)); */
     border-radius: 25px;
     border: 2px double orange;
     height: 2em;
@@ -173,7 +172,7 @@ input {
     border-radius: 1rem;
     padding: 1px;
 }
-input[type=text] {    
+input[type=text] {
     width: 50%;
 }
 .autocomplete-items {
@@ -187,7 +186,7 @@ input[type=text] {
     background-color: #d4d4d4;
     border: 2px solid black;
 }
-.autocomplete-itemsEven{    
+.autocomplete-itemsEven{
     background-color: #9f9d9d;
 }
 .autocomplete-items:hover {    
@@ -300,13 +299,13 @@ input[type=text] {
     padding: 0px;    
     left: 2em;
 }
-.userStateIndicator p{    
+.userStateIndicator p{
     top: 0px;
     margin: 0px;
     padding: 0px;
     /* font-size: 2em; */
 }
-.userStateIndicatorSelect img{    
+.userStateIndicatorSelect img{
     flex-direction: row;
     transition: all 1s;
     text-align: center;    
@@ -317,7 +316,7 @@ input[type=text] {
     margin: auto;
     opacity: 0.8;
 }
-.userStateIndicatorSelectimg1{    
+.userStateIndicatorSelectimg1{
     animation: upDown1 1.5s ease 0s infinite;
 }
 @keyframes upDown1 {
@@ -331,7 +330,7 @@ input[type=text] {
         transform: translateY(0px);
     }
 }
-.userStateIndicatorSelectimg2{    
+.userStateIndicatorSelectimg2{
     animation: upDown2 1.5s linear 0.25s infinite;
 }
 @keyframes upDown2 {
@@ -345,7 +344,7 @@ input[type=text] {
         transform: translateY(0px);
     }
 }
-.userStateIndicatorSelectimg3{    
+.userStateIndicatorSelectimg3{
     animation: upDown3 1.5s ease 0.75s infinite;
 }
 @keyframes upDown3 {
@@ -359,7 +358,7 @@ input[type=text] {
         transform: translateY(0px);
     }
 }
-.userStateIndicatorSelectimg4{    
+.userStateIndicatorSelectimg4{
     animation: upDown4 1.5s linear 1s infinite;
 }
 @keyframes upDown4 {
@@ -405,7 +404,7 @@ input[type=text] {
     position: relative;
     top: 0px;
     margin: auto;
-    margin-top: 2em;    
+    margin-top: 2em;
     margin-bottom: 0px;
     margin-right: auto;    
     float: center;
@@ -418,7 +417,7 @@ input[type=text] {
     border: 4px outset rgb(240, 152, 0);
     position: relative;
     margin: auto;
-    margin-top: 0px;
+    margin-top: 1em;
     float: center;
     text-align: center;
     padding: 0px;
@@ -469,7 +468,7 @@ input[type=text] {
     flex-basis: 100%;
     height: 0;
   }
-.buttons{
+.buttons{    
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -485,7 +484,7 @@ input[type=text] {
     height: 100%;
     color: black;
     font-size: 2rem;
-    text-shadow: 5px 3px 17px #ffffff;
+    text-shadow: 5px 1px 10px #a49c9c;
     border: 3px outset grey;
 }
 .buttons button:active{
@@ -616,10 +615,31 @@ input[type=text] {
         transform: scale(0);        
     }    
 }
+.userInfo{
+    /* display: none; */
+    z-index: 2500;
+    position: absolute;
+    height: 90%;
+    width: 90%;
+    top: 5%;
+    left: 5%;
+    background-color: rgb(0, 0, 0);
+    border: 2px groove orange;
+    border-radius: 2rem;
+    margin: auto; 
+    text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.userInfoText{
+    color: rgb(201, 138, 3);
+    font-size: 2.4rem;
+    text-shadow: 2px 2px 5px rgb(0, 0, 0);
+}
 .footer{
     max-width: 800px;
+    z-index: -1;
     color: black;    
-    /* position: sticky; */
+    position: fixed;
     text-align: center;
     font-size: x-small;
     height: fit-content;
@@ -627,17 +647,16 @@ input[type=text] {
     border-radius: 2em;
     bottom: 1em;
     margin: auto;
-    
     margin-top: 1rem;
-    padding: 0px 0px 0px 0px;    
+    padding: 0px 0px 0px 0px;
     /* padding-top: 10px; */
-    background-image: linear-gradient(to right, rgba(0,0,0,0) , rgb(2, 140, 246, 0.526), rgba(2, 140, 246, 0.526),rgba(0,0,0,0));    
+    background-image: linear-gradient(to right, rgba(0,0,0,0) , rgb(2, 140, 246, 0.526), rgba(2, 140, 246, 0.526),rgba(0,0,0,0));
     background-size: 800%;
     background-repeat: repeat-x;
-    animation-fill-mode: backwards;    
+    animation-fill-mode: backwards;
     transition: background-position 4;
     animation-direction: normal;
-    animation: move1 90s ease-in-out infinite running; 
+    animation: move1 90s ease-in-out infinite running;
 }
 .footer P{
     height: fit-content;

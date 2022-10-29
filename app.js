@@ -192,5 +192,13 @@ async function returnNames(req,res,names,next){
     res.send(names);
 };
 
+//GET USER INFO BY ID
+app.post('/getUserInfo/:data', async (req,res) => {
+    let clientId = JSON.parse(req.params.data);
+    let clientInfo = await db.dbGetClientInfoById(clientId);
+    console.log(JSON.stringify(clientInfo));
+
+});
+
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));

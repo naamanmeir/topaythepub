@@ -203,6 +203,11 @@ exports.dbGetClientDetails = function(name,nick,account) {
   " WHERE name LIKE '"+name+"' OR nick LIKE '"+nick+"' OR account LIKE '"+account+"';");
 };
 
+//-----------------------GET ALL CLIENT DETAILS BY ID----------------------//
+exports.dbGetClientInfoById = function(id) {
+  return pool.query("SELECT * FROM "+tableOrders+" WHERE clientid LIKE "+id+";");
+};
+
 //-----------------------GET EXACT NAME FROM DB----------------------//
 exports.dbGetExactName = function(name,nick,account) {
   return pool.query("SELECT name FROM "+tableClients+
@@ -212,7 +217,7 @@ exports.dbGetExactName = function(name,nick,account) {
 //-----------------------GET ID NICK AND NAME FROM DB BY SEARCH----------------------//
 exports.dbGetNameBySearch = function(query) {
   return pool.query("SELECT id,nick,name FROM "+tableClients+
-  " WHERE nick LIKE '%"+query+"%';");
+  " WHERE nick LIKE '%"+query+"%' ORDER BY last_action DESC;");
 };
 
 exports.dbGetDataByScope = async function(scope) {

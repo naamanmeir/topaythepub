@@ -375,7 +375,6 @@ function userLogged(){
     userSearchMessage(3);
     searchBox1.blur();    
     searchBox1.classList.add("searchBoxLogged");
-
     userAutoLogout(0);
 };
 
@@ -397,12 +396,14 @@ function userLogout(){
 };
 
 function userAutoLogout(reset){
-    if(reset != 0){        
+    if(reset != 0){
         timeOut = reset;
     };
     clearTimeout(timerLogout);
     timerLogout = setTimeout(() => {
+        if(clientName != null || clientNick != null){
         userLogout();
+    }
     },timeOut);
 };
 
@@ -504,6 +505,41 @@ function closeNav() {
     document.getElementById("sideNav").style.width = "0";
     sideMenu = false;
 };
+
+function userInfo(){
+    // open window
+    closeNav();
+
+    const window = document.createElement('div');
+    const text = document.createElement('p');
+    text.innerHTML = (clientName.replace(/,/g,"<br>"));
+    text.classList = ("userInfoText");    
+    window.className = ("userInfo");    
+    window.appendChild(text);
+    document.body.appendChild(window);
+    let uData = getUserInfoById();
+    const out = document.body;    
+    out.ondblclick =  (function(){
+        console.log("out click");
+        if(window){
+            text.remove();
+            window.remove();
+        }
+    });
+};
+
+async function getUserInfoById(){
+    let uData;
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+        clients = JSON.parse(this.response);
+        console.log(clients);
+        };
+      };    
+    if(id == null){return};
+    xhttp.open("POST", "./getUserInfo/"+id, true);
+    xhttp.send();
+}
 
 function allElements(action){
     var searchBox = Array.from(document.getElementsByClassName("searchBox"));
