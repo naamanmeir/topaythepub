@@ -17,7 +17,8 @@ const { response } = require("express");
 const app = express();
 const port = 3090;
 
-var now = new Date().toLocaleString("en-IL", {timeZone: "Asia/Jerusalem"});
+// var now = new Date().toLocaleString("en-IL", {timeZone: "Asia/Jerusalem"});
+var now = new Date();
 console.log("System Startup Time :"+now);
 
 
@@ -115,7 +116,7 @@ app.post('/backupTable/', async (req,res) => {
     if(!limit){
         limit = true;
         let dbBackup;
-        dbBackup = await db.dbBackupTable(now).then((dbBackup) => {return (dbBackup)});
+        dbBackup = await db.dbBackupTable(now.getTime()).then((dbBackup) => {return (dbBackup)});
         console.log(dbBackup);
         const limiter = setTimeout(releaseLimit,5000);
         res.send("dbBackup ok at: "+dbBackup);
@@ -196,7 +197,8 @@ async function returnNames(req,res,names,next){
 app.post('/getUserInfo/:data', async (req,res) => {
     let clientId = JSON.parse(req.params.data);
     let clientInfo = await db.dbGetClientInfoById(clientId);
-    console.log(JSON.stringify(clientInfo));
+    // console.log(JSON.stringify(clientInfo));
+    res.send(clientInfo)
 
 });
 

@@ -16,7 +16,7 @@ async function createTable(){
             return;
             }        
         };
-}
+};
 
 function getUserDetailsByFields(nameField,nickField,numberField,nameFieldSmall){
     let name = document.getElementById(nameField).value;
@@ -50,7 +50,7 @@ function displayClientFields(data,destNick,destNumber,destSmallName){
     destName.value = gotName;
     destNick.value = gotNick;
     destNumber.value = gotNumber;
-}
+};
 
 function editClientFields(field,value){
     value = document.getElementById(value).value;
@@ -65,17 +65,23 @@ function editClientFields(field,value){
         };
 };
 
-function insertName(nameField,nickField,numberField){
-    let newName = document.getElementById(nameField).value;
-    let newNick = document.getElementById(nickField).value;
-    let newNumber = document.getElementById(numberField).value;    
-    let newData = [newName,newNick,newNumber];
-    newData = JSON.stringify(newData);    
+function insertName(nameField,nickField,numberField,insertUserStatus){
+    let newName = document.getElementById(nameField);
+    let newNick = document.getElementById(nickField);
+    let newNumber = document.getElementById(numberField);
+    let status = document.getElementById(insertUserStatus);
+    if(newName.value==''|newNick.value==''|newNumber.value==''){return}
+    let newData = [newName.value,newNick.value,newNumber.value];
+    newData = JSON.stringify(newData);
+    newName.value = '';
+    newNick.value = '';
+    newNumber.value = '';
     xhttp.open("POST", "./insertClient/"+newData, true);
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);                
+            console.log(this.response);
+            status.innerText=(this.response);
             return;
             }        
         };
@@ -102,7 +108,7 @@ function getAllData(scope){
         };
 };
 
-function showOrdersTable(data){    
+function showOrdersTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
@@ -131,7 +137,7 @@ function showOrdersTable(data){
     tableWindow.document.appendChild(table);
 };
 
-function showClientsTable(data){    
+function showClientsTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
@@ -160,7 +166,7 @@ function showClientsTable(data){
     tableWindow.document.appendChild(table);
 };
 
-function showAccountTable(data){    
+function showAccountTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
@@ -329,7 +335,7 @@ function login(name){
         xhttp.open("POST", "./searchName/"+name, true);
         xhttp.send();
     };
-}
+};
 
 // OLD FUNCTIONS FOR ADD REMOVE --------------------------
 let nameInsert;
@@ -337,7 +343,7 @@ function createName(){
     let text = document.getElementById("insertNameText");     
     nameInsert = text.value;
     // console.log(nameInsert);
-}
+};
 function insertNameOld(){
     nameInsert = nameInsert.replace(/\'/g, "''");
     nameInsert = JSON.stringify(nameInsert);
@@ -355,7 +361,7 @@ function createNameForDelete(){
     let text = document.getElementById("deleteNameText");     
     nameRemove = text.value;
     // console.log(nameInsert);
-}
+};
 let nameRemove;
 function deleteName(){
     nameRemove = nameRemove.replace(/\'/g, "''");

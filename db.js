@@ -65,18 +65,18 @@ exports.dbInsertClient = async function(newClient){
   let messageReturn;
   if(ifExist.length != 0){
     console.log("CLIENT EXIST");
-    return ("CLIENT ALLREADY EXIST IN DATABASE");
+    return ("שם תפוס");
   }else{
-    console.log("CLIENT DONT EXIST");    
+    console.log("CLIENT AVAILABLE");    
     messageReturn = await pool.query("INSERT INTO "+tableClients+
     " (name,nick,account) VALUES ('"+name+"','"+nick+"',"+number+");")
     .catch((err) => {
-      console.log(err)
+      console.log(err);return("NO OK");
     }).then((res) => {        
         return (res);
       });
-  console.log("message ruturn: "+  messageReturn)
-  return ("INSERTED CLIENT INTO DATABASE -- NO PROOF YET"+ messageReturn);
+  console.log("Inserted CLient: "+  messageReturn)
+  return messageReturn;
   };  
 };
 
@@ -205,7 +205,12 @@ exports.dbGetClientDetails = function(name,nick,account) {
 
 //-----------------------GET ALL CLIENT DETAILS BY ID----------------------//
 exports.dbGetClientInfoById = function(id) {
-  return pool.query("SELECT * FROM "+tableOrders+" WHERE clientid LIKE "+id+";");
+  return pool.query("SELECT client,"+
+  "sum,item2,item1,"+
+  "DATE_FORMAT(`time`, '%Y-%m-%d %H:%i') AS `formatted_date`,orderid FROM "+
+  tableOrders+
+  " WHERE clientid LIKE "+id+
+  " ORDER BY time DESC;");
 };
 
 //-----------------------GET EXACT NAME FROM DB----------------------//

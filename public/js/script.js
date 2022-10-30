@@ -505,41 +505,83 @@ function closeNav() {
     document.getElementById("sideNav").style.width = "0";
     sideMenu = false;
 };
-
-function userInfo(){
-    // open window
-    closeNav();
-
-    const window = document.createElement('div');
-    const text = document.createElement('p');
-    text.innerHTML = (clientName.replace(/,/g,"<br>"));
-    text.classList = ("userInfoText");    
-    window.className = ("userInfo");    
-    window.appendChild(text);
-    document.body.appendChild(window);
-    let uData = getUserInfoById();
-    const out = document.body;    
-    out.ondblclick =  (function(){
-        console.log("out click");
-        if(window){
-            text.remove();
-            window.remove();
-        }
-    });
-};
-
+//--------------GET USER INFO WITH ID SEND REQUEST----------------
 async function getUserInfoById(){
-    let uData;
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-        clients = JSON.parse(this.response);
-        console.log(clients);
+        uData = JSON.parse(this.response);
+        // console.log(uData);
+        userInfo (uData);
         };
-      };    
+      };
     if(id == null){return};
     xhttp.open("POST", "./getUserInfo/"+id, true);
     xhttp.send();
-}
+};
+//-------------------PRINT USER INFO TO TABLE
+async function userInfo(uData){    
+    closeNav();
+    const nameText = document.createElement('p');
+    const closeButton = document.createElement('div');
+    const nameNick = document.createElement('textarea');
+    const tableDiv = document.createElement('div');
+    const window = document.createElement('div');
+    closeButton.innerText = ("X");
+    nameText.innerHTML = (clientName.replace(/,/g,"<br>"));
+    nameNick.value = (clientNick.replace(/,/g,"<br>"));
+    closeButton.className = ("userInfoCloseButton");
+    nameText.className = ("userInfoText");
+    nameNick.className = ("userInfoChangeNick");
+    tableDiv.className = ("userInfoTableDiv");      
+    window.className = ("userInfo");
+    window.appendChild(closeButton);
+    window.appendChild(nameText);    
+    window.appendChild(nameNick);
+    window.appendChild(tableDiv);    
+    document.body.appendChild(window);    
+    const out = document.getElementById("content");    
+    out.ondblclick =  (function(){        
+        if(window){
+            nameText.remove();
+            closeButton.remove();
+            nameNick.remove();
+            tableDiv.remove();
+            window.remove();
+        }
+    });
+    closeButton.onclick =  (function(){        
+        if(window){
+            nameText.remove();
+            closeButton.remove();
+            nameNick.remove();
+            tableDiv.remove();
+            window.remove();
+        }
+    });
+    const table = document.createElement("table");
+    const tableBody = document.createElement("tbody");
+    const TR = document.createElement("tr");
+    TR.innerHTML = ("<th>שם</th><th>סכום</th><th>פריט 10</th><th>פריט 12</th><th>תאריך ושעה</th><th>תג רישום</th>");    
+    TR.setAttribute("style", "background-color:lightblue;")
+    tableBody.appendChild(TR);
+    for(let i = 0;i < uData.length; i++){
+        const row = document.createElement("tr"); 
+        let rowInfo = Object.values(uData[i]);
+        for (let j = 0; j < rowInfo.length; j++) {
+            const cell = document.createElement("td");
+            const cellText = document.createTextNode(rowInfo[j]);
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+        }
+        row.setAttribute("dir","rtl");
+        row.setAttribute("style", "background-color:lightskyblue;")
+        if(i % 2 === 0  ){row.setAttribute("style", "background-color:lightblue;")}
+    tableBody.appendChild(row);
+    }
+    table.appendChild(tableBody);    
+    table.setAttribute("class", "userInfoTable");    
+    tableDiv.appendChild(table);
+};
 
 function allElements(action){
     var searchBox = Array.from(document.getElementsByClassName("searchBox"));
