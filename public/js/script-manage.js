@@ -17,12 +17,12 @@ async function createTable(){
             }        
         };
 };
-
+let clientEdit;
 function getUserDetailsByFields(nameField,nickField,numberField,nameFieldSmall){
     let name = document.getElementById(nameField).value;
     let nick = document.getElementById(nickField).value;
     let number = document.getElementById(numberField).value;
-    let getData = [name,nick,number];
+    let getData = [name,nick,number];    
     // console.log(getData);
     getData = JSON.stringify(getData);
     // console.log(getData);
@@ -50,16 +50,22 @@ function displayClientFields(data,destNick,destNumber,destSmallName){
     destName.value = gotName;
     destNick.value = gotNick;
     destNumber.value = gotNumber;
+    clientEdit = gotName;
 };
 
 function editClientFields(field,value){
+    if(clientEdit==null||clientEdit==""){return};
     value = document.getElementById(value).value;
-    let data = [field,value];
+    let data = [clientEdit,field,value];
     xhttp.open("POST", "./editClientFields/"+data, true);
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);                
+            console.log(this.response);
+            document.getElementById(destSmallName).value = '';
+            document.getElementById(destNick).value = '';
+            document.getElementById(destNumber).value = '';
+            document.getElementById(nameField).value = '';
             return;
             }        
         };

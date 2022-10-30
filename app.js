@@ -19,7 +19,7 @@ const port = 3090;
 
 // var now = new Date().toLocaleString("en-IL", {timeZone: "Asia/Jerusalem"});
 var now = new Date();
-console.log("System Startup Time :"+now);
+console.log("System Startup Time :"+Date());
 
 
 // Static Files
@@ -68,8 +68,9 @@ app.post('/insertClient/:data', async (req,res,next) => {
 app.post('/editClientFields/:data', async (req,res,next) => {
     let newFields = (req.params.data).split(",");
     console.log("APP: EDIT FIELD : "+newFields);
-    let field = newFields[0];
-    let value = newFields[1];        
+    let client = newFields[0];
+    let field = newFields[1];
+    let value = newFields[2];        
     if(field==1){
         field = "name";        
     }
@@ -80,7 +81,7 @@ app.post('/editClientFields/:data', async (req,res,next) => {
         field = "account";        
     }
     var response;
-    response = await db.dbEditClient(field,value).then((res) => {return (res)})
+    response = await db.dbEditClient(client,field,value).then((res) => {return (res)})
     res.send(response);    
 });
 

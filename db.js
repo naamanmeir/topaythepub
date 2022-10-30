@@ -81,9 +81,9 @@ exports.dbInsertClient = async function(newClient){
 };
 
 //--------------------EDIT CLIENT FIELDS----------------//
-exports.dbEditClient = async function(field,value){    
+exports.dbEditClient = async function(client,field,value){    
     messageReturn = await pool.query("UPDATE "+tableClients+
-    " SET "+field+" = '"+value+"';")
+    " SET "+field+" = '"+value+"' WHERE name is like '"+client+"';")
     .catch((err) => {
       console.log(err)
     }).then((res) => {        
