@@ -80,11 +80,12 @@ function afterOrderAnimation(){
     const animRnd = ("animation"+rnd2);
     // const animRnd = ("animation1");
     holder.src = imgRnd;
-    document.body.appendChild(holder);    
-    holder.className = (animRnd);
+    holder.className = ("endAnimation");
+    document.body.appendChild(holder);
+    holder.classList.add(animRnd);
     userLogout();
     pointerEnableIn(3000);
-    allElements(1);    
+    allElements(1);
 };
 
 function orderSubmitted(data){
@@ -99,7 +100,7 @@ function orderSubmitted(data){
         text.remove();
         window.remove();
         afterOrderAnimation();
-    },3000)
+    },2500)
 };
 
 async function placeOrder(orderPack){
@@ -524,11 +525,14 @@ async function userInfo(uData){
     const nameText = document.createElement('p');
     const closeButton = document.createElement('div');
     const nameNick = document.createElement('textarea');
+    const buttonNick = document.createElement('button');
     const tableDiv = document.createElement('div');
     const window = document.createElement('div');
     closeButton.innerText = ("X");
     nameText.innerHTML = (clientName.replace(/,/g,"<br>"));
     nameNick.value = (clientNick.replace(/,/g,"<br>"));
+    buttonNick.textContent = ('עדכן כינוי');
+    buttonNick.className = ('userInfoChangeNickButton');
     closeButton.className = ("userInfoCloseButton");
     nameText.className = ("userInfoText");
     nameNick.className = ("userInfoChangeNick");
@@ -537,6 +541,7 @@ async function userInfo(uData){
     window.appendChild(closeButton);
     window.appendChild(nameText);    
     window.appendChild(nameNick);
+    window.appendChild(buttonNick);
     window.appendChild(tableDiv);    
     document.body.appendChild(window);    
     const out = document.getElementById("content");    

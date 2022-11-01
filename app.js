@@ -62,7 +62,8 @@ app.post('/insertClient/:data', async (req,res,next) => {
     // console.log("APP: ADD NEW NAME: "+newClient);
     var response;
     response = await db.dbInsertClient(newClient).then((res) => {return (res)})
-    res.send(response);    
+    console.log(await response)
+    // res.send(response);    
 });
 
 app.post('/editClientFields/:data', async (req,res,next) => {
@@ -152,6 +153,7 @@ app.get('/order/:data', async function(req,res,next) {
     var item2 = (orderData[2]);
     var item3 = (orderData[3]);
     var item4 = (orderData[4]);
+    if(item1<0||item2<0||item3<0||item4<0){return "cmon ERROR"};
     var orderDate = now;
     var orderTime = now;
     console.log("date: "+orderDate+" time: "+orderTime+" id: "+id+" ,item1: "+item1+" ,item2:"+item2+" ,item3: "+item3+" ,item4: "+item4);

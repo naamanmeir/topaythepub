@@ -75,7 +75,7 @@ exports.dbInsertClient = async function(newClient){
     }).then((res) => {        
         return (res);
       });
-  console.log("Inserted CLient: "+  messageReturn)
+  console.log("Inserted Client: "+  messageReturn)
   return messageReturn;
   };  
 };
@@ -83,7 +83,7 @@ exports.dbInsertClient = async function(newClient){
 //--------------------EDIT CLIENT FIELDS----------------//
 exports.dbEditClient = async function(client,field,value){    
     messageReturn = await pool.query("UPDATE "+tableClients+
-    " SET "+field+" = '"+value+"' WHERE name is like '"+client+"';")
+    " SET "+field+" = '"+value+"' WHERE name = '"+client+"';")
     .catch((err) => {
       console.log(err)
     }).then((res) => {        
