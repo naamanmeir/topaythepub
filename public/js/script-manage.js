@@ -1,5 +1,7 @@
 var xhttp = new XMLHttpRequest();
 
+var limit = 0; // throttle limiter for db
+
 // FUNCTIONS TO RUN SERVER ACTIONS
 async function placeOrder(orderPack){  
     xhttp.open("GET", "./order/"+orderPack, true);
@@ -17,6 +19,232 @@ async function createTable(){
             }        
         };
 };
+
+const searchBox1 = document.getElementById("getUserByName");
+searchBox1.addEventListener('focus',function(){
+    searchBoxClear();
+    if(searchBox1.value.length==0){userSearchMessage(0);};
+    if(searchBox1.value.length>0){searchBox1.placeholder=("");};
+});
+searchBox1.addEventListener('blur',function(){
+    searchBoxClear();
+    searchBox1.placeholder=("לכתוב פה את השם שלכם✍👉👉");
+});
+searchBox1.addEventListener('input',function(){
+    searchBoxClear();    
+    if(searchBox1.value.length==0){userSearchMessage(0);};
+    if(searchBox1.value.length>0){searchBox1.placeholder=("");};
+    searchBox(searchBox1.value);    
+});
+function searchBox(text){
+    // const searchBox = document.getElementById("searchBox");
+    let searchText = text;
+    searchText = searchText.replace(/\\/g, '');
+    searchText = searchText.replace(/\//g, '');
+    searchText = searchText.replace(/[0-9]/g, '');
+    searchText = searchText.replace(/\./g, '');
+    searchText = searchText.replace(/\,/g, '');    
+    searchText = searchText.replace(/\`/g, '');
+    searchText = searchText.replace(/\"/g, '');
+    searchText = searchText.substring(0,42);    
+    searchBox1.value = searchText;
+    searchText = searchText.replace(/\'/g, "''");
+    if(searchText == ""){
+        userSearchMessage(0);
+        searchText = "-";
+    };
+    if(limit == 0){
+        limit = 1;        
+        setTimeout(() => {
+            limit = 0;
+            searchQuery(searchText,searchBox);
+        },150);
+    };
+};
+
+function searchBoxClear(){
+    const searchBox = document.getElementById("getUserByName");
+    if(searchBox1.value.length==0){userSearchMessage(0);};
+    if(searchBox.value == ""){userSearchMessage(0);};
+};
+
+function searchQuery(query,dest){
+    let clients;
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            if(this.response == (JSON.stringify("clear"))){
+                // console.log("CLEAR AUTOSEARCH");
+                clients = null;
+                clearAutoComplete(document.getElementById("autoComplete"));
+                return;
+            };
+        clients = JSON.parse(this.response);        
+        if(searchBox1.value.length==0|searchBox1.value.length<1){userSearchMessage(0);};
+        if(clients[0] == null){
+            userSearchMessage(1);
+            };
+        if(clients[0] != null){
+            userSearchMessage(2);
+            foundNames(query,clients,dest);
+            };
+        };
+      };
+    if(query != ""){
+        query = JSON.stringify(query);
+        xhttp.open("POST", "./searchName/"+query, true);
+        xhttp.send();
+    }else{
+        clients = null;
+        clearAutoComplete(document.getElementById("autoComplete"));
+    };
+};
+
+function foundNames(query,clients,dest){    
+    // console.log(clients);
+    names = [];
+    for(i=0;i<clients.length;i++){
+        names.push(clients[i].nick);
+    };
+    autoComplete(names);
+};
+
+function autoComplete(names){
+    const autoDiv = document.getElementById("autoComplete");
+    clearAutoComplete(autoDiv);
+    autoDiv.className = "autoCompleteSuggestions";
+    for(i=0;i<names.length && i<8;i++){
+        const para = document.createElement("p");
+        para.className = "autocomplete-items";
+        if(i % 2 === 0){para.classList.add("autocomplete-itemsEven");}
+        para.innerText = names[i];        
+        autoDiv.appendChild(para);
+        para.onclick = function () {
+            copyTextToSearchBox(para.innerText);            
+            loginFunction(para.innerText);
+            clearAutoComplete(autoDiv);
+        }
+    };
+    if(names[0] == searchBox1.value){
+        clearAutoComplete(autoDiv);        
+        userSearchMessage(3);
+        searchBox1.blur();
+        loginFunction(names[0]);
+        };
+    if(searchBox1.value.length==0){userSearchMessage(0);};
+    if(searchBox1.value == ""){clearAutoComplete(autoDiv);}    
+};
+
+function clearAutoComplete(autoDiv){
+    autoDiv.className = "autoCompleteNone";
+    while (autoDiv.hasChildNodes()) {
+        autoDiv.removeChild(autoDiv.firstChild);
+      };
+};
+
+function copyTextToSearchBox(text){
+    const searchBox = document.getElementById("searchBox");
+    searchBox.value = text;
+};
+
+function searchBox(){
+    const searchBox = document.getElementById("getUserByName");
+    let searchText = searchBox.value;
+    searchText = searchText.replace(/\\/g, '');
+    searchText = searchText.replace(/\//g, '');
+    searchText = searchText.replace(/[0-9]/g, '');
+    searchText = searchText.replace(/\./g, '');
+    searchText = searchText.replace(/\,/g, '');
+    searchText = searchText.replace(/\`/g, '');
+    searchText = searchText.replace(/\"/g, '');
+    searchText = searchText.substring(0,42);    
+    searchBox.value = searchText;
+    searchText = searchText.replace(/\'/g, "''");
+    if(searchText == ""){
+        searchText = "-";
+    };
+    if(limit == 0){
+        limit = 1;        
+        setTimeout(() => {
+            limit = 0;
+            searchQuery(searchText,searchBox);
+        },250);
+    };
+};
+
+function searchQuery(query,dest){
+    let clients;
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            if(this.response == (JSON.stringify("clear"))){
+                console.log("CLEAR AUTOSEARCH");
+                clients = null;
+                clearAutoComplete(document.getElementById("autoComplete"));
+                return;
+            }        
+        clients = JSON.parse(this.response);        
+        if(clients[0] != null){
+            foundNames(query,clients,dest);
+            }
+        };
+      };
+    if(query != ""){
+        query = JSON.stringify(query);
+        xhttp.open("POST", "./searchName/"+query, true);
+        xhttp.send();
+    }else{
+        clients = null;
+        clearAutoComplete(document.getElementById("autoComplete"));
+    };
+};
+
+function autoComplete(names){
+    const autoDiv = document.getElementById("autoComplete");
+    clearAutoComplete(autoDiv);
+    autoDiv.className = "autoCompleteSuggestions";
+    for(i=0;i<names.length && i<5;i++){
+        const para = document.createElement("p");
+        para.className = "autocomplete-items";
+        para.innerText = names[i];        
+        autoDiv.appendChild(para);
+        para.onclick = function () {
+            copyTextToSearchBox(para.innerText);
+            // login(para.innerText);
+            clearAutoComplete(autoDiv);            
+        }
+    };
+};
+
+function clearAutoComplete(autoDiv){
+    autoDiv.className = "autoCompleteNone";
+    while (autoDiv.hasChildNodes()) {
+        autoDiv.removeChild(autoDiv.firstChild);
+      };
+};
+
+function copyTextToSearchBox(text){
+    const searchBox = document.getElementById("getUserByName");
+    searchBox.value = text;
+    
+};
+
+function userSearchMessage(select){    
+    if(select == 0){
+        document.getElementById("editNick").value = "";
+        document.getElementById("editNumber").value = "";
+        document.getElementById("editName").value = "";
+        document.getElementById("getUserByName").value = "";
+    }
+    if(select == 1){
+        searchBox1.classList.add("searchBoxNotLogged");    
+    }    
+    if(select == 2){
+        searchBox1.classList.add("searchBoxNotOk");  
+    }
+    if(select == 3){
+        searchBox1.classList.add("searchBoxOk");
+    }
+};
+
 let clientEdit;
 function getUserDetailsByFields(nameField,nickField,numberField,nameFieldSmall){
     let name = document.getElementById(nameField).value;
@@ -30,7 +258,7 @@ function getUserDetailsByFields(nameField,nickField,numberField,nameFieldSmall){
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            // console.log(this.response);
+            console.log(this.response);
             displayClientFields(this.response,nickField,numberField,nameFieldSmall);
             return;
             }
@@ -42,11 +270,13 @@ function displayClientFields(data,destNick,destNumber,destSmallName){
     destNick = document.getElementById(destNick);
     destNumber = document.getElementById(destNumber);    
     data = JSON.parse(data);
-    console.log(data[0].name);
+    console.log("Test")
+    if(data==null||data[0]==null){return ("DATA NULL")};
+    console.log(data);
     let gotName = data[0].name;
     let gotNick = data[0].nick;
     let gotNumber = data[0].account;    
-    console.log(gotName,gotNick,gotNumber);
+    console.log("here : "+gotName,gotNick,gotNumber);
     destName.value = gotName;
     destNick.value = gotNick;
     destNumber.value = gotNumber;
@@ -244,93 +474,14 @@ function inputFilter(e){
     return t;
 };
 
-function searchBox(){
-    const searchBox = document.getElementById("searchBox");
-    let searchText = searchBox.value;
-    searchText = searchText.replace(/\\/g, '');
-    searchText = searchText.replace(/\//g, '');
-    searchText = searchText.replace(/[0-9]/g, '');
-    searchText = searchText.replace(/\./g, '');
-    searchText = searchText.replace(/\,/g, '');
-    searchText = searchText.replace(/\`/g, '');
-    searchText = searchText.replace(/\"/g, '');
-    searchText = searchText.substring(0,42);    
-    searchBox.value = searchText;
-    searchText = searchText.replace(/\'/g, "''");
-    if(searchText == ""){
-        searchText = "-";
-    };
-    if(limit == 0){
-        limit = 1;        
-        setTimeout(() => {
-            limit = 0;
-            searchQuery(searchText,searchBox);
-        },250);
-    };
-};
-
-function searchQuery(query,dest){
-    let clients;
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            if(this.response == (JSON.stringify("clear"))){
-                console.log("CLEAR AUTOSEARCH");
-                clients = null;
-                clearAutoComplete(document.getElementById("autoComplete"));
-                return;
-            }        
-        clients = JSON.parse(this.response);        
-        if(clients[0] != null){
-            foundNames(query,clients,dest);
-            }
-        };
-      };
-    if(query != ""){
-        query = JSON.stringify(query);
-        xhttp.open("POST", "./searchName/"+query, true);
-        xhttp.send();
-    }else{
-        clients = null;
-        clearAutoComplete(document.getElementById("autoComplete"));
-    };
-};
-
-function autoComplete(names){
-    const autoDiv = document.getElementById("autoComplete");
-    clearAutoComplete(autoDiv);
-    autoDiv.className = "autoCompleteSuggestions";
-    for(i=0;i<names.length && i<5;i++){
-        const para = document.createElement("p");
-        para.className = "autocomplete-items";
-        para.innerText = names[i];        
-        autoDiv.appendChild(para);
-        para.onclick = function () {
-            copyTextToSearchBox(para.innerText);
-            login(para.innerText);
-            clearAutoComplete(autoDiv);            
-        }
-    };
-};
-
-function clearAutoComplete(autoDiv){
-    autoDiv.className = "autoCompleteNone";
-    while (autoDiv.hasChildNodes()) {
-        autoDiv.removeChild(autoDiv.firstChild);
-      };
-};
-
-function copyTextToSearchBox(text){
-    const searchBox = document.getElementById("searchBox");
-    searchBox.value = text;
-};
-
 function login(name){
-    console.log(name);
+    // console.log(name);
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
         login = JSON.parse(this.response);
-        console.log(login);
+        console.log("LOGIN FUNCTION: "+login);
+        displayClientFields(login);
         clientName = login[0].name;
         id = login[0].id;
         console.log("id: "+id+" name: "+clientName);
@@ -384,17 +535,17 @@ function deleteName(){
 };
 
 // LOG CONSOLE TO SCREEN ------------------------------
-function clearConsole(){
-    document.getElementById("console").innerHTML ="";
-};
-if (typeof console  != "undefined") 
-  if (typeof console.log != 'undefined')
-    console.olog = console.log;
-else
-  console.olog = function() {};
+// function clearConsole(){
+//     document.getElementById("console").innerHTML ="";
+// };
+// if (typeof console  != "undefined") 
+//   if (typeof console.log != 'undefined')
+//     console.olog = console.log;
+// else
+//   console.olog = function() {};
 
-console.log = function(message) {
-  console.olog(message);
-  $('#console').append('<p>' + message + '</p>');
-};
-console.error = console.debug = console.info =  console.log;
+// console.log = function(message) {
+//   console.olog(message);
+//   $('#console').append('<p>' + message + '</p>');
+// };
+// console.error = console.debug = console.info =  console.log;

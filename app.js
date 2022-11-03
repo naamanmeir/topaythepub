@@ -17,6 +17,10 @@ const { response } = require("express");
 const app = express();
 const port = 3090;
 
+const username = process.env.USERNAME;
+const password = process.env.PASSWORD;
+const user_admin = process.env.USER_ADMIN;
+const password_admin = process.env.PASS_ADMIN;
 // var now = new Date().toLocaleString("en-IL", {timeZone: "Asia/Jerusalem"});
 var now = new Date();
 console.log("System Startup Time :"+Date());
@@ -33,7 +37,28 @@ app.set('views', './views');
 app.set('view engine', 'ejs');
 
 // ------------------------  MANAGE VIEW  ----------------------- //
-app.get('/manage', async function(req, res) {    
+app.get('/manage', async function(req, res) {  
+    const reject = () => {
+        res.setHeader("www-authenticate", "Basic");
+        res.sendStatus(401);
+      };
+    
+      const authorization = req.headers.authorization;
+    
+      if (!authorization) {
+        return reject();
+      }
+    
+      const [username, password] = Buffer.from(
+        authorization.replace("Basic ", ""),
+        "base64"
+      )
+        .toString()
+        .split(":");
+    
+      if (!(username === user_admin && password === password_admin)) {
+        return reject();
+      }  
     res.render('manage', {})
 });
 
@@ -52,17 +77,18 @@ app.post('/getUserDetails/:data', async (req,res,next) => {
     let getNick = getClient[1];
     let getNumber = getClient[2];
     console.log(getName,getNick,getNumber)
-    var response;
-    response = await db.dbGetClientDetails(getName,getNick,getNumber).then((res) => {return (res)})
-    res.send(response);    
+    var clientFields;
+    clientFields = await db.dbGetClientDetails(getName,getNick,getNumber).then((res) => {return (res)})
+    console.log(JSON.stringify(await clientFields));
+    res.send(clientFields);    
 });
 
 app.post('/insertClient/:data', async (req,res,next) => {
     let newClient = JSON.parse(req.params.data);
     // console.log("APP: ADD NEW NAME: "+newClient);
-    var response;
-    response = await db.dbInsertClient(newClient).then((res) => {return (res)})
-    console.log(await response)
+    var insertClientResponse;
+    insertClientResponse = await db.dbInsertClient(newClient).then((res) => {return (res)})
+    console.log(await insertClientResponse)
     // res.send(response);    
 });
 
@@ -81,9 +107,9 @@ app.post('/editClientFields/:data', async (req,res,next) => {
     if(field==3){
         field = "account";        
     }
-    var response;
-    response = await db.dbEditClient(client,field,value).then((res) => {return (res)})
-    res.send(response);    
+    var clientFieldsEdited;
+    clientFieldsEdited = await db.dbEditClient(client,field,value).then((res) => {return (res)})
+    res.send(clientFieldsEdited);    
 });
 
 app.post('/insertName/:data', async (req,res,next) => {
@@ -101,10 +127,6 @@ app.post('/deleteName/:data', async (req,res,next) => {
     response = await db.dbDeleteName(deleteName).then((res) => {return (res)})
     res.send(response);    
 });
-
-function sendBackAddedName(req,res,message,next){
-
-};
 
 app.post('/getAllData/:data', async (req,res) => {
     let scope = JSON.parse(req.params.data);
@@ -131,7 +153,28 @@ function releaseLimit(){
 };
 
 // ------------------------  CLIENT VIEW  ----------------------- //
-app.get('', async function(req, res) {  
+app.get('', async function(req, res) {
+    const reject = () => {
+        res.setHeader("www-authenticate", "Basic");
+        res.sendStatus(401);
+      };
+    
+      const authorization = req.headers.authorization;
+    
+      if (!authorization) {
+        return reject();
+      }
+    
+      const [username, password] = Buffer.from(
+        authorization.replace("Basic ", ""),
+        "base64"
+      )
+        .toString()
+        .split(":");
+    
+      if (!(username === username && password === password)) {
+        return reject();
+      }
     console.log("User Requested Index: "+now);  
     res.render('index', {
         item1 : msg.NAME_ITEM1,

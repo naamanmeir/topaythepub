@@ -9,7 +9,7 @@ body,
     direction: rtl;
     user-select: none;
     scroll-behavior: smooth;
-    float: center;
+    /* float: center; */
 }
 
 p1{
@@ -42,7 +42,7 @@ body {
 .content {
     height: fit-content;        
     max-width: 1200px;
-    float: center;
+    /* float: center; */
     left: 50%;
     right: 50%;    
     display: flex;
@@ -62,7 +62,15 @@ body {
 .function{
 
 }
-
+.searchBoxNotOk{
+    border: 3px solid red;
+}
+.searchBoxOk{
+    border: 3px solid green;
+}
+.searchBoxNoLogged{
+    border: 3px solid grey;
+}
 .textbox {
     width: 66%;
     height: 2rem;

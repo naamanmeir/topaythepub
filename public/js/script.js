@@ -197,20 +197,20 @@ function add(item){
     const count3 = document.getElementById("count3");
     const count4 = document.getElementById("count4");
     const buttonsDiv = document.getElementById("buttons");
-    if(item==1){
+    if(item==1){if(item1==99){return};
             item1 = item1+1;
             count1.innerText = item1;
         }
-    if(item==2){
+    if(item==2){if(item2==99){return};
             item2 = item2+1;
             count2.innerText = item2;
         }
-    if(item==3){
+    if(item==3){if(item3==99){return};
             item3 = item3+1;
             count3.innerText = item3;
             searchBox1.blur();
         }
-    if(item==4){
+    if(item==4){if(item4==99){return};
             item4 = item4+1;
             count4.innerText = item4;
         }
@@ -287,7 +287,7 @@ function searchQuery(query,dest){
                 return;
             };
         clients = JSON.parse(this.response);        
-        if(searchBox1.value.length==0){userSearchMessage(0);};
+        if(searchBox1.value.length==0|searchBox1.value.length<1){userSearchMessage(0);};
         if(clients[0] == null){
             userSearchMessage(1);
             };
@@ -320,7 +320,7 @@ function autoComplete(names){
     const autoDiv = document.getElementById("autoComplete");
     clearAutoComplete(autoDiv);
     autoDiv.className = "autoCompleteSuggestions";
-    for(i=0;i<names.length && i<15;i++){
+    for(i=0;i<names.length && i<8;i++){
         const para = document.createElement("p");
         para.className = "autocomplete-items";
         if(i % 2 === 0){para.classList.add("autocomplete-itemsEven");}

@@ -199,7 +199,7 @@ exports.dbGetClientNameById = function(id) {
 
 //-----------------------GET ALL CLIENT DETAILS BY NAME OR NICK OR NUMBER----------------------//
 exports.dbGetClientDetails = function(name,nick,account) {
-  return pool.query("SELECT * FROM "+tableClients+
+  return pool.query("SELECT name,nick,account FROM "+tableClients+
   " WHERE name LIKE '"+name+"' OR nick LIKE '"+nick+"' OR account LIKE '"+account+"';");
 };
 
@@ -226,14 +226,14 @@ exports.dbGetNameBySearch = function(query) {
 };
 
 exports.dbGetDataByScope = async function(scope) {
-  if (scope==1){
+  if (scope==1){//SCOPE ORDERS
     data = await pool.query(`SELECT * FROM ${tableOrders} ORDER BY orderid DESC;`);
   };
-  if (scope==2){
+  if (scope==2){//SCOPE CLIENTS
     data = await pool.query(`SELECT * FROM ${tableClients};`);
   };
-  if (scope==3){
-    data = await pool.query(`SELECT sum,account,name FROM ${tableClients};`);
+  if (scope==3){//SCOPE REPORT
+    data = await pool.query(`SELECT sum,account,name FROM ${tableClients} WHERE account >= 50;`);
   };
   // console.log(await data);
   return data;
