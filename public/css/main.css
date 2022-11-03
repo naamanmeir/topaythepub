@@ -418,7 +418,7 @@ input[type=text] {
 .item{
     z-index: 1;
     height: fit-content;
-    min-height: 80%;
+    /* min-height: 80%; */
     width: fit-content;
     min-width: 40%;
     border: 4px outset rgb(240, 152, 0);
