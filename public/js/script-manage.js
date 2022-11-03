@@ -27,8 +27,7 @@ searchBox1.addEventListener('focus',function(){
     if(searchBox1.value.length>0){searchBox1.placeholder=("");};
 });
 searchBox1.addEventListener('blur',function(){
-    searchBoxClear();
-    searchBox1.placeholder=("לכתוב פה את השם שלכם✍👉👉");
+    searchBoxClear();    
 });
 searchBox1.addEventListener('input',function(){
     searchBoxClear();    
@@ -85,13 +84,14 @@ function searchQuery(query,dest){
             };
         if(clients[0] != null){
             userSearchMessage(2);
-            foundNames(query,clients,dest);
+            // foundNames(query,clients,dest);
+            autoComplete(clients);
             };
         };
       };
     if(query != ""){
         query = JSON.stringify(query);
-        xhttp.open("POST", "./searchName/"+query, true);
+        xhttp.open("POST", "./searchNameManage/"+query, true);
         xhttp.send();
     }else{
         clients = null;
@@ -99,36 +99,39 @@ function searchQuery(query,dest){
     };
 };
 
-function foundNames(query,clients,dest){    
-    // console.log(clients);
-    names = [];
+function foundNames(query,clients,dest){
+    names = [];  
+    console.log(clients);
     for(i=0;i<clients.length;i++){
-        names.push(clients[i].nick);
+        names.push(clients[i].name);
     };
-    autoComplete(names);
+    autoComplete(clients);
+    // autoComplete(names);
 };
 
-function autoComplete(names){
+function autoComplete(clients){
     const autoDiv = document.getElementById("autoComplete");
-    clearAutoComplete(autoDiv);
+    clearAutoComplete(autoDiv);    
     autoDiv.className = "autoCompleteSuggestions";
-    for(i=0;i<names.length && i<8;i++){
+    for(i=0;i<clients.length;i++){
         const para = document.createElement("p");
         para.className = "autocomplete-items";
         if(i % 2 === 0){para.classList.add("autocomplete-itemsEven");}
-        para.innerText = names[i];        
+        para.innerText = (clients[i].id + ": "+clients[i].name);
+        const clientsSelected = [clients[i].id,clients[i].name,clients[i].account,clients[i].nick];
         autoDiv.appendChild(para);
         para.onclick = function () {
-            copyTextToSearchBox(para.innerText);            
-            loginFunction(para.innerText);
+            copyTextToSearchBox(clientsSelected);
             clearAutoComplete(autoDiv);
         }
     };
-    if(names[0] == searchBox1.value){
-        clearAutoComplete(autoDiv);        
-        userSearchMessage(3);
+    if(clients[0].name == searchBox1.value){
+        clearAutoComplete(autoDiv);
+        document.getElementById("editNick").value = clients[0].nick;
+        document.getElementById("editNumber").value = clients[0].account;
+        document.getElementById("editName").value = clients[0].name;  
         searchBox1.blur();
-        loginFunction(names[0]);
+        userSearchMessage(3);        
         };
     if(searchBox1.value.length==0){userSearchMessage(0);};
     if(searchBox1.value == ""){clearAutoComplete(autoDiv);}    
@@ -141,90 +144,22 @@ function clearAutoComplete(autoDiv){
       };
 };
 
-function copyTextToSearchBox(text){
-    const searchBox = document.getElementById("searchBox");
-    searchBox.value = text;
-};
-
-function searchBox(){
-    const searchBox = document.getElementById("getUserByName");
-    let searchText = searchBox.value;
-    searchText = searchText.replace(/\\/g, '');
-    searchText = searchText.replace(/\//g, '');
-    searchText = searchText.replace(/[0-9]/g, '');
-    searchText = searchText.replace(/\./g, '');
-    searchText = searchText.replace(/\,/g, '');
-    searchText = searchText.replace(/\`/g, '');
-    searchText = searchText.replace(/\"/g, '');
-    searchText = searchText.substring(0,42);    
-    searchBox.value = searchText;
-    searchText = searchText.replace(/\'/g, "''");
-    if(searchText == ""){
-        searchText = "-";
-    };
-    if(limit == 0){
-        limit = 1;        
-        setTimeout(() => {
-            limit = 0;
-            searchQuery(searchText,searchBox);
-        },250);
-    };
-};
-
-function searchQuery(query,dest){
-    let clients;
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            if(this.response == (JSON.stringify("clear"))){
-                console.log("CLEAR AUTOSEARCH");
-                clients = null;
-                clearAutoComplete(document.getElementById("autoComplete"));
-                return;
-            }        
-        clients = JSON.parse(this.response);        
-        if(clients[0] != null){
-            foundNames(query,clients,dest);
-            }
-        };
-      };
-    if(query != ""){
-        query = JSON.stringify(query);
-        xhttp.open("POST", "./searchName/"+query, true);
-        xhttp.send();
-    }else{
-        clients = null;
-        clearAutoComplete(document.getElementById("autoComplete"));
-    };
-};
-
-function autoComplete(names){
-    const autoDiv = document.getElementById("autoComplete");
-    clearAutoComplete(autoDiv);
-    autoDiv.className = "autoCompleteSuggestions";
-    for(i=0;i<names.length && i<5;i++){
-        const para = document.createElement("p");
-        para.className = "autocomplete-items";
-        para.innerText = names[i];        
-        autoDiv.appendChild(para);
-        para.onclick = function () {
-            copyTextToSearchBox(para.innerText);
-            // login(para.innerText);
-            clearAutoComplete(autoDiv);            
-        }
-    };
-};
-
-function clearAutoComplete(autoDiv){
-    autoDiv.className = "autoCompleteNone";
-    while (autoDiv.hasChildNodes()) {
-        autoDiv.removeChild(autoDiv.firstChild);
-      };
-};
-
-function copyTextToSearchBox(text){
-    const searchBox = document.getElementById("getUserByName");
-    searchBox.value = text;
-    
+let clientId;
+let clientName;
+let clientAccount;
+let clientNick;
+//-------------------LOGGED IN CLIENT FOR EDIT
+function copyTextToSearchBox(clientsSelected){
+    clientId = clientsSelected[0];
+    clientName = clientsSelected[1];
+    clientAccount = clientsSelected[2];
+    clientNick = clientsSelected[3];
+    const searchBox = document.getElementById("getUserByName");    
+    searchBox.value = clientsSelected[1];
+    document.getElementById("editName").value = clientsSelected[1];
+    document.getElementById("editNick").value = clientsSelected[3];
+    document.getElementById("editNumber").value = clientsSelected[2];    
+    userSearchMessage(3);
 };
 
 function userSearchMessage(select){    
@@ -241,34 +176,29 @@ function userSearchMessage(select){
         searchBox1.classList.add("searchBoxNotOk");  
     }
     if(select == 3){
+        searchBox1.classList.remove("searchBoxNotLogged");
+        searchBox1.classList.remove("searchBoxNotOk");
         searchBox1.classList.add("searchBoxOk");
     }
 };
 
-let clientEdit;
-function getUserDetailsByFields(nameField,nickField,numberField,nameFieldSmall){
-    let name = document.getElementById(nameField).value;
-    let nick = document.getElementById(nickField).value;
-    let number = document.getElementById(numberField).value;
-    let getData = [name,nick,number];    
-    // console.log(getData);
-    getData = JSON.stringify(getData);
-    // console.log(getData);
-    xhttp.open("POST", "./getUserDetails/"+getData, true);
+function getUserDetailsById(){
+    console.log(clientId);
+    xhttp.open("POST", "./getUserDetails/"+clientId, true);
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             console.log(this.response);
-            displayClientFields(this.response,nickField,numberField,nameFieldSmall);
+            displayClientFields(this.response);
             return;
             }
         };
 };
 
 function displayClientFields(data,destNick,destNumber,destSmallName){
-    destName = document.getElementById(destSmallName);
-    destNick = document.getElementById(destNick);
-    destNumber = document.getElementById(destNumber);    
+    destName = document.getElementById("editNick");
+    destNick = document.getElementById("editNumber");
+    destNumber = document.getElementById("editName");    
     data = JSON.parse(data);
     console.log("Test")
     if(data==null||data[0]==null){return ("DATA NULL")};
@@ -284,22 +214,40 @@ function displayClientFields(data,destNick,destNumber,destSmallName){
 };
 
 function editClientFields(field,value){
-    if(clientEdit==null||clientEdit==""){return};
+    if(clientId==null||clientId==""){console.log("this is stupid");return};
     value = document.getElementById(value).value;
-    let data = [clientEdit,field,value];
+    console.log(field,value);
+    let data = [clientId,field,value];
     xhttp.open("POST", "./editClientFields/"+data, true);
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);
-            document.getElementById(destSmallName).value = '';
-            document.getElementById(destNick).value = '';
-            document.getElementById(destNumber).value = '';
-            document.getElementById(nameField).value = '';
+            editLog(this.response);
             return;
             }        
         };
 };
+
+function clientDeleteLastOrder(){
+    if(clientId==null){return};    
+    xhttp.open("POST", "./deleteLastOrder/"+clientId, true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {            
+            editLog(this.response);
+            return;
+            }        
+        };
+}
+
+function editLog(text){
+    console.log(text);
+    document.getElementById("editLog").innerText = text;
+    document.getElementById("editName").value = '';
+    document.getElementById("editNick").value = '';
+    document.getElementById("editNumber").value = '';
+    document.getElementById("getUserByName").value = '';
+}
 
 function insertName(nameField,nickField,numberField,insertUserStatus){
     let newName = document.getElementById(nameField);
@@ -489,7 +437,7 @@ function login(name){
     };
     if(name != ""){
         name = JSON.stringify(name);
-        xhttp.open("POST", "./searchName/"+name, true);
+        xhttp.open("POST", "./searchNameManage/"+name, true);
         xhttp.send();
     };
 };
@@ -546,6 +494,6 @@ function deleteName(){
 
 // console.log = function(message) {
 //   console.olog(message);
-//   $('#console').append('<p>' + message + '</p>');
+//   document.getElementById("console").append('<p>' + message + '</p>');
 // };
 // console.error = console.debug = console.info =  console.log;

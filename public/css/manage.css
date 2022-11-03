@@ -62,21 +62,30 @@ body {
 .function{
 
 }
+.function p{
+    margin: 0px;
+    padding: 0px;
+}
+.searchBoxNoLogged{
+    border: 3px solid grey;
+}
 .searchBoxNotOk{
     border: 3px solid red;
 }
 .searchBoxOk{
     border: 3px solid green;
 }
-.searchBoxNoLogged{
-    border: 3px solid grey;
-}
 .textbox {
-    width: 66%;
+    width: 75%;
     height: 2rem;
 }
 .textboxShort{
-    width: auto;
+    width: 65%;
+    height: 2rem;
+}
+.textboxNumber{
+    width: fit-content;
+    height: 2rem;
 }
 input:valid {
     color: green;
@@ -87,8 +96,15 @@ input:valid {
 .red{
     background-color: red;
 }
-.left{    
+.orange{
+    background-color: orange;
+}
+.left{  
     float: left;     
+}
+.center{    
+    /* float: center; */
+    text-align: center;
 }
 
 .tableStyle{
@@ -97,10 +113,15 @@ input:valid {
     background-color: rgb(223, 14, 14);
     color: lightblue;
 }
-
-.button {
-
+.logText{
+    direction: ltr;
 }
+
+button {
+    margin: 0.2rem;
+    height: 2rem;
+}
+
 
 .footer{
     color: black;    
@@ -116,3 +137,47 @@ input:valid {
     margin: 0px 0px 0px 0px;    
     margin-bottom: 3%;
 }
+
+.autoCompleteNone{
+    display: none;
+    height: 0;
+}
+.autoCompleteSuggestions {
+    z-index: 3000;
+    position: relative;
+    /* display: inline-block;  ---  causes down carousele */
+    height: 2rem;
+    width: auto;
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+.autocomplete-items {
+    z-index: 3000;    
+    left: 0;
+    right:0;
+    padding: 0px;
+    margin: 0px;
+    font-size: 1rem;
+    color: rgb(20, 20, 20);
+    background-color: #d4d4d4;
+    border: 2px solid black;
+}
+.autocomplete-itemsEven{
+    background-color: #9f9d9d;
+}
+.autocomplete-items:hover {    
+    background-color: #e9e9e9;
+}
+.autocomplete-items div {
+    /* padding: 10px; */
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}  
+.autocomplete-active {
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+}  

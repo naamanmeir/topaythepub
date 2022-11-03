@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
     <title>ניהול</title>
     <link rel="stylesheet" href="css/manage.css">
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
@@ -21,7 +21,7 @@
                 <p>עריכת משתמש קיים</p>
                 <input type="search" class="textbox" id="getUserByName" spellcheck="false" placeholder=" הכנס שם">
                 <div class="autoCompleteNone" id="autoComplete"></div>
-                <button onclick="getUserDetailsByFields('getUserByName','editNick','editNumber','editName')">בקש נתונים</button>
+                <!-- <button onclick="getUserDetailsById()">בקש נתונים</button> -->
             </div>
             <div class="row">
                 <input type="search" class="textboxShort" id="editName" spellcheck="false" placeholder=" ערוך שם חדש">
@@ -30,11 +30,12 @@
                 <button onclick="editClientFields(2,'editNick')">עריכת כינוי</button>
             </div>
             <div class="row">
-                <input type="number" class="textboxShort" id="editNumber" spellcheck="false" placeholder=" ערוך מספר חשבון חדש">
+                <input type="number" class="textboxNumber" id="editNumber" spellcheck="false" placeholder=" ערוך מספר חשבון חדש">
                 <button onclick="editClientFields(3,'editNumber')">עריכת מספר</button>
+                <button class="center orange" onclick="clientDeleteLastOrder()">מחיקת הזמנה אחרונה</button>
                 <button class="left red" onclick="deleteName()">מחיקת משתמש</button>
             </div>
-            <p>מחיקת פעולה אחרונה</p>
+            <div class="logText" id="editLog">-</div>            
         </div>
 
         <br>
@@ -42,9 +43,12 @@
         <div class="addUser">
             <div class="function column">
                 <p>הכנסת משתמש חדש</p>
-                <p>שם משתמש : <input type="search" class="textbox" id="insertName" spellcheck="false" placeholder=" הכנס שם"></p>
-                <p>כינוי : <input type="search" class="textbox" id="insertNick" spellcheck="false" placeholder=" הכנס כינוי "></p>
-                <p>מספר חשבון : <input type="text" class="textboxShort" id="insertNumber" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מספר חשבון ">
+                <p>שם משתמש : </p>
+                <input type="search" class="textbox" id="insertName" spellcheck="false" placeholder=" הכנס שם">
+                <p>כינוי : </p>
+                <input type="search" class="textbox" id="insertNick" spellcheck="false" placeholder=" הכנס כינוי ">
+                <p>מספר חשבון : </p>
+                <input type="text" class="textboxShort" id="insertNumber" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מספר חשבון ">
                 <button onclick="insertName('insertName','insertNick','insertNumber','insertUserStatus')">הכנס משתמש</button>
                 <button id="insertUserStatus"></button>
                 </p>
@@ -68,6 +72,11 @@
         <div class="function" id="getAccounData">
             <button onclick="getAllData(3)">הצגת נתונים לדו"ח</button>
         </div>
+    </div>
+
+        <div class="content column"></div>
+
+    <div class="content row">
 
         <div class="function" id="backupTable">
             <button onclick="backupTable()">גיבוי הטבלה במאגר</button>
@@ -77,7 +86,7 @@
             <button>איפוס נתונים לאחר קריאה</button>
         </div>
 
-        <div class="createTablefunction">
+        <div class="function" id="createTablefunction">
             <button onclick="createTable()">צור טבלה נדרשת</button>
         </div>
 

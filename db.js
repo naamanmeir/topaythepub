@@ -81,17 +81,61 @@ exports.dbInsertClient = async function(newClient){
 };
 
 //--------------------EDIT CLIENT FIELDS----------------//
-exports.dbEditClient = async function(client,field,value){    
+exports.dbEditClient = async function(clientId,field,value){    
     messageReturn = await pool.query("UPDATE "+tableClients+
-    " SET "+field+" = '"+value+"' WHERE name = '"+client+"';")
+    " SET "+field+" = '"+value+"' WHERE id = "+clientId+";")
     .catch((err) => {
       console.log(err)
     }).then((res) => {        
         return (res);
       });
-  console.log("message EFTER EDIT FIELDS: "+  messageReturn)
-  return ("EDITED FIELDS IN DATABASE -- NO PROOF YET"+ messageReturn);
+  console.log("clientID: "+clientId+" Column: "+field+" Value: "+value)
+  return ("clientID: "+clientId+" Column: "+field+" Value: "+value+" No ERRORS");
 };
+
+//--------------------DELETE LAST ORDER BY CLIEND ID----------------//
+exports.dbDeleteLastOrderById = async function(clientId){
+  // get last order from orders by clientId
+  // sum client sum minus last order
+  // update client sum
+  
+  lastOrderDetails = await pool.query("SELECT orderid,item1,item2,item3,item4,sum FROM "+tableOrders+
+  " WHERE clientid = "+clientId+" ORDER BY orderid DESC LIMIT 1;")
+  .catch((err) => {
+    console.log(err)
+  }).then((res) => {        
+      return (res);
+    });
+if(lastOrderDetails[0]==null){console.log("no order");return ("no such order")};
+
+clientDetail = await pool.query("SELECT item1,item2,item3,item4,sum FROM "+tableClients+
+" WHERE id = "+clientId+";");
+
+if(lastOrderDetails[0].sum>clientDetail[0].sum||lastOrderDetails[0].item1>clientDetail[0].item1||
+  lastOrderDetails[0].item2>clientDetail[0].item2||lastOrderDetails[0].item3>clientDetail[0].item3||
+  lastOrderDetails[0].item4>clientDetail[0].item4){console.log("ERROR SUM IS NO LOGICAL");return ("ERROR WITH THE NUMBERS")};
+  
+console.log("Order Sum: "+lastOrderDetails[0].sum);
+console.log("Client Sum: "+clientDetail[0].sum);
+
+deletedOrderFromClients = await pool.query("UPDATE "+tableClients+" SET"+
+" item1 = (item1 - "+lastOrderDetails[0].item1+")"+
+",item2 = (item2 - "+lastOrderDetails[0].item2+")"+
+",item3 = (item3 - "+lastOrderDetails[0].item3+")"+
+",item4 = (item4 - "+lastOrderDetails[0].item4+")"+
+",sum = (sum - "+lastOrderDetails[0].sum+")"+
+"WHERE id = "+clientId+";")
+.catch((err) => {
+  console.log(err)
+}).then((res) => {        
+    return (res);
+  });
+deleteOrderFromOrders = await pool.query("DELETE FROM "+tableOrders+" WHERE orderid = "+
+lastOrderDetails[0].orderid+";");
+console.log(deletedOrderFromClients);
+console.log("DB DELETE LAST ORDER FROM: "+clientId+" SUM OF: "+lastOrderDetails[0].sum);
+return ("DB DELETE LAST ORDER FROM: "+clientId+" SUM OF: "+lastOrderDetails[0].sum);
+}
 
 //--------------------INSERT NEW NAME TO DB----------------//
 exports.dbInsertName = async function(name){
@@ -172,14 +216,14 @@ exports.dbInsertOrderToOrders = async function(orderTime,clientid,item1,item2,it
 
 //--------------------INSERT ORDER TO CLIENT TABLE----------------//
 exports.dbInsertOrderToClient = async function(orderTime,id,item1,item2,item3,item4){  
-  let sum = (item1+item2+item3+item4);
+  var sum = item1*10+item2*12+item3*10+item4*10;  
   let orderResult;
   orderResult = await pool.query(`UPDATE ${tableClients} SET last_action = (NOW()),
    item1 = item1+${item1},
    item2 = item2+${item2},
    item3 = item3+${item3},
    item4 = item4+${item4},
-   sum = sum+((item1+item2+item3+item4)*10)
+   sum = sum+${sum}
    WHERE id = ${id};`)
    .then((rows) => {
     // console.log(rows);
@@ -198,9 +242,15 @@ exports.dbGetClientNameById = function(id) {
 };
 
 //-----------------------GET ALL CLIENT DETAILS BY NAME OR NICK OR NUMBER----------------------//
-exports.dbGetClientDetails = function(name,nick,account) {
+exports.dbGetClientDetailsByFields = function(name,nick,account) {
   return pool.query("SELECT name,nick,account FROM "+tableClients+
   " WHERE name LIKE '"+name+"' OR nick LIKE '"+nick+"' OR account LIKE '"+account+"';");
+};
+
+//-----------------------GET CLIENT DETAILS BY ID----------------------//
+exports.dbGetClientDetailsById = function(clientId) {
+  return pool.query("SELECT name,nick,account FROM "+tableClients+
+  " WHERE id="+clientId+"';");
 };
 
 //-----------------------GET ALL CLIENT DETAILS BY ID----------------------//
@@ -218,8 +268,13 @@ exports.dbGetExactName = function(name,nick,account) {
   return pool.query("SELECT name FROM "+tableClients+
   " WHERE name LIKE '"+name+"' OR nick LIKE '"+nick+"' OR account LIKE '"+account+"';");
 };
+//-----------------------GET ID NICK AND NAME FROM DB BY NICK SEARCH----------------------//
+exports.dbGetNameBySearchName = function(clientName) {
+  return pool.query("SELECT id,account,name,nick FROM "+tableClients+
+  " WHERE name LIKE '%"+clientName+"%' ORDER BY last_action DESC;");
+};
 
-//-----------------------GET ID NICK AND NAME FROM DB BY SEARCH----------------------//
+//-----------------------GET ID NICK AND NAME FROM DB BY NICK SEARCH----------------------//
 exports.dbGetNameBySearch = function(query) {
   return pool.query("SELECT id,nick,name FROM "+tableClients+
   " WHERE nick LIKE '%"+query+"%' ORDER BY last_action DESC;");

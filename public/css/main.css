@@ -77,7 +77,7 @@ video{
     right: 0px;
     margin: 0px;
     padding: 0px;
-    margin-top: 0.5em ;
+    margin-top: 1em;
     padding-bottom: 0.2em;
     border-radius: 1em;
     /* background-image: linear-gradient(to right, rgba(0,0,0,0) , rgba(2, 140, 246, 0.826), rgba(2, 140, 246, 0.826),rgba(0,0,0,0)); */
@@ -404,7 +404,7 @@ input[type=text] {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    height: min-content;
+    height: fit-content;
     width: fit-content;    
     position: relative;
     top: 0px;
@@ -418,7 +418,9 @@ input[type=text] {
 .item{
     z-index: 1;
     height: fit-content;
-    width: fit-content;    
+    min-height: 80%;
+    width: fit-content;
+    min-width: 40%;
     border: 4px outset rgb(240, 152, 0);
     position: relative;
     margin: auto;
@@ -480,7 +482,7 @@ input[type=text] {
     height: 4em;
     float:center;
     margin: auto;
-    margin-top: 1rem;
+    margin-top: 2em;
     text-align:center;
 }
 .buttons button{
@@ -625,12 +627,12 @@ input[type=text] {
     z-index: 4500;
     position: absolute;
     max-height: 90%;
-    height: 90%;
+    height: 95%;
     width: 90%;
     top: 5%;
     left: 5%;
     margin: 0px 0px 0px 0px;
-    padding: 0px 0px 0px 0px;
+    padding: 5px 5px 5px 5px;
     background-color: rgb(0, 0, 0);
     border: 2px groove orange;
     border-radius: 2rem;
@@ -640,37 +642,38 @@ input[type=text] {
 .userInfoText{
     margin: 0px 0px 0px 0px;
     padding: 0px 0px 0px 0px;
+    margin-right: 4%;
     color: rgb(201, 138, 3);
     font-size: 2rem;
     text-shadow: 2px 2px 5px rgb(0, 0, 0);
 }
 .userInfoChangeNick{
+    display: none;
     background-color: whitesmoke;
+    width: 80%;
     color: grey;
-    font-size: 1rem;
-    margin: 0px 0px 0px 0px;
-    padding: 0px 0px 0px 0px;
-    height: 1.1rem;
+    font-size: 2em;    
+    height: 1em;
 }
 .userInfoCloseButton{
     text-align: left;
     float: left;
     width: 2rem;
     margin: auto;
-    margin-top: 0px;    
     padding-top: 0px;
-    padding-left: 1rem;
-    top: 0px;
+    padding-left: 2%;
     color: red;
     font-size: xx-large;
 }
 .userInfoTableDiv{
-    z-index: 4500;
     position: relative;
-    max-height: 90%;
+    max-height: 70%;
     top: 0px;
-    border-radius: 2rem;
+    height: auto;    
+    border-radius: 5px;
     margin: auto;
+    margin-right: 5px;
+    margin-bottom: 5px;
     text-align: right;
     overflow:auto;
 }
@@ -679,9 +682,13 @@ input[type=text] {
     margin: 0px 0px 0px 0px;
     padding: 0px 0px 0px 0px;
     font-size: 1rem;
-    max-height: 50%;
-    height: 80px;
     background-color: lightskyblue;
+}
+.deleteOrderButton{
+    width: 50%;
+    margin: auto;
+    color: black;
+    background-color: red;
 }
 .footer{
     max-width: 800px;
@@ -1002,11 +1009,11 @@ input[type=text] {
     filter: invert(0);
 }
 .opacityOff {
-    transition: opacity 2s ease-out;
+    transition: opacity 1s ease-out;
     opacity: 0;
 }
 .opacityOn {
-    transition: opacity 5s ease;
+    transition: opacity 1s ease;
     opacity: 100;
 }
 

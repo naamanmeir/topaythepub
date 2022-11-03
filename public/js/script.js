@@ -8,7 +8,7 @@ var item1 = 0;
 var item2 = 0;
 var item3 = 0;
 var item4 = 0;
-var id = 999;
+var clientId = 999;
 var clientName;
 var clientNick;
 
@@ -165,22 +165,26 @@ function orderConfirm(orderPack,abort){
     message.appendChild(buttonYes);
     message.appendChild(buttonNo);
     buttonYes.addEventListener("click",function(){
+        vibrate(75);
         placeOrder(orderPack);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
     });
     buttonYes.addEventListener("touchend",function(){
+        vibrate(75);
         placeOrder(orderPack);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
     });
     buttonNo.addEventListener("click",function(){
+        vibrate(175);
         cancelOrder(message);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
         userLogout();
     });
     buttonNo.addEventListener("touchend",function(){
+        vibrate(175);
         cancelOrder(message);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
@@ -198,23 +202,28 @@ function add(item){
     const count4 = document.getElementById("count4");
     const buttonsDiv = document.getElementById("buttons");
     if(item==1){if(item1==99){return};
+            vibrate(75);
             item1 = item1+1;
             count1.innerText = item1;
         }
     if(item==2){if(item2==99){return};
+            vibrate(75);
             item2 = item2+1;
             count2.innerText = item2;
         }
     if(item==3){if(item3==99){return};
+            vibrate(75);
             item3 = item3+1;
             count3.innerText = item3;
             searchBox1.blur();
         }
     if(item==4){if(item4==99){return};
+            vibrate(75);
             item4 = item4+1;
             count4.innerText = item4;
         }
     if(item==101){
+        vibrate(75);
         item1 = 0;
         item2 = 0;
         item3 = 0;
@@ -227,21 +236,29 @@ function add(item){
         return;
     }
     if(item==100){
+        vibrate(200);
         if(clientNick==null){
             errorMessage(1);
             return;
         }
         if(item1+item2+item3+item4 == 0){
+            vibrate(200);
+
             errorMessage(2);
             return;
         }
         if(clientNick!=null){
+        vibrate(75);
         var orderPack = [];
-        orderPack.push([id,item1,item2,item3,item4]);
+        orderPack.push([clientId,item1,item2,item3,item4]);
         orderConfirm(orderPack,false);
         add(101);
         }
     }
+};
+function vibrate(length){
+    if(!("vibrate" in navigator)){console.log("Vibrate not supported!");return;}
+    navigator.vibrate(length);
 };
 
 function searchBox(text){
@@ -366,7 +383,7 @@ function loginFunction(name){
         login = JSON.parse(this.response);
         clientNick = login[0].nick;
         clientName = login[0].name;        
-        id = login[0].id;
+        clientId = login[0].id;
         userLogged();
       };
     };
@@ -385,7 +402,7 @@ function userLogout(){
     add(101);
     clientName = null;
     clientNick = null;
-    id = null;
+    clientId = null;
     // var empty = [0,0,0,0,0];
     // orderConfirm(empty,true);
     const message = document.getElementById("messageBox");
@@ -515,24 +532,23 @@ async function getUserInfoById(){
         userInfo (uData);
         };
       };
-    if(id == null){return};
-    xhttp.open("POST", "./getUserInfo/"+id, true);
+    if(clientId == null){return};
+    xhttp.open("POST", "./getUserInfo/"+clientId, true);
     xhttp.send();
 };
 //-------------------PRINT USER INFO TO TABLE
 async function userInfo(uData){    
     closeNav();
+    allElements(0);
+    let lastOrderRow;
     const nameText = document.createElement('p');
     const closeButton = document.createElement('div');
     const nameNick = document.createElement('textarea');
-    const buttonNick = document.createElement('button');
     const tableDiv = document.createElement('div');
     const window = document.createElement('div');
     closeButton.innerText = ("X");
     nameText.innerHTML = (clientName.replace(/,/g,"<br>"));
     nameNick.value = (clientNick.replace(/,/g,"<br>"));
-    buttonNick.textContent = ('עדכן כינוי');
-    buttonNick.className = ('userInfoChangeNickButton');
     closeButton.className = ("userInfoCloseButton");
     nameText.className = ("userInfoText");
     nameNick.className = ("userInfoChangeNick");
@@ -541,7 +557,6 @@ async function userInfo(uData){
     window.appendChild(closeButton);
     window.appendChild(nameText);    
     window.appendChild(nameNick);
-    window.appendChild(buttonNick);
     window.appendChild(tableDiv);    
     document.body.appendChild(window);    
     const out = document.getElementById("content");    
@@ -551,7 +566,9 @@ async function userInfo(uData){
             closeButton.remove();
             nameNick.remove();
             tableDiv.remove();
+            buttonDeleteOrder.remove();
             window.remove();
+            allElements(1);
         }
     });
     closeButton.onclick =  (function(){        
@@ -560,7 +577,9 @@ async function userInfo(uData){
             closeButton.remove();
             nameNick.remove();
             tableDiv.remove();
+            buttonDeleteOrder.remove();
             window.remove();
+            allElements(1);
         }
     });
     const table = document.createElement("table");
@@ -570,7 +589,7 @@ async function userInfo(uData){
     TR.setAttribute("style", "background-color:lightblue;")
     tableBody.appendChild(TR);
     for(let i = 0;i < uData.length; i++){
-        const row = document.createElement("tr"); 
+        const row = document.createElement("tr");
         let rowInfo = Object.values(uData[i]);
         for (let j = 0; j < rowInfo.length; j++) {
             const cell = document.createElement("td");
@@ -586,7 +605,32 @@ async function userInfo(uData){
     table.appendChild(tableBody);    
     table.setAttribute("class", "userInfoTable");    
     tableDiv.appendChild(table);
+    const buttonDeleteOrder = document.createElement('div');
+    buttonDeleteOrder.textContent = ('למחוק רישום אחרון');
+    buttonDeleteOrder.className = ("deleteOrderButton");    
+    window.appendChild(buttonDeleteOrder);
+    buttonDeleteOrder.onclick = (function(){
+        clientDeleteLastOrder();
+        nameText.remove();
+        closeButton.remove();
+        nameNick.remove();
+        tableDiv.remove();
+        buttonDeleteOrder.remove();
+        window.remove();
+        });
 };
+
+function clientDeleteLastOrder(){
+    if(clientId==null){return};    
+    xhttp.open("POST", "./deleteLastOrder/"+clientId, true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {                        
+            getUserInfoById();
+            return;
+            }        
+        };
+}
 
 function allElements(action){
     var searchBox = Array.from(document.getElementsByClassName("searchBox"));

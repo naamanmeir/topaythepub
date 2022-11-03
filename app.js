@@ -21,6 +21,9 @@ const username = process.env.USERNAME;
 const password = process.env.PASSWORD;
 const user_admin = process.env.USER_ADMIN;
 const password_admin = process.env.PASS_ADMIN;
+const user_david = process.env.USER_DAVID;
+const password_david = process.env.PASS_DAVID;
+
 // var now = new Date().toLocaleString("en-IL", {timeZone: "Asia/Jerusalem"});
 var now = new Date();
 console.log("System Startup Time :"+Date());
@@ -46,6 +49,7 @@ app.get('/manage', async function(req, res) {
       const authorization = req.headers.authorization;
     
       if (!authorization) {
+        console.log("FAILED LOGIN ATTEMPTED TO MANAGE PANEL ON: "+now);
         return reject();
       }
     
@@ -58,7 +62,8 @@ app.get('/manage', async function(req, res) {
     
       if (!(username === user_admin && password === password_admin)) {
         return reject();
-      }  
+      }
+      console.log("LOGIN TO MANAGE PANEL ON: "+now);  
     res.render('manage', {})
 });
 
@@ -70,15 +75,35 @@ app.get('/retable/', async function(req,res){
     res.send(createTableOrders);
 })
 
+// SERACH CLIENT IN DB BY SEARCHBOX
+app.post('/searchNameManage/:data', async (req,res) => {
+    var clientName = (req.params.data).replace(/\"/g,'');    
+    if(clientName == "-"){        
+        res.send(JSON.stringify("clear"));
+        return;
+    };
+    let clientsFound = [];
+    clientsFound = (await db.dbGetNameBySearchName(clientName));    
+    res.send(clientsFound);
+});
+
+// app.post('/getUserDetails/:data', async (req,res,next) => {
+//     let getClient = JSON.parse(req.params.data);
+//     console.log("APP: GET DETAILS BY NAME: "+getClient);
+//     let getName = getClient[0];
+//     let getNick = getClient[1];
+//     let getNumber = getClient[2];
+//     console.log(getName,getNick,getNumber)
+//     var clientFields;
+//     clientFields = await db.dbGetClientDetails(getName,getNick,getNumber).then((res) => {return (res)})
+//     console.log(JSON.stringify(await clientFields));
+//     res.send(clientFields);    
+// });
 app.post('/getUserDetails/:data', async (req,res,next) => {
-    let getClient = JSON.parse(req.params.data);
-    console.log("APP: GET DETAILS BY NAME: "+getClient);
-    let getName = getClient[0];
-    let getNick = getClient[1];
-    let getNumber = getClient[2];
-    console.log(getName,getNick,getNumber)
+    let clientId = (req.params.data);
+    console.log("APP: GET DETAILS BY ID: "+clientId);
     var clientFields;
-    clientFields = await db.dbGetClientDetails(getName,getNick,getNumber).then((res) => {return (res)})
+    clientFields = await db.dbGetClientDetailsById(clientId).then((res) => {return (res)})
     console.log(JSON.stringify(await clientFields));
     res.send(clientFields);    
 });
@@ -95,7 +120,7 @@ app.post('/insertClient/:data', async (req,res,next) => {
 app.post('/editClientFields/:data', async (req,res,next) => {
     let newFields = (req.params.data).split(",");
     console.log("APP: EDIT FIELD : "+newFields);
-    let client = newFields[0];
+    let clientId = newFields[0];
     let field = newFields[1];
     let value = newFields[2];        
     if(field==1){
@@ -108,10 +133,18 @@ app.post('/editClientFields/:data', async (req,res,next) => {
         field = "account";        
     }
     var clientFieldsEdited;
-    clientFieldsEdited = await db.dbEditClient(client,field,value).then((res) => {return (res)})
+    clientFieldsEdited = await db.dbEditClient(clientId,field,value).then((res) => {return (res)})
     res.send(clientFieldsEdited);    
 });
 
+app.post('/deleteLastOrder/:data', async (req,res) => {
+    let clientID = JSON.parse(req.params.data);
+    // console.log("APP: DELETE LAST ORDER FROM ID: "+clientID);
+    var deleteLastOrderResponse;
+    deleteLastOrderResponse = await db.dbDeleteLastOrderById(clientID).then((res) => {return (res)})
+    console.log(deleteLastOrderResponse)
+    res.send(deleteLastOrderResponse);    
+});
 app.post('/insertName/:data', async (req,res,next) => {
     let newName = JSON.parse(req.params.data);
     console.log("APP: ADD NEW NAME: "+newName);
@@ -162,6 +195,7 @@ app.get('', async function(req, res) {
       const authorization = req.headers.authorization;
     
       if (!authorization) {
+        console.log("FAILED LOGIN ATTEMPTED TO APP ON: "+now);
         return reject();
       }
     
@@ -175,7 +209,7 @@ app.get('', async function(req, res) {
       if (!(username === username && password === password)) {
         return reject();
       }
-    console.log("User Requested Index: "+now);  
+    console.log("LOGIN TO APP ON: "+now);  
     res.render('index', {
         item1 : msg.NAME_ITEM1,
         item2 : msg.NAME_ITEM2,
@@ -246,6 +280,34 @@ app.post('/getUserInfo/:data', async (req,res) => {
     // console.log(JSON.stringify(clientInfo));
     res.send(clientInfo)
 
+});
+
+//-------------------------accountent---------------------
+app.get('/david', async function(req, res) {  
+    const reject = () => {
+        res.setHeader("www-authenticate", "Basic");
+        res.sendStatus(401);
+      };
+    
+      const authorization = req.headers.authorization;
+    
+      if (!authorization) {
+        console.log("FAILED LOGIN ATTEMPTED ON: "+now);
+        return reject();
+      }
+    
+      const [username, password] = Buffer.from(
+        authorization.replace("Basic ", ""),
+        "base64"
+      )
+        .toString()
+        .split(":");
+    
+      if (!(username === user_david && password === password_david)) {
+        return reject();
+      }
+    console.log("DAVID LOGGED IN ON: "+now);
+    res.render('accountent', {})
 });
 
 //-------------------------SERVER-----------------------------------//

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>לרשום את התשלומים של הפאב</title>
+    <link rel="stylesheet" href="css/accountent.css">
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+</head>
+<body>
+
+    <%- include('./partials/header'); %>
+
+    <!-- TEXT FIELDS -->
+    <div class="content column">  
+
+            <!-- BUTTONS -->
+    <div class="content row">
+
+        <div class="green" id="getAccountData">
+            <button onclick="getAllData(3)">הצגת נתונים לדו"ח</button>
+        </div>
+
+    </div>
+
+    <div class="content row">
+
+        <div id="getOrdersData">
+            <button onclick="getAllData(1)">הצגת נתוני עסקאות</button>
+        </div>
+
+        <div id="getClientData">
+            <button onclick="getAllData(2)">הצגת נתוני משתמשים</button>
+        </div>
+
+    </div>
+
+    <br>    
+    <br>
+
+  
+    
+    <%- include('./partials/footer'); %>
+
+    <script src="js/script-accountent.js"></script>
+    
+</body>
+</html>
