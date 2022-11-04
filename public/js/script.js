@@ -256,6 +256,7 @@ function add(item){
         }
     }
 };
+
 function vibrate(length){
     if(!("vibrate" in navigator)){console.log("Vibrate not supported!");return;}
     navigator.vibrate(length);
@@ -277,6 +278,7 @@ function searchBox(text){
     if(searchText == ""){
         userSearchMessage(0);
         searchText = "-";
+        userLogout();
     };
     if(limit == 0){
         limit = 1;        
@@ -393,6 +395,7 @@ function userLogged(){
     userSearchMessage(3);
     searchBox1.blur();    
     searchBox1.classList.add("searchBoxLogged");
+    searchBox1.classList.remove("searchBoxNotLogged");
     userAutoLogout(0);
 };
 
@@ -407,7 +410,9 @@ function userLogout(){
     // orderConfirm(empty,true);
     const message = document.getElementById("messageBox");
     message.innerHTML=("");
-    message.classList.remove("messageBoxOn");
+    message.classList.remove("messageBoxOn");    
+    searchBox1.classList.remove("searchBoxLogged");
+    searchBox1.classList.add("searchBoxNotLogged");
     timeOut = (60000*5);
     pointerEnableIn(3000);
     allElements(1);
@@ -425,7 +430,7 @@ function userAutoLogout(reset){
     },timeOut);
 };
 
-function userSearchMessage(select){    
+function userSearchMessage(select){
     let textBox = document.getElementById("searchBox");
     let userIndic = document.getElementById("userStateIndicator");
     if(select == 0){
@@ -433,8 +438,6 @@ function userSearchMessage(select){
         userIndic.classList.remove("userStateIndicatorOk");
         userIndic.classList.remove("userStateIndicatorSelect");
         userIndic.innerText = ("");
-        searchBox1.style.backgroundColor = ("RGBA(255,255,255,1");
-
     }
     if(select == 1){
     userIndic.innerText = ("👎 שם לא סבבה 👎");
@@ -486,7 +489,7 @@ function closeErrorMessage(message){
     },3000);
 };
 
-function autoCloseTextBox(message){    
+function autoCloseTextBox(message){
     setTimeout(function(){
         message.classList.remove("messageBoxOn");
         message.innerText = "";

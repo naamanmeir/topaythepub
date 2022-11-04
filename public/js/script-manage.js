@@ -354,7 +354,7 @@ function showAccountTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>סכום</th><th>מספר חשבון</th><th>שם</th>");    
+    TR.innerHTML = ("<th>מתאריך</th><th>סכום</th><th>מספר חשבון</th><th>שם</th>");    
     tableBody.appendChild(TR);
     for(let i = 0;i < data.length; i++){
         const row = document.createElement("tr");

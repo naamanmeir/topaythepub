@@ -280,15 +280,16 @@ exports.dbGetNameBySearch = function(query) {
   " WHERE nick LIKE '%"+query+"%' ORDER BY last_action DESC;");
 };
 
+//-----------------------GET ACCOUNT INFO BY SCOPE----------------------//
 exports.dbGetDataByScope = async function(scope) {
   if (scope==1){//SCOPE ORDERS
     data = await pool.query(`SELECT * FROM ${tableOrders} ORDER BY orderid DESC;`);
   };
   if (scope==2){//SCOPE CLIENTS
-    data = await pool.query(`SELECT * FROM ${tableClients};`);
+    data = await pool.query("SELECT * FROM "+tableClients+" ORDER BY name;");
   };
   if (scope==3){//SCOPE REPORT
-    data = await pool.query(`SELECT sum,account,name FROM ${tableClients} WHERE account >= 50;`);
+    data = await pool.query("SELECT DATE_FORMAT(`last_action`, '%Y-%m-%d %H:%i') AS `formatted_date`,sum,account,name FROM "+tableClients+" WHERE account >= 50 AND sum > 0;");
   };
   // console.log(await data);
   return data;
