@@ -27,6 +27,8 @@ searchBox1.addEventListener('focus',function(){
     if(searchBox1.value.length>0){searchBox1.placeholder=("");};
 });
 searchBox1.addEventListener('blur',function(){
+    if(searchBox1.value==''||searchBox1.value==null)
+    {clientId=null;clientName=null;clientAccount=null;clientNick=null;};
     searchBoxClear();    
 });
 searchBox1.addEventListener('input',function(){
@@ -168,11 +170,19 @@ function userSearchMessage(select){
         document.getElementById("editNumber").value = "";
         document.getElementById("editName").value = "";
         document.getElementById("getUserByName").value = "";
+        clientId=null;
+        clientName=null;
+        clientAccount=null;
+        clientNick=null;
     }
     if(select == 1){
+        searchBox1.classList.remove("searchBoxNotOk");
+        searchBox1.classList.remove("searchBoxOk");
         searchBox1.classList.add("searchBoxNotLogged");    
     }    
     if(select == 2){
+        searchBox1.classList.remove("searchBoxNotLogged");
+        searchBox1.classList.remove("searchBoxOk");
         searchBox1.classList.add("searchBoxNotOk");  
     }
     if(select == 3){
@@ -215,29 +225,35 @@ function displayClientFields(data,destNick,destNumber,destSmallName){
 
 function editClientFields(field,value){
     if(clientId==null||clientId==""){console.log("this is stupid");return};
-    value = document.getElementById(value).value;
-    console.log(field,value);
-    let data = [clientId,field,value];
-    xhttp.open("POST", "./editClientFields/"+data, true);
-    xhttp.send();
+    if(value==null||value==''){console.log("this is stupid");return};
+    if (window.confirm("לערוך נתונים של משתמש?")) {
+        value = document.getElementById(value).value;
+        console.log(field,value);
+        let data = [clientId,field,value];
+        xhttp.open("POST", "./editClientFields/"+data, true);
+        xhttp.send();
+        };
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             editLog(this.response);
             return;
-            }        
+            }
         };
 };
 
 function clientDeleteLastOrder(){
-    if(clientId==null){return};    
-    xhttp.open("POST", "./deleteLastOrder/"+clientId, true);
-    xhttp.send();
+    if(clientId==null||clientId==""){return};
+    if (window.confirm("למחוק רשימה אחרונה של משתמש?")) {        
+        xhttp.open("POST", "./deleteLastOrder/"+clientId, true);
+        xhttp.send();
+    };
     xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {            
+    if (this.readyState == 4 && this.status == 200) {            
             editLog(this.response);
+            userSearchMessage(0);
             return;
             }        
-        };
+    };
 }
 
 function editLog(text){
@@ -276,7 +292,23 @@ function copyNameToNick(){
     if(document.getElementById("insertNick").value==''){
     document.getElementById("insertNick").value = (document.getElementById("insertName").value);
     }
-}
+};
+
+function deleteClient(){
+    if(clientId==null||clientId==''){return};
+    if(window.confirm("למחוק משתמש?")){
+        xhttp.open("POST", "./deleteClient/"+clientId, true);
+        xhttp.send();
+    }
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            userSearchMessage(0);
+            return;
+            }        
+        };
+};
+
 
 function getAllData(scope){
     // console.log(scope);
@@ -423,8 +455,8 @@ defineInputFields();
 function inputFilter(e){
     let t = e.target;
     // let goodValues = /^[a-z\u05D0-\u05EA]+$/i; // HEBREW REGEX
-    let badValues = /[\d/\/.,"``;~./\[/\]/\-=+?{}<>":!\d|/\\/#$%@^&*()]/gi;
-    t.value = t.value.replace(/\'/g, "''");
+    // t.value = t.value.replace(/\'/, "''");
+    let badValues = /[\d/\/.,"``;~./\[/\]/\-=+?{}<>":!\d|/\\/#$%@^&*()]/gi;    
     t.value = t.value.replace(badValues, '');
     return t;
 };

@@ -58,9 +58,9 @@ exports.dbCreateTableOrders = async function() {
 //--------------------INSERT NEW CLIENT TO DB----------------//
 exports.dbInsertClient = async function(newClient){
   // console.log(newClient);
-  let name = newClient[0];
-  let nick = newClient[1];
-  let number = newClient[2];
+  let name = newClient[0].replace(/\'/g,"''");
+  let nick = newClient[1].replace(/\'/g,"''");
+  let number = newClient[2].replace(/\'/g,"''");
   let ifExist = await this.dbGetExactName(name,nick,number);
   let messageReturn;
   if(ifExist.length != 0){
@@ -81,7 +81,7 @@ exports.dbInsertClient = async function(newClient){
 };
 
 //--------------------EDIT CLIENT FIELDS----------------//
-exports.dbEditClient = async function(clientId,field,value){    
+exports.dbEditClient = async function(clientId,field,value){
     messageReturn = await pool.query("UPDATE "+tableClients+
     " SET "+field+" = '"+value+"' WHERE id = "+clientId+";")
     .catch((err) => {
@@ -130,7 +130,7 @@ deleteOrderFromOrders = await pool.query("DELETE FROM "+tableOrders+" WHERE orde
 lastOrderDetails[0].orderid+";");
 // console.log(deletedOrderFromClients);
 // console.log("DB DELETE LAST ORDER FROM: "+clientId+" SUM OF: "+lastOrderDetails[0].sum);
-return ("DB DELETE LAST ORDER FROM: "+clientId+" SUM OF: "+lastOrderDetails[0].sum);
+return ("DELETE LAST ORDER FROM: "+clientId+" SUM OF: "+lastOrderDetails[0].sum);
 }
 
 //--------------------INSERT NEW NAME TO DB----------------//
@@ -159,30 +159,26 @@ exports.dbInsertName = async function(name){
 };
 };
 
-//--------------------DELETE NAME FROM DB----------------//
-exports.dbDeleteName = async function(name){
-  let ifExist = await this.dbGetExactName(name);  
+//--------------------DELETE CLIENT BY ID----------------//
+exports.dbDeleteClient = async function(clientId){  
+  let ifExist = await this.dbGetClientDetailsById(clientId);  
   let newId;
   let messageReturn;
   if(ifExist.length == 0){
-    console.log("name exist");
-    return ("NAME NOT EXIST IN DATABASE");
+    console.log("CLIENT DONT EXIST");
+    return ("CLIENT NOT FOUND IN DATABASE");
   }else{
     console.log("NAME DONT EXIST");    
-    messageReturn = await pool.getConnection().then(conn => {conn.query(`DELETE FROM ${tableClients} WHERE name = '${name}';`)
-      .then((rows) => {
-        conn.end();
+    messageReturn = await pool.query(`DELETE FROM ${tableClients} WHERE id = '${clientId}';`)
+      .then((rows) => {        
         return (rows);
       }).then((res) => {  
-      console.log(res);
-       conn.end();
-        messageReturn = "HO MY";
-       return (res);
+        console.log(res);
+        return (res);
       });
-  console.log("message ruturn: "+messageReturn)
-  });
+  console.log(messageReturn)
+  };
   return ("REMOVED FROM DATABASE -- NO PROOF YET"+messageReturn);
-};
 };
 
 //--------------------INSERT ORDER TO ORDERS TABLE----------------//
@@ -246,7 +242,7 @@ exports.dbGetClientDetailsByFields = function(name,nick,account) {
 //-----------------------GET CLIENT DETAILS BY ID----------------------//
 exports.dbGetClientDetailsById = function(clientId) {
   return pool.query("SELECT name,nick,account FROM "+tableClients+
-  " WHERE id="+clientId+"';");
+  " WHERE id="+clientId+";");
 };
 
 //-----------------------GET ALL CLIENT DETAILS BY ID----------------------//

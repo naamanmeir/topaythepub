@@ -77,7 +77,8 @@ app.get('/retable/', async function(req,res){
 
 // SERACH CLIENT IN DB BY SEARCHBOX
 app.post('/searchNameManage/:data', async (req,res) => {
-    var clientName = (req.params.data).replace(/\"/g,'');    
+    var clientName = (req.params.data).replace(/\"/g,'');
+    clientName = clientName.replace(/\'/g,"''");
     if(clientName == "-"){        
         res.send(JSON.stringify("clear"));
         return;
@@ -120,9 +121,9 @@ app.post('/insertClient/:data', async (req,res,next) => {
 app.post('/editClientFields/:data', async (req,res,next) => {
     let newFields = (req.params.data).split(",");
     console.log("APP: EDIT FIELD : "+newFields);
-    let clientId = newFields[0];
-    let field = newFields[1];
-    let value = newFields[2];        
+    let clientId = newFields[0].replace(/\'/g, "''");;
+    let field = newFields[1].replace(/\'/g, "''");;
+    let value = newFields[2].replace(/\'/g, "''");;        
     if(field==1){
         field = "name";        
     }
@@ -154,11 +155,11 @@ app.post('/insertName/:data', async (req,res,next) => {
     res.send(response);    
 });
 
-app.post('/deleteName/:data', async (req,res,next) => {
-    let deleteName = JSON.parse(req.params.data);
-    console.log("APP: DELETE NAME: "+deleteName);
+app.post('/deleteClient/:data', async (req,res,next) => {
+    let clientId = JSON.parse(req.params.data);
+    console.log("APP: DELETE CLIENT: "+clientId);
     var response;
-    response = await db.dbDeleteName(deleteName).then((res) => {return (res)})
+    response = await db.dbDeleteClient(clientId).then((res) => {return (res)})
     res.send(response);    
 });
 

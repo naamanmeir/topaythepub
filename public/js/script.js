@@ -630,7 +630,7 @@ async function userInfo(uData){
     buttonDeleteOrder.textContent = ('למחוק רישום אחרון');
     buttonDeleteOrder.className = ("deleteOrderButton");    
     window.appendChild(buttonDeleteOrder);
-    buttonDeleteOrder.onclick = (function(){
+    buttonDeleteOrder.onmouseup = (function(){
         const buttonYes = document.createElement('button');
         const buttonNo = document.createElement('button');
         buttonYes.className = ("deleteOrderConfirm");buttonYes.classList.add("deleteOrderConfirmYes");
