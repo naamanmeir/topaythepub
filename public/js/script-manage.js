@@ -249,12 +249,13 @@ function editLog(text){
     document.getElementById("getUserByName").value = '';
 }
 
-function insertName(nameField,nickField,numberField,insertUserStatus){
-    let newName = document.getElementById(nameField);
-    let newNick = document.getElementById(nickField);
-    let newNumber = document.getElementById(numberField);
-    let status = document.getElementById(insertUserStatus);
-    if(newName.value==''|newNick.value==''|newNumber.value==''){return}
+function insertName(){
+    let newName = document.getElementById("insertName");
+    let newNick = document.getElementById("insertNick");
+    let newNumber = document.getElementById("insertNumber");
+    let status = document.getElementById("insertUserStatus");
+    if(newNick.value==''){newNick.value=newName.value};
+    if(newName.value==''|newNick.value==''|newNumber.value==''){return}    
     let newData = [newName.value,newNick.value,newNumber.value];
     newData = JSON.stringify(newData);
     newName.value = '';
@@ -270,6 +271,12 @@ function insertName(nameField,nickField,numberField,insertUserStatus){
             }        
         };
 };
+
+function copyNameToNick(){    
+    if(document.getElementById("insertNick").value==''){
+    document.getElementById("insertNick").value = (document.getElementById("insertName").value);
+    }
+}
 
 function getAllData(scope){
     // console.log(scope);

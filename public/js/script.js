@@ -1,7 +1,8 @@
 var xhttp = new XMLHttpRequest();
 
 // VARIABLES
-var timeOut = 60000*5;
+var timeOutDef = 40000; // 60000 *5;
+var timeOut = timeOutDef;
 let timerLogout;
 
 var item1 = 0;
@@ -62,7 +63,7 @@ searchBox1.addEventListener('focus',function(){
 });
 searchBox1.addEventListener('blur',function(){
     searchBoxClear();
-    searchBox1.placeholder=("לכתוב פה את השם שלכם✍👉👉");
+    searchBox1.placeholder=("נא להכניס שם✍👉👉");
 });
 searchBox1.addEventListener('input',function(){
     searchBoxClear();    
@@ -396,6 +397,7 @@ function userLogged(){
     searchBox1.blur();    
     searchBox1.classList.add("searchBoxLogged");
     searchBox1.classList.remove("searchBoxNotLogged");
+    document.getElementById("user_info").style.display="block";
     userAutoLogout(0);
 };
 
@@ -406,14 +408,20 @@ function userLogout(){
     clientName = null;
     clientNick = null;
     clientId = null;
-    // var empty = [0,0,0,0,0];
-    // orderConfirm(empty,true);
     const message = document.getElementById("messageBox");
     message.innerHTML=("");
     message.classList.remove("messageBoxOn");    
     searchBox1.classList.remove("searchBoxLogged");
     searchBox1.classList.add("searchBoxNotLogged");
-    timeOut = (60000*5);
+    document.getElementById("user_info").style.display="none";
+    if(document.getElementsByClassName("userInfo")[0]){
+        document.getElementsByClassName("userInfoCloseButton")[0].remove();;
+        document.getElementsByClassName("userInfoText")[0].remove();;
+        document.getElementsByClassName("userInfoChangeNick")[0].remove();;
+        document.getElementsByClassName("userInfoTableDiv")[0].remove();;
+        document.getElementsByClassName("userInfo")[0].remove();
+    }
+    timeOut = timeOutDef;
     pointerEnableIn(3000);
     allElements(1);
 };
@@ -471,12 +479,12 @@ function userSearchMessage(select){
 function errorMessage(value){
     const message = document.getElementById("errorMessage");
     if(value == 1){
-        message.innerText = ("צריך לכתוב קודם את השם שלכם");
+        message.innerText = ("צריך להכניס שם");
         message.classList.add("errorMessageOn");
         closeErrorMessage(message);
     };
     if(value == 2){
-        message.innerText = ("צריך לסמן כמה משקאות לקחתם");
+        message.innerText = ("צריך לסמן כמה משקאות");
         message.classList.add("errorMessageOn");
         closeErrorMessage(message);
     };
@@ -497,16 +505,24 @@ function autoCloseTextBox(message){
 };
 
 function bgSelect(set){
-    const background = document.getElementById("backgroundPanel");
-    const textBackground = document.getElementsByClassName('textBackground1 textBackground2 textBackground3');
-    let bg = ("background"+set);
-    let tbg = ("textBackground"+set);    
-    for(i=0;i<textBackground.length;i++){        
-        console.log(textBackground[i]);
-        textBackground[i].className = (tbg);
-        console.log(textBackground[i].classList);
-    };    
-    background.className = (bg);    
+    const background1 = document.getElementById("backgroundPanel1");
+    const background2 = document.getElementById("backgroundPanel2");    
+    if(set==1){
+        background1.style.display = ("block");
+        background1.className = ("background1");
+        background2.style.display = ("none");
+    }
+    if(set==2){
+        background1.style.display = ("block");
+        background1.className = ("background2");
+        background2.style.display = ("none");        
+    }
+    if(set==3){
+        background1.style.display = ("none");
+        background2.style.display = ("block");
+        background2.className = ("background3");
+    }
+    return;
 };
 
 function openNav() {
@@ -540,9 +556,11 @@ async function getUserInfoById(){
     xhttp.send();
 };
 //-------------------PRINT USER INFO TO TABLE
-async function userInfo(uData){    
+async function userInfo(uData){  
+    if(uData == null){return}  ;
     closeNav();
     allElements(0);
+    userAutoLogout(1000*60);
     let lastOrderRow;
     const nameText = document.createElement('p');
     const closeButton = document.createElement('div');
@@ -588,7 +606,7 @@ async function userInfo(uData){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>שם</th><th>סכום</th><th>פריט 10</th><th>פריט 12</th><th>תאריך ושעה</th><th>תג רישום</th>");    
+    TR.innerHTML = ("<th>שם</th><th>סכום</th><th>פריט 10</th><th>פריט 12</th><th>תאריך ושעה</th><th>מס.</th>");    
     TR.setAttribute("style", "background-color:lightblue;")
     tableBody.appendChild(TR);
     for(let i = 0;i < uData.length; i++){
@@ -613,13 +631,36 @@ async function userInfo(uData){
     buttonDeleteOrder.className = ("deleteOrderButton");    
     window.appendChild(buttonDeleteOrder);
     buttonDeleteOrder.onclick = (function(){
-        clientDeleteLastOrder();
-        nameText.remove();
-        closeButton.remove();
-        nameNick.remove();
-        tableDiv.remove();
-        buttonDeleteOrder.remove();
-        window.remove();
+        const buttonYes = document.createElement('button');
+        const buttonNo = document.createElement('button');
+        buttonYes.className = ("deleteOrderConfirm");buttonYes.classList.add("deleteOrderConfirmYes");
+        buttonNo.className = ("deleteOrderConfirm");buttonNo.classList.add("deleteOrderConfirmNo");
+        buttonYes.innerText=("למחוק רישום אחרון כן זאת הייתה טעות");
+        buttonNo.innerText=("לא למחוק את הרישום בעצם הפאב צריך ת'כסף");
+        const confirmWindow = document.createElement('div');
+        confirmWindow.className = ("userInfoOrderDeleteConfirm");
+        buttonDeleteOrder.style.display=("none");
+        confirmWindow.appendChild(buttonNo);
+        confirmWindow.appendChild(buttonYes);        
+        window.appendChild(confirmWindow);
+        buttonNo.onclick = (function(){
+            buttonNo.remove();
+            buttonYes.remove();
+            confirmWindow.remove();
+            buttonDeleteOrder.style.display=("block");
+        })
+        buttonYes.onclick = (function(){
+            clientDeleteLastOrder();
+            nameText.remove();
+            closeButton.remove();
+            nameNick.remove();
+            tableDiv.remove();
+            buttonDeleteOrder.remove();
+            buttonNo.remove();
+            buttonYes.remove();
+            confirmWindow.remove();
+            window.remove();
+        })
         });
 };
 

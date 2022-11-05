@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <%- include('./partials/header'); %>
+    <%- include('./partials/headerStatic'); %>
 
     <!-- TEXT FIELDS -->
     <div class="content column">
@@ -44,12 +44,12 @@
             <div class="function column">
                 <p>הכנסת משתמש חדש</p>
                 <p>שם משתמש : </p>
-                <input type="search" class="textbox" id="insertName" spellcheck="false" placeholder=" הכנס שם">
+                <input type="search" class="textbox" id="insertName" spellcheck="false" placeholder=" הכנס שם" onchange="copyNameToNick()">
                 <p>כינוי : </p>
                 <input type="search" class="textbox" id="insertNick" spellcheck="false" placeholder=" הכנס כינוי ">
                 <p>מספר חשבון : </p>
                 <input type="text" class="textboxShort" id="insertNumber" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מספר חשבון ">
-                <button onclick="insertName('insertName','insertNick','insertNumber','insertUserStatus')">הכנס משתמש</button>
+                <button onclick="insertName()">הכנס משתמש</button>
                 <button id="insertUserStatus"></button>
                 </p>
             </div>

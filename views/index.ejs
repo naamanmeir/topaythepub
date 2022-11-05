@@ -19,10 +19,10 @@
 
     <div id="sideNav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">⋘</a>
-        <a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)">רקע 1</a>
-        <a href="#" onclick="bgSelect(4)" onclick="clearTimeout(window.tcm)">רקע 2</a>
-        <a href="#" onclick="bgSelect(5)" onclick="clearTimeout(window.tcm)">רקע 3</a>
-        <a href="#" id="user_info" onclick="getUserInfoById()">משתמש</a>
+        <a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)">רקע 1</a>
+        <a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)">רקע 2</a>
+        <a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)">רקע 3</a>
+        <a href="#" class="hidden" id="user_info" onclick="getUserInfoById()">משתמש</a>
         <a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a>
       </div>
 
@@ -36,7 +36,7 @@
             <div class="userStateIndicator" id="userStateIndicator">
                 <p></p>
             </div>
-            <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false" placeholder="לכתוב פה את השם שלכם✍👉👉">
+            <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false" placeholder="נא להכניס שם✍👉👉">
             <div class="autoCompleteNone" id="autoComplete"></div>
         </div>
 
@@ -86,7 +86,7 @@
 
     <script src="js/script.js"></script>
 
-    <div class="background4" id="backgroundPanel">
+    <div class="background1" id="backgroundPanel1">
     <span></span>
     <span></span>
     <span></span>
@@ -138,6 +138,25 @@
     <span></span>
     <span></span>
      </div>
+
+     <ul class="hidden" id="backgroundPanel2">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+     </ul>
     
 </body>
 </html>

@@ -95,10 +95,6 @@ exports.dbEditClient = async function(clientId,field,value){
 
 //--------------------DELETE LAST ORDER BY CLIEND ID----------------//
 exports.dbDeleteLastOrderById = async function(clientId){
-  // get last order from orders by clientId
-  // sum client sum minus last order
-  // update client sum
-  
   lastOrderDetails = await pool.query("SELECT orderid,item1,item2,item3,item4,sum FROM "+tableOrders+
   " WHERE clientid = "+clientId+" ORDER BY orderid DESC LIMIT 1;")
   .catch((err) => {
@@ -115,8 +111,8 @@ if(lastOrderDetails[0].sum>clientDetail[0].sum||lastOrderDetails[0].item1>client
   lastOrderDetails[0].item2>clientDetail[0].item2||lastOrderDetails[0].item3>clientDetail[0].item3||
   lastOrderDetails[0].item4>clientDetail[0].item4){console.log("ERROR SUM IS NO LOGICAL");return ("ERROR WITH THE NUMBERS")};
   
-console.log("Order Sum: "+lastOrderDetails[0].sum);
-console.log("Client Sum: "+clientDetail[0].sum);
+// console.log("Order Sum: "+lastOrderDetails[0].sum);
+// console.log("Client Sum: "+clientDetail[0].sum);
 
 deletedOrderFromClients = await pool.query("UPDATE "+tableClients+" SET"+
 " item1 = (item1 - "+lastOrderDetails[0].item1+")"+
@@ -132,8 +128,8 @@ deletedOrderFromClients = await pool.query("UPDATE "+tableClients+" SET"+
   });
 deleteOrderFromOrders = await pool.query("DELETE FROM "+tableOrders+" WHERE orderid = "+
 lastOrderDetails[0].orderid+";");
-console.log(deletedOrderFromClients);
-console.log("DB DELETE LAST ORDER FROM: "+clientId+" SUM OF: "+lastOrderDetails[0].sum);
+// console.log(deletedOrderFromClients);
+// console.log("DB DELETE LAST ORDER FROM: "+clientId+" SUM OF: "+lastOrderDetails[0].sum);
 return ("DB DELETE LAST ORDER FROM: "+clientId+" SUM OF: "+lastOrderDetails[0].sum);
 }
 

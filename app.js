@@ -42,7 +42,7 @@ app.set('view engine', 'ejs');
 // ------------------------  MANAGE VIEW  ----------------------- //
 app.get('/manage', async function(req, res) {  
     const reject = () => {
-        res.setHeader("www-authenticate", "Basic");
+        res.setHeader("www-authenticate", "Basic",realm="topaythepub admin panel",charset="UTF-8");
         res.sendStatus(401);
       };
     
@@ -145,6 +145,7 @@ app.post('/deleteLastOrder/:data', async (req,res) => {
     console.log(deleteLastOrderResponse)
     res.send(deleteLastOrderResponse);    
 });
+
 app.post('/insertName/:data', async (req,res,next) => {
     let newName = JSON.parse(req.params.data);
     console.log("APP: ADD NEW NAME: "+newName);
@@ -188,7 +189,7 @@ function releaseLimit(){
 // ------------------------  CLIENT VIEW  ----------------------- //
 app.get('', async function(req, res) {
     const reject = () => {
-        res.setHeader("www-authenticate", "Basic");
+        res.setHeader("www-authenticate", "Basic",realm="topaythepub MASOF",charset="UTF-8");
         res.sendStatus(401);
       };
     
@@ -285,7 +286,7 @@ app.post('/getUserInfo/:data', async (req,res) => {
 //-------------------------accountent---------------------
 app.get('/david', async function(req, res) {  
     const reject = () => {
-        res.setHeader("www-authenticate", "Basic");
+        res.setHeader("www-authenticate", "Basic",realm="topaythepub accountent panel",charset="UTF-8");
         res.sendStatus(401);
       };
     
