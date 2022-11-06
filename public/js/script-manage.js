@@ -170,6 +170,7 @@ function userSearchMessage(select){
         document.getElementById("editNumber").value = "";
         document.getElementById("editName").value = "";
         document.getElementById("getUserByName").value = "";
+        document.getElementById("getUserByName").className = ("searchBoxNoLogged");
         clientId=null;
         clientName=null;
         clientAccount=null;
@@ -265,6 +266,18 @@ function editLog(text){
     document.getElementById("getUserByName").value = '';
 }
 
+function importNameListFile(){
+    xhttp.open("POST", "./updateNameList/", true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            document.getElementById("addLog").innerText = this.response;
+            return;
+            }        
+        };
+}
+
 function insertName(){
     let newName = document.getElementById("insertName");
     let newNick = document.getElementById("insertNick");
@@ -282,7 +295,7 @@ function insertName(){
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             console.log(this.response);
-            status.innerText=(this.response);
+            document.getElementById("addLog").innerText = this.response;
             return;
             }        
         };
@@ -297,8 +310,10 @@ function copyNameToNick(){
 function deleteClient(){
     if(clientId==null||clientId==''){return};
     if(window.confirm("למחוק משתמש?")){
-        xhttp.open("POST", "./deleteClient/"+clientId, true);
-        xhttp.send();
+        if(window.confirm("בטוח בטוח ???")){
+            xhttp.open("POST", "./deleteClient/"+clientId, true);
+            xhttp.send();
+        }
     }
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -308,7 +323,6 @@ function deleteClient(){
             }        
         };
 };
-
 
 function getAllData(scope){
     // console.log(scope);

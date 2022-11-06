@@ -13,13 +13,16 @@
 
     <%- include('./partials/headerStatic'); %>
 
+    <div class="row linebreak"></div>
+
+
     <!-- TEXT FIELDS -->
     <div class="content column">
 
         <div class="editUser">            
             <div class="function">
                 <p>עריכת משתמש קיים</p>
-                <input type="search" class="textbox" id="getUserByName" spellcheck="false" placeholder=" הכנס שם">
+                <input type="search" class="searchBoxNoLogged" id="getUserByName" spellcheck="false" placeholder=" הכנס שם">
                 <div class="autoCompleteNone" id="autoComplete"></div>
                 <!-- <button onclick="getUserDetailsById()">בקש נתונים</button> -->
             </div>
@@ -32,13 +35,18 @@
             <div class="row">
                 <input type="number" class="textboxNumber" id="editNumber" spellcheck="false" placeholder="ערוך מספר חשבון">
                 <button onclick="editClientFields(3,'editNumber')">עריכת מספר</button>
-                <button class="center orange" onclick="clientDeleteLastOrder()">מחיקת הזמנה אחרונה</button>
-                <button class="left red" onclick="deleteClient()">מחיקת משתמש</button>
             </div>
-            <div class="logText" id="editLog">-</div>            
+            <div class="row">
+                <button class="center orange" onclick="clientDeleteLastOrder()">מחיקת הזמנה אחרונה</button>
+                <button class="red" onclick="deleteClient()">מחיקת משתמש</button>
+            </div>
+            <br>
+            <div class="row">
+                <div class="logText" id="editLog">-</div>
+            </div>
         </div>
 
-        <br>
+        <div class="row linebreak"></div>
 
         <div class="addUser">
             <div class="function column">
@@ -48,15 +56,18 @@
                 <p>כינוי : </p>
                 <input type="search" class="textbox" id="insertNick" spellcheck="false" placeholder=" הכנס כינוי ">
                 <p>מספר חשבון : </p>
-                <input type="text" class="textboxShort" id="insertNumber" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מספר חשבון ">
-                <button onclick="insertName()">הכנס משתמש</button>
-                <button id="insertUserStatus"></button>
+                <input type="text" class="textboxNumber" id="insertNumber" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מספר חשבון ">
+                <button class="green" onclick="insertName()">הכנס משתמש</button>
                 </p>
+            </div>
+
+            <div class="row">
+                <div class="logText" id="addLog">-</div>
             </div>
 
         </div>
 
-        <br>
+        <div class="row linebreak"></div>
 
             <!-- BUTTONS -->
     <div class="content row">
@@ -90,37 +101,21 @@
             <button onclick="createTable()">צור טבלה נדרשת</button>
         </div>
 
+        <div class="function" id="importNameListFromFile">
+            <button onclick="importNameListFile()">הכנס רשימת שמות</button>
+        </div>
+
     </div>  
+
+    <div class="row linebreak"></div>
 
         <br>
         <div class="clear">
             <button onclick="clearConsole()">clear console</button>
         </div>
         <div class="console" id="console">
-        </div>
-
-        <br>
-
-        <!-- <div class="older">            
-            <p>הכנסת שם למאגר OLD DONT USE</p>
-            <input type="search" class="textbox" id="insertNameText" onkeyup="createName()" spellcheck="false" placeholder="...">            
-            <button onclick="insertNameOld()">הכנס שם חדש</button>
-            <reply></reply>
         </div>        
 
-        <div class="function" id="deleteName">
-            <p>מחיקת שם מהמאגר</p>
-            <input type="search" class="textbox" id="deleteNameText" onkeyup="createNameForDelete()" spellcheck="false" placeholder="...">
-            <button onclick="deleteName()">מחק שם קיים</button>
-            <reply></reply>
-        </div>
-
-        <div class="function" id="removeLastAction">
-            <p>מחיקת פעולה אחרונה של משתמש </p>
-            <input type="search" class="textbox" id="deleteNameText" onkeyup="removeLastAction()" spellcheck="false" placeholder="...">
-            <button>מחק פעולה אחרונה</button>
-            <reply></reply>
-        </div> -->
     </div>
 
     <br>    

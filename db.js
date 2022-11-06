@@ -60,20 +60,23 @@ exports.dbInsertClient = async function(newClient){
   // console.log(newClient);
   let name = newClient[0].replace(/\'/g,"''");
   let nick = newClient[1].replace(/\'/g,"''");
-  let number = newClient[2].replace(/\'/g,"''");
-  let ifExist = await this.dbGetExactName(name,nick,number);
-  let messageReturn;
-  if(ifExist.length != 0){
-    console.log("CLIENT EXIST");
-    return ("שם תפוס");
-  }else{
+  let account = newClient[2].replace(/\'/g,"''");
+  let ifName = await this.dbGetNameIfExist(name);
+  let ifNick = await this.dbGetNickIfExist(nick);
+  let ifAccount = await this.dbGetAccountIfExist(account);
+  if(ifName.length != 0){console.log("NAME EXIST");return ("שם משתמש תפוס");}
+  else if(ifNick.length != 0){console.log("NICK EXIST");return ("כינוי תפוס");}
+  else if(ifAccount.length != 0){console.log("ACCOUNT EXIST");return ("מספר חשבון תפוס");}  
+  else{
+    let messageReturn;
     console.log("CLIENT AVAILABLE");    
     messageReturn = await pool.query("INSERT INTO "+tableClients+
-    " (name,nick,account) VALUES ('"+name+"','"+nick+"',"+number+");")
+    " (name,nick,account) VALUES ('"+name+"','"+nick+"',"+account+");")
     .catch((err) => {
       console.log(err);return("NO OK");
-    }).then((res) => {        
-        return (res);
+    }).then((res) => { 
+      console.log(res);       
+        return ("התווסף קליינט : "+name+ " במספר שירות: "+account+" וכינויו: "+nick);
       });
   console.log("Inserted Client: "+  messageReturn)
   return messageReturn;
@@ -82,15 +85,22 @@ exports.dbInsertClient = async function(newClient){
 
 //--------------------EDIT CLIENT FIELDS----------------//
 exports.dbEditClient = async function(clientId,field,value){
+    var fieldHeb;
+    if(field=='name'){fieldHeb=("שם משתמש")};
+    if(field=='nick'){fieldHeb=("כינוי")};
+    if(field=='account'){fieldHeb=("מספר חשבון")};
     messageReturn = await pool.query("UPDATE "+tableClients+
     " SET "+field+" = '"+value+"' WHERE id = "+clientId+";")
     .catch((err) => {
       console.log(err)
-    }).then((res) => {        
-        return (res);
+      return ("הייתה תקלה");
+    }).then((res) => {
+        console.log(res);
+        return ("למשתמש מספר "+clientId+" עודכן "+fieldHeb+" ונרשם: "+value);
       });
-  console.log("clientID: "+clientId+" Column: "+field+" Value: "+value)
-  return ("clientID: "+clientId+" Column: "+field+" Value: "+value+" No ERRORS");
+  console.log("clientID: "+clientId+" Column: "+field+" Value: "+value);
+  console.log(messageReturn);
+  return (messageReturn);
 };
 
 //--------------------DELETE LAST ORDER BY CLIEND ID----------------//
@@ -260,6 +270,24 @@ exports.dbGetExactName = function(name,nick,account) {
   return pool.query("SELECT name FROM "+tableClients+
   " WHERE name LIKE '"+name+"' OR nick LIKE '"+nick+"' OR account LIKE '"+account+"';");
 };
+
+//-----------------------GET BY NAME FROM DB----------------------//
+exports.dbGetNameIfExist = function(name) {
+  return pool.query("SELECT name FROM "+tableClients+
+  " WHERE name LIKE '"+name+"';");
+};
+
+//-----------------------GET BY NICK FROM DB----------------------//
+exports.dbGetNickIfExist = function(nick) {
+  return pool.query("SELECT nick FROM "+tableClients+
+  " WHERE nick LIKE '"+nick+"';");
+};
+//-----------------------GET BY ACCOUNT FROM DB----------------------//
+exports.dbGetAccountIfExist = function(account) {
+  return pool.query("SELECT account FROM "+tableClients+
+  " WHERE account LIKE '"+account+"';");
+};
+
 //-----------------------GET ID NICK AND NAME FROM DB BY NICK SEARCH----------------------//
 exports.dbGetNameBySearchName = function(clientName) {
   return pool.query("SELECT id,account,name,nick FROM "+tableClients+
@@ -275,13 +303,19 @@ exports.dbGetNameBySearch = function(query) {
 //-----------------------GET ACCOUNT INFO BY SCOPE----------------------//
 exports.dbGetDataByScope = async function(scope) {
   if (scope==1){//SCOPE ORDERS
-    data = await pool.query(`SELECT * FROM ${tableOrders} ORDER BY orderid DESC;`);
+    data = await pool.query("SELECT orderid,DATE_FORMAT(`time`, '%Y-%m-%d %H:%i') AS `formatted_date`"+
+    ",item1,item2,item3,item4,sum,clientid,client FROM "+tableOrders+
+    " ORDER BY orderid DESC;");
   };
   if (scope==2){//SCOPE CLIENTS
-    data = await pool.query("SELECT * FROM "+tableClients+" ORDER BY name;");
+    data = await pool.query("SELECT id,DATE_FORMAT(`last_action`, '%Y-%m-%d %H:%i') AS `formatted_date`"+
+    ",item1,item2,item3,item4,sum,account,name,nick FROM "+tableClients+
+    " ORDER BY name;");    
   };
   if (scope==3){//SCOPE REPORT
-    data = await pool.query("SELECT DATE_FORMAT(`last_action`, '%Y-%m-%d %H:%i') AS `formatted_date`,sum,account,name FROM "+tableClients+" WHERE account >= 50 AND sum > 0;");
+    data = await pool.query("SELECT DATE_FORMAT(`last_action`, '%Y-%m-%d %H:%i') AS `formatted_date`"+
+    ",sum,account,name FROM "+tableClients+
+    " WHERE account >= 50 AND sum > 0;");
   };
   // console.log(await data);
   return data;

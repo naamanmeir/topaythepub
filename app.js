@@ -4,6 +4,7 @@ var favicon = require('serve-favicon')
 const express = require('express')
 const path = require('node:path');
 const fs = require('fs');
+const readline = require('readline');
 
 // extrnal files
 const functions = require('./functions.js');
@@ -75,6 +76,26 @@ app.get('/retable/', async function(req,res){
     res.send(createTableOrders);
 })
 
+//-----------READ NAMES FILE --------------
+app.post('/updateNameList/', async (req,res) => {
+  const fileStream = fs.createReadStream('namelist.csv','utf8');
+  const rl = readline.createInterface({
+    input: fileStream,
+    crlfDelay: Infinity
+  });
+  for await (const line of rl){    
+    let number = (line.split('\t'))[0];
+    let name = (line.split('\t'))[1];
+    let nick = name;
+    console.log(number)
+    console.log(name);
+    let newClient = [name,nick,number];
+    var insertClientResponse;
+    insertClientResponse = await db.dbInsertClient(newClient).then((res) => {return (res)})
+    console.log(await insertClientResponse)
+  }
+});
+
 // SERACH CLIENT IN DB BY SEARCHBOX
 app.post('/searchNameManage/:data', async (req,res) => {
     var clientName = (req.params.data).replace(/\"/g,'');
@@ -115,7 +136,7 @@ app.post('/insertClient/:data', async (req,res,next) => {
     var insertClientResponse;
     insertClientResponse = await db.dbInsertClient(newClient).then((res) => {return (res)})
     console.log(await insertClientResponse)
-    // res.send(response);    
+    res.send(insertClientResponse);    
 });
 
 app.post('/editClientFields/:data', async (req,res,next) => {
