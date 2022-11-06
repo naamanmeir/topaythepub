@@ -309,8 +309,8 @@ function copyNameToNick(){
 
 function deleteClient(){
     if(clientId==null||clientId==''){return};
-    if(window.confirm("למחוק משתמש?")){
-        if(window.confirm("בטוח בטוח ???")){
+    if(window.confirm("למחוק את "+clientName+" ?")){
+        if(window.confirm("בטוח בטוח "+clientName+","+clientNick+","+clientId+" ???")){
             xhttp.open("POST", "./deleteClient/"+clientId, true);
             xhttp.send();
         }
