@@ -8,7 +8,7 @@ async function placeOrder(orderPack){
     xhttp.send();
 };
 
-async function createTable(){    
+async function createTable(){
     xhttp.open("GET", "./retable/", true);
     xhttp.send();
 
@@ -164,7 +164,7 @@ function copyTextToSearchBox(clientsSelected){
     userSearchMessage(3);
 };
 
-function userSearchMessage(select){    
+function userSearchMessage(select){
     if(select == 0){
         document.getElementById("editNick").value = "";
         document.getElementById("editNumber").value = "";
@@ -267,8 +267,10 @@ function editLog(text){
 }
 
 function importNameListFile(){
+    if(window.confirm("להכניס את כל הרשימה עכשיו? ")){
     xhttp.open("POST", "./updateNameList/", true);
     xhttp.send();
+    };
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             console.log(this.response);
@@ -301,7 +303,7 @@ function insertName(){
         };
 };
 
-function copyNameToNick(){    
+function copyNameToNick(){
     if(document.getElementById("insertNick").value==''){
     document.getElementById("insertNick").value = (document.getElementById("insertName").value);
     }
