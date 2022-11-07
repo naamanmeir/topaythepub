@@ -119,3 +119,14 @@ function showAccountTable(data){
     tableWindow.document.write();    
     tableWindow.document.appendChild(table);
 };
+
+function createReportFile(){
+    xhttp.open("POST", "./createFile/", true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);            
+            // return;
+            }
+        };
+}

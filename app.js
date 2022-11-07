@@ -5,6 +5,7 @@ const express = require('express')
 const path = require('node:path');
 const fs = require('fs');
 const readline = require('readline');
+const { stringify } = require("csv-stringify");
 
 // extrnal files
 const functions = require('./functions.js');
@@ -332,6 +333,36 @@ app.get('/david', async function(req, res) {
     console.log("DAVID LOGGED IN ON: "+now);
     res.render('accountent', {})
 });
+
+//-----------------------WRITE REPORT FILE TO SERVER---------------------//
+app.post('/createFile/', async function(req,res){
+  const filename = "saved_from_db.csv";
+  const writableStream = fs.createWriteStream(filename);
+
+  const columns = [
+    "תאריך רישום",
+    "סכום",
+    "מספר חשבון",
+    "שם מלא"
+  ];
+
+  const stringifier = stringify({ header: true, columns: columns });
+
+  let data;
+  data = await db.dbGetDataByScope(3);
+
+  for(let i = 0;i < data.length; i++){
+    console.log(data[i])
+    stringifier.write(data[i]);
+    }
+  stringifier.pipe(writableStream);
+
+  console.log("done");
+
+  // console.log("APP: "+data);
+
+  res.send("DONE");
+})
 
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));

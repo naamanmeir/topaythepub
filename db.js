@@ -321,6 +321,7 @@ exports.dbGetDataByScope = async function(scope) {
   return data;
 };
 
+//-----------------------BACKUP TABLES INTERNALLY-----------------------//
 exports.dbBackupTable = async function(time) {  
   let tsmp = time.toString();
   tsmp = tsmp.replace("/","");

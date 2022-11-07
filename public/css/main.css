@@ -146,7 +146,7 @@ video{
     background-color: rgba(0, 0, 0, 0);
     height: 2.1em;
     width: 100%;
-    font-size: 1.5em;
+    font-size: 1.3em;
     word-wrap: none;    
     margin: auto;
     margin-top: 0.1em;
@@ -159,9 +159,9 @@ video{
     user-select: none;
 }
 .searchBoxLogged{
-    font-size: 1.5em;
+    font-size: 1.3em;
     border-color: green;
-    transition: all 1s;
+    transition: all 0.2s;
 }
 .searchBoxNotLogged{    
     border-color: orange;
@@ -655,7 +655,7 @@ input[type=text] {
 .userInfoText{
     margin: 0px 0px 0px 0px;
     padding: 0px 0px 0px 0px;
-    margin-right: 4%;
+    margin-right: 7%;
     color: rgb(201, 138, 3);    
 }
 .userInfoChangeNick{
