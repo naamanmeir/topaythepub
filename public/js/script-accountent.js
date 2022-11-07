@@ -127,7 +127,7 @@ function createReportFile(){
         if (this.readyState == 4 && this.status == 200) {
             // console.log(this.response);
             window.open(this.response);
-            // return;
+            return;
             }
         };
 }

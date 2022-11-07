@@ -8,7 +8,6 @@ const readline = require('readline');
 const { stringify } = require("csv-stringify");
 
 // extrnal files
-const functions = require('./functions.js');
 const db = require('./db.js');
 const { Script } = require("node:vm");
 const msg = require('./strings.js');
@@ -111,18 +110,6 @@ app.post('/searchNameManage/:data', async (req,res) => {
     res.send(clientsFound);
 });
 
-// app.post('/getUserDetails/:data', async (req,res,next) => {
-//     let getClient = JSON.parse(req.params.data);
-//     console.log("APP: GET DETAILS BY NAME: "+getClient);
-//     let getName = getClient[0];
-//     let getNick = getClient[1];
-//     let getNumber = getClient[2];
-//     console.log(getName,getNick,getNumber)
-//     var clientFields;
-//     clientFields = await db.dbGetClientDetails(getName,getNick,getNumber).then((res) => {return (res)})
-//     console.log(JSON.stringify(await clientFields));
-//     res.send(clientFields);    
-// });
 app.post('/getUserDetails/:data', async (req,res,next) => {
     let clientId = (req.params.data);
     console.log("APP: GET DETAILS BY ID: "+clientId);
@@ -353,14 +340,12 @@ app.get('/createFile/', async function(req,res){
   data = await db.dbGetDataByScope(3);  
   for(let i = 0;i < data.length; i++){    
     let row = [data[i].formatted_date,data[i].sum,data[i].account,data[i].name];
-    console.log(row)
-    // var someEncodedString = Buffer.from('someString', 'utf-8').toString();
+    // console.log(row);
     stringifier.write(row);
     }
-  stringifier.pipe(writableStream);    
-  // res.send("DONE");
+  stringifier.pipe(writableStream);
   res.setHeader('Content-disposition', "'attachment; filename="+filename+"'");
-  res.set('Content-Type', 'text/csv');
+  res.set('Content-Type', 'text/csv; charset=utf-8');
   res.status(200).send('./report/'+filename);
 })
 

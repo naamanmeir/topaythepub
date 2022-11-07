@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>לרשום את התשלומים של הפאב</title>
+    <title>תשלומי פאב</title>
     <link rel="stylesheet" href="css/accountent.css">
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 </head>
@@ -13,19 +13,18 @@
 
     <div class="row linebreak"></div>
 
-
     <!-- TEXT FIELDS -->
     <div class="content column">  
 
             <!-- BUTTONS -->
     <div class="content row">
-
+        
         <div class="green" id="getAccountData">
-            <button onclick="getAllData(3)">הצגת נתונים בחלון</button>
+            <button onclick="createReportFile()">יצירת קובץ דו"ח להורדה</button>
         </div>
 
         <div class="green" id="getAccountData">
-            <button onclick="createReportFile()">יצירת קובץ דו"ח</button>
+            <button onclick="getAllData(3)">הצגת נתונים בחלון חדש</button>
         </div>
 
     </div>

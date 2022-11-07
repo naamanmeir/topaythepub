@@ -1,5 +1,4 @@
 const mariadb = require('mariadb');
-const functions = require('./functions');
 
 const pool = mariadb.createPool({
   host: process.env.MYSQL,
