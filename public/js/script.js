@@ -291,6 +291,7 @@ function searchBox(text){
 };
 
 function searchBoxClear(){
+    // clearAutoComplete(document.getElementById("autoComplete"));
     const searchBox = document.getElementById("searchBox");
     if(searchBox1.value.length==0){userSearchMessage(0);};
     if(searchBox.value == ""){userSearchMessage(0);};
@@ -556,7 +557,7 @@ async function getUserInfoById(){
     xhttp.send();
 };
 //-------------------PRINT USER INFO TO TABLE
-async function userInfo(uData){  
+async function userInfo(uData){
     if(uData == null){return}  ;
     closeNav();
     allElements(0);

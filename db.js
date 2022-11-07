@@ -65,7 +65,7 @@ exports.dbInsertClient = async function(newClient){
   let ifAccount = await this.dbGetAccountIfExist(account);
   if(ifName.length != 0){console.log("NAME EXIST");return ("שם משתמש תפוס");}
   else if(ifNick.length != 0){console.log("NICK EXIST");return ("כינוי תפוס");}
-  else if(ifAccount.length != 0){console.log("ACCOUNT EXIST");return ("מספר חשבון תפוס");}  
+  else if(ifAccount.length != 0 && account != 0){console.log("ACCOUNT EXIST");return ("מספר חשבון תפוס");}  
   else{
     let messageReturn;
     console.log("CLIENT AVAILABLE");    

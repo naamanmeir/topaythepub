@@ -1,4 +1,3 @@
-// Imports
 require("dotenv").config();
 var favicon = require('serve-favicon')
 const express = require('express')
@@ -7,14 +6,12 @@ const fs = require('fs');
 const readline = require('readline');
 const { stringify } = require("csv-stringify");
 
-// extrnal files
 const db = require('./db.js');
 const { Script } = require("node:vm");
 const msg = require('./strings.js');
 const { createPool } = require("mariadb");
 const { response } = require("express");
 
-//consts
 const app = express();
 const port = 3090;
 
@@ -25,12 +22,9 @@ const password_admin = process.env.PASS_ADMIN;
 const user_david = process.env.USER_DAVID;
 const password_david = process.env.PASS_DAVID;
 
-// var now = new Date().toLocaleString("en-IL", {timeZone: "Asia/Jerusalem"});
 var now = new Date();
 console.log("System Startup Time :"+Date());
 
-
-// Static Files
 app.use(express.static(__dirname + 'public'));
 app.use('/css', express.static(__dirname + '/public/css'))
 app.use('/js', express.static(__dirname + '/public/js'))
@@ -44,14 +38,14 @@ app.set('view engine', 'ejs');
 // ------------------------  MANAGE VIEW  ----------------------- //
 app.get('/manage', async function(req, res) {  
     const reject = () => {
-        res.setHeader("www-authenticate", "Basic",realm="topaythepub admin panel",charset="UTF-8");
+        res.setHeader("www-authenticate", "Basic",realm="topaythepub_admin_panel",charset="UTF-8");
         res.sendStatus(401);
       };
     
       const authorization = req.headers.authorization;
     
       if (!authorization) {
-        console.log("FAILED LOGIN ATTEMPTED TO MANAGE PANEL ON: "+now);
+        console.log("FAILED LOGIN ATTEMPTED TO MANAGE PANEL ON: "+Date());
         return reject();
       }
     
@@ -65,10 +59,11 @@ app.get('/manage', async function(req, res) {
       if (!(username === user_admin && password === password_admin)) {
         return reject();
       }
-      console.log("LOGIN TO MANAGE PANEL ON: "+now);  
+      console.log("LOGIN TO MANAGE PANEL ON: "+Date());  
     res.render('manage', {})
 });
 
+// ------------------------  CREATE TABLE ----------------------- //
 app.get('/retable/', async function(req,res){
     let createTableCLients;
     let createTableOrders;
@@ -323,7 +318,7 @@ app.get('/david', async function(req, res) {
 });
 
 //-----------------------WRITE REPORT FILE AND SEND TO DOWNLOAD---------------------//
-app.get('/createFile/', async function(req,res){ 
+app.get('/createFile/', async function(req,res){
   let fileDate = new Date();
   fileDate = (fileDate.getFullYear()+"-"+fileDate.getMonth()+"-"+
   fileDate.getDate()+"-"+fileDate.getHours()+"-"+fileDate.getMinutes());  
