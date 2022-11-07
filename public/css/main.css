@@ -197,11 +197,12 @@ input[type=text] {
     margin: 0px;
     font-size: 1.8rem;
     color: rgb(20, 20, 20);
-    background-color: #d4d4d4;
+    background-color: #b9c1c3;
+
     border: 2px solid black;
 }
 .autocomplete-itemsEven{
-    background-color: #9f9d9d;
+    background-color: #d4d4d4;
 }
 .autocomplete-items:hover {    
     background-color: #e9e9e9;
@@ -1006,22 +1007,25 @@ input[type=text] {
     top: 0;
     right: 0;
     background-color: rgba(11, 49, 58, 0.86);
+    border: 0px solid #97480f;
+    border-width: 0px;
     overflow-x: hidden;
     padding-top: 60px;
     transition: 0.5s;
     white-space: nowrap;
 }  
 .sidenav a {
-    padding: 8px 32px 8px 8px;
+    padding: 8px 32px 18px 8px;
     text-decoration: none;
     font-size: 25px;
-    color: #818181;
+    color: #cfcfcf;
     display: block;
     transition: 0.3s;
     word-wrap:unset; 
 }  
 .sidenav a:hover {
-    color: #f1f1f1;
+    background-color: #a49c9c;
+    color: #ffffff;
 }
 .sidenav .closebtn {
     position: absolute;

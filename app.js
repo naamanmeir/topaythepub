@@ -202,7 +202,7 @@ app.get('', async function(req, res) {
       const authorization = req.headers.authorization;
     
       if (!authorization) {
-        console.log("FAILED LOGIN ATTEMPTED TO APP ON: "+now);
+        console.log("FAILED LOGIN ATTEMPTED TO MASOF APP ON: "+Date());
         return reject();
       }
     
@@ -216,7 +216,7 @@ app.get('', async function(req, res) {
       if (!(username === username && password === password)) {
         return reject();
       }
-    console.log("LOGIN TO APP ON: "+now);  
+    console.log("LOGIN TO APP ON: "+Date());  
     res.render('index', {
         item1 : msg.NAME_ITEM1,
         item2 : msg.NAME_ITEM2,
@@ -299,7 +299,7 @@ app.get('/david', async function(req, res) {
       const authorization = req.headers.authorization;
     
       if (!authorization) {
-        console.log("FAILED LOGIN ATTEMPTED ON: "+now);
+        console.log("FAILED LOGIN ATTEMPTED TO ACCOUNTENT ON: "+Date());
         return reject();
       }
     
@@ -313,13 +313,13 @@ app.get('/david', async function(req, res) {
       if (!(username === user_david && password === password_david)) {
         return reject();
       }
-    console.log("DAVID LOGGED IN ON: "+now);
+    console.log("DAVID LOGGED IN ON: "+Date());
     res.render('accountent', {})
 });
 
 //-----------------------WRITE REPORT FILE AND SEND TO DOWNLOAD---------------------//
 app.get('/createFile/', async function(req,res){
-  let fileDate = new Date();
+  let fileDate = new Date();  
   fileDate = (fileDate.getFullYear()+"-"+fileDate.getMonth()+"-"+
   fileDate.getDate()+"-"+fileDate.getHours()+"-"+fileDate.getMinutes());  
   const filename = "pub_report_"+fileDate+".csv";
@@ -330,13 +330,12 @@ app.get('/createFile/', async function(req,res){
     "מספר חשבון",
     "שם מלא"
   ];
-  const stringifier = stringify({ header: true, columns: columns });
+  const stringifier = stringify({ header: true, columns: columns, bom: true});
   let data;
-  data = await db.dbGetDataByScope(3);  
-  for(let i = 0;i < data.length; i++){    
-    let row = [data[i].formatted_date,data[i].sum,data[i].account,data[i].name];
-    // console.log(row);
-    stringifier.write(row);
+  data = await db.dbGetDataByScope(3);
+  for(let i = 0;i < data.length; i++){
+    let row = [data[i].formatted_date,data[i].sum,data[i].account,data[i].name];    
+    stringifier.write(row);    
     }
   stringifier.pipe(writableStream);
   res.setHeader('Content-disposition', "'attachment; filename="+filename+"'");

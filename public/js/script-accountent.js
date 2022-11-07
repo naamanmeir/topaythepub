@@ -54,6 +54,7 @@ function showOrdersTable(data){
     table.appendChild(tableBody);  
     table.setAttribute("border", "1");
     table.setAttribute("align", "center");
+    table.setAttribute("width", "100%");
     table.setAttribute("style", "font-size:larger");
     table.setAttribute("class", "tableStyle");
     var tableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");    
@@ -83,6 +84,7 @@ function showClientsTable(data){
     table.appendChild(tableBody);  
     table.setAttribute("border", "1");
     table.setAttribute("align", "center");
+    table.setAttribute("width", "100%");
     table.setAttribute("style", "font-size:larger");
     table.setAttribute("class", "tableStyle");
     var tableWindow = window.open("", "טבלת משתמשים", "width=1000, height=800, dir=rtl");    
@@ -110,12 +112,13 @@ function showAccountTable(data){
         if(i % 2 === 0  ){row.setAttribute("style", "background-color:lightblue;")}
     tableBody.appendChild(row);    
     }
-    table.appendChild(tableBody);  
+    table.appendChild(tableBody);
     table.setAttribute("border", "1");
     table.setAttribute("align", "center");
+    table.setAttribute("width", "100%");
     table.setAttribute("style", "font-size:xx-large");
     table.setAttribute("class", "tableStyle");
-    var tableWindow = window.open("", "טבלת חיובים", "width=800, height=800, dir=rtl");    
+    var tableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");    
     tableWindow.document.write();    
     tableWindow.document.appendChild(table);
 };
@@ -125,7 +128,7 @@ function createReportFile(){
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            // console.log(this.response);
+            // THIS WILL DOWNLOAD YES
             window.open(this.response);
             return;
             }

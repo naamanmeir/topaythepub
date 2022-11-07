@@ -369,9 +369,10 @@ function showOrdersTable(data){
     table.appendChild(tableBody);  
     table.setAttribute("border", "1");
     table.setAttribute("align", "center");
+    table.setAttribute("width", "100%");
     table.setAttribute("style", "font-size:larger");
     table.setAttribute("class", "tableStyle");
-    var tableWindow = window.open("", "טבלת חיובים", "width=800, height=800, dir=rtl");    
+    var tableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");    
     tableWindow.document.write();    
     tableWindow.document.appendChild(table);
 };
@@ -398,9 +399,10 @@ function showClientsTable(data){
     table.appendChild(tableBody);  
     table.setAttribute("border", "1");
     table.setAttribute("align", "center");
+    table.setAttribute("width", "100%");
     table.setAttribute("style", "font-size:larger");
     table.setAttribute("class", "tableStyle");
-    var tableWindow = window.open("", "טבלת חיובים", "width=800, height=800, dir=rtl");    
+    var tableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");    
     tableWindow.document.write();    
     tableWindow.document.appendChild(table);
 };
@@ -428,9 +430,10 @@ function showAccountTable(data){
     table.appendChild(tableBody);  
     table.setAttribute("border", "1");
     table.setAttribute("align", "center");
+    table.setAttribute("width", "100%");
     table.setAttribute("style", "font-size:larger");
     table.setAttribute("class", "tableStyle");
-    var tableWindow = window.open("", "טבלת חיובים", "width=800, height=800, dir=rtl");    
+    var tableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");    
     tableWindow.document.write();    
     tableWindow.document.appendChild(table);
 };

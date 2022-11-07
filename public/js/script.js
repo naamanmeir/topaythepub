@@ -62,11 +62,11 @@ searchBox1.addEventListener('focus',function(){
     if(searchBox1.value.length>0){searchBox1.placeholder=("");};
 });
 searchBox1.addEventListener('blur',function(){
-    searchBoxClear();
+    // searchBoxClear();
     searchBox1.placeholder=("נא להכניס שם✍👉👉");
 });
 searchBox1.addEventListener('input',function(){
-    searchBoxClear();    
+    // searchBoxClear();
     if(searchBox1.value.length==0){userSearchMessage(0);};
     if(searchBox1.value.length>0){searchBox1.placeholder=("");};
     searchBox(searchBox1.value);    
@@ -291,7 +291,7 @@ function searchBox(text){
 };
 
 function searchBoxClear(){
-    // clearAutoComplete(document.getElementById("autoComplete"));
+    clearAutoComplete(document.getElementById("autoComplete"));
     const searchBox = document.getElementById("searchBox");
     if(searchBox1.value.length==0){userSearchMessage(0);};
     if(searchBox.value == ""){userSearchMessage(0);};
@@ -531,6 +531,7 @@ function openNav() {
     const sideNav = document.getElementById("sideNav");
     sideNav.style.transition = "all 0.5s";
     sideNav.style.width = "10rem";
+    sideNav.style.borderWidth = "2px";
     const out = document.getElementById("content");
     out.onclick =  (function(){
         if(sideNav.style.width == "10rem"){
@@ -542,6 +543,7 @@ function openNav() {
 function closeNav() {
     document.getElementById("sideNav").style.width = "0";
     sideMenu = false;
+    sideNav.style.borderWidth = "0px";
 };
 //--------------GET USER INFO WITH ID SEND REQUEST----------------
 async function getUserInfoById(){

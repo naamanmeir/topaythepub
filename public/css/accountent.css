@@ -46,7 +46,8 @@ body,
     flex-direction: row;
 }
 .tableStyle{
-    font-size: x-large;
+    width: 100%;
+    font-size: 3rem;
     color: aqua;
     background-color: rgb(223, 14, 14);
     color: lightblue;
