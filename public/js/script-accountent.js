@@ -121,11 +121,12 @@ function showAccountTable(data){
 };
 
 function createReportFile(){
-    xhttp.open("POST", "./createFile/", true);
+    xhttp.open("GET", "./createFile/", true);
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);            
+            // console.log(this.response);
+            window.open(this.response);
             // return;
             }
         };

@@ -36,6 +36,7 @@ app.use(express.static(__dirname + 'public'));
 app.use('/css', express.static(__dirname + '/public/css'))
 app.use('/js', express.static(__dirname + '/public/js'))
 app.use('/img', express.static(__dirname + '/public/img'))
+app.use('/report', express.static(__dirname + '/public/report'))
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
 
 app.set('views', './views');
@@ -334,34 +335,33 @@ app.get('/david', async function(req, res) {
     res.render('accountent', {})
 });
 
-//-----------------------WRITE REPORT FILE TO SERVER---------------------//
-app.post('/createFile/', async function(req,res){
-  const filename = "saved_from_db.csv";
-  const writableStream = fs.createWriteStream(filename);
-
+//-----------------------WRITE REPORT FILE AND SEND TO DOWNLOAD---------------------//
+app.get('/createFile/', async function(req,res){ 
+  let fileDate = new Date();
+  fileDate = (fileDate.getFullYear()+"-"+fileDate.getMonth()+"-"+
+  fileDate.getDate()+"-"+fileDate.getHours()+"-"+fileDate.getMinutes());  
+  const filename = "pub_report_"+fileDate+".csv";
+  const writableStream = fs.createWriteStream('public/report/'+filename);
   const columns = [
     "תאריך רישום",
     "סכום",
     "מספר חשבון",
     "שם מלא"
   ];
-
   const stringifier = stringify({ header: true, columns: columns });
-
   let data;
-  data = await db.dbGetDataByScope(3);
-
-  for(let i = 0;i < data.length; i++){
-    console.log(data[i])
-    stringifier.write(data[i]);
+  data = await db.dbGetDataByScope(3);  
+  for(let i = 0;i < data.length; i++){    
+    let row = [data[i].formatted_date,data[i].sum,data[i].account,data[i].name];
+    console.log(row)
+    // var someEncodedString = Buffer.from('someString', 'utf-8').toString();
+    stringifier.write(row);
     }
-  stringifier.pipe(writableStream);
-
-  console.log("done");
-
-  // console.log("APP: "+data);
-
-  res.send("DONE");
+  stringifier.pipe(writableStream);    
+  // res.send("DONE");
+  res.setHeader('Content-disposition', "'attachment; filename="+filename+"'");
+  res.set('Content-Type', 'text/csv');
+  res.status(200).send('./report/'+filename);
 })
 
 //-------------------------SERVER-----------------------------------//
