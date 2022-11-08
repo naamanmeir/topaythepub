@@ -15,8 +15,7 @@ body,
     -ms-user-select: none;
     -o-user-select: none;    
     user-select: none;
-    scroll-behavior: smooth;
-    float: center;
+    scroll-behavior: smooth;    
 }
 body {
     display: flex;
@@ -29,7 +28,6 @@ img{
     height: 7rem;
     padding: 0px;
     margin: auto auto;
-    float: center;
 }
 video{
     width: 100%;
@@ -42,9 +40,6 @@ video{
     right: 1%;    
     background-image: none;
     background-color: RGBA(0,0,0,0);
-    float: center;
-    /* left: 50%; */
-    /* right: 50%; */
     margin: auto; 
     display: flex;
     flex-direction: column;    
@@ -146,8 +141,7 @@ video{
     background-color: rgba(0, 0, 0, 0);
     height: 2.1em;
     width: 100%;
-    font-size: 1.3em;
-    word-wrap: none;    
+    font-size: 1.3em;       
     margin: auto;
     margin-top: 0.1em;
     padding-top: 0;
@@ -223,8 +217,7 @@ input[type=text] {
     height: 2em;    
     margin: auto;
     margin-top: 0px;
-    text-align: left;
-    align-self: left;
+    text-align: left;    
     bottom: -2.5rem;    
 }
 .userStateIndicatorNotOk {
@@ -328,8 +321,7 @@ input[type=text] {
     transition: all 1s;
     text-align: center;    
     width: 2rem;
-    height: 2rem;    
-    padding: -10px;
+    height: 2rem;
     margin: -10px;
     margin: auto;
     opacity: 0.8;
@@ -424,8 +416,7 @@ input[type=text] {
     margin: auto;
     margin-top: 0px;
     margin-bottom: 0px;
-    margin-right: auto;    
-    float: center;
+    margin-right: auto;        
     transition: background-color 0.8s ease; 
 }
 .item{
@@ -437,11 +428,9 @@ input[type=text] {
     border: 4px outset rgb(240, 152, 0);
     position: relative;
     margin: auto;
-    margin-top: 1em;
-    float: center;
+    margin-top: 1em;    
     text-align: center;
-    padding: 0px;
-    box-shadow: 1px 4px 8px 2 rgba(0, 0, 0, 0.964), 2px 6px 20px 1 rgba(0, 0, 0, 0.736);
+    padding: 0px;    
     transition: background-color 0.5s ease;
 }
 .item img{
@@ -492,8 +481,7 @@ input[type=text] {
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 4em;
-    float:center;
+    height: 4em;    
     margin: auto;
     margin-top: 2em;
     text-align:center;
@@ -818,8 +806,6 @@ input[type=text] {
         width:fit-content;
         min-width: 6em;
         height: 5rem;
-        align-self: left;
-        float: left;
         padding: 0px;
         margin: 0px;
     }
@@ -980,8 +966,7 @@ input[type=text] {
     font-size: xx-large;
     display: block;
     text-decoration: none;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;    
     border-radius: 2px;
     border: solid 2px;
     transition: 1s;
@@ -1080,13 +1065,10 @@ input[type=text] {
     }
 }
 .background1 {
-    /* min-height: 100vh; */
-    min-height: var(--original-viewport-height);
-    min-width: var(--original-viewport-width);
     z-index: -10;
     position: fixed;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     top: 0;
     left: 0;
     background: #000000;
@@ -1776,7 +1758,7 @@ input[type=text] {
         border-radius: 5%;
     }
     70%{
-        filter: hue-rotate(0deg) saturate(1) blur(4);
+        filter: hue-rotate(1deg) saturate(1) blur(4);
     }
     98%{
         transform: translateY(-1100px) rotate(700deg);

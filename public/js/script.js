@@ -19,6 +19,14 @@ var fs = false;
 
 var limit = 0; // throttle limiter for db
 
+window.addEventListener('load', loadUtiliti, false );
+function loadUtiliti(){    
+    setTimeout(function () {
+        var viewport = document.querySelector("meta[name=viewport]");
+        viewport.setAttribute("content", viewport.content + ", height=" + window.innerHeight);
+    }, 300);
+};
+
 function fullScreen(){
     if(!fs){
         setTimeout(function(){
@@ -41,7 +49,7 @@ function fullScreen(){
         },100);
     }
 
-}
+};
 
 function fullScreenOff(){
     window.addEventListener("click" ,function(){
