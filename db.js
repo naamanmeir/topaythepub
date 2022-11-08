@@ -312,8 +312,9 @@ exports.dbGetDataByScope = async function(scope) {
     " ORDER BY name;");    
   };
   if (scope==3){//SCOPE REPORT
-    data = await pool.query("SELECT DATE_FORMAT(`last_action`, '%Y-%m-%d %H:%i') AS `formatted_date`"+
-    ",sum,account,name FROM "+tableClients+    
+    data = await pool.query("SELECT sum,"+
+    " DATE_FORMAT(`last_action`, '%y/%m/%d') AS `formatted_date`"+
+    ",name,account FROM "+tableClients+    
     " WHERE account >= 50 AND sum > 0 "+
     " ORDER BY last_action DESC ;");
   };

@@ -289,8 +289,8 @@ app.post('/getUserInfo/:data', async (req,res) => {
 
 });
 
-//-------------------------accountent---------------------
-app.get('/david', async function(req, res) {  
+//-------------------------accountant---------------------
+app.get('/accountant', async function(req, res) {  
     const reject = () => {
         res.setHeader("www-authenticate", "Basic",realm="topaythepub accountent panel",charset="UTF-8");
         res.sendStatus(401);
@@ -299,7 +299,7 @@ app.get('/david', async function(req, res) {
       const authorization = req.headers.authorization;
     
       if (!authorization) {
-        console.log("FAILED LOGIN ATTEMPTED TO ACCOUNTENT ON: "+Date());
+        console.log("FAILED LOGIN ATTEMPTED TO ACCOUNTANT ON: "+Date());
         return reject();
       }
     
@@ -313,8 +313,8 @@ app.get('/david', async function(req, res) {
       if (!(username === user_david && password === password_david)) {
         return reject();
       }
-    console.log("DAVID LOGGED IN ON: "+Date());
-    res.render('accountent', {})
+    console.log("LOGGED IN TO ACCOUNTANT ON: "+Date());
+    res.render('accountant', {})
 });
 
 //-----------------------WRITE REPORT FILE AND SEND TO DOWNLOAD---------------------//
@@ -325,16 +325,17 @@ app.get('/createFile/', async function(req,res){
   const filename = "pub_report_"+fileDate+".csv";
   const writableStream = fs.createWriteStream('public/report/'+filename);
   const columns = [
-    "תאריך רישום",
-    "סכום",
-    "מספר חשבון",
-    "שם מלא"
+    "",
+    "מס. לקוח",
+    "שם לקוח",
+    "פרטים",
+    "סכום"
   ];
-  const stringifier = stringify({ header: true, columns: columns, bom: true});
+  const stringifier = stringify({ header: true, columns: columns, bom: true});  
   let data;
   data = await db.dbGetDataByScope(3);
   for(let i = 0;i < data.length; i++){
-    let row = [data[i].formatted_date,data[i].sum,data[i].account,data[i].name];    
+    let row = ["",data[i].account,data[i].name,"פאב "+data[i].formatted_date,"₪ "+data[i].sum.toFixed(2)];    
     stringifier.write(row);    
     }
   stringifier.pipe(writableStream);

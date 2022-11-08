@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>תשלומי פאב</title>
-    <link rel="stylesheet" href="css/accountent.css">
+    <link rel="stylesheet" href="css/accountant.css">
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 </head>
 <body>
@@ -19,23 +19,23 @@
             <!-- BUTTONS -->
     <div class="content row">
         
-        <div class="green" id="getAccountData">
+        <div class="buttonBig" id="getAccountData">
             <button onclick="createReportFile()">יצירת קובץ דו"ח להורדה</button>
-        </div>
-
-        <div class="green" id="getAccountData">
-            <button onclick="getAllData(3)">הצגת דו"ח בחלון חדש</button>
         </div>
 
     </div>
 
     <div class="content row">
 
-        <div id="getOrdersData">
+        <div class="buttonSmall" id="getAccountData">
+            <button onclick="getAllData(3)">הצגת דו"ח</button>
+        </div>
+
+        <div class="buttonSmall" id="getOrdersData">
             <button onclick="getAllData(1)">הצגת נתוני עסקאות</button>
         </div>
 
-        <div id="getClientData">
+        <div class="buttonSmall" id="getClientData">
             <button onclick="getAllData(2)">הצגת נתוני משתמשים</button>
         </div>
 
@@ -48,7 +48,7 @@
     
     <%- include('./partials/footer'); %>
 
-    <script src="js/script-accountent.js"></script>
+    <script src="js/script-accountant.js"></script>
     
 </body>
 </html>
