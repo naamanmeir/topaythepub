@@ -34,8 +34,9 @@ video{
     height: 100%;
 }
 .content {
-    height: 100%;
-    width: 98%;
+    z-index: 5;
+    height: 100vh;
+    width: 98vw;
     left: 1%;
     right: 1%;    
     background-image: none;
@@ -48,23 +49,26 @@ video{
 }
 @media only screen and (orientation:landscape) and (hover: none) and (pointer: coarse){
     .html{
-        height: 98%;
+        height: 98vh;
+        width: 98vw;
         top: 0px;
         margin-top: 0px;
         padding-top: 0px;
     }
     .body{
-        height: 98%;
+        height: 98vh;
+        width: 98vw;
         top: 0px;
         margin-top: 0px;
         padding-top: 0px;
     }
     .content {
-        height: 100%;
-        width: 100%;
+        height: 100vh;
+        width: 100vw;
         top: 0px;
         margin-top: 0px;
         padding-top: 0px;     
+        margin: auto;
     }
 }
 .header{
@@ -1058,26 +1062,36 @@ input[type=text] {
     display: block;
 }
 
+.backgroundTest{
+    z-index: -8;
+    width: 100vw;
+    height: 100vh;    
+    top:0px;
+    position: fixed;
+    /* background-color: #0ee223; */
+    background-image: linear-gradient(red, yellow);
+}
+
 /* ----------------------background1-----------------*/
 @keyframes move1 {
     100% {
-        transform: translate3d(0, 0, 1px) rotate(360deg);
+        transform: translate3d(0, 0, 1px) rotate(360deg) scale(1);
     }
 }
 .background1 {
     z-index: -10;
-    position: fixed;
+    position: absolute;
     width: 100vw;
     height: 100vh;
     top: 0;
-    left: 0;
+    left: 0;    
     background: #000000;
     overflow: hidden;
 }
 .background1 span {
-    width: 20vmin;
-    height: 20vmin;
-    border-radius: 20vmin;
+    width: 22vmin;
+    height: 22vmin;
+    border-radius: 22vmin;
     backface-visibility: hidden;
     position: absolute;
     animation: move1;

@@ -17,38 +17,56 @@ var sideMenu = false;
 
 var fs = false;
 
+var orientationPortrait;
+const windowWidth = window.innerWidth+"px";
+const windowHeight = window.innerHeight+"px";
+var viewport = document.querySelector("meta[name=viewport]");
 var limit = 0; // throttle limiter for db
 
 window.addEventListener('load', loadUtiliti, false );
+// window.addEventListener("resize", windowSizeChanged);
+
 function loadUtiliti(){    
-    setTimeout(function () {
-        var viewport = document.querySelector("meta[name=viewport]");
-        viewport.setAttribute("content", viewport.content + ", height=" + window.innerHeight);
+    setTimeout(function () {        
+        viewport.setAttribute("content","width="+window.innerWidth+", height=" + window.innerHeight+", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
     }, 300);
 };
 
+function generateRandomColor(){
+    let maxVal = 0xFFFFFF; // 16777215
+    let randomNumber = Math.random() * maxVal; 
+    randomNumber = Math.floor(randomNumber);
+    randomNumber = randomNumber.toString(16);
+    let randColor = randomNumber.padStart(6, 0);   
+    return `#${randColor.toUpperCase()}`
+}
+
+function windowSizeChanged() {
+    console.log(window.innerHeight);
+  }
+
 function fullScreen(){
     if(!fs){
+        document.body.requestFullscreen();
         setTimeout(function(){
             document.getElementById("fs_mark").style.backgroundImage="url(img/fs1.png)";
             document.getElementById("fs_mark").innerText=("חלון");
-            document.body.requestFullscreen();
-            window.scrollTo(0,200);
+            // window.scrollTo(0,1);
             closeNav();
             fs = true;
-        },100);
+            viewport.setAttribute("content","width="+window.innerWidth+", height="+window.innerHeight+", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+        },300);
     }
     if(fs){
         setTimeout(function(){
             document.getElementById("fs_mark").style.backgroundImage="url(img/fs2.png)";
             document.getElementById("fs_mark").innerText=("מסך מלא");
             document.exitFullscreen();
-            window.scrollTo(0,200);
+            // window.scrollTo(0,200);
             closeNav();
             fs = false;
-        },100);
+        },300);        
     }
-
 };
 
 function fullScreenOff(){
