@@ -191,7 +191,7 @@ exports.dbDeleteClient = async function(clientId){
 
 //--------------------INSERT ORDER TO ORDERS TABLE----------------//
 exports.dbInsertOrderToOrders = async function(orderTime,clientid,item1,item2,item3,item4){
-  var sum = item1*10+item2*12+item3*10+item4*10;  
+  var sum = item1*10+item2*10+item3*8+item4*10;  
   let clientName;
   let insertReturn;
   let insertClientData;
@@ -216,7 +216,7 @@ exports.dbInsertOrderToOrders = async function(orderTime,clientid,item1,item2,it
 
 //--------------------INSERT ORDER TO CLIENT TABLE----------------//
 exports.dbInsertOrderToClient = async function(orderTime,id,item1,item2,item3,item4){  
-  var sum = item1*10+item2*12+item3*10+item4*10;  
+  var sum = item1*10+item2*10+item3*8+item4*10;  
   let orderResult;
   orderResult = await pool.query(`UPDATE ${tableClients} SET last_action = (NOW()),
    item1 = item1+${item1},

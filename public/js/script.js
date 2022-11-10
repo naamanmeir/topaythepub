@@ -93,7 +93,7 @@ searchBox1.addEventListener('blur',function(){
 searchBox1.addEventListener('input',function(){
     // searchBoxClear();
     if(searchBox1.value.length==0){userSearchMessage(0);};
-    if(searchBox1.value.length>0){searchBox1.placeholder=("");};
+    // if(searchBox1.value.length>0){searchBox1.placeholder=("");};
     searchBox(searchBox1.value);    
 });
 
@@ -187,7 +187,7 @@ function orderConfirm(orderPack,abort){
     message.innerHTML += ("<br>");
     if(price!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+price+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
-    message.innerHTML += ("<p1>האם לרשום גביה של "+price+" שקלים בכרטיס המיסים ? </p1>");message.innerHTML += ("<br>");message.innerHTML += ("<br>");
+    message.innerHTML += ("<p1>האם לרשום גביה של "+price+" שקלים? </p1>");message.innerHTML += ("<br>");message.innerHTML += ("<br>");
     message.appendChild(buttonYes);
     message.appendChild(buttonNo);
     buttonYes.addEventListener("click",function(){
@@ -221,27 +221,26 @@ function orderConfirm(orderPack,abort){
 
 function add(item){
     if(sideMenu){return};
-    searchBox1.blur();
+    // searchBox1.focus();
     const count1 = document.getElementById("count1");
     const count2 = document.getElementById("count2");
     const count3 = document.getElementById("count3");
     const count4 = document.getElementById("count4");
     const buttonsDiv = document.getElementById("buttons");
     if(item==1){if(item1==99){return};
-            vibrate(75);
+            vibrate(45);
             item1 = item1+1;
             count1.innerText = item1;
         }
     if(item==2){if(item2==99){return};
-            vibrate(75);
+            vibrate(55);
             item2 = item2+1;
             count2.innerText = item2;
         }
     if(item==3){if(item3==99){return};
-            vibrate(75);
+            vibrate(65);
             item3 = item3+1;
-            count3.innerText = item3;
-            searchBox1.blur();
+            count3.innerText = item3;            
         }
     if(item==4){if(item4==99){return};
             vibrate(75);
@@ -366,7 +365,7 @@ function autoComplete(names){
     const autoDiv = document.getElementById("autoComplete");
     clearAutoComplete(autoDiv);
     autoDiv.className = "autoCompleteSuggestions";
-    for(i=0;i<names.length && i<8;i++){
+    for(i=0;i<names.length && i<2;i++){
         const para = document.createElement("p");
         para.className = "autocomplete-items";
         if(i % 2 === 0){para.classList.add("autocomplete-itemsEven");}
@@ -480,6 +479,7 @@ function userSearchMessage(select){
     userIndic.classList.add("userStateIndicatorNotOk");
     searchBox1.classList.add("searchBoxNotLogged");
     userIndic.placeholder=("");
+    clearAutoComplete(document.getElementById("autoComplete"));
     }    
     if(select == 2){
         userIndic.innerHTML = ("<img class='userStateIndicatorSelectimg1' "+
