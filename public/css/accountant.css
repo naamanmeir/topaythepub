@@ -57,8 +57,10 @@ body,
 }
 button {
     margin: 0.8rem;
-    height: 4rem;
-    width: auto;    
+    height: 4rem;    
+    width: fit-content;
+    height: fit-content;
+    min-height: 3rem;    
 }
 .buttonBig{
     background-color: green;

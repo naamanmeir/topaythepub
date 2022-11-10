@@ -258,7 +258,33 @@ function clientDeleteLastOrder(){
 };
 
 function clientOrderHistory(){
-    
+    const table = document.createElement("table");
+    const tableBody = document.createElement("tbody");
+    const TR = document.createElement("tr");
+    TR.innerHTML = ("<th>תג משתמש</th><th>נרשם בתאריך</th><th>מוצר1</th><th>מוצר2</th><th>מוצר3</th><th>מוצר4</th><th>סך הכל</th><th>מספר חשבון</th><th>שם רשום</th><th>כינוי</th>");
+    tableBody.appendChild(TR);
+    for(let i = 0;i < data.length; i++){
+        const row = document.createElement("tr");
+        let clientRow = Object.values(data[i]);        
+        for (let j = 0; j < clientRow.length; j++) {            
+            const cell = document.createElement("td");
+            let cellText = document.createTextNode(clientRow[j]);            
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+        }
+        row.setAttribute("dir","rtl");
+        if(i % 2 === 0  ){row.setAttribute("style", "background-color:lightblue;")}
+    tableBody.appendChild(row);    
+    }
+    table.appendChild(tableBody);  
+    table.setAttribute("border", "1");
+    table.setAttribute("align", "center");
+    table.setAttribute("width", "100%");
+    table.setAttribute("style", "font-size:larger");
+    table.setAttribute("class", "tableStyle");
+    var tableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");    
+    tableWindow.document.write();    
+    tableWindow.document.appendChild(table);
 };
 
 function editLog(text){
@@ -344,8 +370,11 @@ function getAllData(scope){
                 showClientsTable(JSON.parse(this.response));
             }
             if(scope==3){
+                showClientsTable(JSON.parse(this.response));
+            }
+            if(scope==4){
                 showAccountTable(JSON.parse(this.response));
-            }              
+            }                
             return;
             }
         };
@@ -456,13 +485,25 @@ function backupTable(){
 };
 
 function resetAfterReport(){
+    if (window.confirm("פעולה זו תנקה נתונים לאחר הפקת דוח דו חודשי")) {
+        xhttp.open("GET", "./resetClientsDataAfterRead/", true);
+        xhttp.send();    
+    };
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            // console.log(this.response);
+            return;
+            }
+        };
+};
+
+function removeOldBackups(){
     if (window.confirm("זה כאילו למחוק את כל הגיבויים עד עכשיו לא ללחוץ סתם")) {
         xhttp.open("GET", "./removeOldBackups/", true);
         xhttp.send();    
     };
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            // console.log(this.response);
             return;
             }
         };
@@ -515,44 +556,44 @@ function login(name){
 };
 
 // OLD FUNCTIONS FOR ADD REMOVE --------------------------
-let nameInsert;
-function createName(){
-    let text = document.getElementById("insertNameText");     
-    nameInsert = text.value;
-    // console.log(nameInsert);
-};
-function insertNameOld(){
-    nameInsert = nameInsert.replace(/\'/g, "''");
-    nameInsert = JSON.stringify(nameInsert);
-    xhttp.open("POST", "./insertName/"+nameInsert, true);
-    xhttp.send();
+// let nameInsert;
+// function createName(){
+//     let text = document.getElementById("insertNameText");     
+//     nameInsert = text.value;
+//     // console.log(nameInsert);
+// };
+// function insertNameOld(){
+//     nameInsert = nameInsert.replace(/\'/g, "''");
+//     nameInsert = JSON.stringify(nameInsert);
+//     xhttp.open("POST", "./insertName/"+nameInsert, true);
+//     xhttp.send();
 
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);                
-            return;
-            }        
-        };
-};
-function createNameForDelete(){
-    let text = document.getElementById("deleteNameText");     
-    nameRemove = text.value;
-    // console.log(nameInsert);
-};
-let nameRemove;
-function deleteName(){
-    nameRemove = nameRemove.replace(/\'/g, "''");
-    nameRemove = JSON.stringify(nameRemove);
-    xhttp.open("POST", "./deleteName/"+nameRemove, true);
-    xhttp.send();
+//     xhttp.onreadystatechange = function() {
+//         if (this.readyState == 4 && this.status == 200) {
+//             console.log(this.response);                
+//             return;
+//             }        
+//         };
+// };
+// function createNameForDelete(){
+//     let text = document.getElementById("deleteNameText");     
+//     nameRemove = text.value;
+//     // console.log(nameInsert);
+// };
+// let nameRemove;
+// function deleteName(){
+//     nameRemove = nameRemove.replace(/\'/g, "''");
+//     nameRemove = JSON.stringify(nameRemove);
+//     xhttp.open("POST", "./deleteName/"+nameRemove, true);
+//     xhttp.send();
 
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);                
-            return;
-            }        
-        };
-};
+//     xhttp.onreadystatechange = function() {
+//         if (this.readyState == 4 && this.status == 200) {
+//             console.log(this.response);                
+//             return;
+//             }        
+//         };
+// };
 
 // LOG CONSOLE TO SCREEN ------------------------------
 // function clearConsole(){

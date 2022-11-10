@@ -270,7 +270,7 @@ app.post('/getUserInfo/:data', async (req,res) => {
 });
 
 //-------------------------accountant---------------------
-app.get('/accountant', async function(req, res) {  
+app.get('/accountant', async function(req, res) {
     const reject = () => {
         res.setHeader("www-authenticate", "Basic",realm="topaythepub accountent panel",charset="UTF-8");
         res.sendStatus(401);
@@ -324,8 +324,7 @@ app.get('/createFile/', async function(req,res){
   res.status(200).send('./report/'+filename);
 });
 
-
-//-----------------------WRITE REPORT FILE AND SEND TO DOWNLOAD---------------------//
+//-----------------------REMOVE OLD BACKUPS WITH SUFFIX---------------------//
 app.get('/removeOldBackups/', async function(req,res){
   let removedOldBackups;
   removedOldBackups = await db.dbDeleteOldBackups();
@@ -333,6 +332,17 @@ app.get('/removeOldBackups/', async function(req,res){
   console.log(removedOldBackups);
   
   res.send(removedOldBackups);
+});
+
+
+//-----------------------RESET CLIENTS TABLE AFTER REPORT---------------------//
+app.get('/resetClientsDataAfterRead/', async function(req,res){
+  let resetClientsData;
+  resetClientsData = await db.dbResetClientOrders();
+
+  console.log(resetClientsData);
+  
+  res.send(resetClientsData);
 });
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));

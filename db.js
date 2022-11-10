@@ -10,7 +10,6 @@ const pool = mariadb.createPool({
 
 const tableClients = process.env.MYSQL_TABLE_CLIENTS;
 const tableOrders = process.env.MYSQL_TABLE_ORDERS;
-let testovich = "testovich";
 
 exports.dbCreateTableClients = async function() {
   let createTableClients;
@@ -140,7 +139,7 @@ lastOrderDetails[0].orderid+";");
 // console.log(deletedOrderFromClients);
 // console.log("DB DELETE LAST ORDER FROM: "+clientId+" SUM OF: "+lastOrderDetails[0].sum);
 return ("DELETE LAST ORDER FROM: "+clientId+" SUM OF: "+lastOrderDetails[0].sum);
-}
+};
 
 //--------------------INSERT NEW NAME TO DB----------------//
 exports.dbInsertName = async function(name){
@@ -281,13 +280,14 @@ exports.dbGetNickIfExist = function(nick) {
   return pool.query("SELECT nick FROM "+tableClients+
   " WHERE nick LIKE '"+nick+"';");
 };
+
 //-----------------------GET BY ACCOUNT FROM DB----------------------//
 exports.dbGetAccountIfExist = function(account) {
   return pool.query("SELECT account FROM "+tableClients+
   " WHERE account LIKE '"+account+"';");
 };
 
-//-----------------------GET ID NICK AND NAME FROM DB BY NICK SEARCH----------------------//
+//-----------------------GET ID NICK AND NAME FROM DB BY NAME SEARCH----------------------//
 exports.dbGetNameBySearchName = function(clientName) {
   return pool.query("SELECT id,account,name,nick FROM "+tableClients+
   " WHERE name LIKE '%"+clientName+"%' ORDER BY last_action DESC;");
@@ -356,4 +356,11 @@ for(i=0;i<tableBackups.length-1;i++){
   console.log(tableDropResponse);
   }
 };
+
+//-----------------------RESET CLIENTS ORDERS AFTER REPORT-----------------------//
+exports.dbResetClientOrders = async function() {
+  let resetClientOrders;
+  resetClientOrders = await pool.query("UPDATE "+tableClients+" SET item1=0,item2=0,item3=0,item4=0,sum=0;");
+  console.log(resetClientOrders);
+  };
 
