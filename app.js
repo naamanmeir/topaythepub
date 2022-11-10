@@ -23,7 +23,8 @@ const user_david = process.env.USER_DAVID;
 const password_david = process.env.PASS_DAVID;
 
 var now = new Date();
-console.log("System Startup Time :"+Date());
+console.log("System Startup Time : "+Date());
+console.log("System Startup Time : "+now.getTime());
 
 app.use(express.static(__dirname + 'public'));
 app.use('/css', express.static(__dirname + '/public/css'))
@@ -180,7 +181,7 @@ app.post('/backupTable/', async (req,res) => {
     if(!limit){
         limit = true;
         let dbBackup;
-        dbBackup = await db.dbBackupTable(now.getTime()).then((dbBackup) => {return (dbBackup)});
+        dbBackup = await db.dbBackupTable(Date.now()).then((dbBackup) => {return (dbBackup)});
         console.log(dbBackup);
         const limiter = setTimeout(releaseLimit,5000);
         res.send("dbBackup ok at: "+dbBackup);
@@ -188,6 +189,7 @@ app.post('/backupTable/', async (req,res) => {
         res.send("dbBackup limit rate wait a few seconds ha");
     }    
 });
+
 function releaseLimit(){
     (limit=false);
 };
@@ -258,28 +260,6 @@ app.post('/searchName/:data', async (req,res) => {
     res.send(names);
 });
 
-async function getNames(req,res,next) {
-    var query = req.params.data;
-    // var names = await db.dbGetNameBySearch(query)
-    // console.log(names);
-    const promise1 = Promise.resolve(await db.dbGetNameBySearch(query))    
-    promise1.then(names => {
-        console.log("APP:"+names)
-        returnNames(req,res,names,next)
-      })
-      .catch(err => {
-        console.log("---------------ERROR READING FROM DB---------------");
-        console.log(err);
-       }) 
-    // returnNames(req,res,names,next);
-};
-
-async function returnNames(req,res,names,next){
-    // names = ["gog","ads","fas"];
-    // console.log("get names "+names);
-    res.send(names);
-};
-
 //GET USER INFO BY ID
 app.post('/getUserInfo/:data', async (req,res) => {
     let clientId = JSON.parse(req.params.data);
@@ -333,7 +313,7 @@ app.get('/createFile/', async function(req,res){
   ];
   const stringifier = stringify({ header: true, columns: columns, bom: true});  
   let data;
-  data = await db.dbGetDataByScope(3);
+  data = await db.dbGetDataByScope(4);
   for(let i = 0;i < data.length; i++){
     let row = ["",data[i].account,data[i].name,"פאב "+data[i].formatted_date,"₪ "+data[i].sum.toFixed(2)];    
     stringifier.write(row);    
@@ -342,7 +322,17 @@ app.get('/createFile/', async function(req,res){
   res.setHeader('Content-disposition', "'attachment; filename="+filename+"'");
   res.set('Content-Type', 'text/csv; charset=utf-8');
   res.status(200).send('./report/'+filename);
-})
+});
 
+
+//-----------------------WRITE REPORT FILE AND SEND TO DOWNLOAD---------------------//
+app.get('/removeOldBackups/', async function(req,res){
+  let removedOldBackups;
+  removedOldBackups = await db.dbDeleteOldBackups();
+
+  console.log(removedOldBackups);
+  
+  res.send(removedOldBackups);
+});
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));

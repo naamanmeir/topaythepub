@@ -306,12 +306,18 @@ exports.dbGetDataByScope = async function(scope) {
     ",item1,item2,item3,item4,sum,clientid,client FROM "+tableOrders+
     " ORDER BY orderid DESC;");
   };
-  if (scope==2){//SCOPE CLIENTS
+  if (scope==2){//SCOPE CLIENTS ALL
     data = await pool.query("SELECT id,DATE_FORMAT(`last_action`, '%Y-%m-%d %H:%i') AS `formatted_date`"+
     ",item1,item2,item3,item4,sum,account,name,nick FROM "+tableClients+
+    " WHERE account > 50"+
     " ORDER BY name;");    
   };
-  if (scope==3){//SCOPE REPORT
+  if (scope==3){//SCOPE CLIENTS REAL
+    data = await pool.query("SELECT id,DATE_FORMAT(`last_action`, '%Y-%m-%d %H:%i') AS `formatted_date`"+
+    ",item1,item2,item3,item4,sum,account,name,nick FROM "+tableClients+    
+    " ORDER BY name;");    
+  };
+  if (scope==4){//SCOPE REPORT
     data = await pool.query("SELECT sum,"+
     " DATE_FORMAT(`last_action`, '%y/%m/%d') AS `formatted_date`"+
     ",name,account FROM "+tableClients+    
@@ -331,11 +337,23 @@ exports.dbBackupTable = async function(time) {
   tsmp = tsmp.replace(" ","");
   tsmp = tsmp.replace("/","");
   tsmp = tsmp.replace(":","");
-  const table_bk = (`${tableClients}_${tsmp}`);
-  let backup_table = await pool.query(`CREATE OR REPLACE TABLE ${table_bk} LIKE ${tableClients};`);
-  let backup_rows = await pool.query(`INSERT IGNORE INTO ${table_bk} SELECT * FROM ${tableClients}`);
+  const backupTableName = (`bk_${tsmp}_${tableClients}`);
+  let backup_table = await pool.query(`CREATE OR REPLACE TABLE ${backupTableName} LIKE ${tableClients};`);
+  let backup_rows = await pool.query(`INSERT IGNORE INTO ${backupTableName} SELECT * FROM ${tableClients}`);
   console.log(await backup_table);
   console.log(await backup_rows);
-  return (table_bk);
+  return (backupTableName);
+};
+
+//-----------------------DELETE OLD BACKUP TABLES INTERNALLY-----------------------//
+exports.dbDeleteOldBackups = async function(time) {
+let tableBackups;
+tableBackups = await pool.query(`SHOW TABLES LIKE 'clients_%';`);
+for(i=0;i<tableBackups.length-1;i++){
+  let tableName = (JSON.stringify(tableBackups).split(',')[i].split(':')[1].replace('"','').replace('"','').replace('}',''));   
+  console.log(tableName);
+  tableDropResponse = await pool.query("DROP TABLE "+tableName+";");
+  console.log(tableDropResponse);
+  }
 };
 

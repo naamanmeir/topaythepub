@@ -25,8 +25,11 @@ function getAllData(scope){
                 showClientsTable(JSON.parse(this.response));
             }
             if(scope==3){
+                showClientsTable(JSON.parse(this.response));
+            }
+            if(scope==4){
                 showAccountTable(JSON.parse(this.response));
-            }              
+            }
             return;
             }
         };

@@ -35,6 +35,7 @@
             <div class="row">
                 <input type="number" class="textboxNumber" id="editNumber" spellcheck="false" placeholder="ערוך מספר חשבון">
                 <button onclick="editClientFields(3,'editNumber')">עריכת מספר</button>            
+                <button class="center orange" onclick="clientOrderHistory()">צפייה בהסטוריית הזמנות</button>
                 <button class="center orange" onclick="clientDeleteLastOrder()">מחיקת הזמנה אחרונה</button>
                 <button class="red" onclick="deleteClient()">מחיקת משתמש</button>
             </div>
@@ -76,10 +77,14 @@
 
         <div class="function" id="getCLientData">
             <button onclick="getAllData(2)">הצגת נתוני משתמשים</button>
-        </div>        
+        </div>
+
+        <div class="function" id="getCLientData">
+            <button onclick="getAllData(3)">הצגת נתוני משתמשים כולל כלבים</button>
+        </div>
 
         <div class="function" id="getAccounData">
-            <button onclick="getAllData(3)">הצגת נתונים לדו"ח</button>
+            <button onclick="getAllData(4)">הצגת נתונים לדו"ח</button>
         </div>
     </div>
 

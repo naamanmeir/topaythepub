@@ -255,7 +255,11 @@ function clientDeleteLastOrder(){
             return;
             }        
     };
-}
+};
+
+function clientOrderHistory(){
+    
+};
 
 function editLog(text){
     console.log(text);
@@ -264,7 +268,7 @@ function editLog(text){
     document.getElementById("editNick").value = '';
     document.getElementById("editNumber").value = '';
     document.getElementById("getUserByName").value = '';
-}
+};
 
 function importNameListFile(){
     if(window.confirm("להכניס את כל הרשימה עכשיו? ")){
@@ -278,7 +282,7 @@ function importNameListFile(){
             return;
             }        
         };
-}
+};
 
 function insertName(){
     let newName = document.getElementById("insertName");
@@ -439,19 +443,29 @@ function showAccountTable(data){
 };
 
 function backupTable(){
+    if (window.confirm("לייצר גיבוי חדש לטבלת המשתמשים?")) {
     xhttp.open("POST", "./backupTable/", true);
     xhttp.send();
+        };
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             console.log(this.response);
-            // showDataTable(JSON.parse(this.response));
             return;
             }
         };
 };
 
-function resetDbData(){
-
+function resetAfterReport(){
+    if (window.confirm("זה כאילו למחוק את כל הגיבויים עד עכשיו לא ללחוץ סתם")) {
+        xhttp.open("GET", "./removeOldBackups/", true);
+        xhttp.send();    
+    };
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            // console.log(this.response);
+            return;
+            }
+        };
 };
 
 function defineInputFields(){
