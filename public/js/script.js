@@ -17,7 +17,6 @@ var sideMenu = false;
 
 var fs = false;
 
-var orientationPortrait;
 const windowWidth = window.innerWidth+"px";
 const windowHeight = window.innerHeight+"px";
 var viewport = document.querySelector("meta[name=viewport]");
@@ -29,7 +28,7 @@ window.addEventListener('load', loadUtiliti, false );
 function loadUtiliti(){    
     setTimeout(function () {        
         viewport.setAttribute("content","width="+window.innerWidth+", height=" + window.innerHeight+", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
-    }, 300);
+    }, 100);
 };
 
 function generateRandomColor(){
@@ -42,8 +41,8 @@ function generateRandomColor(){
 }
 
 function windowSizeChanged() {
-    console.log(window.innerHeight);
-  }
+    viewport.setAttribute("content","width="+windowWidth+", height=" +windowHeight+", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+}
 
 function fullScreen(){
     if(!fs){

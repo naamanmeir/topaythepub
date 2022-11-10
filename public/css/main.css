@@ -3,6 +3,7 @@ body {
     height: 98%;
     width: 98%;
     height: -webkit-fill-available;
+    margin: auto;
 }
 html,
 body,
@@ -20,14 +21,14 @@ body,
 body {
     display: flex;
     flex-direction: column;
-    /* flex-shrink: 1; */
-    /* flex-grow: 1; */
+    /* flex-shrink: 1;
+    flex-grow: 1; */
 }
 img{
-    width: 7rem;
-    height: 7rem;
+    width: 7em;
+    max-height: 7rem;
     padding: 0px;
-    margin: auto auto;
+    margin: 0px;
 }
 video{
     width: 100%;
@@ -36,7 +37,7 @@ video{
 .content {
     z-index: 5;
     height: 100vh;
-    width: 98vw;
+    width: 98%;
     left: 1%;
     right: 1%;    
     background-image: none;
@@ -49,8 +50,8 @@ video{
 }
 @media only screen and (orientation:landscape) and (hover: none) and (pointer: coarse){
     .html{
-        height: 98vh;
-        width: 98vw;
+        height: 98%;
+        width: 98%;
         top: 0px;
         margin-top: 0px;
         padding-top: 0px;
@@ -144,7 +145,7 @@ video{
     border: 3px double orange;
     background-color: rgba(0, 0, 0, 0);
     height: 2.1em;
-    width: 100%;
+    width: 95%;
     font-size: 1.3em;       
     margin: auto;
     margin-top: 0.1em;
@@ -764,11 +765,14 @@ input[type=text] {
         flex-direction: row;
         margin: auto;
         padding: 4px;
+        width: fit-content;
     }
     .item{
-        font-size: small;        
+        font-size: small;
+        width: fit-content;        
         margin: 0px;
         margin-right: 1em;
+        min-width: 0%;
     }
     .break {
         flex-basis: auto;
@@ -779,8 +783,9 @@ input[type=text] {
         flex-direction: column-reverse;
         width: fit-content;                
         margin: auto;
-        margin-right: 4rem;
-        height: 4em;        
+        /* margin-bottom: 50vh; */
+        /* margin-right: 80vw; */
+        /* height: 4em;         */
     }
     .footer{
         width: 100%;
