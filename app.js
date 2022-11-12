@@ -176,6 +176,27 @@ app.post('/getAllData/:data', async (req,res) => {
     res.send(dbData)
 });
 
+app.post('/getUserOrders/:data', async (req,res) => {
+  if(req.params.data==null||isNaN(req.params.data)){console.log("ID IS NOT A NUMBER");return;};
+  let clientId = JSON.parse(req.params.data);  
+  let dbData;
+  dbData =  await db.dbGetClientOrdersById(clientId).then((dbData) => {return (dbData)});
+  res.send(dbData)
+});
+
+app.get('/getListOfArchiveReport/', async (req,res) => {
+  let archiveList = [];
+  let listFromDb;
+  listFromDb =  await db.dbGetListOfArchiveReport().then((archiveList) => {return (archiveList)});
+  
+  listFromDb.forEach(element => {
+    // console.log(JSON.parse(JSON.stringify(element).split(':')[1].replace('}','')));  
+    archiveList.push(JSON.parse(JSON.stringify(element).split(':')[1].replace('}','')));
+  });  
+  console.log(archiveList);
+  res.send(archiveList);
+});
+
 let limit = false;
 app.post('/backupTable/', async (req,res) => {
     if(!limit){
@@ -333,7 +354,6 @@ app.get('/removeOldBackups/', async function(req,res){
   
   res.send(removedOldBackups);
 });
-
 
 //-----------------------RESET CLIENTS TABLE AFTER REPORT---------------------//
 app.get('/resetClientsDataAfterRead/', async function(req,res){

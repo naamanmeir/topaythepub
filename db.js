@@ -294,9 +294,18 @@ exports.dbGetNameBySearchName = function(clientName) {
 };
 
 //-----------------------GET ID NICK AND NAME FROM DB BY NICK SEARCH----------------------//
-exports.dbGetNameBySearch = function(query) {
+exports.dbGetNameBySearch = function(query) {  
+  let queryList = query.split(" ");
+  if(queryList[1]==null){queryList[1]=queryList[0]};
+  if(queryList[2]==null){queryList[2]=queryList[0]};
+  if(queryList[3]==null){queryList[3]=queryList[0]};
+  if(queryList[4]==null){queryList[4]=queryList[0]};
   return pool.query("SELECT id,nick,name FROM "+tableClients+
-  " WHERE nick LIKE '%"+query+"%' ORDER BY last_action DESC;");
+  " WHERE nick LIKE '%"+queryList[0]+"%'"+
+  " AND nick LIKE '%"+queryList[1]+"%'"+
+  " AND nick LIKE '%"+queryList[2]+"%'"+
+  " AND nick LIKE '%"+queryList[3]+"%'"+
+  " ORDER BY last_action DESC;");
 };
 
 //-----------------------GET ACCOUNT INFO BY SCOPE----------------------//
@@ -328,6 +337,16 @@ exports.dbGetDataByScope = async function(scope) {
   return data;
 };
 
+//-----------------------GET ACCOUNT ORDERS BY ID----------------------//
+exports.dbGetClientOrdersById = async function(clientId) {
+  data = await pool.query("SELECT orderid,DATE_FORMAT(`time`, '%Y-%m-%d %H:%i') AS `formatted_date`"+
+  ",item1,item2,item3,item4,sum,client FROM "+tableOrders+
+  " WHERE clientid = "+clientId+
+  " ORDER BY orderid DESC;");
+  // console.log(await data);
+  return data;
+};
+
 //-----------------------BACKUP TABLES INTERNALLY-----------------------//
 exports.dbBackupTable = async function(time) {  
   let tsmp = time.toString();
@@ -345,6 +364,11 @@ exports.dbBackupTable = async function(time) {
   return (backupTableName);
 };
 
+//-----------------------GET LIST OF ARCHIVE REPORT-----------------------//
+exports.dbGetListOfArchiveReport = async function() {  
+  let archiveList = await pool.query("SHOW TABLES LIKE 'bk_%';");  
+  return (archiveList);
+};
 //-----------------------DELETE OLD BACKUP TABLES INTERNALLY-----------------------//
 exports.dbDeleteOldBackups = async function(time) {
 let tableBackups;

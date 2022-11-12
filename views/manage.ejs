@@ -35,7 +35,7 @@
             <div class="row">
                 <input type="number" class="textboxNumber" id="editNumber" spellcheck="false" placeholder="ערוך מספר חשבון">
                 <button onclick="editClientFields(3,'editNumber')">עריכת מספר</button>            
-                <button class="center orange" onclick="clientOrderHistory()">צפייה בהסטוריית הזמנות</button>
+                <button class="center orange" onclick="clientGetOrderHistory()">צפייה בהסטוריית הזמנות</button>
                 <button class="center orange" onclick="clientDeleteLastOrder()">מחיקת הזמנה אחרונה</button>
                 <button class="red" onclick="deleteClient()">מחיקת משתמש</button>
             </div>
@@ -66,7 +66,62 @@
 
         </div>
 
+    </div>
+
         <div class="row linebreak"></div>
+
+        <div class="editProduct">
+            <div class="function">
+                <p>עריכת משתמש קיים</p>
+                <input type="search" class="searchBoxNoLogged" id="getProductName" spellcheck="false" placeholder=" מצא מוצר מהרשימה">
+                <div class="autoCompleteNone" id="autoComplete"></div>
+            </div>
+            <div class="row">
+                <input type="search" class="textboxShort" id="editName" spellcheck="false" placeholder="ערוך שם מוצר">
+                <button onclick="editProductName(1,'editName')">עריכת שם</button>
+                <div class="row"></div>
+            </div>
+            <div class="row">
+                <input type="number" class="textboxNumber" id="editNumber" spellcheck="false" placeholder="ערוך מחיר">
+                <button onclick="editProductFields(3,'editNumber')">עריכת מחיר</button>
+                <button class="red" onclick="deleteProduct()">מחיקת מוצר</button>
+            </div>
+            <br>
+            <div class="row">
+                <div class="logText" id="editLog">-</div>
+            </div>
+        </div>
+
+        <div class="row linebreak"></div>
+
+        <div class="addProduct">
+            <div class="function column">
+                <p>הכנסת מוצר</p>
+                <p>שם מוצר : </p>
+                <input type="search" class="textbox" id="insertProduct" spellcheck="false" placeholder=" הכנס מוצר">
+                <p> מחיר : </p>
+                <input type="text" class="textboxNumber" id="insertNumber" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מחיר  ">
+                <button class="green" onclick="iinsertProduct()">הכנס מוצר</button>
+                </p>
+            </div>
+
+            <div class="row">
+                <div class="logText" id="addLog">-</div>
+            </div>
+
+        </div>
+
+        <div class="row linebreak"></div>
+
+        <div class="archive">
+            <p>ארכיון</p>
+            <select name="reportArchive" id="reportArchive">
+            </select>
+            <button class="green" onclick="requestReportArchive()">הצג נתוני ארכיון</button>
+        </div>
+
+        <div class="row linebreak"></div>
+
 
             <!-- BUTTONS -->
     <div class="content row">

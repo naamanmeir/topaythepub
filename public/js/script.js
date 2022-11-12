@@ -20,7 +20,7 @@ var fs = false;
 const windowWidth = window.innerWidth+"px";
 const windowHeight = window.innerHeight+"px";
 var viewport = document.querySelector("meta[name=viewport]");
-var limit = 0; // throttle limiter for db
+var limit = 0;
 
 window.addEventListener('load', loadUtiliti, false );
 // window.addEventListener("resize", windowSizeChanged);
@@ -38,11 +38,11 @@ function generateRandomColor(){
     randomNumber = randomNumber.toString(16);
     let randColor = randomNumber.padStart(6, 0);   
     return `#${randColor.toUpperCase()}`
-}
+};
 
 function windowSizeChanged() {
     viewport.setAttribute("content","width="+windowWidth+", height=" +windowHeight+", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
-}
+};
 
 function fullScreen(){
     if(!fs){
@@ -102,16 +102,19 @@ function afterOrderAnimation(){
     let rnd1 = Math.floor(Math.random() * (20 - 1) + 1);
     let rnd2 = Math.floor(Math.random() * (6 - 1) + 1);
     rnd1 = ('0'+rnd1).slice(-2);
-    const imgRnd = ("img/thank_"+rnd1+".png");
+    const imgRnd = ("img/outro/thank_"+rnd1+".png");
     const animRnd = ("animation"+rnd2);
     // const animRnd = ("animation1");
     holder.src = imgRnd;
     holder.className = ("endAnimation");
     document.body.appendChild(holder);
+    holder.classList.add("imgFill");
     holder.classList.add(animRnd);
     userLogout();
-    pointerEnableIn(3000);
-    allElements(1);
+    pointerEnableIn(3000);    
+    setTimeout(() => {
+        allElements(1);
+    },2500)
 };
 
 function orderSubmitted(data){
@@ -126,7 +129,7 @@ function orderSubmitted(data){
         text.remove();
         window.remove();
         afterOrderAnimation();
-    },2500)
+    },1500)
 };
 
 async function placeOrder(orderPack){
@@ -288,7 +291,7 @@ function vibrate(length){
 };
 
 function searchBox(text){
-    // const searchBox = document.getElementById("searchBox");
+    userAutoLogout(25000);
     let searchText = text;
     searchText = searchText.replace(/\\/g, '');
     searchText = searchText.replace(/\//g, '');
@@ -310,7 +313,7 @@ function searchBox(text){
         setTimeout(() => {
             limit = 0;
             searchQuery(searchText,searchBox);
-        },150);
+        },250);
     };
 };
 
@@ -365,7 +368,7 @@ function autoComplete(names){
     const autoDiv = document.getElementById("autoComplete");
     clearAutoComplete(autoDiv);
     autoDiv.className = "autoCompleteSuggestions";
-    for(i=0;i<names.length && i<2;i++){
+    for(i=0;i<names.length && i<4;i++){
         const para = document.createElement("p");
         para.className = "autocomplete-items";
         if(i % 2 === 0){para.classList.add("autocomplete-itemsEven");}
@@ -423,7 +426,7 @@ function userLogged(){
     searchBox1.classList.add("searchBoxLogged");
     searchBox1.classList.remove("searchBoxNotLogged");
     document.getElementById("user_info").style.display="block";
-    userAutoLogout(0);
+    userAutoLogout(45000);
 };
 
 function userLogout(){
@@ -446,6 +449,7 @@ function userLogout(){
         document.getElementsByClassName("userInfoTableDiv")[0].remove();;
         document.getElementsByClassName("userInfo")[0].remove();
     }
+    clearAutoComplete(document.getElementById("autoComplete"))
     timeOut = timeOutDef;
     pointerEnableIn(3000);
     allElements(1);
@@ -457,9 +461,7 @@ function userAutoLogout(reset){
     };
     clearTimeout(timerLogout);
     timerLogout = setTimeout(() => {
-        if(clientName != null || clientNick != null){
         userLogout();
-    }
     },timeOut);
 };
 

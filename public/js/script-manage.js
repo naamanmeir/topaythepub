@@ -257,11 +257,24 @@ function clientDeleteLastOrder(){
     };
 };
 
-function clientOrderHistory(){
+function clientGetOrderHistory(){
+    if(clientId==null){return};
+    xhttp.open("POST", "./getUserOrders/"+clientId, true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {            
+                // editLog(JSON.parse(this.response));
+                clientOrderHistory(JSON.parse(this.response));
+                return;
+                }        
+        };
+}
+
+function clientOrderHistory(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>תג משתמש</th><th>נרשם בתאריך</th><th>מוצר1</th><th>מוצר2</th><th>מוצר3</th><th>מוצר4</th><th>סך הכל</th><th>מספר חשבון</th><th>שם רשום</th><th>כינוי</th>");
+    TR.innerHTML = ("<th>תג רשימה</th><th>נרשם בתאריך</th><th>מוצר1</th><th>מוצר2</th><th>מוצר3</th><th>מוצר4</th><th>סך הכל</th><th>שם לקוח</th>");
     tableBody.appendChild(TR);
     for(let i = 0;i < data.length; i++){
         const row = document.createElement("tr");
@@ -282,9 +295,9 @@ function clientOrderHistory(){
     table.setAttribute("width", "100%");
     table.setAttribute("style", "font-size:larger");
     table.setAttribute("class", "tableStyle");
-    var tableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");    
-    tableWindow.document.write();    
-    tableWindow.document.appendChild(table);
+    var clientHistorytableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");    
+    clientHistorytableWindow.document.write();    
+    clientHistorytableWindow.document.appendChild(table);
 };
 
 function editLog(text){
@@ -509,6 +522,25 @@ function removeOldBackups(){
         };
 };
 
+function getReportArchiveList(){
+    xhttp.open("GET", "./getListOfArchiveReport/", true);
+    xhttp.send();    
+};
+xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        archiveList = JSON.parse(this.response);        
+        let selectBar = document.getElementById("reportArchive");
+        archiveList.forEach(table => {            
+            var opt = document.createElement("option");
+            opt.value= table;
+            opt.innerHTML = table;
+            selectBar.appendChild(opt);            
+        });
+        return;
+        }
+};
+getReportArchiveList();
+
 function defineInputFields(){
 let inputElements = document.getElementsByClassName("textbox");
 const inputs = document.querySelectorAll('input');
@@ -554,46 +586,6 @@ function login(name){
         xhttp.send();
     };
 };
-
-// OLD FUNCTIONS FOR ADD REMOVE --------------------------
-// let nameInsert;
-// function createName(){
-//     let text = document.getElementById("insertNameText");     
-//     nameInsert = text.value;
-//     // console.log(nameInsert);
-// };
-// function insertNameOld(){
-//     nameInsert = nameInsert.replace(/\'/g, "''");
-//     nameInsert = JSON.stringify(nameInsert);
-//     xhttp.open("POST", "./insertName/"+nameInsert, true);
-//     xhttp.send();
-
-//     xhttp.onreadystatechange = function() {
-//         if (this.readyState == 4 && this.status == 200) {
-//             console.log(this.response);                
-//             return;
-//             }        
-//         };
-// };
-// function createNameForDelete(){
-//     let text = document.getElementById("deleteNameText");     
-//     nameRemove = text.value;
-//     // console.log(nameInsert);
-// };
-// let nameRemove;
-// function deleteName(){
-//     nameRemove = nameRemove.replace(/\'/g, "''");
-//     nameRemove = JSON.stringify(nameRemove);
-//     xhttp.open("POST", "./deleteName/"+nameRemove, true);
-//     xhttp.send();
-
-//     xhttp.onreadystatechange = function() {
-//         if (this.readyState == 4 && this.status == 200) {
-//             console.log(this.response);                
-//             return;
-//             }        
-//         };
-// };
 
 // LOG CONSOLE TO SCREEN ------------------------------
 // function clearConsole(){
