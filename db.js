@@ -356,7 +356,8 @@ exports.dbBackupTable = async function(time) {
   tsmp = tsmp.replace(" ","");
   tsmp = tsmp.replace("/","");
   tsmp = tsmp.replace(":","");
-  const backupTableName = (`bk_${tsmp}_${tableClients}`);
+  const backupTableName = (`${tableClients}_${tsmp}`);
+  console.log(backupTableName);
   let backup_table = await pool.query(`CREATE OR REPLACE TABLE ${backupTableName} LIKE ${tableClients};`);
   let backup_rows = await pool.query(`INSERT IGNORE INTO ${backupTableName} SELECT * FROM ${tableClients}`);
   console.log(await backup_table);
@@ -366,7 +367,7 @@ exports.dbBackupTable = async function(time) {
 
 //-----------------------GET LIST OF ARCHIVE REPORT-----------------------//
 exports.dbGetListOfArchiveReport = async function() {  
-  let archiveList = await pool.query("SHOW TABLES LIKE 'bk_%';");  
+  let archiveList = await pool.query("SHOW TABLES LIKE 'clients_%';");  
   return (archiveList);
 };
 //-----------------------DELETE OLD BACKUP TABLES INTERNALLY-----------------------//

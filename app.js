@@ -188,12 +188,11 @@ app.get('/getListOfArchiveReport/', async (req,res) => {
   let archiveList = [];
   let listFromDb;
   listFromDb =  await db.dbGetListOfArchiveReport().then((archiveList) => {return (archiveList)});
-  
   listFromDb.forEach(element => {
     // console.log(JSON.parse(JSON.stringify(element).split(':')[1].replace('}','')));  
     archiveList.push(JSON.parse(JSON.stringify(element).split(':')[1].replace('}','')));
   });  
-  console.log(archiveList);
+  // console.log(archiveList);
   res.send(archiveList);
 });
 
@@ -202,8 +201,10 @@ app.post('/backupTable/', async (req,res) => {
     if(!limit){
         limit = true;
         let dbBackup;
-        dbBackup = await db.dbBackupTable(Date.now()).then((dbBackup) => {return (dbBackup)});
-        console.log(dbBackup);
+        let dateObj = new Date().toISOString().substr(0, 19);
+        dateFormat = dateObj.replace(/-/g,'_').replace(/:/g,'_').replace(/T/g,'_');
+        console.log("BACKUP TIME: "+dateFormat);        
+        dbBackup = await db.dbBackupTable(dateFormat).then((dbBackup) => {return (dbBackup)});        
         const limiter = setTimeout(releaseLimit,5000);
         res.send("dbBackup ok at: "+dbBackup);
     }else{

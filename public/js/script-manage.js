@@ -492,6 +492,7 @@ function backupTable(){
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             console.log(this.response);
+            getReportArchiveList();
             return;
             }
         };
@@ -524,12 +525,14 @@ function removeOldBackups(){
 
 function getReportArchiveList(){
     xhttp.open("GET", "./getListOfArchiveReport/", true);
-    xhttp.send();    
-};
-xhttp.onreadystatechange = function() {
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
         archiveList = JSON.parse(this.response);        
         let selectBar = document.getElementById("reportArchive");
+        while (selectBar.hasChildNodes()) {
+            selectBar.removeChild(selectBar.firstChild);
+          };
         archiveList.forEach(table => {            
             var opt = document.createElement("option");
             opt.value= table;
@@ -538,6 +541,7 @@ xhttp.onreadystatechange = function() {
         });
         return;
         }
+    };
 };
 getReportArchiveList();
 
