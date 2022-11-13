@@ -176,6 +176,13 @@ app.post('/getAllData/:data', async (req,res) => {
     res.send(dbData)
 });
 
+app.post('/requestReportArchive/:data', async (req,res) => {
+  let tableName = req.params.data;
+  console.log("GETTING ARCHIVE DATA FROM: "+tableName);  
+  dbData =  await db.dbGetDataFromArchiveByDate(tableName).then((dbData) => {return (dbData)});
+  res.send(dbData);
+})
+
 app.post('/getUserOrders/:data', async (req,res) => {
   if(req.params.data==null||isNaN(req.params.data)){console.log("ID IS NOT A NUMBER");return;};
   let clientId = JSON.parse(req.params.data);  
@@ -358,11 +365,21 @@ app.get('/removeOldBackups/', async function(req,res){
 
 //-----------------------RESET CLIENTS TABLE AFTER REPORT---------------------//
 app.get('/resetClientsDataAfterRead/', async function(req,res){
+  if(!limit){
+    limit = true;
+    let dbBackup;
+    let dateObj = new Date().toISOString().substr(0, 19);
+    dateFormat = dateObj.replace(/-/g,'_').replace(/:/g,'_').replace(/T/g,'_');
+    console.log("BACKUP TIME: "+dateFormat);        
+    dbBackup = await db.dbBackupTable(dateFormat).then((dbBackup) => {return (dbBackup)});        
+    const limiter = setTimeout(releaseLimit,5000);
+    // res.send("dbBackup ok at: "+dbBackup);
+  }else{
+    res.send("dbBackup limit rate wait a few seconds ha");
+  } 
   let resetClientsData;
   resetClientsData = await db.dbResetClientOrders();
-
-  console.log(resetClientsData);
-  
+  console.log(resetClientsData);  
   res.send(resetClientsData);
 });
 //-------------------------SERVER-----------------------------------//

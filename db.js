@@ -329,11 +329,21 @@ exports.dbGetDataByScope = async function(scope) {
   if (scope==4){//SCOPE REPORT
     data = await pool.query("SELECT sum,"+
     " DATE_FORMAT(`last_action`, '%y/%m/%d') AS `formatted_date`"+
-    ",name,account FROM "+tableClients+    
+    ",name,account FROM "+tableClients+
     " WHERE account >= 50 AND sum > 0 "+
     " ORDER BY last_action DESC ;");
   };
   // console.log(await data);
+  return data;
+};
+
+//-----------------------GET ARCHIVE REPORT BY DATE----------------------//
+exports.dbGetDataFromArchiveByDate = async function(archiveTableName) {
+  data = await pool.query("SELECT sum,"+
+    " DATE_FORMAT(`last_action`, '%y/%m/%d') AS `formatted_date`"+
+    ",name,account FROM "+archiveTableName+
+    " WHERE account >= 50 AND sum > 0 "+
+    " ORDER BY last_action DESC ;");
   return data;
 };
 

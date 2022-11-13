@@ -23,7 +23,18 @@
             <button onclick="createReportFile()">יצירת קובץ דו"ח להורדה</button>
         </div>
 
+        <div class="function" id="backupTable">
+            <button onclick="backupTable()">יצירת גיבוי חדש לפי תאריך עכשווי</button>
+        </div>
+
+        <div class="function" id="resetDbData">
+            <button class="red" onclick="resetAfterReport()">איפוס נתונים לאחר קריאה</button>
+        </div>
+
     </div>
+
+    <div class="row linebreak"></div>
+
 
     <div class="content row">
 
@@ -45,10 +56,16 @@
 
     </div>
 
-    <br>    
-    <br>
+    <div class="row linebreak"></div>
 
-    <div class="row linebreak"></div>  
+    <div class="archive">
+        <p>ארכיון טבלאות  </p>
+        <select name="reportArchive" id="reportArchive">
+        </select>
+        <button class="green" onclick="requestReportArchive()">הצג נתוני ארכיון</button>
+    </div>    
+
+    <div class="row linebreak"></div>
     
     <%- include('./partials/footer'); %>
 

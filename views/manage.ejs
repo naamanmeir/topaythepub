@@ -72,7 +72,7 @@
 
         <div class="editProduct">
             <div class="function">
-                <p>עריכת משתמש קיים</p>
+                <p>עריכת מוצר קיים</p>
                 <input type="search" class="searchBoxNoLogged" id="getProductName" spellcheck="false" placeholder=" מצא מוצר מהרשימה">
                 <div class="autoCompleteNone" id="autoComplete"></div>
             </div>
@@ -120,11 +120,23 @@
             <button class="green" onclick="requestReportArchive()">הצג נתוני ארכיון</button>
         </div>
 
+        <div class="function" id="backupTable">
+            <button onclick="backupTable()">יצירת גיבוי חדש לפי תאריך עכשווי</button>
+        </div>
+
+        <div class="function" id="resetDbData">
+            <button class="red" onclick="resetAfterReport()">איפוס נתונים לאחר קריאה</button>
+        </div>
+
         <div class="row linebreak"></div>
 
-
             <!-- BUTTONS -->
+
     <div class="content row">
+
+        <div class="function" id="getAccounData">
+            <button onclick="getAllData(4)">הצגת נתונים לדו"ח</button>
+        </div>
 
         <div class="function" id="getOrdersData">
             <button onclick="getAllData(1)">הצגת נתוני עסקאות</button>
@@ -138,22 +150,15 @@
             <button onclick="getAllData(3)">הצגת נתוני משתמשים כולל כלבים</button>
         </div>
 
-        <div class="function" id="getAccounData">
-            <button onclick="getAllData(4)">הצגת נתונים לדו"ח</button>
-        </div>
     </div>
 
         <div class="content column"></div>
 
+        <div class="row linebreak"></div>
+
     <div class="content row">
 
-        <div class="function" id="backupTable">
-            <button onclick="backupTable()">גיבוי הטבלה במאגר</button>
-        </div>
 
-        <div class="function" id="resetDbData">
-            <button onclick="resetAfterReport()">איפוס נתונים לאחר קריאה</button>
-        </div>
 
         <div class="function" id="createTablefunction">
             <button onclick="createTable()">צור טבלה נדרשת</button>

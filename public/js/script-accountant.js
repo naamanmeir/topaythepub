@@ -139,4 +139,83 @@ function createReportFile(){
             return;
             }
         };
-}
+};
+
+function resetAfterReport(){
+    if (window.confirm("פעולה זו תנקה נתונים לאחר הפקת דוח דו חודשי")) {
+        xhttp.open("GET", "./resetClientsDataAfterRead/", true);
+        xhttp.send();    
+    };
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            // console.log(this.response);
+            return;
+            }
+        };
+};
+
+function backupTable(){
+    if (window.confirm("לייצר גיבוי חדש לטבלת המשתמשים?")) {
+    xhttp.open("POST", "./backupTable/", true);
+    xhttp.send();
+        };
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            getReportArchiveList();
+            return;
+            }
+        };
+};
+
+function requestReportArchive(){
+    let selectBar = document.getElementById("reportArchive");
+    console.log(selectBar.value);
+    data = selectBar.value;
+    xhttp.open("POST", "./requestReportArchive/"+data, true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            showAccountTable(JSON.parse(this.response));
+            return;
+            }        
+    };
+};
+
+function requestReportArchive(){
+    let selectBar = document.getElementById("reportArchive");
+    console.log(selectBar.value);
+    data = selectBar.value;
+    xhttp.open("POST", "./requestReportArchive/"+data, true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            showAccountTable(JSON.parse(this.response));
+            return;
+            }        
+    };
+};
+
+function getReportArchiveList(){
+    xhttp.open("GET", "./getListOfArchiveReport/", true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        archiveList = JSON.parse(this.response);        
+        let selectBar = document.getElementById("reportArchive");
+        while (selectBar.hasChildNodes()) {
+            selectBar.removeChild(selectBar.firstChild);
+          };
+        archiveList.forEach(table => {            
+            var opt = document.createElement("option");            
+            opt.value = table;
+            opt.innerHTML = table;
+            selectBar.appendChild(opt);            
+        });
+        return;
+        }
+    };
+};
+getReportArchiveList();
