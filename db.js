@@ -10,6 +10,8 @@ const pool = mariadb.createPool({
 
 const tableClients = process.env.MYSQL_TABLE_CLIENTS;
 const tableOrders = process.env.MYSQL_TABLE_ORDERS;
+const tableProducts = process.env.MYSQL_TABLE_PRODUCTS;
+const tableUsers = process.env.MYSQL_TABLE_USERS;
 
 exports.dbCreateTableClients = async function() {
   let createTableClients;
@@ -51,6 +53,38 @@ exports.dbCreateTableOrders = async function() {
   .then((results) => {console.log(results);return results})
   .catch((err) => {console.log(err)})});
   return createTableOrders;
+};
+
+exports.dbCreateTableProducts = async function() {
+  let createTableProducts;
+  createTableProducts = await pool.getConnection()
+  .then(conn => {conn.query("CREATE TABLE IF NOT EXISTS `"+tableProducts+
+  "`(`itemid` INT NOT NULL AUTO_INCREMENT,"+
+  "`itemnumber` INT NOT NULL DEFAULT '0',"+
+  "`stock` INT NOT NULL DEFAULT '0',"+
+  "`price` INT NOT NULL DEFAULT '10',"+  
+  "`itemname` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'beer',"+
+  "`itemimgpath` VARCHAR(1024) NOT NULL DEFAULT 'img/items/soup02.png',"+
+  "PRIMARY KEY (`itemid`));"
+  )
+  .then((results) => {console.log(results);return results})
+  .catch((err) => {console.log(err)})});
+  return createTableProducts;
+};
+
+exports.dbCreateTableUsers = async function() {
+  let createTableUsers;
+  createTableUsers = await pool.getConnection()
+  .then(conn => {conn.query("CREATE TABLE IF NOT EXISTS `"+tableUsers+
+  "`(`userid` INT NOT NULL AUTO_INCREMENT,"+
+  "`class` INT NOT NULL DEFAULT '0',"+
+  "`password` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'pass',"+
+  "`name` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'user',"+
+  "PRIMARY KEY (`userid`));"
+  )
+  .then((results) => {console.log(results);return results})
+  .catch((err) => {console.log(err)})});
+  return createTableUsers;
 };
 
 //--------------------INSERT NEW CLIENT TO DB----------------//
@@ -383,7 +417,7 @@ exports.dbGetListOfArchiveReport = async function() {
 //-----------------------DELETE OLD BACKUP TABLES INTERNALLY-----------------------//
 exports.dbDeleteOldBackups = async function(time) {
 let tableBackups;
-tableBackups = await pool.query(`SHOW TABLES LIKE 'clients_%';`);
+tableBackups = await pool.query(`SHOW TABLES LIKE 'bk_%';`);
 for(i=0;i<tableBackups.length-1;i++){
   let tableName = (JSON.stringify(tableBackups).split(',')[i].split(':')[1].replace('"','').replace('"','').replace('}',''));   
   console.log(tableName);

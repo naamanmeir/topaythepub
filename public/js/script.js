@@ -176,17 +176,17 @@ function orderConfirm(orderPack,abort){
     let i2 = orderPack[0][2];
     let i3 = orderPack[0][3];
     let i4 = orderPack[0][4];
-    let price = (i1*10)+(i2*12)+i3+i4;
+    let price = (i1*itemPrice1)+(i2*itemPrice2)+(i3*itemPrice3)+(i4*itemPrice4);
     message.innerHTML = ("<p2>   היי </p2>");
     message.innerHTML += ("<br>");
     message.innerHTML += ("<p5>"+clientName+"</p5>");
     message.innerHTML += ("<br>");    
     message.innerHTML += ("<p1> ההזמנה מכילה :</p1>");
     message.innerHTML += ("<br>");    
-    if(i1!=0){message.innerHTML += ("<p2>"+itemName1+": </p2><p3>"+i1+"</p3>");message.innerHTML += ("<br>");}
-    if(i2!=0){message.innerHTML += ("<p2>"+itemName2+": </p2><p3>"+i2+"</p3>");message.innerHTML += ("<br>");}
-    if(i3!=0){message.innerHTML += ("<p2>"+itemName3+": </p2><p3>"+i3+"</p3>");message.innerHTML += ("<br>");}
-    if(i4!=0){message.innerHTML += ("<p2>"+itemName4+": </p2><p3>"+i4+"</p3>");message.innerHTML += ("<br>");}
+    if(i1!=0){message.innerHTML += ("<p2>"+itemName1+": </p2><p3>"+i1+"</p3><p2>  בשווי: </p2><p3>"+itemPrice1+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
+    if(i1!=0){message.innerHTML += ("<p2>"+itemName2+": </p2><p3>"+i2+"</p3><p2>  בשווי: </p2><p3>"+itemPrice2+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
+    if(i1!=0){message.innerHTML += ("<p2>"+itemName3+": </p2><p3>"+i3+"</p3><p2>  בשווי: </p2><p3>"+itemPrice3+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
+    if(i1!=0){message.innerHTML += ("<p2>"+itemName4+": </p2><p3>"+i4+"</p3><p2>  בשווי: </p2><p3>"+itemPrice4+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
     if(price!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+price+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");

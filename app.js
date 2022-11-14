@@ -1,6 +1,7 @@
 require("dotenv").config();
-var favicon = require('serve-favicon')
-const express = require('express')
+var favicon = require('serve-favicon');
+const express = require('express');
+const session = require('express-session');
 const path = require('node:path');
 const fs = require('fs');
 const readline = require('readline');
@@ -8,19 +9,19 @@ const { stringify } = require("csv-stringify");
 
 const db = require('./db.js');
 const { Script } = require("node:vm");
-const msg = require('./strings.js');
+const strings = require('./strings.js');
 const { createPool } = require("mariadb");
 const { response } = require("express");
 
 const app = express();
 const port = 3090;
 
-const username = process.env.USERNAME;
-const password = process.env.PASSWORD;
+const user_masof = process.env.USER_MASOF;
+const pass_masof = process.env.PASS_MASOF;
 const user_admin = process.env.USER_ADMIN;
 const password_admin = process.env.PASS_ADMIN;
-const user_david = process.env.USER_DAVID;
-const password_david = process.env.PASS_DAVID;
+const user_accountant = process.env.USER_ACCOUNTANT;
+const password_accountant = process.env.PASS_ACCOUNTANT;
 
 var now = new Date();
 console.log("System Startup Time : "+Date());
@@ -35,6 +36,9 @@ app.use(favicon(__dirname + '/public/img/favicon.ico'));
 
 app.set('views', './views');
 app.set('view engine', 'ejs');
+
+// ------------------------  SESSION SETTINGS  ----------------------- //
+
 
 // ------------------------  MANAGE VIEW  ----------------------- //
 app.get('/manage', async function(req, res) {  
@@ -66,10 +70,14 @@ app.get('/manage', async function(req, res) {
 
 // ------------------------  CREATE TABLE ----------------------- //
 app.get('/retable/', async function(req,res){
-    let createTableCLients;
+    let createTableClients;
     let createTableOrders;
-    createTableCLients = await db.dbCreateTableClients().then((res) => {return (res)});
-    createTableOrders = await db.dbCreateTableOrders().then((res) => {return (res)});    
+    let createTableProducts;
+    let createTableUsers;
+    createTableClients = await db.dbCreateTableClients().then((res) => {return (res)});
+    createTableOrders = await db.dbCreateTableOrders().then((res) => {return (res)});
+    createTableProducts = await db.dbCreateTableProducts().then((res) => {return (res)});
+    createTableUsers = await db.dbCreateTableUsers().then((res) => {return (res)});
     res.send(createTableOrders);
 })
 
@@ -225,6 +233,12 @@ function releaseLimit(){
 
 // ------------------------  CLIENT VIEW  ----------------------- //
 app.get('', async function(req, res) {
+  let products = [];
+  products.push([strings.NAME_ITEM1,strings.PRICE_ITEM1]);
+  products.push([strings.NAME_ITEM2,strings.PRICE_ITEM2]);
+  products.push([strings.NAME_ITEM3,strings.PRICE_ITEM3]);
+  products.push([strings.NAME_ITEM4,strings.PRICE_ITEM4]);
+
     const reject = () => {
         res.setHeader("www-authenticate", "Basic",realm="topaythepub MASOF",charset="UTF-8");
         res.sendStatus(401);
@@ -244,16 +258,13 @@ app.get('', async function(req, res) {
         .toString()
         .split(":");
     
-      if (!(username === username && password === password)) {
+      if (!(username === user_masof && password === pass_masof)) {
         return reject();
       }
-    console.log("LOGIN TO APP ON: "+Date());  
+    console.log("LOGIN TO APP ON: "+Date());
     res.render('index', {
-        item1 : msg.NAME_ITEM1,
-        item2 : msg.NAME_ITEM2,
-        item3 : msg.NAME_ITEM3,
-        item4 : msg.NAME_ITEM4,
-        msg1 : msg.MSG_ORDER_VALIDATE
+        products: products,
+        msg1 : strings.MSG_ORDER_VALIDATE
     })
 });
 
@@ -319,7 +330,7 @@ app.get('/accountant', async function(req, res) {
         .toString()
         .split(":");
     
-      if (!(username === user_david && password === password_david)) {
+      if (!(username === user_accountant && password === password_accountant)) {
         return reject();
       }
     console.log("LOGGED IN TO ACCOUNTANT ON: "+Date());

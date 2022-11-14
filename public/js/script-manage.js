@@ -457,7 +457,7 @@ function showAccountTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>מתאריך</th><th>סכום</th><th>מספר חשבון</th><th>שם</th>");    
+    TR.innerHTML = ("<th>סכום</th><th>פרטים</th><th>שם לקוח</th><th>מס. לקוח</th>");    
     tableBody.appendChild(TR);
     for(let i = 0;i < data.length; i++){
         const row = document.createElement("tr");
@@ -465,7 +465,10 @@ function showAccountTable(data){
         for (let j = 0; j < clientRow.length; j++) {
             if(j == 2){clientRow[j] = clientRow[j]};
             const cell = document.createElement("td");
-            const cellText = document.createTextNode(clientRow[j]);
+            let cellText;
+            if(j==0){cellText = document.createTextNode(clientRow[j]+" ₪");}
+            if(j==1){cellText = document.createTextNode("פאב "+clientRow[j]);}
+            if(j>1){cellText = document.createTextNode(clientRow[j]);}
             cell.appendChild(cellText);
             row.appendChild(cell);
         }
@@ -473,11 +476,11 @@ function showAccountTable(data){
         if(i % 2 === 0  ){row.setAttribute("style", "background-color:lightblue;")}
     tableBody.appendChild(row);    
     }
-    table.appendChild(tableBody);  
+    table.appendChild(tableBody);
     table.setAttribute("border", "1");
     table.setAttribute("align", "center");
     table.setAttribute("width", "100%");
-    table.setAttribute("style", "font-size:larger");
+    table.setAttribute("style", "font-size:xx-large");
     table.setAttribute("class", "tableStyle");
     var tableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");    
     tableWindow.document.write();    
