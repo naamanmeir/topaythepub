@@ -3,7 +3,7 @@ const NAME_ITEM2="מרק הבית"
 const NAME_ITEM3="8 שקל"
 const NAME_ITEM4="מוצר היום"
 const PRICE_ITEM1=10;
-const PRICE_ITEM2=12;
+const PRICE_ITEM2=10;
 const PRICE_ITEM3=8;
 const PRICE_ITEM4=14;
 

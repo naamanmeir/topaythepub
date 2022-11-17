@@ -16,6 +16,7 @@ const { response } = require("express");
 const app = express();
 const port = 3090;
 
+const session_secret = process.env.SESSION_SECRET;
 const user_masof = process.env.USER_MASOF;
 const pass_masof = process.env.PASS_MASOF;
 const user_admin = process.env.USER_ADMIN;
@@ -38,12 +39,23 @@ app.set('views', './views');
 app.set('view engine', 'ejs');
 
 // ------------------------  SESSION SETTINGS  ----------------------- //
+app.use(session({
+  secret: session_secret,
+  resave: true,
+  saveUninitialized: true
+}));
 
+var auth = function(req, res, next) {
+  if (req.session && req.session.user === user_admin && req.session.admin)
+    return next();
+  else
+    return res.sendStatus(401);
+};
 
 // ------------------------  MANAGE VIEW  ----------------------- //
-app.get('/manage', async function(req, res) {  
+app.get('/manage', async function(req, res) {
     const reject = () => {
-        res.setHeader("www-authenticate", "Basic",realm="topaythepub_admin_panel",charset="UTF-8");
+        res.setHeader("www-authenticate", "Basic",realm="admin",uri="/manage",charset="UTF-8");
         res.sendStatus(401);
       };
     
@@ -65,6 +77,7 @@ app.get('/manage', async function(req, res) {
         return reject();
       }
       console.log("LOGIN TO MANAGE PANEL ON: "+Date());  
+      // req.session = true;
     res.render('manage', {})
 });
 
@@ -240,7 +253,7 @@ app.get('', async function(req, res) {
   products.push([strings.NAME_ITEM4,strings.PRICE_ITEM4]);
 
     const reject = () => {
-        res.setHeader("www-authenticate", "Basic",realm="topaythepub MASOF",charset="UTF-8");
+        res.setHeader("www-authenticate", "Basic",realm="masof",uri="/",charset="UTF-8");
         res.sendStatus(401);
       };
     
@@ -312,7 +325,7 @@ app.post('/getUserInfo/:data', async (req,res) => {
 //-------------------------accountant---------------------
 app.get('/accountant', async function(req, res) {
     const reject = () => {
-        res.setHeader("www-authenticate", "Basic",realm="topaythepub accountent panel",charset="UTF-8");
+        res.setHeader("www-authenticate", "Basic",realm="accountant",uri="/accountant",charset="UTF-8");
         res.sendStatus(401);
       };
     

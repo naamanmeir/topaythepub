@@ -183,10 +183,10 @@ function orderConfirm(orderPack,abort){
     message.innerHTML += ("<br>");    
     message.innerHTML += ("<p1> ההזמנה מכילה :</p1>");
     message.innerHTML += ("<br>");    
-    if(i1!=0){message.innerHTML += ("<p2>"+itemName1+": </p2><p3>"+i1+"</p3><p2>  בשווי: </p2><p3>"+itemPrice1+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
-    if(i1!=0){message.innerHTML += ("<p2>"+itemName2+": </p2><p3>"+i2+"</p3><p2>  בשווי: </p2><p3>"+itemPrice2+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
-    if(i1!=0){message.innerHTML += ("<p2>"+itemName3+": </p2><p3>"+i3+"</p3><p2>  בשווי: </p2><p3>"+itemPrice3+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
-    if(i1!=0){message.innerHTML += ("<p2>"+itemName4+": </p2><p3>"+i4+"</p3><p2>  בשווי: </p2><p3>"+itemPrice4+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
+    if(i1!=0){message.innerHTML += ("<p2>"+itemName1+": </p2><p3>"+i1+"</p3><p2>  בשווי: </p2><p3>"+i1*itemPrice1+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
+    if(i2!=0){message.innerHTML += ("<p2>"+itemName2+": </p2><p3>"+i2+"</p3><p2>  בשווי: </p2><p3>"+i2*itemPrice2+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
+    if(i3!=0){message.innerHTML += ("<p2>"+itemName3+": </p2><p3>"+i3+"</p3><p2>  בשווי: </p2><p3>"+i3*itemPrice3+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
+    if(i4!=0){message.innerHTML += ("<p2>"+itemName4+": </p2><p3>"+i4+"</p3><p2>  בשווי: </p2><p3>"+i4*itemPrice4+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
     if(price!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+price+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
@@ -227,8 +227,8 @@ function add(item){
     // searchBox1.focus();
     const count1 = document.getElementById("count1");
     const count2 = document.getElementById("count2");
-    const count3 = document.getElementById("count3");
-    const count4 = document.getElementById("count4");
+    // const count3 = document.getElementById("count3");
+    // const count4 = document.getElementById("count4");
     const buttonsDiv = document.getElementById("buttons");
     if(item==1){if(item1==99){return};
             vibrate(45);
@@ -258,8 +258,8 @@ function add(item){
         item4 = 0;
         count1.innerText = "";
         count2.innerText = "";
-        count3.innerText = "";
-        count4.innerText = "";
+        // count3.innerText = "";
+        // count4.innerText = "";
         // userLogout();
         return;
     }
@@ -704,7 +704,7 @@ function clientDeleteLastOrder(){
             return;
             }        
         };
-}
+};
 
 function allElements(action){
     var searchBox = Array.from(document.getElementsByClassName("searchBox"));
