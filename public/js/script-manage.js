@@ -268,7 +268,7 @@ function clientGetOrderHistory(){
                 return;
                 }        
         };
-}
+};
 
 function clientOrderHistory(data){
     const table = document.createElement("table");
@@ -369,13 +369,17 @@ function deleteClient(){
         };
 };
 
-function getAllData(scope){
-    // console.log(scope);
+async function getAllData(scope){
+    console.log("GET ALL DATA FUNC: ");
+    let itemsBought;
+    itemsBought = await this.getItemsBought().then((buys) => {return (buys)});   
+    console.log(itemsBought);
     xhttp.open("POST", "./getAllData/"+scope, true);
     xhttp.send();
-    xhttp.onreadystatechange = function() {
+    xhttp.onreadystatechange = async function() {
         if (this.readyState == 4 && this.status == 200) {
             // console.log(this.response);
+            let allData = this.response;
             if(scope==1){
                 showOrdersTable(JSON.parse(this.response));
             }
@@ -386,10 +390,22 @@ function getAllData(scope){
                 showClientsTable(JSON.parse(this.response));
             }
             if(scope==4){
-                showAccountTable(JSON.parse(this.response));
+                showAccountTable((JSON.parse(allData,itemsBought)));                
             }                
             return;
             }
+        };
+};
+
+async function getItemsBought(){
+    xhttp.open("GET", "./getItemsBought/", false);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            itemsBought = this.response;
+            return itemsBought;
+            }        
         };
 };
 
@@ -453,15 +469,31 @@ function showClientsTable(data){
     tableWindow.document.appendChild(table);
 };
 
-function showAccountTable(data){
+function showAccountTable(data,itemsBought){
+    let div = document.createElement("div");
+    div.classList.add("reportTableDiv");
+    // div.setAttribute("dir","rtl");
+    div.setAttribute("border", "1");
+    div.setAttribute("align", "center");
+    div.setAttribute("width", "100%");
+    div.setAttribute("style", "font-size:xx-large");
+    div.setAttribute("class", "tableStyle");
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
+    let header = document.createElement("p");    
+    let headerText = document.createTextNode("דוח לתקופה נוכחית תאריכים יוספו בהמשך");
+    header.appendChild(headerText);
+    // console.log(itemsBought);
+    let itemsText;
+    itemsText = document.createTextNode(" משהוים נלקחו מהמקרר : "+", מרקים נלגמו : ");
+    // div.appendChild(header);
+    // div.appendChild(itemsText);
     TR.innerHTML = ("<th>סכום</th><th>פרטים</th><th>שם לקוח</th><th>מס. לקוח</th>");    
     tableBody.appendChild(TR);
     for(let i = 0;i < data.length; i++){
         const row = document.createElement("tr");
-        let clientRow = Object.values(data[i]);        
+        let clientRow = Object.values(data[i]);
         for (let j = 0; j < clientRow.length; j++) {
             if(j == 2){clientRow[j] = clientRow[j]};
             const cell = document.createElement("td");
@@ -483,8 +515,9 @@ function showAccountTable(data){
     table.setAttribute("style", "font-size:xx-large");
     table.setAttribute("class", "tableStyle");
     var tableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");    
-    tableWindow.document.write();    
-    tableWindow.document.appendChild(table);
+    tableWindow.document.write();
+    div.appendChild(table);
+    tableWindow.document.appendChild(div);    
 };
 
 function backupTable(){

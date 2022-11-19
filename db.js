@@ -433,3 +433,21 @@ exports.dbResetClientOrders = async function() {
   console.log(resetClientOrders);
   };
 
+  //----------------------GET ITEMS BOUGHT IN CURRENT REPORT---------------------//
+  exports.dbGetItemsBought = async function() {
+    //get items amount from db
+    console.log("GET ITEMS: ");
+    let item1Bought;
+    let item2Bought;
+    let itemsBought = [];
+    item1Bought = await pool.query("SELECT SUM(item1) FROM "+tableClients+" WHERE account > 50;");
+    item2Bought = await pool.query("SELECT SUM(item2) FROM "+tableClients+" WHERE account > 50;");
+    item1Bought = (JSON.stringify(item1Bought).split(':')[1].replace('"}]','').replace('"',''));
+    item2Bought = (JSON.stringify(item2Bought).split(':')[1].replace('"}]','').replace('"',''));
+    itemsBought.push(item1Bought);
+    itemsBought.push(item2Bought);
+    // console.log(itemsBought);
+    return itemsBought;
+  };
+
+  // this.dbGetItemsBought();

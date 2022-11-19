@@ -191,10 +191,21 @@ app.post('/deleteClient/:data', async (req,res,next) => {
 });
 
 app.post('/getAllData/:data', async (req,res) => {
-    let scope = JSON.parse(req.params.data);
+    let scope = JSON.parse(req.params.data);    
+    // let itemsBought;
+    // itemsBought = await db.dbGetItemsBought().then((dbData) => {return (dbData)});
+    // console.log(itemsBought);
     let dbData;
     dbData =  await db.dbGetDataByScope(scope).then((dbData) => {return (dbData)});
     res.send(dbData)
+});
+
+app.get('/getItemsBought/', async (req,res) => {
+  console.log("GET ITEMS BOUGHT AT APP: ");
+  let itemsBought;
+  itemsBought = await db.dbGetItemsBought().then((dbData) => {return (dbData)});
+  console.log(itemsBought);
+  res.send(itemsBought);
 });
 
 app.post('/requestReportArchive/:data', async (req,res) => {
@@ -202,7 +213,7 @@ app.post('/requestReportArchive/:data', async (req,res) => {
   console.log("GETTING ARCHIVE DATA FROM: "+tableName);  
   dbData =  await db.dbGetDataFromArchiveByDate(tableName).then((dbData) => {return (dbData)});
   res.send(dbData);
-})
+});
 
 app.post('/getUserOrders/:data', async (req,res) => {
   if(req.params.data==null||isNaN(req.params.data)){console.log("ID IS NOT A NUMBER");return;};

@@ -146,6 +146,10 @@ button {
     margin-bottom: 3%;
 }
 
+.reportTableDiv{
+    direction: rtl;
+}
+
 .linebreak{
     background-color: green;
     width: 100%;

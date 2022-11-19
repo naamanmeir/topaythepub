@@ -541,9 +541,9 @@ function bgSelect(set){
         background2.style.display = ("none");
     }
     if(set==2){
-        background1.style.display = ("block");
-        background1.className = ("background2");
-        background2.style.display = ("none");        
+        background2.style.display = ("block");
+        background2.className = ("background2");
+        background1.style.display = ("none");        
     }
     if(set==3){
         background1.style.display = ("none");
