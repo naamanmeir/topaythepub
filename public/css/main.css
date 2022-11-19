@@ -1000,13 +1000,19 @@ video{
     transition: 1s;
 }
 .elementOpen{
-    color: rgb(255, 242, 0);
-    font-size: xx-large;    
+    /* color: rgb(255, 242, 0); */
+    /* font-size: xx-large;     */
     width: fit-content;
-    padding-left: 20px;
-    padding-top: 0px;
+    right: 0px;
+    padding-left: 10px;
+    padding-top: 15px;
     position: absolute;
     z-index: 2000;
+}
+.elementOpen img{
+    width: 55%;
+    height: 55%;
+    filter: invert(0.6);
 }
 /* .textBackground{
 
@@ -1035,7 +1041,15 @@ video{
     display: block;
     transition: 0.3s;
     word-wrap:unset; 
-}  
+}
+.sidenav img {
+    padding-right: 25%;
+    width: 55%;
+    height: 55%;
+    filter: invert(0.6);
+    transform: scaleX(-1);
+
+}
 .sidenav a:hover {
     background-color: #a49c9c;
     color: #ffffff;

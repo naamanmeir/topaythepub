@@ -88,7 +88,7 @@ searchBox1.addEventListener('focus',function(){
 });
 searchBox1.addEventListener('blur',function(){
     // searchBoxClear();
-    searchBox1.placeholder=("נא להכניס שם✍👉👉");
+    searchBox1.placeholder=("שלום הכניסו שם✍👉👉");
 });
 searchBox1.addEventListener('input',function(){
     // searchBoxClear();
@@ -636,7 +636,7 @@ async function userInfo(uData){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>שם</th><th>סכום</th><th>פריט 10</th><th>פריט 12</th><th>תאריך ושעה</th><th>מס.</th>");    
+    TR.innerHTML = ("<th>שם</th><th>סכום</th><th>"+itemName1+"</th><th>"+itemName2+"</th><th>תאריך ושעה</th><th>מס.</th>");    
     TR.setAttribute("style", "background-color:lightblue;")
     tableBody.appendChild(TR);
     for(let i = 0;i < uData.length; i++){
