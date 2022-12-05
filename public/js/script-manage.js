@@ -409,6 +409,17 @@ async function getItemsBought(){
         };
 };
 
+function openInfotables(){
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            window.open("./infotables","_blank");
+            }        
+        };
+    xhttp.open("GET", "./infotables", false);
+    xhttp.send();
+}
+
 function showOrdersTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
