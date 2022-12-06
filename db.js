@@ -87,6 +87,19 @@ exports.dbCreateTableUsers = async function() {
   return createTableUsers;
 };
 
+//-----------------------GET PRODUCTS IF YESH----------------------//
+exports.dbGetProducts = async function () {
+  products = await pool.query("SELECT itemnumber,itemname,price,itemimgpath FROM " + tableProducts +
+    " WHERE stock > 0 ORDER BY itemnumber DESC;");  
+  return products;
+};
+
+exports.dbGetProductsAll = async function () {
+  products = await pool.query("SELECT itemnumber,itemname,price,itemimgpath FROM " + tableProducts +
+    " ORDER BY itemnumber DESC;");  
+  return products;
+};
+
 //--------------------INSERT NEW CLIENT TO DB----------------//
 exports.dbInsertClient = async function(newClient){
   // console.log(newClient);
@@ -432,6 +445,29 @@ exports.dbResetClientOrders = async function() {
   resetClientOrders = await pool.query("UPDATE "+tableClients+" SET item1=0,item2=0,item3=0,item4=0,sum=0;");
   console.log(resetClientOrders);
   };
+
+//--------------------INSERT NEW PRODUCTS TO DB----------------//
+exports.dbInsertProduct = async function(newProduct){
+  // console.log(newProduct);
+  let name = newProduct[0].replace(/\'/g,"''");
+  let price = newProduct[1].replace(/\'/g,"''");
+  let img = newProduct[2];
+  let stock = newProduct[3];
+  img = ("img/items/"+img+".png");
+  console.log(img);
+  let messageReturn;
+  console.log("CLIENT AVAILABLE");    
+  messageReturn = await pool.query("INSERT INTO "+tableProducts+
+  " (itemname,price,itemimgpath,stock) VALUES ('"+name+"','"+price+"','"+img+"','"+stock+"');")
+  .catch((err) => {
+    console.log(err);return("NO OK");
+  }).then((res) => { 
+    console.log(res);       
+      return ("התווסף מוצר : "+name+ " במחיר : "+price);
+    });
+  console.log("Inserted Client: "+  messageReturn)
+  return messageReturn;  
+};
 
   //----------------------GET ITEMS BOUGHT IN CURRENT REPORT---------------------//
   exports.dbGetItemsBought = async function() {

@@ -153,6 +153,7 @@ function cancelOrder(message){
 
 function orderConfirm(orderPack,abort){
     userAutoLogout(60000); // LOGOUT AFTER ONE MINUTE
+    console.log("orderConfirm");
     const message = document.getElementById("messageBox");    
     if(abort){message.innerHTML=("");message.classList.remove("messageBoxOn");return};
     let buttonYes = document.createElement("button");

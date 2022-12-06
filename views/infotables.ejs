@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דיווח</title>
+    <link rel="stylesheet" href="css/manage.css">
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+</head>
+<body>
+
+    <%- include('./partials/headerStatic'); %>
+
+    <div class="row linebreak"></div>
+
+    <div class="content row">
+
+        <div class="function" id="getAccounData">
+            <button onclick="currentReport()">הצגת נתונים לדו"ח</button>
+        </div>
+
+        <div class="function" id="getOrdersData">
+            <button onclick="orders()">הצגת נתוני עסקאות</button>
+        </div>
+
+        <div class="function" id="getCLientData">
+            <button onclick="clients()">הצגת נתוני משתמשים</button>
+        </div>
+
+        <div class="function" id="getCLientData">
+            <button onclick="clientsFull()">הצגת נתוני משתמשים כולל כלבים</button>
+        </div>
+
+    </div>
+
+    <div class="row linebreak"></div>
+
+    <div class="tableContainer">
+        <div class="table">
+            
+        </div>
+    </div>
+
+    
+    <%- include('./partials/footer'); %>
+
+    <script src="js/script-infotables.js"></script>
+    
+</body>
+</html>

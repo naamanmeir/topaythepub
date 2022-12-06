@@ -8,7 +8,7 @@
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">    
     <link rel="stylesheet" href="css/main.css">
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-    <title>לשלם לפאב</title>
+    <title>לשלם לפאבDEV</title>
 </head>
 
 <body oncontextmenu="return false;">
@@ -38,56 +38,30 @@
 
         <div class="messageBox column" id="messageBox"></div>
 
-        <div class="items" id="items">
-            <div class="item" onpointerup="add(1)">
-                <p><%=products[0][0]%></p>
-                <img src="img/items/fridge01.png">
-                <count id="count1"></count>
-            </div>
-            <div class="item" onpointerup="add(2)">
-                <p><%=products[1][0]%></p>
-                <img src="img/items/soup02.png">
-                <count id="count2"></count>
-            </div>
-            <!-- <div class="item" onpointerup="add(3)">
-                <p><%=products[2][0]%></p>
-                <img src="img/items/bar02.png">
-                <count id="count3"></count>
-            </div>
-            <div class="item" onpointerup="add(4)">
-                <p><%=products[3][0]%></p>
-                <img src="img/items/piza01.png">
-                <count id="count4"></count>
-            </div> -->
-
-            <!-- <div class="break"></div> break -->
-
-            <div class="buttons" id="buttons">
-                <div class="errorMessage" id="errorMessage"></div>
-                <button id="cancel" onclick="add(101)"> בטל</button>
-                <button id="placeOrder" onclick="add(100)">בצע רישום</button>
-            </div>
+        <div class="items">
+            <% products.forEach(function(row) {var id = row.itemnumber;var name = row.itemname;var price = row.price;var img = row.itemimgpath;%>
+                <div class="item" id="<%=id%>Div" onpointerup="add(<%=id%>)">
+                    <p><%=name%></p>
+                    <img src="<%=img%>">
+                    <p class="p2" id="<%=id%>price"><%=price%> ₪</p>
+                    <count class="counts" id="count<%=id%>"></count>
+                  </div>
+              <% }); %>
         </div>        
 
-    </div>
+        <div class="buttons" id="buttons">
+            <!-- <div class="errorMessage" id="errorMessage"></div> -->
+            <button id="cancel" onclick="add(101)"> בטל</button>
+            <button id="placeOrder" onclick="add(100)">בצע רישום</button>
+        </div>        
+
+    </div>    
 
     <div class="backgroundCanvas">
         <canvas class="canvas" id="canvas"></canvas>
     </div>
 
     <!-- <%- include('./partials/footer'); %> -->
-
-    <script>
-        const itemName1 = "<%=products[0][0]%>";
-        const itemName2 = "<%=products[1][0]%>";
-        const itemName3 = "<%=products[2][0]%>";
-        const itemName4 = "<%=products[3][0]%>";
-        const itemPrice1 = "<%=products[0][1]%>";
-        const itemPrice2 = "<%=products[1][1]%>";
-        const itemPrice3 = "<%=products[2][1]%>";
-        const itemPrice4 = "<%=products[3][1]%>";
-        const products = "<%=products%>";
-     </script>
 
     <script src="js/script.js"></script>
     <script src="js/bgFuncs.js"></script>

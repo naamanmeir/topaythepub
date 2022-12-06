@@ -73,7 +73,8 @@
         <div class="editProduct">
             <div class="function">
                 <p>עריכת מוצר קיים</p>
-                <input type="search" class="searchBoxNoLogged" id="getProductName" spellcheck="false" placeholder=" מצא מוצר מהרשימה">
+                <!-- <input type="search" class="searchBoxNoLogged" id="getProductName" spellcheck="false" placeholder=" מצא מוצר מהרשימה"> -->
+                <select id="selectProduct"><option>בחר מוצר</option></select>
                 <div class="autoCompleteNone" id="autoComplete"></div>
             </div>
             <div class="row">
@@ -100,13 +101,17 @@
                 <p>שם מוצר : </p>
                 <input type="search" class="textbox" id="insertProduct" spellcheck="false" placeholder=" הכנס מוצר">
                 <p> מחיר : </p>
-                <input type="text" class="textboxNumber" id="insertNumber" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מחיר  ">
-                <button class="green" onclick="iinsertProduct()">הכנס מוצר</button>
+                <input type="text" class="textboxNumber" id="insertPrice" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מחיר  ">
+                <p> תמונה : </p>
+                <select id="selectImg"><option value="1">מקרר</option><option value="2">בירה</option><option value="3">משקה</option><option value="4">מרק</option><option value="5">פיצה</option><option value="6">משהו מיוחד</option></select>
+                <p> כמות : </p>
+                <input type="text" class="textboxNumber" id="insertStock" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס כמות  ">
+                <button class="green" onclick="insertProduct()">הכנס מוצר</button>
                 </p>
             </div>
 
             <div class="row">
-                <div class="logText" id="addLog">-</div>
+                <div class="logText" id="productsLog">-</div>
             </div>
 
         </div>
@@ -131,6 +136,11 @@
         <div class="row linebreak"></div>
 
             <!-- BUTTONS -->
+
+            <button onClick="openInfotables()">הצגת  </button>
+
+            <!-- <button onClick="location.href='report'">הצגת נתונים </button> -->
+            <!-- <a href="./report">sdgsdgsg</a> -->
 
     <div class="content row">
 

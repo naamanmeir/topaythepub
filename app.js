@@ -81,6 +81,35 @@ app.get('/manage', async function(req, res) {
     res.render('manage', {})
 });
 
+// ------------------------  MANAGE REPORT VIEW  ----------------------- //
+app.get('/infotables', async function(req, res) {
+  const reject = () => {
+      res.setHeader("www-authenticate", "Basic",realm="infotables",uri="/infotables",charset="UTF-8");
+      res.sendStatus(401);
+    };
+  
+    const authorization = req.headers.authorization;
+  
+    if (!authorization) {
+      console.log("FAILED LOGIN ATTEMPTED TO MANAGE PANEL ON: "+Date());
+      return reject();
+    }
+  
+    const [username, password] = Buffer.from(
+      authorization.replace("Basic ", ""),
+      "base64"
+    )
+      .toString()
+      .split(":");
+  
+    if (!(username === user_admin && password === password_admin)) {
+      return reject();
+    }
+    console.log("LOGIN TO MANAGE REPORT PAGE ON: "+Date());  
+    // req.session = true;
+  res.render('infotables', {})
+});
+
 // ------------------------  CREATE TABLE ----------------------- //
 app.get('/retable/', async function(req,res){
     let createTableClients;
@@ -223,6 +252,25 @@ app.post('/getUserOrders/:data', async (req,res) => {
   res.send(dbData)
 });
 
+app.get('/getProducts/', async (req,res) => {  
+  let products = [];
+  let listFromDb;
+  listFromDb = await db.dbGetProductsAll();  
+  listFromDb.forEach(element => {    
+    products.push(JSON.parse(JSON.stringify(element.itemname)));
+  }); 
+  res.send(products);
+});
+
+app.post('/insertProduct/:data', async (req,res,next) => {
+  let newItem = JSON.parse(req.params.data);
+  console.log("APP: ADD NEW PRODUCTS: "+newItem);
+  var response;
+  response = await db.dbInsertProduct(newItem).then((res) => {return (res)})
+  res.send(response);    
+});
+
+
 app.get('/getListOfArchiveReport/', async (req,res) => {
   let archiveList = [];
   let listFromDb;
@@ -255,41 +303,39 @@ function releaseLimit(){
     (limit=false);
 };
 
-// ------------------------  CLIENT VIEW  ----------------------- //
-app.get('', async function(req, res) {
-  let products = [];
-  products.push([strings.NAME_ITEM1,strings.PRICE_ITEM1]);
-  products.push([strings.NAME_ITEM2,strings.PRICE_ITEM2]);
-  products.push([strings.NAME_ITEM3,strings.PRICE_ITEM3]);
-  products.push([strings.NAME_ITEM4,strings.PRICE_ITEM4]);
 
-    const reject = () => {
-        res.setHeader("www-authenticate", "Basic",realm="masof",uri="/",charset="UTF-8");
-        res.sendStatus(401);
-      };
-    
-      const authorization = req.headers.authorization;
-    
-      if (!authorization) {
-        console.log("FAILED LOGIN ATTEMPTED TO MASOF APP ON: "+Date());
-        return reject();
-      }
-    
-      const [username, password] = Buffer.from(
-        authorization.replace("Basic ", ""),
-        "base64"
-      )
-        .toString()
-        .split(":");
-    
-      if (!(username === user_masof && password === pass_masof)) {
-        return reject();
-      }
-    console.log("LOGIN TO APP ON: "+Date());
-    res.render('index', {
-        products: products,
-        msg1 : strings.MSG_ORDER_VALIDATE
-    })
+// ------------------------  CLIENT VIEW  ----------------------- //
+app.get('', async function (req, res) {
+  let products = [];
+  products = await db.dbGetProducts();
+
+  const reject = () => {
+    res.setHeader("www-authenticate", "Basic", realm = "masof", uri = "/", charset = "UTF-8");
+    res.sendStatus(401);
+  };
+
+  const authorization = req.headers.authorization;
+
+  if (!authorization) {
+    console.log("FAILED LOGIN ATTEMPTED TO MASOF APP ON: " + Date());
+    return reject();
+  }
+
+  const [username, password] = Buffer.from(
+    authorization.replace("Basic ", ""),
+    "base64"
+  )
+    .toString()
+    .split(":");
+
+  if (!(username === user_masof && password === pass_masof)) {
+    return reject();
+  }
+  console.log("LOGIN TO APP ON: " + Date());
+  res.render('index', {
+    products: products,
+    msg1: strings.MSG_ORDER_VALIDATE
+  })
 });
 
 // PLACE ORDER BY ID
