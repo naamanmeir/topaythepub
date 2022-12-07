@@ -2,6 +2,9 @@ var xhttp = new XMLHttpRequest();
 
 var limit = 0; // throttle limiter for db
 
+let products;
+let productName;
+let productId;
 // FUNCTIONS TO RUN SERVER ACTIONS
 async function placeOrder(orderPack){  
     xhttp.open("GET", "./order/"+orderPack, true);
@@ -224,12 +227,12 @@ function displayClientFields(data,destNick,destNumber,destSmallName){
     clientEdit = gotName;
 };
 
-function editClientFields(field,value){
+function editClient(field,value){
     if(clientId==null||clientId==""){console.log("this is stupid");return};
     if(value==null||value==''){console.log("this is stupid");return};
     if (window.confirm("לערוך נתונים של משתמש?")) {
         value = document.getElementById(value).value;
-        console.log(field,value);
+        // console.log(field,value);
         let data = [clientId,field,value];
         xhttp.open("POST", "./editClientFields/"+data, true);
         xhttp.send();
@@ -409,25 +412,78 @@ async function getItemsBought(){
         };
 };
 
-async function getProducts(){
-    console.log("getProducts t");
+async function getProducts(){    
     xhttp.open("GET", "./getProducts/", true);
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            productList = JSON.parse(this.response);        
+            products = JSON.parse(this.response);
+            productList = JSON.parse(this.response);
             let selectBar = document.getElementById("selectProduct");
-            // while (selectBar.hasChildNodes()) {
-            //     selectBar.removeChild(selectBar.firstChild);
-            //   };
-              productList.forEach(table => {            
-                var opt = document.createElement("option");            
-                opt.value = table;
-                opt.innerHTML = table;
-                selectBar.appendChild(opt);            
-            });
+            while (selectBar.childElementCount > 1) {
+                selectBar.removeChild(selectBar.lastChild);
+              };
+              productList.forEach(table => {
+                var opt = document.createElement("option");
+                opt.value = table[1];
+                opt.innerHTML = table[1];
+                selectBar.appendChild(opt);
+            });            
             return;
             }
+        };
+};
+
+function editProductLoad(){
+    let itemSelect = document.getElementById("selectProduct");
+    let textName = document.getElementById("productName");
+    let textPrice = document.getElementById("productPrice");    
+    let i = itemSelect.selectedIndex-1;
+    // console.log(i);
+    console.log(products[i][1]);
+    console.log(products[i][2]);
+    productId = products[i][0];
+    productName = products[i][1];
+    textName.value = products[i][1];
+    textPrice.value = products[i][2];
+};
+
+function editProduct(){
+    if(productId==null||productId==""){console.log("this is stupid");return};
+    let newName = document.getElementById("productName");
+    let newPrice = document.getElementById("productPrice");
+    let data = [productId,newName.value,newPrice.value];
+    console.log(data);
+    if (window.confirm("לערוך נתונים של מוצר?")) {                
+        xhttp.open("POST", "./editProduct/"+data, true);
+        xhttp.send();
+        };
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            editLog(this.response);
+            getProducts();
+            return;
+            }
+        };
+};
+
+function deleteProduct(){
+    if(productId==null||productId==''){return};
+    if(window.confirm("למחוק את "+productName+" ?")){
+        if(window.confirm("בטוח בטוח "+productName+","+productId+" ???")){
+            xhttp.open("POST", "./deleteProduct/"+productId, true);
+            xhttp.send();
+        }
+    }
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            document.getElementById("productEditLog").innerText = this.response;
+            document.getElementById("productName").value = "";
+            document.getElementById("productPrice").value = "";
+            getProducts();
+            return;
+            }        
         };
 };
 
@@ -447,6 +503,7 @@ function insertProduct(){
         if (this.readyState == 4 && this.status == 200) {
             console.log(this.response);
             document.getElementById("productsLog").innerText = this.response;
+            getProducts();
             return;
             }        
         };

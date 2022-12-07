@@ -256,8 +256,9 @@ app.get('/getProducts/', async (req,res) => {
   let products = [];
   let listFromDb;
   listFromDb = await db.dbGetProductsAll();  
-  listFromDb.forEach(element => {    
-    products.push(JSON.parse(JSON.stringify(element.itemname)));
+  listFromDb.forEach(item => {
+    let row = [item.itemid,item.itemname,item.price,item.itemimgpath,item.stock];
+    products.push(JSON.parse(JSON.stringify(row)));
   }); 
   res.send(products);
 });
@@ -267,6 +268,24 @@ app.post('/insertProduct/:data', async (req,res,next) => {
   console.log("APP: ADD NEW PRODUCTS: "+newItem);
   var response;
   response = await db.dbInsertProduct(newItem).then((res) => {return (res)})
+  res.send(response);    
+});
+
+app.post('/editProduct/:data', async (req,res) => {
+  let newData = (req.params.data);
+  let newArray = newData.split(',');
+  console.log("APP: EDIT PRODUCT"+newArray);
+  let productID = newArray[0];  
+  var response;
+  response = await db.dbEditProduct(newArray).then((res) => {return (res)})
+  res.send(response);    
+});
+
+app.post('/deleteProduct/:data', async (req,res,next) => {
+  let productID = JSON.parse(req.params.data);
+  console.log("APP: DELETE PRODUCT: "+productID);
+  var response;
+  response = await db.dbDeleteProduct(productID).then((res) => {return (res)})
   res.send(response);    
 });
 
