@@ -89,19 +89,14 @@ exports.dbCreateTableUsers = async function() {
 
 //-----------------------GET PRODUCTS IF YESH----------------------//
 exports.dbGetProducts = async function () {
-  products = await pool.query("SELECT itemid,itemnumber,itemname,price,itemimgpath,stock FROM "+tableProducts+
-    " WHERE stock > 0 ORDER BY itemid ASC;");  
+  products = await pool.query("SELECT itemnumber,itemname,price,itemimgpath FROM " + tableProducts +
+    " WHERE stock > 0 ORDER BY itemnumber DESC;");  
   return products;
 };
 
 exports.dbGetProductsAll = async function () {
-  products = await pool.query("SELECT itemid,itemnumber,itemname,price,itemimgpath,stock FROM "+tableProducts+
-    " ORDER BY itemid ASC;");  
-  return products;
-};
-
-exports.dbGetPricesAll = async function () {
-  products = await pool.query("SELECT price FROM "+tableProducts+" ORDER BY itemid ASC;");  
+  products = await pool.query("SELECT itemnumber,itemname,price,itemimgpath FROM " + tableProducts +
+    " ORDER BY itemnumber DESC;");  
   return products;
 };
 
@@ -467,51 +462,6 @@ exports.dbInsertProduct = async function(newProduct){
     });
   console.log("Inserted Client: "+  messageReturn)
   return messageReturn;  
-};
-
-exports.dbEditProduct = async function(values){  
-  console.log("DB EDIT PRODUCT");
-  console.log(values); 
-  let productId = values[0];
-  let newName = values[1];
-  let newPrice = values[2];
-  let newStock = values[3];
-  let editProductRes;
-  editProductRes = await pool.query("UPDATE "+tableProducts+
-  " SET itemname = '"+newName+"' ,price = '"+ newPrice+"' ,stock = '"+ newStock+
-  "' WHERE itemid = "+productId+";")
-  .catch((err) => {
-    console.log(err)
-    return ("הייתה תקלה");
-  }).then((res) => {
-      console.log(res);
-      return ("למשתמש מספר "+productId);
-    });
-// console.log("clientID: "+clientId+" Column: "+field+" Value: "+value);
-console.log(editProductRes);
-return (editProductRes);
-}
-
-//--------------------DELETE PRODUCT BY ID----------------//
-exports.dbDeleteProduct = async function(productId){  
-  // let ifExist = await this.dbGetClientDetailsById(clientId);  
-  let newId;
-  let messageReturn;
-  // if(ifExist.length == 0){
-    // console.log("CLIENT DONT EXIST");
-    // return ("CLIENT NOT FOUND IN DATABASE");
-  // }else{
-    console.log("NAME DONT EXIST");    
-    messageReturn = await pool.query(`DELETE FROM ${tableProducts} WHERE itemid = '${productId}';`)
-      .then((rows) => {        
-        return (rows);
-      }).then((res) => {  
-        console.log(res);
-        return (res);
-      });
-  console.log(messageReturn)
-  // };
-  return ("REMOVED FROM DATABASE -- NO PROOF YET"+messageReturn);
 };
 
   //----------------------GET ITEMS BOUGHT IN CURRENT REPORT---------------------//

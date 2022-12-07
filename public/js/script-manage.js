@@ -412,6 +412,60 @@ async function getItemsBought(){
         };
 };
 
+async function getProducts(){
+    console.log("getProducts t");
+    xhttp.open("GET", "./getProducts/", true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            productList = JSON.parse(this.response);        
+            let selectBar = document.getElementById("selectProduct");
+            // while (selectBar.hasChildNodes()) {
+            //     selectBar.removeChild(selectBar.firstChild);
+            //   };
+              productList.forEach(table => {            
+                var opt = document.createElement("option");            
+                opt.value = table;
+                opt.innerHTML = table;
+                selectBar.appendChild(opt);            
+            });
+            return;
+            }
+        };
+};
+
+function insertProduct(){
+    let newItem = document.getElementById("insertProduct");
+    let newPrice = document.getElementById("insertPrice");
+    let newStock = document.getElementById("insertStock");
+    let newImg = document.getElementById("selectImg");
+    if(newItem.value==''|newPrice.value==''|newStock.value==''){return};
+    let newData = [newItem.value,newPrice.value,newImg.value,newStock.value];
+    newData = JSON.stringify(newData);
+    newItem.value = '';
+    newPrice.value = '';    
+    xhttp.open("POST", "./insertProduct/"+newData, true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            document.getElementById("productsLog").innerText = this.response;
+            return;
+            }        
+        };
+};
+
+function openInfotables(){
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            window.open("./infotables","_blank");
+            }        
+        };
+    xhttp.open("GET", "./infotables", false);
+    xhttp.send();
+}
+
 function showOrdersTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
@@ -657,3 +711,13 @@ function login(name){
 //   document.getElementById("console").append('<p>' + message + '</p>');
 // };
 // console.error = console.debug = console.info =  console.log;
+window.addEventListener('load', loadUtiliti, false );
+function loadUtiliti(){    
+    setTimeout(function () {        
+        getReportArchiveList();
+    }, 100);
+    setTimeout(function () {
+        getProducts();        
+    }, 400);
+
+};

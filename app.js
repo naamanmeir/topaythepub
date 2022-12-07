@@ -252,6 +252,25 @@ app.post('/getUserOrders/:data', async (req,res) => {
   res.send(dbData)
 });
 
+app.get('/getProducts/', async (req,res) => {  
+  let products = [];
+  let listFromDb;
+  listFromDb = await db.dbGetProductsAll();  
+  listFromDb.forEach(element => {    
+    products.push(JSON.parse(JSON.stringify(element.itemname)));
+  }); 
+  res.send(products);
+});
+
+app.post('/insertProduct/:data', async (req,res,next) => {
+  let newItem = JSON.parse(req.params.data);
+  console.log("APP: ADD NEW PRODUCTS: "+newItem);
+  var response;
+  response = await db.dbInsertProduct(newItem).then((res) => {return (res)})
+  res.send(response);    
+});
+
+
 app.get('/getListOfArchiveReport/', async (req,res) => {
   let archiveList = [];
   let listFromDb;
