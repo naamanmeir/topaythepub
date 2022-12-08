@@ -270,6 +270,27 @@ app.post('/insertProduct/:data', async (req,res,next) => {
   res.send(response);    
 });
 
+<<<<<<< HEAD
+=======
+app.post('/editProduct/:data', async (req,res) => {
+  let newData = (req.params.data);
+  let newArray = newData.split(',');
+  console.log("APP: EDIT PRODUCT"+newArray);
+  // let productID = newArray[0];
+  var response;
+  response = await db.dbEditProduct(newArray).then((res) => {return (res)})
+  res.send(response);    
+});
+
+app.post('/deleteProduct/:data', async (req,res,next) => {
+  let productID = JSON.parse(req.params.data);
+  console.log("APP: DELETE PRODUCT: "+productID);
+  var response;
+  response = await db.dbDeleteProduct(productID).then((res) => {return (res)})
+  res.send(response);    
+});
+
+>>>>>>> new ver working kinda
 
 app.get('/getListOfArchiveReport/', async (req,res) => {
   let archiveList = [];
@@ -307,10 +328,19 @@ function releaseLimit(){
 // ------------------------  CLIENT VIEW  ----------------------- //
 app.get('', async function (req, res) {
   let products = [];
+<<<<<<< HEAD
   products.push([strings.NAME_ITEM1,strings.PRICE_ITEM1]);
   products.push([strings.NAME_ITEM2,strings.PRICE_ITEM2]);
   products.push([strings.NAME_ITEM3,strings.PRICE_ITEM3]);
   products.push([strings.NAME_ITEM4,strings.PRICE_ITEM4]);
+=======
+  products = await db.dbGetProducts();  
+  // console.log(products);
+  const reject = () => {
+    res.setHeader("www-authenticate", "Basic", realm = "masof", uri = "/", charset = "UTF-8");
+    res.sendStatus(401);
+  };
+>>>>>>> new ver working kinda
 
     const reject = () => {
         res.setHeader("www-authenticate", "Basic",realm="masof",uri="/",charset="UTF-8");
@@ -339,6 +369,18 @@ app.get('', async function (req, res) {
         products: products,
         msg1 : strings.MSG_ORDER_VALIDATE
     })
+});
+
+// ------------------------  CLIENT GET PRODUCTS  ----------------------- //
+app.get('/clientGetProducts/', async (req,res) => {  
+  let products = [];
+  let listFromDb;
+  listFromDb = await db.dbGetProducts();  
+  listFromDb.forEach(item => {
+    let row = [item.itemname,item.price];    
+    products.push(JSON.parse(JSON.stringify(row)));
+  }); 
+  res.send(products);
 });
 
 // ------------------------  CLIENT GET PRODUCTS  ----------------------- //

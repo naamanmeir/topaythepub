@@ -420,6 +420,7 @@ async function getProducts(){
         if (this.readyState == 4 && this.status == 200) {
             productList = JSON.parse(this.response);        
             let selectBar = document.getElementById("selectProduct");
+<<<<<<< HEAD
             // while (selectBar.hasChildNodes()) {
             //     selectBar.removeChild(selectBar.firstChild);
             //   };
@@ -429,6 +430,53 @@ async function getProducts(){
                 opt.innerHTML = table;
                 selectBar.appendChild(opt);            
             });
+=======
+            while (selectBar.childElementCount > 1) {
+                selectBar.removeChild(selectBar.lastChild);
+              };
+              productList.forEach(table => {
+                var opt = document.createElement("option");
+                opt.value = table[1];
+                opt.innerHTML = table[1];
+                selectBar.appendChild(opt);
+            });            
+            return;
+            }
+        };
+};
+
+function editProductLoad(){
+    let itemSelect = document.getElementById("selectProduct");
+    let textName = document.getElementById("productName");
+    let textPrice = document.getElementById("productPrice");
+    let textStock = document.getElementById("productStock");
+    let i = itemSelect.selectedIndex-1;
+    // console.log(i);
+    console.log(products[i][1]);
+    console.log(products[i][4]);
+    productId = products[i][0];
+    productName = products[i][1];
+    textName.value = products[i][1];
+    textPrice.value = products[i][2];
+    textStock.value = products[i][4];
+};
+
+function editProduct(){
+    if(productId==null||productId==""){console.log("this is stupid");return};
+    let newName = document.getElementById("productName");
+    let newPrice = document.getElementById("productPrice");
+    let newStock = document.getElementById("productStock");
+    let data = [productId,newName.value,newPrice.value,newStock.value];
+    console.log(data);
+    if (window.confirm("לערוך נתונים של מוצר?")) {                
+        xhttp.open("POST", "./editProduct/"+data, true);
+        xhttp.send();
+        };
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            editLog(this.response);
+            getProducts();
+>>>>>>> new ver working kinda
             return;
             }
         };

@@ -773,8 +773,12 @@ video{
 /* @media only screen and (orientation:landscape) and (hover: none) and (pointer: coarse){
     .header{
         top: 0px;
+<<<<<<< HEAD
         padding-top: 0px;
         margin-top: 0px;
+=======
+        padding-top: 0px;        
+>>>>>>> new ver working kinda
         padding-bottom: 0px;
         margin-bottom: 0px;
     }
