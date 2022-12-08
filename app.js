@@ -275,7 +275,7 @@ app.post('/editProduct/:data', async (req,res) => {
   let newData = (req.params.data);
   let newArray = newData.split(',');
   console.log("APP: EDIT PRODUCT"+newArray);
-  let productID = newArray[0];  
+  // let productID = newArray[0];
   var response;
   response = await db.dbEditProduct(newArray).then((res) => {return (res)})
   res.send(response);    
@@ -326,8 +326,8 @@ function releaseLimit(){
 // ------------------------  CLIENT VIEW  ----------------------- //
 app.get('', async function (req, res) {
   let products = [];
-  products = await db.dbGetProducts();
-
+  products = await db.dbGetProducts();  
+  // console.log(products);
   const reject = () => {
     res.setHeader("www-authenticate", "Basic", realm = "masof", uri = "/", charset = "UTF-8");
     res.sendStatus(401);
@@ -357,23 +357,43 @@ app.get('', async function (req, res) {
   })
 });
 
+// ------------------------  CLIENT GET PRODUCTS  ----------------------- //
+app.get('/clientGetProducts/', async (req,res) => {  
+  let products = [];
+  let listFromDb;
+  listFromDb = await db.dbGetProducts();  
+  listFromDb.forEach(item => {
+    let row = [item.itemname,item.price];    
+    products.push(JSON.parse(JSON.stringify(row)));
+  }); 
+  res.send(products);
+});
+
 // PLACE ORDER BY ID
-app.get('/order/:data', async function(req,res,next) {    
+app.get('/order/:data', async function(req,res) {    
     console.log("ORDER: ");
     console.log(now);
     // console.log(req.params.data);
-    const orderData = req.params.data.split(',');
-    var id = (orderData[0]);
-    var item1 = (orderData[1]);
-    var item2 = (orderData[2]);
-    var item3 = (orderData[3]);
-    var item4 = (orderData[4]);
-    if(item1<0||item2<0||item3<0||item4<0){return "cmon ERROR"};
+    const orderData = (req.params.data).split(',');
+    // console.log(orderData);
+    let clientId = orderData[orderData.length-1];
+    let totalPrice = orderData[orderData.length-2];
+    // console.log(clientId);
+    // console.log(totalPrice);
+    let orderInfo;
+    for(let i = 0;i<orderData.length-2;i = i+2){
+      if(orderInfo == null||orderInfo == ""){
+        orderInfo = (orderData[i]+"-"+orderData[i+1]+".");  
+      } else {
+        orderInfo += (orderData[i]+"-"+orderData[i+1]+".");
+      }
+    }
+    console.log("order info: "+orderInfo);
     var orderDate = now;
     var orderTime = now;
-    console.log("date: "+orderDate+" time: "+orderTime+" id: "+id+" ,item1: "+item1+" ,item2:"+item2+" ,item3: "+item3+" ,item4: "+item4);
+    // console.log("date: "+orderDate+" time: "+orderTime+" id: "+id+" ,item1: "+item1+" ,item2:"+item2+" ,item3: "+item3+" ,item4: "+item4);
     let orderResult;    
-    orderResult = await db.dbInsertOrderToOrders(orderTime,id,item1,item2,item3,item4).then((orderResult) => {return (orderResult)});    
+    orderResult = await db.dbInsertOrderToOrders(orderTime,clientId,orderInfo,totalPrice).then((orderResult) => {return (orderResult)});
     res.send(orderResult);
 });
 
@@ -484,3 +504,5 @@ app.get('/resetClientsDataAfterRead/', async function(req,res){
 });
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));
+
+

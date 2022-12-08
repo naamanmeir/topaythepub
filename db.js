@@ -89,14 +89,19 @@ exports.dbCreateTableUsers = async function() {
 
 //-----------------------GET PRODUCTS IF YESH----------------------//
 exports.dbGetProducts = async function () {
-  products = await pool.query("SELECT itemid,itemnumber,itemname,price,itemimgpath,stock FROM " + tableProducts +
-    " WHERE stock > 0 ORDER BY itemnumber DESC;");  
+  products = await pool.query("SELECT itemid,itemnumber,itemname,price,itemimgpath,stock FROM "+tableProducts+
+    " WHERE stock > 0 ORDER BY itemid ASC;");  
   return products;
 };
 
 exports.dbGetProductsAll = async function () {
-  products = await pool.query("SELECT itemid,itemnumber,itemname,price,itemimgpath,stock FROM " + tableProducts +
-    " ORDER BY itemnumber DESC;");  
+  products = await pool.query("SELECT itemid,itemnumber,itemname,price,itemimgpath,stock FROM "+tableProducts+
+    " ORDER BY itemid ASC;");  
+  return products;
+};
+
+exports.dbGetPricesAll = async function () {
+  products = await pool.query("SELECT price FROM "+tableProducts+" ORDER BY itemid ASC;");  
   return products;
 };
 
@@ -237,16 +242,19 @@ exports.dbDeleteClient = async function(clientId){
 };
 
 //--------------------INSERT ORDER TO ORDERS TABLE----------------//
-exports.dbInsertOrderToOrders = async function(orderTime,clientid,item1,item2,item3,item4){
-  var sum = item1*10+item2*10+item3*8+item4*10;  
+exports.dbInsertOrderToOrders = async function(orderTime,clientId,orderInfo,totalPrice){
+  let prices;
+  // prices = await this.dbGetPricesAll().then((response) => {return (response)});
+  // var sum = item1*prices[0]+item2*prices[1]+item3*prices[2]+item4*prices[3];  
   let clientName;
   let insertReturn;
   let insertClientData;
-  clientName = await this.dbGetClientNameById(clientid);
+  clientName = await this.dbGetClientNameById(clientId);
   clientName[0].name = clientName[0].name.replace(/\'/g, "''");
+  // console.log(orderInfo);
   insertReturn = await pool.query("INSERT INTO "+tableOrders+
-   " (item1,item2,item3,item4,sum,clientid,client)"+ 
-   " VALUES ("+item1+","+item2+","+item3+","+item4+","+sum+","+clientid+",'"+clientName[0].name+"');")
+   " (info,sum,clientid,client)"+ 
+   " VALUES ('"+orderInfo+"',"+totalPrice+","+clientId+",'"+clientName[0].name+"');")
     .then((rows) => {
       // console.log(rows);
       return (rows)
@@ -254,7 +262,7 @@ exports.dbInsertOrderToOrders = async function(orderTime,clientid,item1,item2,it
     .catch(err =>{
       console.log("CONNECTION Error: " + err)
     })
-  insertClientData = await this.dbInsertOrderToClient(orderTime,clientid,item1,item2,item3,item4);
+  insertClientData = await this.dbInsertOrderToClient(orderTime,clientId,totalPrice);
   insertReturn = insertReturn.insertId.toString();
   clientName = clientName[0].name.toString()
   let returnString = (`רישום מספר ${insertReturn}, נרשם בהצלחה, על חשבון, ${clientName} `)  
@@ -262,16 +270,11 @@ exports.dbInsertOrderToOrders = async function(orderTime,clientid,item1,item2,it
 };
 
 //--------------------INSERT ORDER TO CLIENT TABLE----------------//
-exports.dbInsertOrderToClient = async function(orderTime,id,item1,item2,item3,item4){  
-  var sum = item1*10+item2*10+item3*8+item4*10;  
+exports.dbInsertOrderToClient = async function(orderTime,clientId,totalPrice){  
   let orderResult;
   orderResult = await pool.query(`UPDATE ${tableClients} SET last_action = (NOW()),
-   item1 = item1+${item1},
-   item2 = item2+${item2},
-   item3 = item3+${item3},
-   item4 = item4+${item4},
-   sum = sum+${sum}
-   WHERE id = ${id};`)
+   sum = sum+${totalPrice}
+   WHERE id = ${clientId};`)
    .then((rows) => {
     // console.log(rows);
     return (rows)
@@ -302,8 +305,7 @@ exports.dbGetClientDetailsById = function(clientId) {
 
 //-----------------------GET ALL CLIENT DETAILS BY ID----------------------//
 exports.dbGetClientInfoById = function(id) {
-  return pool.query("SELECT client,"+
-  "sum,item2,item1,"+
+  return pool.query("SELECT sum,info,"+  
   "DATE_FORMAT(`time`, '%Y-%m-%d %H:%i') AS `formatted_date`,orderid FROM "+
   tableOrders+
   " WHERE clientid LIKE "+id+
@@ -355,22 +357,22 @@ exports.dbGetNameBySearch = function(query) {
   " ORDER BY last_action DESC;");
 };
 
-//-----------------------GET ACCOUNT INFO BY SCOPE----------------------//
+//-----------------------GET INFO BY SCOPE----------------------//
 exports.dbGetDataByScope = async function(scope) {
   if (scope==1){//SCOPE ORDERS
     data = await pool.query("SELECT orderid,DATE_FORMAT(`time`, '%Y-%m-%d %H:%i') AS `formatted_date`"+
-    ",item1,item2,item3,item4,sum,clientid,client FROM "+tableOrders+
+    ",info,sum,clientid,client FROM "+tableOrders+
     " ORDER BY orderid DESC;");
   };
   if (scope==2){//SCOPE CLIENTS ALL
     data = await pool.query("SELECT id,DATE_FORMAT(`last_action`, '%Y-%m-%d %H:%i') AS `formatted_date`"+
-    ",item1,item2,item3,item4,sum,account,name,nick FROM "+tableClients+
+    ",sum,account,name,nick FROM "+tableClients+
     " WHERE account > 50"+
     " ORDER BY name;");    
   };
   if (scope==3){//SCOPE CLIENTS REAL
     data = await pool.query("SELECT id,DATE_FORMAT(`last_action`, '%Y-%m-%d %H:%i') AS `formatted_date`"+
-    ",item1,item2,item3,item4,sum,account,name,nick FROM "+tableClients+    
+    ",sum,account,name,nick FROM "+tableClients+    
     " ORDER BY name;");    
   };
   if (scope==4){//SCOPE REPORT
@@ -397,7 +399,7 @@ exports.dbGetDataFromArchiveByDate = async function(archiveTableName) {
 //-----------------------GET ACCOUNT ORDERS BY ID----------------------//
 exports.dbGetClientOrdersById = async function(clientId) {
   data = await pool.query("SELECT orderid,DATE_FORMAT(`time`, '%Y-%m-%d %H:%i') AS `formatted_date`"+
-  ",item1,item2,item3,item4,sum,client FROM "+tableOrders+
+  ",info,sum,client FROM "+tableOrders+
   " WHERE clientid = "+clientId+
   " ORDER BY orderid DESC;");
   // console.log(await data);
@@ -442,7 +444,7 @@ for(i=0;i<tableBackups.length-1;i++){
 //-----------------------RESET CLIENTS ORDERS AFTER REPORT-----------------------//
 exports.dbResetClientOrders = async function() {
   let resetClientOrders;
-  resetClientOrders = await pool.query("UPDATE "+tableClients+" SET item1=0,item2=0,item3=0,item4=0,sum=0;");
+  resetClientOrders = await pool.query("UPDATE "+tableClients+" SET sum=0;");
   console.log(resetClientOrders);
   };
 
@@ -475,9 +477,11 @@ exports.dbEditProduct = async function(values){
   let productId = values[0];
   let newName = values[1];
   let newPrice = values[2];
+  let newStock = values[3];
   let editProductRes;
   editProductRes = await pool.query("UPDATE "+tableProducts+
-  " SET itemname = '"+newName+"' ,price = '"+ newPrice+"' WHERE itemid = "+productId+";")
+  " SET itemname = '"+newName+"' ,price = '"+ newPrice+"' ,stock = '"+ newStock+
+  "' WHERE itemid = "+productId+";")
   .catch((err) => {
     console.log(err)
     return ("הייתה תקלה");

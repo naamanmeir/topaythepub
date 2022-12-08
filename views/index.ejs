@@ -38,21 +38,21 @@
 
         <div class="messageBox column" id="messageBox"></div>
 
-        <div class="items">
-            <% products.forEach(function(row) {var id = row.itemnumber;var name = row.itemname;var price = row.price;var img = row.itemimgpath;%>
-                <div class="item" id="<%=id%>Div" onpointerup="add(<%=id%>)">
-                    <p><%=name%></p>
+        <div class="items" id="itemsDiv">
+            <% products.forEach((product,index) => {var id = product.itemid;var name = product.itemname;var price = product.price;var img = product.itemimgpath;%>
+                <div class="item" id="div<%=index%>" onpointerup="addItem(<%=index%>)">
+                    <p class="itemName" id="name<%=index%>"><%=name%></p>
                     <img src="<%=img%>">
-                    <p class="p2" id="<%=id%>price"><%=price%> ₪</p>
-                    <count class="counts" id="count<%=id%>"></count>
+                    <p class="itemPrice p2" id="price<%=index%>"><%=price%> ₪</p>
+                    <count class="counts" id="count<%=index%>"></count>
                   </div>
               <% }); %>
         </div>        
 
         <div class="buttons" id="buttons">
-            <!-- <div class="errorMessage" id="errorMessage"></div> -->
-            <button id="cancel" onclick="add(101)"> בטל</button>
-            <button id="placeOrder" onclick="add(100)">בצע רישום</button>
+            <div class="errorMessage" id="errorMessage"></div>
+            <button id="cancel" onclick="orderButtons(2)"> בטל</button>
+            <button id="placeOrder" onclick="orderButtons(1)">בצע רישום</button>
         </div>        
 
     </div>    
@@ -63,12 +63,9 @@
 
     <!-- <%- include('./partials/footer'); %> -->
 
-    <script src="js/script.js"></script>
-    <script src="js/bgFuncs.js"></script>
-
     <!-- <div class="backgroundTest"></div> -->
 
-    <div class="hidden" id="backgroundPanel1">
+    <div class="background1" id="backgroundPanel1">
     <span></span>
     <span></span>
     <span></span>
@@ -121,29 +118,34 @@
     <span></span>
      </div>
 
-    <ul class="background3" id="backgroundPanel2">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-     </ul>
+    <div class="background3">
+        <ul class="hidden" id="backgroundPanel2">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+
+     <script src="js/script.js"></script>
+     <script src="js/bgFuncs.js"></script>
     
 </body>
 </html>

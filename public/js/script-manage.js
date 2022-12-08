@@ -375,8 +375,8 @@ function deleteClient(){
 async function getAllData(scope){
     console.log("GET ALL DATA FUNC: ");
     let itemsBought;
-    itemsBought = await this.getItemsBought().then((buys) => {return (buys)});   
-    console.log(itemsBought);
+    // itemsBought = await this.getItemsBought().then((buys) => {return (buys)});   
+    // console.log(itemsBought);
     xhttp.open("POST", "./getAllData/"+scope, true);
     xhttp.send();
     xhttp.onreadystatechange = async function() {
@@ -437,22 +437,25 @@ async function getProducts(){
 function editProductLoad(){
     let itemSelect = document.getElementById("selectProduct");
     let textName = document.getElementById("productName");
-    let textPrice = document.getElementById("productPrice");    
+    let textPrice = document.getElementById("productPrice");
+    let textStock = document.getElementById("productStock");
     let i = itemSelect.selectedIndex-1;
     // console.log(i);
     console.log(products[i][1]);
-    console.log(products[i][2]);
+    console.log(products[i][4]);
     productId = products[i][0];
     productName = products[i][1];
     textName.value = products[i][1];
     textPrice.value = products[i][2];
+    textStock.value = products[i][4];
 };
 
 function editProduct(){
     if(productId==null||productId==""){console.log("this is stupid");return};
     let newName = document.getElementById("productName");
     let newPrice = document.getElementById("productPrice");
-    let data = [productId,newName.value,newPrice.value];
+    let newStock = document.getElementById("productStock");
+    let data = [productId,newName.value,newPrice.value,newStock.value];
     console.log(data);
     if (window.confirm("לערוך נתונים של מוצר?")) {                
         xhttp.open("POST", "./editProduct/"+data, true);
@@ -524,7 +527,7 @@ function showOrdersTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>תג עסקה</th><th>נרשם בתאריך</th><th>מוצר1</th><th>מוצר2</th><th>מוצר3</th><th>מוצר4</th><th>סך הכל</th><th>תג משתמש</th><th>שם רשום</th>");
+    TR.innerHTML = ("<th>תג עסקה</th><th>נרשם בתאריך</th><th>פרטים</th><th>סך הכל</th><th>תג משתמש</th><th>שם רשום</th>");
     tableBody.appendChild(TR);
     for(let i = 0;i < data.length; i++){
         const row = document.createElement("tr");
@@ -554,7 +557,7 @@ function showClientsTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>תג משתמש</th><th>נרשם בתאריך</th><th>מוצר1</th><th>מוצר2</th><th>מוצר3</th><th>מוצר4</th><th>סך הכל</th><th>מספר חשבון</th><th>שם רשום</th><th>כינוי</th>");
+    TR.innerHTML = ("<th>תג משתמש</th><th>נרשם בתאריך</th><th>סכום בחשבון</th><th>מספר חשבון</th><th>שם רשום</th><th>כינוי</th>");
     tableBody.appendChild(TR);
     for(let i = 0;i < data.length; i++){
         const row = document.createElement("tr");

@@ -9,6 +9,16 @@ var item1 = 0;
 var item2 = 0;
 var item3 = 0;
 var item4 = 0;
+let itemName1;
+let itemName2;
+let itemName3;
+let itemName4;
+let itemPrice1;
+let itemPrice2;
+let itemPrice3;
+let itemPrice4;
+let products = [];
+let orderArray = [];
 var clientId = 999;
 var clientName;
 var clientNick;
@@ -29,6 +39,29 @@ function loadUtiliti(){
     setTimeout(function () {        
         viewport.setAttribute("content","width="+window.innerWidth+", height=" + window.innerHeight+", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
     }, 100);
+    setTimeout(getProducts(), 300);
+    setTimeout(replaceItems(), 900);
+
+};
+
+function getProducts(){
+    xhttp.open("GET", "./clientGetProducts/", true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            products = JSON.parse(this.response);
+            console.log(products);
+            if(products[0])itemName1 = products[0][0];
+            if(products[0])itemPrice1 = products[0][1];
+            if(products[1])itemName2 = products[1][0];
+            if(products[1])itemPrice2 = products[1][1];
+            if(products[2])itemName3 = products[2][0];
+            if(products[2])itemPrice3 = products[2][1];
+            if(products[3])itemName4 = products[3][0];
+            if(products[3])itemPrice4 = products[3][1];
+            return;
+            }
+        };
 };
 
 function generateRandomColor(){
@@ -96,7 +129,24 @@ searchBox1.addEventListener('input',function(){
     // if(searchBox1.value.length>0){searchBox1.placeholder=("");};
     searchBox(searchBox1.value);    
 });
+//---------------------UI-----------------------------
 
+function replaceItems(){
+    var divs = document.getElementsByClassName('item');
+    // console.log(divs);
+    for ( var i=0; i < divs.length; i++ ) {
+        var thisDiv = divs[i];
+        randomTop = getRandomNumber(0, 22);
+        randomLeft = getRandomNumber(0, 22);
+        thisDiv.style.top = randomTop +"px";
+        thisDiv.style.left = randomLeft +"px";
+    }
+    function getRandomNumber(min, max) {        
+    return Math.random() * (max - min) + min;        
+    }
+}
+
+//-------------NOT--------------UI--------------
 function afterOrderAnimation(){
     const holder = document.createElement('img');
     let rnd1 = Math.floor(Math.random() * (20 - 1) + 1);
@@ -151,9 +201,9 @@ function cancelOrder(message){
     userLogout();
 };
 
-function orderConfirm(orderPack,abort){
+function orderConfirm(orderArray2,abort){
     userAutoLogout(60000); // LOGOUT AFTER ONE MINUTE
-    console.log("orderConfirm");
+    console.log("orderConfirm");    
     const message = document.getElementById("messageBox");    
     if(abort){message.innerHTML=("");message.classList.remove("messageBoxOn");return};
     let buttonYes = document.createElement("button");
@@ -173,36 +223,54 @@ function orderConfirm(orderPack,abort){
     buttonNo.classList.add("confirmButtonsNo");
     buttonYes.textContent = 'אשר רישום';
     buttonNo.textContent = 'בטל רישום';
-    let i1 = orderPack[0][1];
-    let i2 = orderPack[0][2];
-    let i3 = orderPack[0][3];
-    let i4 = orderPack[0][4];
-    let price = (i1*itemPrice1)+(i2*itemPrice2)+(i3*itemPrice3)+(i4*itemPrice4);
+    // console.log(orderArray2);
+
+    // if (orderArray) let i1 = orderArray2[0][1];
+    // let i2 = orderArray2[0][2];
+    // let i3 = orderArray2[0][3];
+    // let i4 = orderArray2[0][4];
+    // let price = (i1*itemPrice1)+(i2*itemPrice2)+(i3*itemPrice3);
+
     message.innerHTML = ("<p2>   היי </p2>");
     message.innerHTML += ("<br>");
     message.innerHTML += ("<p5>"+clientName+"</p5>");
-    message.innerHTML += ("<br>");    
+    message.innerHTML += ("<br>");
     message.innerHTML += ("<p1> ההזמנה מכילה :</p1>");
-    message.innerHTML += ("<br>");    
-    if(i1!=0){message.innerHTML += ("<p2>"+itemName1+": </p2><p3>"+i1+"</p3><p2>  בשווי: </p2><p3>"+i1*itemPrice1+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
-    if(i2!=0){message.innerHTML += ("<p2>"+itemName2+": </p2><p3>"+i2+"</p3><p2>  בשווי: </p2><p3>"+i2*itemPrice2+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
-    if(i3!=0){message.innerHTML += ("<p2>"+itemName3+": </p2><p3>"+i3+"</p3><p2>  בשווי: </p2><p3>"+i3*itemPrice3+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
-    if(i4!=0){message.innerHTML += ("<p2>"+itemName4+": </p2><p3>"+i4+"</p3><p2>  בשווי: </p2><p3>"+i4*itemPrice4+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
-    if(price!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+price+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
+    let finalPrice = 0;
+    let orderComplete = [];
+    for (let i = 0;i<orderArray2.length;i++){
+        if(orderArray2[i]){
+            let itemCount = orderArray2[i][0];
+            let itemName = orderArray2[i][1];
+            let itemPrice = orderArray2[i][2];
+            let totalPrice = (itemCount * itemPrice);
+            // console.log(itemCount,itemName,itemPrice,totalPrice)
+            finalPrice += totalPrice;
+            message.innerHTML += ("<p2>"+itemName+": </p2><p3>"+itemCount+"</p3><p2>  בשווי: </p2><p3>"+totalPrice+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");
+            let orderRow = [itemCount,itemName];
+            orderComplete.push([orderRow])
+        }
+    };
     message.innerHTML += ("<br>");
-    message.innerHTML += ("<p1>האם לרשום גביה של "+price+" שקלים? </p1>");message.innerHTML += ("<br>");message.innerHTML += ("<br>");
+    if(finalPrice!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+finalPrice+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
+    message.innerHTML += ("<br>");
+    message.innerHTML += ("<p1>האם לרשום גביה של "+finalPrice+" שקלים? </p1>");message.innerHTML += ("<br>");message.innerHTML += ("<br>");
     message.appendChild(buttonYes);
     message.appendChild(buttonNo);
+    // let orderComplete = [orderArray2,finalPrice];
+    orderComplete.push([finalPrice]);
+    orderComplete.push([clientId]);
+    console.log(orderComplete);
     buttonYes.addEventListener("click",function(){
         vibrate(75);
-        placeOrder(orderPack);
+        placeOrder(orderComplete);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
     });
     buttonYes.addEventListener("touchend",function(){
         vibrate(75);
-        placeOrder(orderPack);
+        placeOrder(orderComplete);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
     });
@@ -223,33 +291,76 @@ function orderConfirm(orderPack,abort){
     message.classList.add("messageBoxOn");   
 };
 
+function addItem(item){
+    if(sideMenu){return};    
+    // console.log(orderArray)
+    const counts = document.getElementsByClassName("counts");
+    if(counts[item].innerText == "" ||counts[item].innerText == null ){
+        counts[item].innerText = 1;    
+    }else{
+        let current = counts[item].innerText;
+        if(current<99)counts[item].innerText = (parseInt(current)+1);
+    }
+    let itemsBought = parseInt(counts[item].innerText);
+    orderArray[item] = [itemsBought,products[item][0],products[item][1]];
+    // console.log(itemsBought);
+    // console.log(orderArray);
+}
+
+function orderButtons(btn){
+    if(btn==2){ // CANCEL ITEMS AND CLEAR ARRAY
+        const counts = document.getElementsByClassName("counts");
+        vibrate(75);
+        item1 = 0;
+        item2 = 0;
+        item3 = 0;
+        item4 = 0;
+        if(counts[0])counts[0].innerText = "";
+        if(counts[1])counts[1].innerText = "";
+        if(counts[2])counts[2].innerText = "";
+        if(counts[3])counts[3].innerText = "";
+        orderArray = [];
+        // userLogout();
+        return;
+    }
+    if(btn==1){ // PLACE ORDER IF ENOUGHT DATA
+        vibrate(200);
+        if(clientNick==null){
+            errorMessage(1);
+            return;
+        }
+        if(orderArray==""||orderArray==null){
+            vibrate(200);
+            errorMessage(2);
+            return;
+        }
+        orderConfirm(orderArray,false);
+    }
+}
+
 function add(item){
     if(sideMenu){return};
-    // searchBox1.focus();
-    const count1 = document.getElementById("count1");
-    const count2 = document.getElementById("count2");
-    // const count3 = document.getElementById("count3");
-    // const count4 = document.getElementById("count4");
+    const counts = document.getElementsByClassName("counts");    
     const buttonsDiv = document.getElementById("buttons");
-    if(item==1){if(item1==99){return};
+    if(item==0){if(item1==99){return};
             vibrate(45);
             item1 = item1+1;
-            count1.innerText = item1;
+            counts[0].innerText = item1;
         }
-    if(item==2){if(item2==99){return};
+    if(item==1){if(item2==99){return};
             vibrate(55);
             item2 = item2+1;
-            count2.innerText = item2;
+            counts[1].innerText = item2;
         }
-    if(item==3){if(item3==99){return};
+    if(item==2){if(item3==99){return};
             vibrate(65);
             item3 = item3+1;
-            count3.innerText = item3;            
+            counts[2].innerText = item3;            
         }
-    if(item==4){if(item4==99){return};
+    if(item==3){if(item4==99){return};
             vibrate(75);
             item4 = item4+1;
-            count4.innerText = item4;
+            counts[3].innerText = item4;
         }
     if(item==101){
         vibrate(75);
@@ -257,10 +368,11 @@ function add(item){
         item2 = 0;
         item3 = 0;
         item4 = 0;
-        count1.innerText = "";
-        count2.innerText = "";
-        // count3.innerText = "";
-        // count4.innerText = "";
+        if(counts[0])counts[0].innerText = "";
+        if(counts[1])counts[1].innerText = "";
+        if(counts[2])counts[2].innerText = "";
+        if(counts[3])counts[3].innerText = "";
+        orderArray = [];
         // userLogout();
         return;
     }
@@ -637,7 +749,7 @@ async function userInfo(uData){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>שם</th><th>סכום</th><th>"+itemName1+"</th><th>"+itemName2+"</th><th>תאריך ושעה</th><th>מס.</th>");    
+    TR.innerHTML = ("<th>סכום</th><th>פרטים</th><th>תאריך ושעה</th><th>מס.</th>");    
     TR.setAttribute("style", "background-color:lightblue;")
     tableBody.appendChild(TR);
     for(let i = 0;i < uData.length; i++){

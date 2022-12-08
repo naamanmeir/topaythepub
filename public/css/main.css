@@ -4,6 +4,9 @@ body {
     width: 98%;
     height: -webkit-fill-available;
     margin: auto;
+    top: 0px;
+    margin-top: 0px;
+    padding-top: 0px;
 }
 html,
 body,
@@ -57,12 +60,8 @@ video{
         padding-top: 0px;
     }
     .body{
-        height: 98%;
+        height: 100%;
         width: 98%;
-        top: 0px;
-        margin-top: 0px;
-        padding-top: 0px;
-        background-color: #0ee223;
     }
     .content {
         height: 100%;
@@ -167,7 +166,7 @@ video{
 ::placeholder {
     color: rgb(245, 191, 90);    
     opacity: 1;
-  }
+}
 .searchBoxLogged{
     /* font-size: 1.3em; */
     border-color: green;
@@ -420,29 +419,36 @@ video{
     flex: 1;
 }
 .items{
+    height: 100%;
+    width: 100%;
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     flex: 1;
-    flex-wrap: wrap;
-    flex-shrink: 1;
-    /* justify-content:space-between; */
-    margin: auto;
+    justify-content: center;
+    /* margin: auto;     */
+    position: relative;
     transition: background-color 0.8s ease; 
 }
-.item{
-    /* z-index: 1; */
-    /* flex: 1; */
-    /* flex-shrink: 1; */
-    height: fit-content;
-    width: fit-content;
-    flex-basis: 45.333333%;
+.item{    
+    flex: 1;
+    flex-shrink: 1;
+    max-height: fit-content;
+    width: 2%;
+    max-width: fit-content;
+    flex-basis: 20%;
     background-color: #61584b81;
     border: 4px outset rgb(240, 152, 0);
-    position: relative;    
+    position: relative;
     margin: auto;
-    margin-bottom: 2%;
+    margin-left: 12%;
+    margin-right: 12%;
+    margin-top: 2%;
+    padding: 0px;
     text-align: center;    
     transition: background-color 0.5s ease;
+    border-radius: 5%;
+    /* transition: all 1s ease; */
 }
 .item img{
     user-select: none;
@@ -459,8 +465,8 @@ video{
 .item p{
     padding: 0.2rem;
     margin: 0px;
-    font-size: 1.25rem;
-    /* text-shadow: 1px 1px 0px #fec46d; */
+    font-size: 1.45rem;
+    text-shadow: 1px 1px 1px #fec46d;
     background-color: rgb(205, 132, 5);
     user-select: none;
     pointer-events: none;
@@ -497,7 +503,7 @@ video{
 .break {
     flex-basis: 100%;
     height: 0;
-  }
+}
 .buttons{    
     display: flex;
     flex: 1;
@@ -764,11 +770,10 @@ video{
     margin: 0px;
     line-height: 100%;
 }
-@media only screen and (orientation:landscape) and (hover: none) and (pointer: coarse){
+/* @media only screen and (orientation:landscape) and (hover: none) and (pointer: coarse){
     .header{
         top: 0px;
-        padding-top: 0px;
-        /* margin-top: 0px; */
+        padding-top: 0px;        
         padding-bottom: 0px;
         margin-bottom: 0px;
     }
@@ -847,7 +852,7 @@ video{
     .finaleMessageBox{        
         top:10%;
     }
-}
+} */
 .imgFill{
     width: 100%;
     height: 100%;    
@@ -1329,30 +1334,27 @@ video{
 @keyframes animate2 {
     0%{
         transform: translateY(0) rotate(0deg);
-        opacity: 0;
+        /* opacity: 1;
         border-radius: 5%;
-        filter: hue-rotate(0deg) saturate(1) blur(0);
+        filter: hue-rotate(0deg) saturate(1) blur(0); */
     }
     1%{
         transform: translateY(-10px) rotate(5deg);
-        opacity: 1;
+        /* opacity: 1;
         border-radius: 5%;
-        filter: hue-rotate(1deg) saturate(1);
-    }
-    70%{
-        filter: hue-rotate(40deg) saturate(1);
+        filter: hue-rotate(1deg) saturate(1); */
     }
     98%{
         transform: translateY(-1100px) rotate(700deg);
-        filter: hue-rotate(90deg) saturate(48);
-        opacity: 0.4;
-        border-radius: 30%;
+        /* filter: hue-rotate(90deg) saturate(48);
+        opacity: 1;
+        border-radius: 30%; */
     }
     100%{
         transform: translateY(-1200px) rotate(720deg);
-        filter: hue-rotate(180deg) saturate(98);
-        opacity: 0;
-        border-radius: 15%;
+        /* filter: hue-rotate(180deg) saturate(98);
+        opacity: 1;
+        border-radius: 15%; */
     }
 }
 .background2 {
