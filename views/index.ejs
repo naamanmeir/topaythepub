@@ -18,6 +18,7 @@
         <a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)">רקע עיגולים</a>
         <a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)">רקע ריבועים</a>
         <a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)">רקע טבעות</a>
+        <a href="#" onclick="bgSelect(0)" onclick="clearTimeout(window.tcm)">רקע שחור</a>
         <a href="#" class="hidden" id="user_info" onclick="getUserInfoById()">משתמש</a>
         <!-- <a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a> -->
       </div>
@@ -38,38 +39,24 @@
 
         <div class="messageBox column" id="messageBox"></div>
 
-        <div class="items" id="items">
-            <div class="item" onpointerup="add(1)">
-                <p><%=products[0][0]%></p>
-                <img src="img/items/fridge01.png">
-                <count id="count1"></count>
-            </div>
-            <div class="item" onpointerup="add(2)">
-                <p><%=products[1][0]%></p>
-                <img src="img/items/soup02.png">
-                <count id="count2"></count>
-            </div>
-            <!-- <div class="item" onpointerup="add(3)">
-                <p><%=products[2][0]%></p>
-                <img src="img/items/bar02.png">
-                <count id="count3"></count>
-            </div>
-            <div class="item" onpointerup="add(4)">
-                <p><%=products[3][0]%></p>
-                <img src="img/items/piza01.png">
-                <count id="count4"></count>
-            </div> -->
-
-            <!-- <div class="break"></div> break -->
-
-            <div class="buttons" id="buttons">
-                <div class="errorMessage" id="errorMessage"></div>
-                <button id="cancel" onclick="add(101)"> בטל</button>
-                <button id="placeOrder" onclick="add(100)">בצע רישום</button>
-            </div>
+        <div class="items" id="itemsDiv">
+            <% products.forEach((product,index) => {var id = product.itemid;var name = product.itemname;var price = product.price;var img = product.itemimgpath;%>
+                <div class="item" id="div<%=index%>" onpointerup="addItem(<%=index%>)">
+                    <p class="itemName" id="name<%=index%>"><%=name%></p>
+                    <img src="<%=img%>">
+                    <p class="itemPrice p2" id="price<%=index%>"><%=price%> ₪</p>
+                    <count class="counts" id="count<%=index%>"></count>
+                  </div>
+              <% }); %>
         </div>        
 
-    </div>
+        <div class="buttons" id="buttons">
+            <div class="errorMessage" id="errorMessage"></div>
+            <button id="cancel" onclick="orderButtons(2)"> בטל</button>
+            <button id="placeOrder" onclick="orderButtons(1)">בצע רישום</button>
+        </div>        
+
+    </div>    
 
     <div class="backgroundCanvas">
         <canvas class="canvas" id="canvas"></canvas>
@@ -77,24 +64,9 @@
 
     <!-- <%- include('./partials/footer'); %> -->
 
-    <script>
-        const itemName1 = "<%=products[0][0]%>";
-        const itemName2 = "<%=products[1][0]%>";
-        const itemName3 = "<%=products[2][0]%>";
-        const itemName4 = "<%=products[3][0]%>";
-        const itemPrice1 = "<%=products[0][1]%>";
-        const itemPrice2 = "<%=products[1][1]%>";
-        const itemPrice3 = "<%=products[2][1]%>";
-        const itemPrice4 = "<%=products[3][1]%>";
-        const products = "<%=products%>";
-     </script>
-
-    <script src="js/script.js"></script>
-    <script src="js/bgFuncs.js"></script>
-
     <!-- <div class="backgroundTest"></div> -->
 
-    <div class="hidden" id="backgroundPanel1">
+    <div class="background1" id="backgroundPanel1">
     <span></span>
     <span></span>
     <span></span>
@@ -147,7 +119,7 @@
     <span></span>
      </div>
 
-    <ul class="background3" id="backgroundPanel2">
+    <ul class="hidden" id="backgroundPanel2">
         <li></li>
         <li></li>
         <li></li>
@@ -169,7 +141,12 @@
         <li></li>
         <li></li>
         <li></li>
-     </ul>
+    </ul>
+
+    <div class="hidden" id="backgroundPanel0"></div>
+
+     <script src="js/script.js"></script>
+     <script src="js/bgFuncs.js"></script>
     
 </body>
 </html>

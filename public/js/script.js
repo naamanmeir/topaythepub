@@ -9,6 +9,16 @@ var item1 = 0;
 var item2 = 0;
 var item3 = 0;
 var item4 = 0;
+let itemName1;
+let itemName2;
+let itemName3;
+let itemName4;
+let itemPrice1;
+let itemPrice2;
+let itemPrice3;
+let itemPrice4;
+let products = [];
+let orderArray = [];
 var clientId = 999;
 var clientName;
 var clientNick;
@@ -17,93 +27,133 @@ var sideMenu = false;
 
 var fs = false;
 
-const windowWidth = window.innerWidth+"px";
-const windowHeight = window.innerHeight+"px";
+const windowWidth = window.innerWidth + "px";
+const windowHeight = window.innerHeight + "px";
 var viewport = document.querySelector("meta[name=viewport]");
 var limit = 0;
 
-window.addEventListener('load', loadUtiliti, false );
+window.addEventListener('load', loadUtiliti, false);
 // window.addEventListener("resize", windowSizeChanged);
 
-function loadUtiliti(){    
-    setTimeout(function () {        
-        viewport.setAttribute("content","width="+window.innerWidth+", height=" + window.innerHeight+", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+function loadUtiliti() {
+    setTimeout(function () {
+        viewport.setAttribute("content", "width=" + window.innerWidth + ", height=" + window.innerHeight + ", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
     }, 100);
+    setTimeout(getProducts(), 300);
+    setTimeout(replaceItems(), 900);
+
 };
 
-function generateRandomColor(){
+function getProducts() {
+    xhttp.open("GET", "./clientGetProducts/", true);
+    xhttp.send();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            products = JSON.parse(this.response);
+            console.log(products);
+            if (products[0]) itemName1 = products[0][0];
+            if (products[0]) itemPrice1 = products[0][1];
+            if (products[1]) itemName2 = products[1][0];
+            if (products[1]) itemPrice2 = products[1][1];
+            if (products[2]) itemName3 = products[2][0];
+            if (products[2]) itemPrice3 = products[2][1];
+            if (products[3]) itemName4 = products[3][0];
+            if (products[3]) itemPrice4 = products[3][1];
+            return;
+        }
+    };
+};
+
+function generateRandomColor() {
     let maxVal = 0xFFFFFF; // 16777215
-    let randomNumber = Math.random() * maxVal; 
+    let randomNumber = Math.random() * maxVal;
     randomNumber = Math.floor(randomNumber);
     randomNumber = randomNumber.toString(16);
-    let randColor = randomNumber.padStart(6, 0);   
+    let randColor = randomNumber.padStart(6, 0);
     return `#${randColor.toUpperCase()}`
 };
 
 function windowSizeChanged() {
-    viewport.setAttribute("content","width="+windowWidth+", height=" +windowHeight+", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+    viewport.setAttribute("content", "width=" + windowWidth + ", height=" + windowHeight + ", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
 };
 
-function fullScreen(){
-    if(!fs){
+function fullScreen() {
+    if (!fs) {
         document.body.requestFullscreen();
-        setTimeout(function(){
-            document.getElementById("fs_mark").style.backgroundImage="url(img/fs1.png)";
-            document.getElementById("fs_mark").innerText=("חלון");
+        setTimeout(function () {
+            document.getElementById("fs_mark").style.backgroundImage = "url(img/fs1.png)";
+            document.getElementById("fs_mark").innerText = ("חלון");
             // window.scrollTo(0,1);
             closeNav();
             fs = true;
-            viewport.setAttribute("content","width="+window.innerWidth+", height="+window.innerHeight+", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
-        },300);
+            viewport.setAttribute("content", "width=" + window.innerWidth + ", height=" + window.innerHeight + ", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+        }, 300);
     }
-    if(fs){
-        setTimeout(function(){
-            document.getElementById("fs_mark").style.backgroundImage="url(img/fs2.png)";
-            document.getElementById("fs_mark").innerText=("מסך מלא");
+    if (fs) {
+        setTimeout(function () {
+            document.getElementById("fs_mark").style.backgroundImage = "url(img/fs2.png)";
+            document.getElementById("fs_mark").innerText = ("מסך מלא");
             document.exitFullscreen();
             // window.scrollTo(0,200);
             closeNav();
             fs = false;
-        },300);        
+        }, 300);
     }
 };
 
-function fullScreenOff(){
-    window.addEventListener("click" ,function(){
-        setTimeout(function(){
+function fullScreenOff() {
+    window.addEventListener("click", function () {
+        setTimeout(function () {
             document.body.requestFullscreen();
-            window.scrollTo(0,200);
-        },100);
-        setTimeout(function(){        
-            window.scrollTo(0,1);
-        },200);
+            window.scrollTo(0, 200);
+        }, 100);
+        setTimeout(function () {
+            window.scrollTo(0, 1);
+        }, 200);
     });
 };
 
 const searchBox1 = document.getElementById("searchBox");
-searchBox1.addEventListener('focus',function(){
+searchBox1.addEventListener('focus', function () {
     searchBoxClear();
-    if(searchBox1.value.length==0){userSearchMessage(0);};
-    if(searchBox1.value.length>0){searchBox1.placeholder=("");};
+    if (searchBox1.value.length == 0) { userSearchMessage(0); };
+    if (searchBox1.value.length > 0) { searchBox1.placeholder = (""); };
 });
-searchBox1.addEventListener('blur',function(){
+searchBox1.addEventListener('blur', function () {
     // searchBoxClear();
-    searchBox1.placeholder=("שלום הכניסו שם✍👉👉");
+    searchBox1.placeholder = ("שלום הכניסו שם✍👉👉");
 });
-searchBox1.addEventListener('input',function(){
+searchBox1.addEventListener('input', function () {
     // searchBoxClear();
-    if(searchBox1.value.length==0){userSearchMessage(0);};
+    if (searchBox1.value.length == 0) { userSearchMessage(0); };
     // if(searchBox1.value.length>0){searchBox1.placeholder=("");};
-    searchBox(searchBox1.value);    
+    searchBox(searchBox1.value);
 });
+//---------------------UI-----------------------------
 
-function afterOrderAnimation(){
+function replaceItems() {
+    var divs = document.getElementsByClassName('item');
+    // console.log(divs);
+    for (var i = 0; i < divs.length; i++) {
+        var thisDiv = divs[i];
+        randomTop = getRandomNumber(0, 22);
+        randomLeft = getRandomNumber(0, 22);
+        thisDiv.style.top = randomTop + "px";
+        thisDiv.style.left = randomLeft + "px";
+    }
+    function getRandomNumber(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+}
+
+//-------------NOT--------------UI--------------
+function afterOrderAnimation() {
     const holder = document.createElement('img');
     let rnd1 = Math.floor(Math.random() * (20 - 1) + 1);
     let rnd2 = Math.floor(Math.random() * (6 - 1) + 1);
-    rnd1 = ('0'+rnd1).slice(-2);
-    const imgRnd = ("img/outro/thank_"+rnd1+".png");
-    const animRnd = ("animation"+rnd2);
+    rnd1 = ('0' + rnd1).slice(-2);
+    const imgRnd = ("img/outro/thank_" + rnd1 + ".png");
+    const animRnd = ("animation" + rnd2);
     // const animRnd = ("animation1");
     holder.src = imgRnd;
     holder.className = ("endAnimation");
@@ -111,50 +161,51 @@ function afterOrderAnimation(){
     holder.classList.add("imgFill");
     holder.classList.add(animRnd);
     userLogout();
-    pointerEnableIn(3000);    
+    pointerEnableIn(3000);
     setTimeout(() => {
         allElements(1);
-    },2500)
+    }, 2500)
 };
 
-function orderSubmitted(data){
+function orderSubmitted(data) {
     const window = document.createElement('div');
-    const text = document.createElement('p');    
-    text.innerHTML = (data.replace(/,/g,"<br>"))    
-    text.classList = ("finaleMessageBoxText");    
-    window.className = ("finaleMessageBox");    
+    const text = document.createElement('p');
+    text.innerHTML = (data.replace(/,/g, "<br>"))
+    text.classList = ("finaleMessageBoxText");
+    window.className = ("finaleMessageBox");
     window.appendChild(text);
     document.body.appendChild(window);
     setTimeout(() => {
         text.remove();
         window.remove();
         afterOrderAnimation();
-    },1500)
+    }, 1500)
 };
 
-async function placeOrder(orderPack){
-    
-    xhttp.open("GET", "./order/"+orderPack, true);
+async function placeOrder(orderPack) {
+
+    xhttp.open("GET", "./order/" + orderPack, true);
     xhttp.send();
-    xhttp.onreadystatechange = function() {
+    xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-        // console.log("ORDER PASSED AND RESPONDED: "+this.response);
-        orderSubmitted(this.response);
-      };
-    };    
+            // console.log("ORDER PASSED AND RESPONDED: "+this.response);
+            orderSubmitted(this.response);
+        };
+    };
 };
 
-function cancelOrder(message){
+function cancelOrder(message) {
     allElements(1);
     message.innerHTML = ("");
     message.classList.remove("messageBoxOn");
     userLogout();
 };
 
-function orderConfirm(orderPack,abort){
+function orderConfirm(orderArray2, abort) {
     userAutoLogout(60000); // LOGOUT AFTER ONE MINUTE
-    const message = document.getElementById("messageBox");    
-    if(abort){message.innerHTML=("");message.classList.remove("messageBoxOn");return};
+    console.log("orderConfirm");
+    const message = document.getElementById("messageBox");
+    if (abort) { message.innerHTML = (""); message.classList.remove("messageBoxOn"); return };
     let buttonYes = document.createElement("button");
     let buttonNo = document.createElement("button");
     const body = document.body;
@@ -172,277 +223,343 @@ function orderConfirm(orderPack,abort){
     buttonNo.classList.add("confirmButtonsNo");
     buttonYes.textContent = 'אשר רישום';
     buttonNo.textContent = 'בטל רישום';
-    let i1 = orderPack[0][1];
-    let i2 = orderPack[0][2];
-    let i3 = orderPack[0][3];
-    let i4 = orderPack[0][4];
-    let price = (i1*itemPrice1)+(i2*itemPrice2)+(i3*itemPrice3)+(i4*itemPrice4);
+    // console.log(orderArray2);
+
+    // if (orderArray) let i1 = orderArray2[0][1];
+    // let i2 = orderArray2[0][2];
+    // let i3 = orderArray2[0][3];
+    // let i4 = orderArray2[0][4];
+    // let price = (i1*itemPrice1)+(i2*itemPrice2)+(i3*itemPrice3);
+
     message.innerHTML = ("<p2>   היי </p2>");
     message.innerHTML += ("<br>");
-    message.innerHTML += ("<p5>"+clientName+"</p5>");
-    message.innerHTML += ("<br>");    
+    message.innerHTML += ("<p5>" + clientName + "</p5>");
+    message.innerHTML += ("<br>");
     message.innerHTML += ("<p1> ההזמנה מכילה :</p1>");
-    message.innerHTML += ("<br>");    
-    if(i1!=0){message.innerHTML += ("<p2>"+itemName1+": </p2><p3>"+i1+"</p3><p2>  בשווי: </p2><p3>"+i1*itemPrice1+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
-    if(i2!=0){message.innerHTML += ("<p2>"+itemName2+": </p2><p3>"+i2+"</p3><p2>  בשווי: </p2><p3>"+i2*itemPrice2+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
-    if(i3!=0){message.innerHTML += ("<p2>"+itemName3+": </p2><p3>"+i3+"</p3><p2>  בשווי: </p2><p3>"+i3*itemPrice3+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
-    if(i4!=0){message.innerHTML += ("<p2>"+itemName4+": </p2><p3>"+i4+"</p3><p2>  בשווי: </p2><p3>"+i4*itemPrice4+"</p3><p2> ₪ </p2>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
-    if(price!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+price+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
+    let finalPrice = 0;
+    let orderComplete = [];
+    for (let i = 0; i < orderArray2.length; i++) {
+        if (orderArray2[i]) {
+            let itemCount = orderArray2[i][0];
+            let itemName = orderArray2[i][1];
+            let itemPrice = orderArray2[i][2];
+            let totalPrice = (itemCount * itemPrice);
+            // console.log(itemCount,itemName,itemPrice,totalPrice)
+            finalPrice += totalPrice;
+            message.innerHTML += ("<p2>" + itemName + ": </p2><p3>" + itemCount + "</p3><p2>  בשווי: </p2><p3>" + totalPrice + "</p3><p2> ₪ </p2>"); message.innerHTML += ("<br>");
+            let orderRow = [itemCount, itemName];
+            orderComplete.push([orderRow])
+        }
+    };
     message.innerHTML += ("<br>");
-    message.innerHTML += ("<p1>האם לרשום גביה של "+price+" שקלים? </p1>");message.innerHTML += ("<br>");message.innerHTML += ("<br>");
+    if (finalPrice != 0) { message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>"); message.innerHTML += ("<p4>" + finalPrice + "</p4><p2> שקלים</p2>"); message.innerHTML += ("<br>"); }
+    message.innerHTML += ("<br>");
+    message.innerHTML += ("<p1>האם לרשום גביה של " + finalPrice + " שקלים? </p1>"); message.innerHTML += ("<br>"); message.innerHTML += ("<br>");
     message.appendChild(buttonYes);
     message.appendChild(buttonNo);
-    buttonYes.addEventListener("click",function(){
+    // let orderComplete = [orderArray2,finalPrice];
+    orderComplete.push([finalPrice]);
+    orderComplete.push([clientId]);
+    console.log(orderComplete);
+    buttonYes.addEventListener("click", function () {
         vibrate(75);
-        placeOrder(orderPack);
+        placeOrder(orderComplete);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
     });
-    buttonYes.addEventListener("touchend",function(){
+    buttonYes.addEventListener("touchend", function () {
         vibrate(75);
-        placeOrder(orderPack);
+        placeOrder(orderComplete);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
     });
-    buttonNo.addEventListener("click",function(){
+    buttonNo.addEventListener("click", function () {
         vibrate(175);
         cancelOrder(message);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
         userLogout();
     });
-    buttonNo.addEventListener("touchend",function(){
+    buttonNo.addEventListener("touchend", function () {
         vibrate(175);
         cancelOrder(message);
         message.innerHTML = ("");
         message.classList.remove("messageBoxOn");
         userLogout();
     });
-    message.classList.add("messageBoxOn");   
+    message.classList.add("messageBoxOn");
 };
 
-function add(item){
-    if(sideMenu){return};
-    // searchBox1.focus();
-    const count1 = document.getElementById("count1");
-    const count2 = document.getElementById("count2");
-    // const count3 = document.getElementById("count3");
-    // const count4 = document.getElementById("count4");
-    const buttonsDiv = document.getElementById("buttons");
-    if(item==1){if(item1==99){return};
-            vibrate(45);
-            item1 = item1+1;
-            count1.innerText = item1;
-        }
-    if(item==2){if(item2==99){return};
-            vibrate(55);
-            item2 = item2+1;
-            count2.innerText = item2;
-        }
-    if(item==3){if(item3==99){return};
-            vibrate(65);
-            item3 = item3+1;
-            count3.innerText = item3;            
-        }
-    if(item==4){if(item4==99){return};
-            vibrate(75);
-            item4 = item4+1;
-            count4.innerText = item4;
-        }
-    if(item==101){
+function addItem(item) {
+    if (sideMenu) { return };
+    // console.log(orderArray)
+    const counts = document.getElementsByClassName("counts");
+    if (counts[item].innerText == "" || counts[item].innerText == null) {
+        counts[item].innerText = 1;
+    } else {
+        let current = counts[item].innerText;
+        if (current < 99) counts[item].innerText = (parseInt(current) + 1);
+    }
+    let itemsBought = parseInt(counts[item].innerText);
+    orderArray[item] = [itemsBought, products[item][0], products[item][1]];
+    // console.log(itemsBought);
+    // console.log(orderArray);
+}
+
+function orderButtons(btn) {
+    if (btn == 2) { // CANCEL ITEMS AND CLEAR ARRAY
+        const counts = document.getElementsByClassName("counts");
         vibrate(75);
         item1 = 0;
         item2 = 0;
         item3 = 0;
         item4 = 0;
-        count1.innerText = "";
-        count2.innerText = "";
-        // count3.innerText = "";
-        // count4.innerText = "";
+        if (counts[0]) counts[0].innerText = "";
+        if (counts[1]) counts[1].innerText = "";
+        if (counts[2]) counts[2].innerText = "";
+        if (counts[3]) counts[3].innerText = "";
+        orderArray = [];
         // userLogout();
         return;
     }
-    if(item==100){
+    if (btn == 1) { // PLACE ORDER IF ENOUGHT DATA
         vibrate(200);
-        if(clientNick==null){
+        if (clientNick == null) {
             errorMessage(1);
             return;
         }
-        if(item1+item2+item3+item4 == 0){
+        if (orderArray == "" || orderArray == null) {
+            vibrate(200);
+            errorMessage(2);
+            return;
+        }
+        orderConfirm(orderArray, false);
+    }
+}
+
+function add(item) {
+    if (sideMenu) { return };
+    const counts = document.getElementsByClassName("counts");
+    const buttonsDiv = document.getElementById("buttons");
+    if (item == 0) {
+        if (item1 == 99) { return };
+        vibrate(45);
+        item1 = item1 + 1;
+        counts[0].innerText = item1;
+    }
+    if (item == 1) {
+        if (item2 == 99) { return };
+        vibrate(55);
+        item2 = item2 + 1;
+        counts[1].innerText = item2;
+    }
+    if (item == 2) {
+        if (item3 == 99) { return };
+        vibrate(65);
+        item3 = item3 + 1;
+        counts[2].innerText = item3;
+    }
+    if (item == 3) {
+        if (item4 == 99) { return };
+        vibrate(75);
+        item4 = item4 + 1;
+        counts[3].innerText = item4;
+    }
+    if (item == 101) {
+        vibrate(75);
+        item1 = 0;
+        item2 = 0;
+        item3 = 0;
+        item4 = 0;
+        if (counts[0]) counts[0].innerText = "";
+        if (counts[1]) counts[1].innerText = "";
+        if (counts[2]) counts[2].innerText = "";
+        if (counts[3]) counts[3].innerText = "";
+        orderArray = [];
+        // userLogout();
+        return;
+    }
+    if (item == 100) {
+        vibrate(200);
+        if (clientNick == null) {
+            errorMessage(1);
+            return;
+        }
+        if (item1 + item2 + item3 + item4 == 0) {
             vibrate(200);
 
             errorMessage(2);
             return;
         }
-        if(clientNick!=null){
-        vibrate(75);
-        var orderPack = [];
-        orderPack.push([clientId,item1,item2,item3,item4]);
-        orderConfirm(orderPack,false);
-        add(101);
+        if (clientNick != null) {
+            vibrate(75);
+            var orderPack = [];
+            orderPack.push([clientId, item1, item2, item3, item4]);
+            orderConfirm(orderPack, false);
+            add(101);
         }
     }
 };
 
-function vibrate(length){
-    if(!("vibrate" in navigator)){console.log("Vibrate not supported!");return;}
+function vibrate(length) {
+    if (!("vibrate" in navigator)) { console.log("Vibrate not supported!"); return; }
     navigator.vibrate(length);
 };
 
-function searchBox(text){
+function searchBox(text) {
     userAutoLogout(25000);
     let searchText = text;
     searchText = searchText.replace(/\\/g, '');
     searchText = searchText.replace(/\//g, '');
     searchText = searchText.replace(/[0-9]/g, '');
     searchText = searchText.replace(/\./g, '');
-    searchText = searchText.replace(/\,/g, '');    
+    searchText = searchText.replace(/\,/g, '');
     searchText = searchText.replace(/\`/g, '');
     searchText = searchText.replace(/\"/g, '');
-    searchText = searchText.substring(0,42);    
+    searchText = searchText.substring(0, 42);
     searchBox1.value = searchText;
     searchText = searchText.replace(/\'/g, "''");
-    if(searchText == ""){
+    if (searchText == "") {
         userSearchMessage(0);
         searchText = "-";
         userLogout();
     };
-    if(limit == 0){
-        limit = 1;        
+    if (limit == 0) {
+        limit = 1;
         setTimeout(() => {
             limit = 0;
-            searchQuery(searchText,searchBox);
-        },250);
+            searchQuery(searchText, searchBox);
+        }, 250);
     };
 };
 
-function searchBoxClear(){
+function searchBoxClear() {
     clearAutoComplete(document.getElementById("autoComplete"));
     const searchBox = document.getElementById("searchBox");
-    if(searchBox1.value.length==0){userSearchMessage(0);};
-    if(searchBox.value == ""){userSearchMessage(0);};
+    if (searchBox1.value.length == 0) { userSearchMessage(0); };
+    if (searchBox.value == "") { userSearchMessage(0); };
 };
 
-function searchQuery(query,dest){
+function searchQuery(query, dest) {
     let clients;
-    xhttp.onreadystatechange = function() {
+    xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            if(this.response == (JSON.stringify("clear"))){
+            if (this.response == (JSON.stringify("clear"))) {
                 // console.log("CLEAR AUTOSEARCH");
                 clients = null;
                 clearAutoComplete(document.getElementById("autoComplete"));
                 return;
             };
-        clients = JSON.parse(this.response);        
-        if(searchBox1.value.length==0|searchBox1.value.length<1){userSearchMessage(0);};
-        if(clients[0] == null){
-            userSearchMessage(1);
+            clients = JSON.parse(this.response);
+            if (searchBox1.value.length == 0 | searchBox1.value.length < 1) { userSearchMessage(0); };
+            if (clients[0] == null) {
+                userSearchMessage(1);
             };
-        if(clients[0] != null){
-            userSearchMessage(2);
-            foundNames(query,clients,dest);
+            if (clients[0] != null) {
+                userSearchMessage(2);
+                foundNames(query, clients, dest);
             };
         };
-      };
-    if(query != ""){
+    };
+    if (query != "") {
         query = JSON.stringify(query);
-        xhttp.open("POST", "./searchName/"+query, true);
+        xhttp.open("POST", "./searchName/" + query, true);
         xhttp.send();
-    }else{
+    } else {
         clients = null;
         clearAutoComplete(document.getElementById("autoComplete"));
     };
 };
 
-function foundNames(query,clients,dest){    
+function foundNames(query, clients, dest) {
     // console.log(clients);
     names = [];
-    for(i=0;i<clients.length;i++){
+    for (i = 0; i < clients.length; i++) {
         names.push(clients[i].nick);
     };
     autoComplete(names);
 };
 
-function autoComplete(names){
+function autoComplete(names) {
     const autoDiv = document.getElementById("autoComplete");
     clearAutoComplete(autoDiv);
     autoDiv.className = "autoCompleteSuggestions";
-    for(i=0;i<names.length && i<4;i++){
+    for (i = 0; i < names.length && i < 4; i++) {
         const para = document.createElement("p");
         para.className = "autocomplete-items";
-        if(i % 2 === 0){para.classList.add("autocomplete-itemsEven");}
-        para.innerText = names[i];        
+        if (i % 2 === 0) { para.classList.add("autocomplete-itemsEven"); }
+        para.innerText = names[i];
         autoDiv.appendChild(para);
         para.onclick = function () {
-            copyTextToSearchBox(para.innerText);            
+            copyTextToSearchBox(para.innerText);
             loginFunction(para.innerText);
             clearAutoComplete(autoDiv);
         }
     };
-    if(names[0] == searchBox1.value){
-        clearAutoComplete(autoDiv);        
+    if (names[0] == searchBox1.value) {
+        clearAutoComplete(autoDiv);
         userSearchMessage(3);
         searchBox1.blur();
         loginFunction(names[0]);
-        };
-    if(searchBox1.value.length==0){userSearchMessage(0);};
-    if(searchBox1.value == ""){clearAutoComplete(autoDiv);}    
+    };
+    if (searchBox1.value.length == 0) { userSearchMessage(0); };
+    if (searchBox1.value == "") { clearAutoComplete(autoDiv); }
 };
 
-function clearAutoComplete(autoDiv){
+function clearAutoComplete(autoDiv) {
     autoDiv.className = "autoCompleteNone";
     while (autoDiv.hasChildNodes()) {
         autoDiv.removeChild(autoDiv.firstChild);
-      };
+    };
 };
 
-function copyTextToSearchBox(text){
+function copyTextToSearchBox(text) {
     const searchBox = document.getElementById("searchBox");
     searchBox.value = text;
 };
 
-function loginFunction(name){
-    if(name != ""){        
+function loginFunction(name) {
+    if (name != "") {
         name = name.replace(/\'/g, "''");
-        name = JSON.stringify(name);        
-        xhttp.open("POST", "./searchName/"+name, true);
+        name = JSON.stringify(name);
+        xhttp.open("POST", "./searchName/" + name, true);
         xhttp.send();
     };
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {        
-        login = JSON.parse(this.response);
-        clientNick = login[0].nick;
-        clientName = login[0].name;        
-        clientId = login[0].id;
-        userLogged();
-      };
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            login = JSON.parse(this.response);
+            clientNick = login[0].nick;
+            clientName = login[0].name;
+            clientId = login[0].id;
+            userLogged();
+        };
     };
 };
 
-function userLogged(){
+function userLogged() {
     userSearchMessage(3);
-    searchBox1.blur();    
+    searchBox1.blur();
     searchBox1.classList.add("searchBoxLogged");
     searchBox1.classList.remove("searchBoxNotLogged");
-    document.getElementById("user_info").style.display="block";
+    document.getElementById("user_info").style.display = "block";
     userAutoLogout(45000);
 };
 
-function userLogout(){
-    searchBox1.value = ("");    
+function userLogout() {
+    searchBox1.value = ("");
     userSearchMessage(0);
     add(101);
     clientName = null;
     clientNick = null;
     clientId = null;
     const message = document.getElementById("messageBox");
-    message.innerHTML=("");
-    message.classList.remove("messageBoxOn");    
+    message.innerHTML = ("");
+    message.classList.remove("messageBoxOn");
     searchBox1.classList.remove("searchBoxLogged");
     searchBox1.classList.add("searchBoxNotLogged");
-    document.getElementById("user_info").style.display="none";
-    if(document.getElementsByClassName("userInfo")[0]){
+    document.getElementById("user_info").style.display = "none";
+    if (document.getElementsByClassName("userInfo")[0]) {
         document.getElementsByClassName("userInfoCloseButton")[0].remove();;
         document.getElementsByClassName("userInfoText")[0].remove();;
         document.getElementsByClassName("userInfoChangeNick")[0].remove();;
@@ -455,100 +572,112 @@ function userLogout(){
     allElements(1);
 };
 
-function userAutoLogout(reset){
-    if(reset != 0){
+function userAutoLogout(reset) {
+    if (reset != 0) {
         timeOut = reset;
     };
     clearTimeout(timerLogout);
     timerLogout = setTimeout(() => {
         userLogout();
-    },timeOut);
+    }, timeOut);
 };
 
-function userSearchMessage(select){
+function userSearchMessage(select) {
     let textBox = document.getElementById("searchBox");
     let userIndic = document.getElementById("userStateIndicator");
-    if(select == 0){
+    if (select == 0) {
         userIndic.classList.remove("userStateIndicatorNotOk");
         userIndic.classList.remove("userStateIndicatorOk");
         userIndic.classList.remove("userStateIndicatorSelect");
         userIndic.innerText = ("");
     }
-    if(select == 1){
-    userIndic.innerText = ("👎 שם לא סבבה 👎");
-    userIndic.classList.remove("userStateIndicatorOk");
-    userIndic.classList.remove("userStateIndicatorSelect");
-    userIndic.classList.add("userStateIndicatorNotOk");
-    searchBox1.classList.add("searchBoxNotLogged");
-    userIndic.placeholder=("");
-    clearAutoComplete(document.getElementById("autoComplete"));
-    }    
-    if(select == 2){
-        userIndic.innerHTML = ("<img class='userStateIndicatorSelectimg1' "+
-        "src='img/anim/finger_down.png'></img>"+
-        "<img class='userStateIndicatorSelectimg2' src='img/anim/finger_down.png'>"+
-        "</img><p>לבחור שם</p><img class='userStateIndicatorSelectimg3' "+
-        "src='img/anim/finger_down.png'></img><img class='userStateIndicatorSelectimg4' "+
-        "src='img/anim/finger_down.png'></img>");        
+    if (select == 1) {
+        userIndic.innerText = ("👎 שם לא סבבה 👎");
+        userIndic.classList.remove("userStateIndicatorOk");
+        userIndic.classList.remove("userStateIndicatorSelect");
+        userIndic.classList.add("userStateIndicatorNotOk");
+        searchBox1.classList.add("searchBoxNotLogged");
+        userIndic.placeholder = ("");
+        clearAutoComplete(document.getElementById("autoComplete"));
+    }
+    if (select == 2) {
+        userIndic.innerHTML = ("<img class='userStateIndicatorSelectimg1' " +
+            "src='img/anim/finger_down.png'></img>" +
+            "<img class='userStateIndicatorSelectimg2' src='img/anim/finger_down.png'>" +
+            "</img><p>לבחור שם</p><img class='userStateIndicatorSelectimg3' " +
+            "src='img/anim/finger_down.png'></img><img class='userStateIndicatorSelectimg4' " +
+            "src='img/anim/finger_down.png'></img>");
         userIndic.classList.remove("userStateIndicatorNotOk");
         userIndic.classList.remove("userStateIndicatorOk");
         userIndic.classList.add("userStateIndicatorSelect");
-        userIndic.placeholder=("");
+        userIndic.placeholder = ("");
     }
-    if(select == 3){
+    if (select == 3) {
         userIndic.innerHTML = ("<p11>👍</p11><p12>👍</p12>");
-        userIndic.classList.remove("userStateIndicatorNotOk");        
+        userIndic.classList.remove("userStateIndicatorNotOk");
         userIndic.classList.remove("userStateIndicatorSelect");
         userIndic.classList.add("userStateIndicatorOk");
-        userIndic.placeholder=("");
+        userIndic.placeholder = ("");
     }
 };
 
-function errorMessage(value){
+function errorMessage(value) {
     const message = document.getElementById("errorMessage");
-    if(value == 1){
+    if (value == 1) {
         message.innerText = ("צריך להכניס שם");
         message.classList.add("errorMessageOn");
         closeErrorMessage(message);
     };
-    if(value == 2){
+    if (value == 2) {
         message.innerText = ("צריך לסמן כמה משקאות");
         message.classList.add("errorMessageOn");
         closeErrorMessage(message);
     };
 };
 
-function closeErrorMessage(message){
+function closeErrorMessage(message) {
     setTimeout(() => {
         message.innerText = ("");
         message.classList.remove("errorMessageOn");
-    },3000);
+    }, 3000);
 };
 
-function autoCloseTextBox(message){
-    setTimeout(function(){
+function autoCloseTextBox(message) {
+    setTimeout(function () {
         message.classList.remove("messageBoxOn");
         message.innerText = "";
     }, 5000);
 };
 
-function bgSelect(set){
+function bgSelect(set) {
     const background1 = document.getElementById("backgroundPanel1");
-    const background2 = document.getElementById("backgroundPanel2");    
-    if(set==1){
+    const background2 = document.getElementById("backgroundPanel2");
+    const background0 = document.getElementById("backgroundPanel0");
+    if (set == 0) {
+        background1.style.display = ("none");
+        background2.style.display = ("none");
+        background0.style.display = ("block");
+        background0.className = ("background0");
+        return;
+    }
+    if (set == 1) {
         background1.style.display = ("block");
         background1.className = ("background1");
         background2.style.display = ("none");
+        background0.style.display = ("none");
+
     }
-    if(set==2){
+    if (set == 2) {
         background2.style.display = ("block");
         background2.className = ("background2");
-        background1.style.display = ("none");        
+        background1.style.display = ("none");
+        background0.style.display = ("none");
     }
-    if(set==3){
+    if (set == 3) {
         background1.style.display = ("none");
         background2.style.display = ("block");
         background2.className = ("background3");
+        background0.style.display = ("none");
     }
     return;
 };
@@ -560,37 +689,37 @@ function openNav() {
     sideNav.style.width = "10rem";
     sideNav.style.borderWidth = "2px";
     const out = document.getElementById("content");
-    out.onclick =  (function(){
-        if(sideNav.style.width == "10rem"){
+    out.onclick = (function () {
+        if (sideNav.style.width == "10rem") {
             closeNav();
         }
     });
 };
-  
+
 function closeNav() {
     document.getElementById("sideNav").style.width = "0";
     sideMenu = false;
     sideNav.style.borderWidth = "0px";
 };
 //--------------GET USER INFO WITH ID SEND REQUEST----------------
-async function getUserInfoById(){
-    xhttp.onreadystatechange = function() {
+async function getUserInfoById() {
+    xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-        uData = JSON.parse(this.response);
-        // console.log(uData);
-        userInfo (uData);
+            uData = JSON.parse(this.response);
+            // console.log(uData);
+            userInfo(uData);
         };
-      };
-    if(clientId == null){return};
-    xhttp.open("POST", "./getUserInfo/"+clientId, true);
+    };
+    if (clientId == null) { return };
+    xhttp.open("POST", "./getUserInfo/" + clientId, true);
     xhttp.send();
 };
 //-------------------PRINT USER INFO TO TABLE
-async function userInfo(uData){
-    if(uData == null){return}  ;
+async function userInfo(uData) {
+    if (uData == null) { return };
     closeNav();
     allElements(0);
-    userAutoLogout(1000*60);
+    userAutoLogout(1000 * 60);
     let lastOrderRow;
     const nameText = document.createElement('p');
     const closeButton = document.createElement('div');
@@ -598,21 +727,21 @@ async function userInfo(uData){
     const tableDiv = document.createElement('div');
     const window = document.createElement('div');
     closeButton.innerText = ("X");
-    nameText.innerHTML = (clientName.replace(/,/g,"<br>"));
-    nameNick.value = (clientNick.replace(/,/g,"<br>"));
+    nameText.innerHTML = (clientName.replace(/,/g, "<br>"));
+    nameNick.value = (clientNick.replace(/,/g, "<br>"));
     closeButton.className = ("userInfoCloseButton");
     nameText.className = ("userInfoText");
     nameNick.className = ("userInfoChangeNick");
-    tableDiv.className = ("userInfoTableDiv");      
+    tableDiv.className = ("userInfoTableDiv");
     window.className = ("userInfo");
     window.appendChild(closeButton);
-    window.appendChild(nameText);    
+    window.appendChild(nameText);
     window.appendChild(nameNick);
-    window.appendChild(tableDiv);    
-    document.body.appendChild(window);    
-    const out = document.getElementById("content");    
-    out.ondblclick =  (function(){        
-        if(window){
+    window.appendChild(tableDiv);
+    document.body.appendChild(window);
+    const out = document.getElementById("content");
+    out.ondblclick = (function () {
+        if (window) {
             nameText.remove();
             closeButton.remove();
             nameNick.remove();
@@ -622,8 +751,8 @@ async function userInfo(uData){
             allElements(1);
         }
     });
-    closeButton.onclick =  (function(){        
-        if(window){
+    closeButton.onclick = (function () {
+        if (window) {
             nameText.remove();
             closeButton.remove();
             nameNick.remove();
@@ -636,10 +765,10 @@ async function userInfo(uData){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>שם</th><th>סכום</th><th>"+itemName1+"</th><th>"+itemName2+"</th><th>תאריך ושעה</th><th>מס.</th>");    
+    TR.innerHTML = ("<th>סכום</th><th>פרטים</th><th>תאריך ושעה</th><th>מס.</th>");
     TR.setAttribute("style", "background-color:lightblue;")
     tableBody.appendChild(TR);
-    for(let i = 0;i < uData.length; i++){
+    for (let i = 0; i < uData.length; i++) {
         const row = document.createElement("tr");
         let rowInfo = Object.values(uData[i]);
         for (let j = 0; j < rowInfo.length; j++) {
@@ -648,38 +777,38 @@ async function userInfo(uData){
             cell.appendChild(cellText);
             row.appendChild(cell);
         }
-        row.setAttribute("dir","rtl");
+        row.setAttribute("dir", "rtl");
         row.setAttribute("style", "background-color:lightskyblue;")
-        if(i % 2 === 0  ){row.setAttribute("style", "background-color:lightblue;")}
-    tableBody.appendChild(row);
+        if (i % 2 === 0) { row.setAttribute("style", "background-color:lightblue;") }
+        tableBody.appendChild(row);
     }
-    table.appendChild(tableBody);    
-    table.setAttribute("class", "userInfoTable");    
+    table.appendChild(tableBody);
+    table.setAttribute("class", "userInfoTable");
     tableDiv.appendChild(table);
     const buttonDeleteOrder = document.createElement('div');
     buttonDeleteOrder.textContent = ('למחוק רישום אחרון');
-    buttonDeleteOrder.className = ("deleteOrderButton");    
+    buttonDeleteOrder.className = ("deleteOrderButton");
     window.appendChild(buttonDeleteOrder);
-    buttonDeleteOrder.onmouseup = (function(){
+    buttonDeleteOrder.onmouseup = (function () {
         const buttonYes = document.createElement('button');
         const buttonNo = document.createElement('button');
-        buttonYes.className = ("deleteOrderConfirm");buttonYes.classList.add("deleteOrderConfirmYes");
-        buttonNo.className = ("deleteOrderConfirm");buttonNo.classList.add("deleteOrderConfirmNo");
-        buttonYes.innerText=("למחוק רישום אחרון כן זאת הייתה טעות");
-        buttonNo.innerText=("לא למחוק את הרישום בעצם הפאב צריך ת'כסף");
+        buttonYes.className = ("deleteOrderConfirm"); buttonYes.classList.add("deleteOrderConfirmYes");
+        buttonNo.className = ("deleteOrderConfirm"); buttonNo.classList.add("deleteOrderConfirmNo");
+        buttonYes.innerText = ("למחוק רישום אחרון כן זאת הייתה טעות");
+        buttonNo.innerText = ("לא למחוק את הרישום בעצם הפאב צריך ת'כסף");
         const confirmWindow = document.createElement('div');
         confirmWindow.className = ("userInfoOrderDeleteConfirm");
-        buttonDeleteOrder.style.display=("none");
+        buttonDeleteOrder.style.display = ("none");
         confirmWindow.appendChild(buttonNo);
-        confirmWindow.appendChild(buttonYes);        
+        confirmWindow.appendChild(buttonYes);
         window.appendChild(confirmWindow);
-        buttonNo.onclick = (function(){
+        buttonNo.onclick = (function () {
             buttonNo.remove();
             buttonYes.remove();
             confirmWindow.remove();
-            buttonDeleteOrder.style.display=("block");
+            buttonDeleteOrder.style.display = ("block");
         })
-        buttonYes.onclick = (function(){
+        buttonYes.onclick = (function () {
             clientDeleteLastOrder();
             nameText.remove();
             closeButton.remove();
@@ -691,63 +820,63 @@ async function userInfo(uData){
             confirmWindow.remove();
             window.remove();
         })
-        });
+    });
 };
 
-function clientDeleteLastOrder(){
-    if(clientId==null){return};    
-    xhttp.open("POST", "./deleteLastOrder/"+clientId, true);
+function clientDeleteLastOrder() {
+    if (clientId == null) { return };
+    xhttp.open("POST", "./deleteLastOrder/" + clientId, true);
     xhttp.send();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {                        
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
             getUserInfoById();
             return;
-            }        
-        };
+        }
+    };
 };
 
-function allElements(action){
+function allElements(action) {
     var searchBox = Array.from(document.getElementsByClassName("searchBox"));
     var userStateIndicator = Array.from(document.getElementsByClassName("userStateIndicator"))
     var items = Array.from(document.getElementsByClassName("items"));
-    var buttons = Array.from(document.getElementsByClassName("buttons"));    
-    var sidenav = Array.from(document.getElementsByClassName("sidenav"));    
+    var buttons = Array.from(document.getElementsByClassName("buttons"));
+    var sidenav = Array.from(document.getElementsByClassName("sidenav"));
     var elementOpen = Array.from(document.getElementsByClassName("elementOpen"));
-    var classes = searchBox.concat(items,buttons,sidenav,elementOpen,userStateIndicator);
-    if (action == 0){
+    var classes = searchBox.concat(items, buttons, sidenav, elementOpen, userStateIndicator);
+    if (action == 0) {
         classes.forEach(elementOff);
     }
-    if (action == 1){
+    if (action == 1) {
         classes.forEach(elementOn);
-    }    
+    }
 };
 
-function elementOff(element){
+function elementOff(element) {
     element.classList.remove("opacityOn");
     element.classList.add("opacityOff");
 };
 
-function elementOn(element){
+function elementOn(element) {
     element.classList.remove("opacityOff");
     element.classList.add("opacityOn");
 };
 
-function pointerAll(element){
+function pointerAll(element) {
     element.classList.remove("pointerNone");
     element.classList.add("pointerAll")
 };
 
-function pointerNone(element){
+function pointerNone(element) {
     element.classList.remove("pointerAll");
     element.classList.add("pointerNone")
 };
 
-function pointerEnableIn(i){
+function pointerEnableIn(i) {
     setTimeout(() => {
         const body = document.body;
         pointerAll(body);
         const items = document.getElementsByClassName("item");
         var itemsArray = Array.from(items);
-        itemsArray.forEach(pointerAll); 
-    },i);
+        itemsArray.forEach(pointerAll);
+    }, i);
 };

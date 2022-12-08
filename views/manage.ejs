@@ -27,14 +27,14 @@
             </div>
             <div class="row">
                 <input type="search" class="textboxShort" id="editName" spellcheck="false" placeholder="ערוך שם">
-                <button onclick="editClientFields(1,'editName')">עריכת שם</button>
+                <button onclick="editClient(1,'editName')">עריכת שם</button>
                 <div class="row"></div>
                 <input type="search" class="textboxShort" id="editNick" spellcheck="false" placeholder="ערוך כינוי">
-                <button onclick="editClientFields(2,'editNick')">עריכת כינוי</button>
+                <button onclick="editClient(2,'editNick')">עריכת כינוי</button>
             </div>
             <div class="row">
                 <input type="number" class="textboxNumber" id="editNumber" spellcheck="false" placeholder="ערוך מספר חשבון">
-                <button onclick="editClientFields(3,'editNumber')">עריכת מספר</button>            
+                <button onclick="editClient(3,'editNumber')">עריכת מספר</button>            
                 <button class="center orange" onclick="clientGetOrderHistory()">צפייה בהסטוריית הזמנות</button>
                 <button class="center orange" onclick="clientDeleteLastOrder()">מחיקת הזמנה אחרונה</button>
                 <button class="red" onclick="deleteClient()">מחיקת משתמש</button>
@@ -71,24 +71,29 @@
         <div class="row linebreak"></div>
 
         <div class="editProduct">
-            <div class="function">
+            <div class="row">
                 <p>עריכת מוצר קיים</p>
-                <input type="search" class="searchBoxNoLogged" id="getProductName" spellcheck="false" placeholder=" מצא מוצר מהרשימה">
+                <!-- <input type="search" class="searchBoxNoLogged" id="getProductName" spellcheck="false" placeholder=" מצא מוצר מהרשימה"> -->
+                <select id="selectProduct" onchange="editProductLoad()"><option>בחר מוצר</option></select>
                 <div class="autoCompleteNone" id="autoComplete"></div>
             </div>
             <div class="row">
-                <input type="search" class="textboxShort" id="editName" spellcheck="false" placeholder="ערוך שם מוצר">
-                <button onclick="editProductName(1,'editName')">עריכת שם</button>
+                <input type="search" class="textboxShort" id="productName" spellcheck="false" placeholder="ערוך שם מוצר">                
                 <div class="row"></div>
             </div>
             <div class="row">
-                <input type="number" class="textboxNumber" id="editNumber" spellcheck="false" placeholder="ערוך מחיר">
-                <button onclick="editProductFields(3,'editNumber')">עריכת מחיר</button>
+                <input type="number" class="textboxNumber" id="productPrice" spellcheck="false" placeholder="ערוך מחיר">
+            </div>
+            <div class="row">
+                <input type="number" class="textboxNumber" id="productStock" spellcheck="false" placeholder="ערוך כמות">
+            </div>
+            <div class="row">    
+                <button class="green" onclick="editProduct()">עדכן נתונים</button>
                 <button class="red" onclick="deleteProduct()">מחיקת מוצר</button>
             </div>
             <br>
             <div class="row">
-                <div class="logText" id="editLog">-</div>
+                <div class="logText" id="productEditLog">-</div>
             </div>
         </div>
 
@@ -100,13 +105,17 @@
                 <p>שם מוצר : </p>
                 <input type="search" class="textbox" id="insertProduct" spellcheck="false" placeholder=" הכנס מוצר">
                 <p> מחיר : </p>
-                <input type="text" class="textboxNumber" id="insertNumber" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מחיר  ">
-                <button class="green" onclick="iinsertProduct()">הכנס מוצר</button>
+                <input type="text" class="textboxNumber" id="insertPrice" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מחיר  ">
+                <p> תמונה : </p>
+                <select id="selectImg"><option value="1">מקרר</option><option value="2">בירה</option><option value="3">משקה</option><option value="4">מרק</option><option value="5">פיצה</option><option value="6">משהו מיוחד</option></select>
+                <p> כמות : </p>
+                <input type="text" class="textboxNumber" id="insertStock" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס כמות  ">
+                <button class="green" onclick="insertProduct()">הכנס מוצר</button>
                 </p>
             </div>
 
             <div class="row">
-                <div class="logText" id="addLog">-</div>
+                <div class="logText" id="productsLog">-</div>
             </div>
 
         </div>
