@@ -39,7 +39,7 @@ function showOrdersTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>תג עסקה</th><th>נרשם בתאריך</th><th>מוצר1</th><th>מוצר2</th><th>מוצר3</th><th>מוצר4</th><th>סך הכל</th><th>תג משתמש</th><th>שם רשום</th>");
+    TR.innerHTML = ("<th>תג עסקה</th><th>נרשם בתאריך</th><th>סך הכל</th><th>תג משתמש</th><th>שם רשום</th>");
     tableBody.appendChild(TR);
     for(let i = 0;i < data.length; i++){
         const row = document.createElement("tr");
@@ -69,7 +69,7 @@ function showClientsTable(data){
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>תג משתמש</th><th>נרשם בתאריך</th><th>מוצר1</th><th>מוצר2</th><th>מוצר3</th><th>מוצר4</th><th>סך הכל</th><th>מספר חשבון</th><th>שם רשום</th><th>כינוי</th>");
+    TR.innerHTML = ("<th>תג משתמש</th><th>נרשם בתאריך</th><th>סך הכל</th><th>מספר חשבון</th><th>שם רשום</th><th>כינוי</th>");
     tableBody.appendChild(TR);
     for(let i = 0;i < data.length; i++){
         const row = document.createElement("tr");

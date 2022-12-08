@@ -155,7 +155,7 @@ exports.dbEditClient = async function(clientId,field,value){
 
 //--------------------DELETE LAST ORDER BY CLIEND ID----------------//
 exports.dbDeleteLastOrderById = async function(clientId){
-  lastOrderDetails = await pool.query("SELECT orderid,item1,item2,item3,item4,sum FROM "+tableOrders+
+  lastOrderDetails = await pool.query("SELECT orderid,sum FROM "+tableOrders+
   " WHERE clientid = "+clientId+" ORDER BY orderid DESC LIMIT 1;")
   .catch((err) => {
     console.log(err)
@@ -164,12 +164,10 @@ exports.dbDeleteLastOrderById = async function(clientId){
     });
 if(lastOrderDetails[0]==null){console.log("no order");return ("no such order")};
 
-clientDetail = await pool.query("SELECT item1,item2,item3,item4,sum FROM "+tableClients+
+clientDetail = await pool.query("SELECT sum FROM "+tableClients+
 " WHERE id = "+clientId+";");
 
-if(lastOrderDetails[0].sum>clientDetail[0].sum||lastOrderDetails[0].item1>clientDetail[0].item1||
-  lastOrderDetails[0].item2>clientDetail[0].item2||lastOrderDetails[0].item3>clientDetail[0].item3||
-  lastOrderDetails[0].item4>clientDetail[0].item4){console.log("ERROR SUM IS NO LOGICAL");return ("ERROR WITH THE NUMBERS")};
+if(lastOrderDetails[0].sum>clientDetail[0].sum){console.log("ERROR SUM IS NO LOGICAL");return ("ERROR WITH THE NUMBERS")};
   
 // console.log("Order Sum: "+lastOrderDetails[0].sum);
 // console.log("Client Sum: "+clientDetail[0].sum);

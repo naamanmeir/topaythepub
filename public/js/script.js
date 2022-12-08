@@ -49,8 +49,7 @@ function getProducts(){
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            products = JSON.parse(this.response);
-            console.log(products);
+            products = JSON.parse(this.response);            
             if(products[0])itemName1 = products[0][0];
             if(products[0])itemPrice1 = products[0][1];
             if(products[1])itemName2 = products[1][0];
@@ -647,21 +646,33 @@ function autoCloseTextBox(message){
 
 function bgSelect(set){
     const background1 = document.getElementById("backgroundPanel1");
-    const background2 = document.getElementById("backgroundPanel2");    
+    const background2 = document.getElementById("backgroundPanel2");
+    const background0 = document.getElementById("backgroundPanel0");
+    if(set==0){
+        background1.style.display = ("none");
+        background2.style.display = ("none");
+        background0.style.display = ("block");
+        background0.className = ("background0");
+        return;
+    }
     if(set==1){
         background1.style.display = ("block");
         background1.className = ("background1");
         background2.style.display = ("none");
+        background0.style.display = ("none");
+
     }
     if(set==2){
         background2.style.display = ("block");
         background2.className = ("background2");
-        background1.style.display = ("none");        
+        background1.style.display = ("none"); 
+        background0.style.display = ("none");       
     }
     if(set==3){
         background1.style.display = ("none");
         background2.style.display = ("block");
         background2.className = ("background3");
+        background0.style.display = ("none");
     }
     return;
 };
