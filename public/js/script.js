@@ -50,11 +50,15 @@ function getProducts(){
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             products = JSON.parse(this.response);            
 =======
             products = JSON.parse(this.response);
             console.log(products);
 >>>>>>> new ver working kinda
+=======
+            products = JSON.parse(this.response);            
+>>>>>>> dev0.9 pre_merge 01
             if(products[0])itemName1 = products[0][0];
             if(products[0])itemPrice1 = products[0][1];
             if(products[1])itemName2 = products[1][0];
