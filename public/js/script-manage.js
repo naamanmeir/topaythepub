@@ -420,17 +420,6 @@ async function getProducts(){
         if (this.readyState == 4 && this.status == 200) {
             productList = JSON.parse(this.response);        
             let selectBar = document.getElementById("selectProduct");
-<<<<<<< HEAD
-            // while (selectBar.hasChildNodes()) {
-            //     selectBar.removeChild(selectBar.firstChild);
-            //   };
-              productList.forEach(table => {            
-                var opt = document.createElement("option");            
-                opt.value = table;
-                opt.innerHTML = table;
-                selectBar.appendChild(opt);            
-            });
-=======
             while (selectBar.childElementCount > 1) {
                 selectBar.removeChild(selectBar.lastChild);
               };
@@ -476,7 +465,6 @@ function editProduct(){
         if (this.readyState == 4 && this.status == 200) {
             editLog(this.response);
             getProducts();
->>>>>>> new ver working kinda
             return;
             }
         };

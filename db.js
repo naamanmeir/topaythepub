@@ -89,21 +89,12 @@ exports.dbCreateTableUsers = async function() {
 
 //-----------------------GET PRODUCTS IF YESH----------------------//
 exports.dbGetProducts = async function () {
-<<<<<<< HEAD
-  products = await pool.query("SELECT itemnumber,itemname,price,itemimgpath FROM " + tableProducts +
-    " WHERE stock > 0 ORDER BY itemnumber DESC;");  
-=======
   products = await pool.query("SELECT itemid,itemnumber,itemname,price,itemimgpath,stock FROM "+tableProducts+
     " WHERE stock > 0 ORDER BY itemid ASC;");  
->>>>>>> new ver working kinda
   return products;
 };
 
 exports.dbGetProductsAll = async function () {
-<<<<<<< HEAD
-  products = await pool.query("SELECT itemnumber,itemname,price,itemimgpath FROM " + tableProducts +
-    " ORDER BY itemnumber DESC;");  
-=======
   products = await pool.query("SELECT itemid,itemnumber,itemname,price,itemimgpath,stock FROM "+tableProducts+
     " ORDER BY itemid ASC;");  
   return products;
@@ -111,7 +102,6 @@ exports.dbGetProductsAll = async function () {
 
 exports.dbGetPricesAll = async function () {
   products = await pool.query("SELECT price FROM "+tableProducts+" ORDER BY itemid ASC;");  
->>>>>>> new ver working kinda
   return products;
 };
 
@@ -176,19 +166,9 @@ if(lastOrderDetails[0]==null){console.log("no order");return ("no such order")};
 
 clientDetail = await pool.query("SELECT sum FROM "+tableClients+
 " WHERE id = "+clientId+";");
-
-if(lastOrderDetails[0].sum>clientDetail[0].sum){console.log("ERROR SUM IS NO LOGICAL");return ("ERROR WITH THE NUMBERS")};
-  
-// console.log("Order Sum: "+lastOrderDetails[0].sum);
-// console.log("Client Sum: "+clientDetail[0].sum);
-
-deletedOrderFromClients = await pool.query("UPDATE "+tableClients+" SET"+
-" item1 = (item1 - "+lastOrderDetails[0].item1+")"+
-",item2 = (item2 - "+lastOrderDetails[0].item2+")"+
-",item3 = (item3 - "+lastOrderDetails[0].item3+")"+
-",item4 = (item4 - "+lastOrderDetails[0].item4+")"+
-",sum = (sum - "+lastOrderDetails[0].sum+")"+
-"WHERE id = "+clientId+";")
+if(lastOrderDetails[0].sum>clientDetail[0].sum){console.log("ERROR SUM IS NO LOGICAL");return ("ERROR WITH THE NUMBERS")};  
+deletedOrderFromClients = await pool.query("UPDATE "+tableClients+
+" SET sum = (sum - "+lastOrderDetails[0].sum+") WHERE id = "+clientId+";")
 .catch((err) => {
   console.log(err)
 }).then((res) => {        
@@ -479,8 +459,6 @@ exports.dbInsertProduct = async function(newProduct){
   return messageReturn;  
 };
 
-<<<<<<< HEAD
-=======
 exports.dbEditProduct = async function(values){  
   console.log("DB EDIT PRODUCT");
   console.log(values); 
@@ -526,7 +504,6 @@ exports.dbDeleteProduct = async function(productId){
   return ("REMOVED FROM DATABASE -- NO PROOF YET"+messageReturn);
 };
 
->>>>>>> new ver working kinda
   //----------------------GET ITEMS BOUGHT IN CURRENT REPORT---------------------//
   exports.dbGetItemsBought = async function() {
     //get items amount from db

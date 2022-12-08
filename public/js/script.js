@@ -48,17 +48,9 @@ function getProducts(){
     xhttp.open("GET", "./clientGetProducts/", true);
     xhttp.send();
     xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-            products = JSON.parse(this.response);            
-=======
+        if (this.readyState == 4 && this.status == 200) {            
             products = JSON.parse(this.response);
             console.log(products);
->>>>>>> new ver working kinda
-=======
-            products = JSON.parse(this.response);            
->>>>>>> dev0.9 pre_merge 01
             if(products[0])itemName1 = products[0][0];
             if(products[0])itemPrice1 = products[0][1];
             if(products[1])itemName2 = products[1][0];
@@ -260,15 +252,9 @@ function orderConfirm(orderArray2,abort){
             orderComplete.push([orderRow])
         }
     };
-<<<<<<< HEAD
     message.innerHTML += ("<br>");
     if(finalPrice!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+finalPrice+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
     message.innerHTML += ("<br>");
-=======
-    message.innerHTML += ("<br>");
-    if(finalPrice!=0){message.innerHTML += ("<p1>וסך הכל בשקלים זה: </p1>");message.innerHTML += ("<p4>"+finalPrice+"</p4><p2> שקלים</p2>");message.innerHTML += ("<br>");}
-    message.innerHTML += ("<br>");
->>>>>>> new ver working kinda
     message.innerHTML += ("<p1>האם לרשום גביה של "+finalPrice+" שקלים? </p1>");message.innerHTML += ("<br>");message.innerHTML += ("<br>");
     message.appendChild(buttonYes);
     message.appendChild(buttonNo);

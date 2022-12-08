@@ -270,8 +270,6 @@ app.post('/insertProduct/:data', async (req,res,next) => {
   res.send(response);    
 });
 
-<<<<<<< HEAD
-=======
 app.post('/editProduct/:data', async (req,res) => {
   let newData = (req.params.data);
   let newArray = newData.split(',');
@@ -289,8 +287,6 @@ app.post('/deleteProduct/:data', async (req,res,next) => {
   response = await db.dbDeleteProduct(productID).then((res) => {return (res)})
   res.send(response);    
 });
-
->>>>>>> new ver working kinda
 
 app.get('/getListOfArchiveReport/', async (req,res) => {
   let archiveList = [];
@@ -328,19 +324,8 @@ function releaseLimit(){
 // ------------------------  CLIENT VIEW  ----------------------- //
 app.get('', async function (req, res) {
   let products = [];
-<<<<<<< HEAD
-  products.push([strings.NAME_ITEM1,strings.PRICE_ITEM1]);
-  products.push([strings.NAME_ITEM2,strings.PRICE_ITEM2]);
-  products.push([strings.NAME_ITEM3,strings.PRICE_ITEM3]);
-  products.push([strings.NAME_ITEM4,strings.PRICE_ITEM4]);
-=======
-  products = await db.dbGetProducts();  
+  products = await db.dbGetProducts();
   // console.log(products);
-  const reject = () => {
-    res.setHeader("www-authenticate", "Basic", realm = "masof", uri = "/", charset = "UTF-8");
-    res.sendStatus(401);
-  };
->>>>>>> new ver working kinda
 
     const reject = () => {
         res.setHeader("www-authenticate", "Basic",realm="masof",uri="/",charset="UTF-8");
@@ -530,5 +515,4 @@ app.get('/resetClientsDataAfterRead/', async function(req,res){
 });
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));
-
 
