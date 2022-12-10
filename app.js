@@ -365,7 +365,7 @@ app.get('/clientGetProducts/', async (req, res) => {
   let listFromDb;
   listFromDb = await db.dbGetProducts();
   listFromDb.forEach(item => {
-    let row = [item.itemname, item.price];
+    let row = [item.itemid, item.itemname, item.price, item.itemimgpath];
     products.push(JSON.parse(JSON.stringify(row)));
   });
   res.send(products);

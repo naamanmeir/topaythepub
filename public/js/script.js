@@ -40,7 +40,8 @@ function loadUtiliti() {
         viewport.setAttribute("content", "width=" + window.innerWidth + ", height=" + window.innerHeight + ", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
     }, 100);
     setTimeout(getProducts(), 300);
-    setTimeout(replaceItems(), 900);
+    // setTimeout(displayItems(), 6200);
+    // setTimeout(replaceItems(), 1600);
 
 };
 
@@ -50,7 +51,7 @@ function getProducts() {
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             products = JSON.parse(this.response);
-            console.log(products);
+            // console.log(products);
             if (products[0]) itemName1 = products[0][0];
             if (products[0]) itemPrice1 = products[0][1];
             if (products[1]) itemName2 = products[1][0];
@@ -59,6 +60,8 @@ function getProducts() {
             if (products[2]) itemPrice3 = products[2][1];
             if (products[3]) itemName4 = products[3][0];
             if (products[3]) itemPrice4 = products[3][1];
+            displayItems();
+            // replaceItems();
             return;
         }
     };
@@ -136,8 +139,8 @@ function replaceItems() {
     // console.log(divs);
     for (var i = 0; i < divs.length; i++) {
         var thisDiv = divs[i];
-        randomTop = getRandomNumber(0, 22);
-        randomLeft = getRandomNumber(0, 22);
+        randomTop = getRandomNumber(0, 12);
+        randomLeft = getRandomNumber(0, 12);
         thisDiv.style.top = randomTop + "px";
         thisDiv.style.left = randomLeft + "px";
     }
@@ -145,6 +148,35 @@ function replaceItems() {
         return Math.random() * (max - min) + min;
     }
 }
+
+function displayItems() {
+    var items = document.getElementById('itemsDiv');
+    while (items.firstChild) {
+        items.removeChild(items.firstChild);
+    };
+    // console.log(products);
+    products.forEach((item, index) => {
+        // console.log(item);
+        // console.log(index);
+        let itemDiv = document.createElement("div");
+        itemDiv.innerHTML = (`<p class="itemName" id="name${index}">${item[1]}</p>;
+        <img src="${item[3]}" onpointerup="addItem(${index})">
+        <p class="itemPrice p2">₪${item[2]}</p>
+        <count class="counts" id="count${index}"></count>        
+        `);
+        itemDiv.className = ("item");
+        items.appendChild(itemDiv);
+        itemDiv.onmouseup = function () {
+            addItem(index);
+        };
+        // replaceItems();
+    });
+};
+
+const interval = setInterval(function () {
+    getProducts();
+    displayItems();
+}, 5000);
 
 //-------------NOT--------------UI--------------
 function afterOrderAnimation() {
@@ -203,7 +235,7 @@ function cancelOrder(message) {
 
 function orderConfirm(orderArray2, abort) {
     userAutoLogout(60000); // LOGOUT AFTER ONE MINUTE
-    console.log("orderConfirm");
+    // console.log("orderConfirm");
     const message = document.getElementById("messageBox");
     if (abort) { message.innerHTML = (""); message.classList.remove("messageBoxOn"); return };
     let buttonYes = document.createElement("button");
@@ -224,13 +256,6 @@ function orderConfirm(orderArray2, abort) {
     buttonYes.textContent = 'אשר רישום';
     buttonNo.textContent = 'בטל רישום';
     // console.log(orderArray2);
-
-    // if (orderArray) let i1 = orderArray2[0][1];
-    // let i2 = orderArray2[0][2];
-    // let i3 = orderArray2[0][3];
-    // let i4 = orderArray2[0][4];
-    // let price = (i1*itemPrice1)+(i2*itemPrice2)+(i3*itemPrice3);
-
     message.innerHTML = ("<p2>   היי </p2>");
     message.innerHTML += ("<br>");
     message.innerHTML += ("<p5>" + clientName + "</p5>");
@@ -261,7 +286,7 @@ function orderConfirm(orderArray2, abort) {
     // let orderComplete = [orderArray2,finalPrice];
     orderComplete.push([finalPrice]);
     orderComplete.push([clientId]);
-    console.log(orderComplete);
+    // console.log(orderComplete);
     buttonYes.addEventListener("click", function () {
         vibrate(75);
         placeOrder(orderComplete);
@@ -293,7 +318,6 @@ function orderConfirm(orderArray2, abort) {
 
 function addItem(item) {
     if (sideMenu) { return };
-    // console.log(orderArray)
     const counts = document.getElementsByClassName("counts");
     if (counts[item].innerText == "" || counts[item].innerText == null) {
         counts[item].innerText = 1;
@@ -302,9 +326,7 @@ function addItem(item) {
         if (current < 99) counts[item].innerText = (parseInt(current) + 1);
     }
     let itemsBought = parseInt(counts[item].innerText);
-    orderArray[item] = [itemsBought, products[item][0], products[item][1]];
-    // console.log(itemsBought);
-    // console.log(orderArray);
+    orderArray[item] = [itemsBought, products[item][1], products[item][2]];
 }
 
 function orderButtons(btn) {
@@ -880,3 +902,4 @@ function pointerEnableIn(i) {
         itemsArray.forEach(pointerAll);
     }, i);
 };
+

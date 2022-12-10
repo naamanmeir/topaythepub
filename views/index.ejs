@@ -39,16 +39,7 @@
 
         <div class="messageBox column" id="messageBox"></div>
 
-        <div class="items" id="itemsDiv">
-            <% products.forEach((product,index) => {var id = product.itemid;var name = product.itemname;var price = product.price;var img = product.itemimgpath;%>
-                <div class="item" id="div<%=index%>" onpointerup="addItem(<%=index%>)">
-                    <p class="itemName" id="name<%=index%>"><%=name%></p>
-                    <img src="<%=img%>">
-                    <p class="itemPrice p2" id="price<%=index%>"><%=price%> ₪</p>
-                    <count class="counts" id="count<%=index%>"></count>
-                  </div>
-              <% }); %>
-        </div>        
+        <div class="items" id="itemsDiv"></div>        
 
         <div class="buttons" id="buttons">
             <div class="errorMessage" id="errorMessage"></div>

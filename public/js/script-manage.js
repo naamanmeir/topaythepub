@@ -459,7 +459,7 @@ function editProduct() {
     let newStock = document.getElementById("productStock");
     let data = [productId, newName.value, newPrice.value, newStock.value];
     console.log(data);
-    if (window.confirm("לערוך נתונים של מוצר?")) {
+    if (window.confirm("לערוך נתונים של " + productName + "?")) {
         xhttp.open("POST", "./editProduct/" + data, true);
         xhttp.send();
     };
@@ -482,8 +482,10 @@ function insertProduct() {
     newData = JSON.stringify(newData);
     newItem.value = '';
     newPrice.value = '';
-    xhttp.open("POST", "./insertProduct/" + newData, true);
-    xhttp.send();
+    if (window.confirm("להכניס מוצר?")) {
+        xhttp.open("POST", "./insertProduct/" + newData, true);
+        xhttp.send();
+    };
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             console.log(this.response);
@@ -495,7 +497,19 @@ function insertProduct() {
 };
 
 function deleteProduct() {
-
+    if (!productId) return;
+    if (window.confirm("למחוק " + productName + "?")) {
+        xhttp.open("POST", "./deleteProduct/" + productId, true);
+        xhttp.send();
+    };
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            document.getElementById("productsEditLog").innerText = this.response;
+            getProducts();
+            return;
+        }
+    };
 }
 
 function openInfotables() {
