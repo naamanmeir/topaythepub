@@ -74,7 +74,7 @@
             <div class="row">
                 <p>עריכת מוצר קיים</p>
                 <!-- <input type="search" class="searchBoxNoLogged" id="getProductName" spellcheck="false" placeholder=" מצא מוצר מהרשימה"> -->
-                <select id="selectProduct" onchange="editProductLoad()"><option>בחר מוצר</option></select>
+                <select class="select" id="selectProduct" onchange="editProductLoad()"><option>בחר מוצר</option></select>
                 <div class="autoCompleteNone" id="autoComplete"></div>
             </div>
             <div class="row">
@@ -107,7 +107,7 @@
                 <p> מחיר : </p>
                 <input type="text" class="textboxNumber" id="insertPrice" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מחיר  ">
                 <p> תמונה : </p>
-                <select id="selectImg"><option value="1">מקרר</option><option value="2">בירה</option><option value="3">משקה</option><option value="4">מרק</option><option value="5">פיצה</option><option value="6">משהו מיוחד</option></select>
+                <select class="select" id="selectImg"><option value="1">מקרר</option><option value="2">בירה</option><option value="3">משקה</option><option value="4">מרק</option><option value="5">פיצה</option><option value="6">משהו מיוחד</option></select>
                 <p> כמות : </p>
                 <input type="text" class="textboxNumber" id="insertStock" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס כמות  ">
                 <button class="green" onclick="insertProduct()">הכנס מוצר</button>
@@ -124,18 +124,23 @@
 
         <div class="archive">
             <p>ארכיון</p>
-            <select name="reportArchive" id="reportArchive">
+            <select class="select" name="reportArchive" id="reportArchive">
             </select>
             <button class="green" onclick="requestReportArchive()">הצג נתוני ארכיון</button>
         </div>
 
         <div class="function" id="backupTable">
-            <button onclick="backupTable()">יצירת גיבוי חדש לפי תאריך עכשווי</button>
+            <button class="orange" onclick="backupTable()">יצירת גיבוי חדש</button>
         </div>
+
+        <div class="row"></div>
 
         <div class="function" id="resetDbData">
             <button class="red" onclick="resetAfterReport()">איפוס נתונים לאחר קריאה</button>
         </div>
+
+        <div class="row"></div>
+        
 
         <div class="row linebreak"></div>
 
@@ -149,19 +154,19 @@
     <div class="content row">
 
         <div class="function" id="getAccounData">
-            <button onclick="getAllData(4)">הצגת נתונים לדו"ח</button>
+            <button onclick="getAllData(4)">נתונים לדו"ח</button>
         </div>
 
         <div class="function" id="getOrdersData">
-            <button onclick="getAllData(1)">הצגת נתוני עסקאות</button>
+            <button onclick="getAllData(1)">נתוני עסקאות</button>
         </div>
 
         <div class="function" id="getCLientData">
-            <button onclick="getAllData(2)">הצגת נתוני משתמשים</button>
+            <button onclick="getAllData(2)">נתוני משתמשים</button>
         </div>
 
         <div class="function" id="getCLientData">
-            <button onclick="getAllData(3)">הצגת נתוני משתמשים כולל כלבים</button>
+            <button onclick="getAllData(3)">נתוני משתמשים כולל כלבים</button>
         </div>
 
     </div>

@@ -12,12 +12,12 @@ body,
     /* float: center; */
 }
 
-p1{
+p1 {
     margin: 0px;
     padding: 0px;
 }
 
-.header{
+.header {
     grid-area: header;
     text-align: center;
     right: 0px;
@@ -26,7 +26,7 @@ p1{
     padding-top: 1%;
 }
 
-.header p{
+.header p {
     color: blue;
     font-size: 2rem;
     line-height: 0.5rem;
@@ -36,90 +36,103 @@ p1{
     padding-bottom: 3%;
 }
 
-body {
-}
+body {}
 
 .content {
-    height: fit-content;        
+    height: fit-content;
     max-width: 1200px;
     /* float: center; */
     left: 50%;
-    right: 50%;    
+    right: 50%;
     display: flex;
     margin: auto;
     /* gap: 10px 10px; */
 }
 
-.green{
-    background-color: green;
-}
 
-.column{
+
+.column {
     flex-direction: column;
 }
 
-.row{
+.row {
     padding-top: 1%;
     flex-direction: row;
 }
 
-.function{
+.function {}
 
-}
-.function p{
+.function p {
     margin: 0px;
     padding: 0px;
 }
-.searchBoxNoLogged{
+
+.searchBoxNoLogged {
     width: 75%;
     height: 2rem;
     border: 3px solid grey;
 }
-.searchBoxNotOk{
+
+.searchBoxNotOk {
     border: 3px solid red;
 }
-.searchBoxOk{
+
+.searchBoxOk {
     border: 3px solid green;
 }
+
 .textbox {
     width: 75%;
     height: 2rem;
 }
-.textboxShort{
+
+.textboxShort {
     width: 65%;
     height: 2rem;
 }
-.textboxNumber{
+
+.textboxNumber {
     width: fit-content;
     height: 2rem;
 }
+
 input:valid {
     color: green;
-  }
-  input:invalid {
+}
+
+input:invalid {
     color: red;
-  }
-.red{
+}
+
+.green {
+    background-color: green;
+}
+
+.red {
     background-color: red;
 }
-.orange{
+
+.orange {
     background-color: orange;
 }
-.left{  
-    float: left;     
+
+.left {
+    float: left;
 }
-.center{    
+
+.center {
     /* float: center; */
     text-align: center;
 }
 
-.tableStyle{
+.tableStyle {
     font-size: x-large;
     color: aqua;
     background-color: rgb(223, 14, 14);
     color: lightblue;
 }
-.logText{
+
+.logText {
     margin-top: 1rem;
     margin-bottom: 1rem;
     direction: rtl;
@@ -127,42 +140,52 @@ input:valid {
 
 button {
     margin: 0.2rem;
-    height: fit-content;
-    width: fit-content;
+    min-height: fit-content;
+    min-width: fit-content;
+    height: 4rem;
+    width: 4rem;
 }
 
-.footer{
-    color: black;    
+.select {
+    font-size: 1.5rem;
+    margin: 1%;
+}
+
+.footer {
+    color: black;
     position: sticky;
     text-align: center;
     font-size: x-small;
     /* line-height: 50px; */
     height: 1px;
-    bottom: 0px;    
+    bottom: 0px;
     padding: 0px 0px 0px 0px;
     padding-bottom: 0px;
     padding-top: 10px;
-    margin: 0px 0px 0px 0px;    
+    margin: 0px 0px 0px 0px;
     margin-bottom: 3%;
 }
 
-.reportTableDiv{
+.reportTableDiv {
     direction: rtl;
 }
 
-.linebreak{
+.linebreak {
     background-color: green;
     width: 100%;
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
-.addUser{
+
+.addUser {
     /* margin-top: 2rem; */
 }
-.autoCompleteNone{
+
+.autoCompleteNone {
     display: none;
     height: 0;
 }
+
 .autoCompleteSuggestions {
     z-index: 3000;
     position: relative;
@@ -175,10 +198,11 @@ button {
     padding-bottom: 0px;
     padding-top: 0px;
 }
+
 .autocomplete-items {
-    z-index: 3000;    
+    z-index: 3000;
     left: 0;
-    right:0;
+    right: 0;
     padding: 0px;
     margin: 0px;
     font-size: 1rem;
@@ -186,19 +210,23 @@ button {
     background-color: #d4d4d4;
     border: 2px solid black;
 }
-.autocomplete-itemsEven{
+
+.autocomplete-itemsEven {
     background-color: #9f9d9d;
 }
-.autocomplete-items:hover {    
+
+.autocomplete-items:hover {
     background-color: #e9e9e9;
 }
+
 .autocomplete-items div {
     /* padding: 10px; */
     cursor: pointer;
     background-color: #fff;
     border-bottom: 1px solid #d4d4d4;
-}  
+}
+
 .autocomplete-active {
     background-color: DodgerBlue !important;
     color: #ffffff;
-}  
+}

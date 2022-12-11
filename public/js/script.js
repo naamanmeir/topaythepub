@@ -5,6 +5,8 @@ var timeOutDef = 40000; // 60000 *5;
 var timeOut = timeOutDef;
 let timerLogout;
 
+const refreshDataInterval = setInterval(startRefreshDataInterval, 120000);
+
 var item1 = 0;
 var item2 = 0;
 var item3 = 0;
@@ -147,7 +149,7 @@ function replaceItems() {
     function getRandomNumber(min, max) {
         return Math.random() * (max - min) + min;
     }
-}
+};
 
 function displayItems() {
     var items = document.getElementById('itemsDiv');
@@ -172,11 +174,6 @@ function displayItems() {
         // replaceItems();
     });
 };
-
-const interval = setInterval(function () {
-    getProducts();
-    displayItems();
-}, 5000);
 
 //-------------NOT--------------UI--------------
 function afterOrderAnimation() {
@@ -566,6 +563,7 @@ function userLogged() {
     searchBox1.classList.remove("searchBoxNotLogged");
     document.getElementById("user_info").style.display = "block";
     userAutoLogout(45000);
+    stopRefreshDataInterval();
 };
 
 function userLogout() {
@@ -591,6 +589,9 @@ function userLogout() {
     clearAutoComplete(document.getElementById("autoComplete"))
     timeOut = timeOutDef;
     pointerEnableIn(3000);
+    getProducts();
+    displayItems();
+    startRefreshDataInterval();
     allElements(1);
 };
 
@@ -602,6 +603,17 @@ function userAutoLogout(reset) {
     timerLogout = setTimeout(() => {
         userLogout();
     }, timeOut);
+};
+
+function startRefreshDataInterval() {
+    const refreshDataInterval = setInterval(function () {
+        getProducts();
+        displayItems();
+    }, 120000);
+};
+
+function stopRefreshDataInterval() {
+    clearInterval(refreshDataInterval);
 };
 
 function userSearchMessage(select) {

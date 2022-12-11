@@ -484,7 +484,7 @@ exports.dbEditProduct = async function (values) {
       return ("הייתה תקלה");
     }).then((res) => {
       console.log(res);
-      return ("למשתמש מספר " + productId);
+      return (productId);
     });
   // console.log("clientID: "+clientId+" Column: "+field+" Value: "+value);
   console.log(editProductRes);

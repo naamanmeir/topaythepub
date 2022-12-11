@@ -7,6 +7,9 @@ const fs = require('fs');
 const readline = require('readline');
 const { stringify } = require("csv-stringify");
 
+var SSE = require('express-sse');
+var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
+
 const db = require('./db.js');
 const { Script } = require("node:vm");
 const strings = require('./strings.js');
@@ -506,4 +509,3 @@ app.get('/resetClientsDataAfterRead/', async function (req, res) {
 });
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));
-
