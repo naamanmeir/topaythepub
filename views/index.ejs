@@ -13,19 +13,9 @@
 
 <body oncontextmenu="return false;">
 
-    <div id="sideNav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><img src="img/ui/menu_close.png"></a>
-        <a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)">רקע עיגולים</a>
-        <a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)">רקע ריבועים</a>
-        <a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)">רקע טבעות</a>
-        <a href="#" onclick="bgSelect(0)" onclick="clearTimeout(window.tcm)">רקע שחור</a>
-        <a href="#" class="hidden" id="user_info" onclick="getUserInfoById()">משתמש</a>
-        <!-- <a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a> -->
-      </div>
+    <div id="sideNav" class="sidenav"></div>
 
-      <span class="elementOpen" onclick="openNav()"><img src="img/ui/menu_top03.png"></span>
-
-    
+      <span class="elementOpen" onclick="openNav()"><img src="img/ui/menu_top03.png"></span>    
 
         <%- include('./partials/header'); %>
 
@@ -35,13 +25,13 @@
             <div class="userStateIndicator" id="userStateIndicator">
                 <p></p>
             </div>
-            <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false" placeholder="שלום הכניסו שם✍👉👉">
+            <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false" placeholder=" נא להכניס שם✍👉👉">
             <div class="autoCompleteNone" id="autoComplete"></div>
         </div>
 
         <div class="messageBox column" id="messageBox"></div>
 
-        <div class="items" id="itemsDiv"></div>        
+        <div class="items" id="itemsDiv"></div>
 
         <div class="buttons" id="buttons">
             <div class="errorMessage" id="errorMessage"></div>
