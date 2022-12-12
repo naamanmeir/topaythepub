@@ -13,14 +13,7 @@ var item1 = 0;
 var item2 = 0;
 var item3 = 0;
 var item4 = 0;
-let itemName1;
-let itemName2;
-let itemName3;
-let itemName4;
-let itemPrice1;
-let itemPrice2;
-let itemPrice3;
-let itemPrice4;
+
 let products = [];
 let orderArray = [];
 var clientId = 999;
@@ -56,14 +49,6 @@ function getProducts() {
         if (this.readyState == 4 && this.status == 200) {
             products = JSON.parse(this.response);
             // console.log(products);
-            if (products[0]) itemName1 = products[0][0];
-            if (products[0]) itemPrice1 = products[0][1];
-            if (products[1]) itemName2 = products[1][0];
-            if (products[1]) itemPrice2 = products[1][1];
-            if (products[2]) itemName3 = products[2][0];
-            if (products[2]) itemPrice3 = products[2][1];
-            if (products[3]) itemName4 = products[3][0];
-            if (products[3]) itemPrice4 = products[3][1];
             displayItems();
             // replaceItems();
             return;
@@ -137,6 +122,18 @@ searchBox1.addEventListener('input', function () {
     searchBox(searchBox1.value);
 });
 //---------------------UI-----------------------------
+
+function uiSidemenu(){
+    const sideNav = document.getElementById("sideNav");
+    sideNav.innerHTML = (`<a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><img src="img/ui/menu_close.png"></a>`);
+    sideNav.innerHTML += (`<a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)">רקע עיגולים</a>`);
+    sideNav.innerHTML += (`<a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)">רקע ריבועים</a>`);
+    sideNav.innerHTML += (`<a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)">רקע טבעות</a>`);
+    sideNav.innerHTML += (`<a href="#" onclick="bgSelect(0)" onclick="clearTimeout(window.tcm)">רקע שחור</a>`);
+    sideNav.innerHTML += (`<a href="#" class="hidden" id="user_info" onclick="getUserInfoById()">משתמש</a>`);
+    // sideNav.innerHTML += (`<a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a>`);    
+};
+uiSidemenu();
 
 function replaceItems() {
     var divs = document.getElementsByClassName('item');
