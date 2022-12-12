@@ -486,7 +486,7 @@ video {
 }
 
 .items {
-    height: 100%;
+    height: 50vh;
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -500,10 +500,10 @@ video {
 
 .item {
     flex: 1;
-    flex-shrink: 1;
+    /* flex-shrink: 1; */
     max-height: fit-content;
     width: 2%;
-    max-width: fit-content;
+    max-width: 25%;
     flex-basis: 20%;
     background-color: #61584b81;
     border: 4px outset rgb(240, 152, 0);
@@ -580,13 +580,18 @@ video {
 }
 
 .buttons {
+    /* position: relative; */
     display: flex;
     flex: 1;
     flex-direction: row;
-    width: 100%;
+    width: 80%;
     height: 4em;
     margin: auto;
     margin-top: 1rem;
+    margin-bottom: 1rem;
+    bottom: 1rem;
+    left: 10%;
+    right: 10%;
     text-align: center;
 }
 

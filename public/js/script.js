@@ -5,7 +5,9 @@ var timeOutDef = 40000; // 60000 *5;
 var timeOut = timeOutDef;
 let timerLogout;
 
-const refreshDataInterval = setInterval(startRefreshDataInterval, 120000);
+var refreshDataIntervalTime = 120000;
+
+const refreshDataInterval = setInterval(startRefreshDataInterval, refreshDataIntervalTime);
 
 var item1 = 0;
 var item2 = 0;
@@ -609,7 +611,7 @@ function startRefreshDataInterval() {
     const refreshDataInterval = setInterval(function () {
         getProducts();
         displayItems();
-    }, 120000);
+    }, refreshDataIntervalTime);
 };
 
 function stopRefreshDataInterval() {

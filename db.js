@@ -455,7 +455,7 @@ exports.dbInsertProduct = async function (newProduct) {
   img = ("img/items/" + img + ".png");
   console.log(img);
   let messageReturn;
-  console.log("CLIENT AVAILABLE");
+  console.log("PRODUCT NAME AVAILABLE");
   messageReturn = await pool.query("INSERT INTO " + tableProducts +
     " (itemname,price,itemimgpath,stock) VALUES ('" + name + "','" + price + "','" + img + "','" + stock + "');")
     .catch((err) => {
@@ -464,7 +464,7 @@ exports.dbInsertProduct = async function (newProduct) {
       console.log(res);
       return ("התווסף מוצר : " + name + " במחיר : " + price);
     });
-  console.log("Inserted Client: " + messageReturn)
+  console.log("Inserted Product: " + messageReturn)
   return messageReturn;
 };
 
