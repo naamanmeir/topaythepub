@@ -36,7 +36,9 @@ function loadUtiliti() {
     setTimeout(function () {
         viewport.setAttribute("content", "width=" + window.innerWidth + ", height=" + window.innerHeight + ", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
     }, 100);
-    setTimeout(getProducts(), 300);
+    setTimeout(getProducts(), 300);    
+    setTimeout(uiSidemenu(), 500);
+
     // setTimeout(displayItems(), 6200);
     // setTimeout(replaceItems(), 1600);
 
@@ -131,9 +133,10 @@ function uiSidemenu(){
     sideNav.innerHTML += (`<a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)">רקע טבעות</a>`);
     sideNav.innerHTML += (`<a href="#" onclick="bgSelect(0)" onclick="clearTimeout(window.tcm)">רקע שחור</a>`);
     sideNav.innerHTML += (`<a href="#" class="hidden" id="user_info" onclick="getUserInfoById()">משתמש</a>`);
-    // sideNav.innerHTML += (`<a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a>`);    
+    // sideNav.innerHTML += (`<a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a>`);
+    sideNav.innerHTML += (`<a href="#" onclick="refreshPage()"">refresh</a>`);
+
 };
-uiSidemenu();
 
 function replaceItems() {
     var divs = document.getElementsByClassName('item');
@@ -172,6 +175,10 @@ function displayItems() {
         };
         // replaceItems();
     });
+};
+
+function refreshPage(){
+    location.reload();
 };
 
 //-------------NOT--------------UI--------------

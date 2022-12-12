@@ -422,7 +422,7 @@ async function getProducts() {
             while (selectBar.childElementCount > 1) {
                 selectBar.removeChild(selectBar.lastChild);
             };
-            console.log(products);
+            // console.log(products);
             products.forEach(table => {
                 var opt = document.createElement("option");
                 opt.value = table.itemname;
