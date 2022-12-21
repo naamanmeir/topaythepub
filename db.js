@@ -357,27 +357,39 @@ exports.dbGetNameBySearch = function (query) {
 //-----------------------GET INFO BY SCOPE----------------------//
 exports.dbGetDataByScope = async function (scope) {
   if (scope == 1) {//SCOPE ORDERS
-    data = await pool.query("SELECT orderid,DATE_FORMAT(`time`, '%Y-%m-%d %H:%i') AS `formatted_date`" +
+    data = await pool.query("SELECT orderid,DATE_FORMAT(`time`, '%d-%m-%y') AS `formatted_date`" +
       ",info,sum,clientid,client FROM " + tableOrders +
+      " WHERE clientid IN ( SELECT id FROM "+ tableClients + " WHERE account >= 50 )" +
       " ORDER BY orderid DESC;");
   };
   if (scope == 2) {//SCOPE CLIENTS ALL
-    data = await pool.query("SELECT id,DATE_FORMAT(`last_action`, '%Y-%m-%d %H:%i') AS `formatted_date`" +
+    data = await pool.query("SELECT id,DATE_FORMAT(`last_action`, '%d-%m-%y %h:%i') AS `formatted_date`" +
       ",sum,account,name,nick FROM " + tableClients +
       " WHERE account > 50" +
       " ORDER BY name;");
   };
   if (scope == 3) {//SCOPE CLIENTS REAL
-    data = await pool.query("SELECT id,DATE_FORMAT(`last_action`, '%Y-%m-%d %H:%i') AS `formatted_date`" +
+    data = await pool.query("SELECT id,DATE_FORMAT(`last_action`, '%d-%m-%y %h:%i') AS `formatted_date`" +
       ",sum,account,name,nick FROM " + tableClients +
       " ORDER BY name;");
   };
-  if (scope == 4) {//SCOPE REPORT
+  if (scope == 4) {//SCOPE REPORT WITH TOTAL SUM PER CLIENT
     data = await pool.query("SELECT sum," +
-      " DATE_FORMAT(`last_action`, '%y/%m/%d') AS `formatted_date`" +
+      " DATE_FORMAT(`last_action`, '%d/%m/%y') AS `formatted_date`" +
       ",name,account FROM " + tableClients +
       " WHERE account >= 50 AND sum > 0 " +
       " ORDER BY last_action DESC ;");
+  };
+  if (scope == 5) {//SCOPE REPORT WITH ORDERS MERGED BY DATE
+    data = await pool.query("SELECT sum(orders.sum) AS `sum`,DATE_FORMAT(`time`, '%d-%m-%y') AS `date`" +
+      ",GROUP_CONCAT(orders.info SEPARATOR ',') AS `info`,orders.client AS `client`,clients.account AS `account`"+
+      // " ,GROUP_CONCAT(orders.info SEPARATOR ',') " +
+      " FROM " + tableOrders +
+      " INNER JOIN "+ tableClients + " ON orders.clientid = clients.id " +
+      " WHERE sign = 0 AND " +
+      " clientid IN ( SELECT id FROM "+ tableClients + " WHERE account >= 50 AND sum > 0)" +
+      " GROUP BY date, clientid " +
+      " ORDER BY orderid DESC;");
   };
   // console.log(await data);
   return data;
@@ -386,7 +398,7 @@ exports.dbGetDataByScope = async function (scope) {
 //-----------------------GET ARCHIVE REPORT BY DATE----------------------//
 exports.dbGetDataFromArchiveByDate = async function (archiveTableName) {
   data = await pool.query("SELECT sum," +
-    " DATE_FORMAT(`last_action`, '%y/%m/%d') AS `formatted_date`" +
+    " DATE_FORMAT(`last_action`, '%d/%m/%y') AS `formatted_date`" +
     ",name,account FROM " + archiveTableName +
     " WHERE account >= 50 AND sum > 0 " +
     " ORDER BY last_action DESC ;");
@@ -441,7 +453,9 @@ exports.dbDeleteOldBackups = async function (time) {
 //-----------------------RESET CLIENTS ORDERS AFTER REPORT-----------------------//
 exports.dbResetClientOrders = async function () {
   let resetClientOrders;
+  let resetOrders;
   resetClientOrders = await pool.query("UPDATE " + tableClients + " SET sum=0;");
+  resetOrders = await pool.query("UPDATE " + tableOrders + " SET sign=1 WHERE sign = 0;");
   console.log(resetClientOrders);
 };
 

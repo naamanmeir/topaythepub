@@ -229,6 +229,7 @@ app.post('/getAllData/:data', async (req, res) => {
   // console.log(itemsBought);
   let dbData;
   dbData = await db.dbGetDataByScope(scope).then((dbData) => { return (dbData) });
+  // console.log(dbData);
   res.send(dbData)
 });
 
@@ -451,12 +452,46 @@ app.get('/accountant', async function (req, res) {
   res.render('accountant', {})
 });
 
-//-----------------------WRITE REPORT FILE AND SEND TO DOWNLOAD---------------------//
-app.get('/createFile/', async function (req, res) {
+//-----------------------WRITE REPORT FILE WITH ORDERS SCHEME---------------------//
+app.get('/createFileReportOrders/', async function (req, res) {
+  console.log("REPORT FILE CREATE ON "+Date())
+  let fileDate = new Date();
+  var month = fileDate.getMonth();
+  month = month+1;
+  var minutes = fileDate.getMinutes();
+  minutes = ("0" + minutes).slice(-2);
+  fileDate = (fileDate.getFullYear().toString().substr(-2) + "-" + month + "-" +
+    fileDate.getDate() + "-" + fileDate.getHours() + "-" + minutes);
+  const filename = "pub_orders_" + fileDate + ".csv";
+  const writableStream = fs.createWriteStream('public/report/' + filename);
+  const columns = [
+    "",
+    "מס. לקוח",
+    "שם לקוח",
+    "פרטים",
+    "תאריך",
+    "סכום"
+  ];
+  const stringifier = stringify({ header: true, columns: columns, bom: true });
+  let data;
+  data = await db.dbGetDataByScope(5);
+  // console.log(JSON.stringify(data));
+  for (let i = 0; i < data.length; i++) {
+    let row = ["", data[i].account, data[i].client, data[i].info ,data[i].date, "₪ " + data[i].sum];
+    stringifier.write(row);
+  }  
+  stringifier.pipe(writableStream);
+  res.setHeader('Content-disposition', "'attachment; filename=" + filename + "'");
+  res.set('Content-Type', 'text/csv; charset=utf-8');
+  res.status(200).send('./report/' + filename);
+});
+
+//-----------------------WRITE REPORT FILE WITH CLIENTS SCHEME---------------------//
+app.get('/createFileReportClients/', async function (req, res) {
   let fileDate = new Date();
   fileDate = (fileDate.getFullYear() + "-" + fileDate.getMonth() + "-" +
     fileDate.getDate() + "-" + fileDate.getHours() + "-" + fileDate.getMinutes());
-  const filename = "pub_report_" + fileDate + ".csv";
+  const filename = "pub_report_clients" + fileDate + ".csv";
   const writableStream = fs.createWriteStream('public/report/' + filename);
   const columns = [
     "",
@@ -509,3 +544,32 @@ app.get('/resetClientsDataAfterRead/', async function (req, res) {
 });
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));
+
+
+// A simple dataSource that changes over time
+let dataSource = 0;
+const updateDataSource = () => {
+  const delta = Math.random();
+  dataSource += delta;
+}
+
+setInterval(()=> updateDataSource(), 500);
+
+
+const requestListener = function (req, res) {
+  if (req.url === '/ticker') {
+    res.statusCode = 200;
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("connection", "keep-alive");
+    res.setHeader("Content-Type", "text/event-stream");
+
+    setInterval(() => {
+      const data = JSON.stringify({ ticker: dataSource });
+      res.write(`id: ${(new Date()).toLocaleTimeString()}\ndata: ${data}\n\n`);
+    }, 1000);
+  } else {
+    res.statusCode = 404;
+    res.end("resource does not exist");
+  }
+};

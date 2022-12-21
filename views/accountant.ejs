@@ -18,9 +18,13 @@
 
             <!-- BUTTONS -->
     <div class="content row">
-        
+
         <div class="buttonBig" id="getAccountData">
-            <button onclick="createReportFile()">יצירת קובץ דו"ח להורדה</button>
+            <button onclick="createReportFileOrders()">הורדת דו"ח עסקאות</button>
+        </div>
+
+        <div class="buttonSmall" id="getAccountData">
+            <button onclick="getAllData(5)">הצגת דו"ח עסקאות</button>
         </div>
 
         <div class="function" id="backupTable">
@@ -35,15 +39,26 @@
 
     <div class="row linebreak"></div>
 
+    <div class="content row">
+
+        <div class="buttonBig" id="getAccountData">
+            <button onclick="createReportFileClients()">הורדת דו"ח - סך הכל למשתמש</button>
+        </div>
+
+
+        <div class="buttonSmall" id="getAccountData">
+            <button onclick="getAllData(4)">הצגת דו"ח  סך הכל למשתמש</button>
+        </div>
+        
+    </div>
+
+    <div class="row linebreak"></div>
+
 
     <div class="content row">
 
-        <div class="buttonSmall" id="getAccountData">
-            <button onclick="getAllData(4)">הצגת דו"ח</button>
-        </div>
-
         <div class="buttonSmall" id="getOrdersData">
-            <button onclick="getAllData(1)">הצגת נתוני עסקאות</button>
+            <button onclick="getAllData(1)">הצגת כל העסקאות</button>
         </div>
 
         <div class="buttonSmall" id="getClientData">

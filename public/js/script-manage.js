@@ -276,7 +276,7 @@ function clientOrderHistory(data) {
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
     const TR = document.createElement("tr");
-    TR.innerHTML = ("<th>תג רשימה</th><th>נרשם בתאריך</th><th>מוצר1</th><th>מוצר2</th><th>מוצר3</th><th>מוצר4</th><th>סך הכל</th><th>שם לקוח</th>");
+    TR.innerHTML = ("<th>תג רשימה</th><th>נרשם בתאריך</th><th>פרטים</th><th>סך הכל</th><th>שם לקוח</th>");
     tableBody.appendChild(TR);
     for (let i = 0; i < data.length; i++) {
         const row = document.createElement("tr");

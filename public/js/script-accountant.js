@@ -17,7 +17,7 @@ function getAllData(scope) {
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            // console.log(this.response);
+            console.log(this.response);
             if (scope == 1) {
                 showOrdersTable(JSON.parse(this.response));
             }
@@ -29,6 +29,9 @@ function getAllData(scope) {
             }
             if (scope == 4) {
                 showAccountTable(JSON.parse(this.response));
+            }
+            if (scope == 5) {
+                showAccountOrdersTable(JSON.parse(this.response));
             }
             return;
         }
@@ -122,15 +125,61 @@ function showAccountTable(data) {
     table.setAttribute("border", "1");
     table.setAttribute("align", "center");
     table.setAttribute("width", "100%");
-    table.setAttribute("style", "font-size:xx-large");
+    table.setAttribute("style", "font-size:larger");
     table.setAttribute("class", "tableStyle");
     var tableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");
     tableWindow.document.write();
     tableWindow.document.appendChild(table);
 };
 
-function createReportFile() {
-    xhttp.open("GET", "./createFile/", true);
+function showAccountOrdersTable(data) {
+    const table = document.createElement("table");
+    const tableBody = document.createElement("tbody");
+    const TR = document.createElement("tr");
+    TR.innerHTML = ("<th>סכום</th><th>תאריך</th><th>פרטים</th><th>שם לקוח</th><th>מס. לקוח</th>");
+    tableBody.appendChild(TR);
+    for (let i = 0; i < data.length; i++) {
+        const row = document.createElement("tr");
+        let clientRow = Object.values(data[i]);
+        for (let j = 0; j < clientRow.length; j++) {
+            if (j == 2) { clientRow[j] = clientRow[j] };
+            const cell = document.createElement("td");
+            let cellText;
+            if (j == 0) { cellText = document.createTextNode(clientRow[j] + " ₪"); }
+            if (j == 1) { cellText = document.createTextNode(clientRow[j]); }
+            if (j > 1) { cellText = document.createTextNode(clientRow[j]); }
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+        }
+        row.setAttribute("dir", "rtl");
+        if (i % 2 === 0) { row.setAttribute("style", "background-color:lightblue;") }
+        tableBody.appendChild(row);
+    }
+    table.appendChild(tableBody);
+    table.setAttribute("border", "1");
+    table.setAttribute("align", "center");
+    table.setAttribute("width", "100%");
+    table.setAttribute("style", "font-size:larger");
+    table.setAttribute("class", "tableStyle");
+    var tableWindow = window.open("", "טבלת חיובים", "width=1000, height=800, dir=rtl");
+    tableWindow.document.write();
+    tableWindow.document.appendChild(table);
+};
+
+function createReportFileOrders() {
+    xhttp.open("GET", "./createFileReportOrders/", true);
+    xhttp.send();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            // THIS WILL DOWNLOAD YES
+            window.open(this.response);
+            return;
+        }
+    };
+};
+
+function createReportFileClients() {
+    xhttp.open("GET", "./createFileReportClients/", true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {

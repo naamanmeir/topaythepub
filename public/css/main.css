@@ -59,9 +59,6 @@ video {
 
 @media only screen and (orientation:landscape) and (hover: none) and (pointer: coarse) {
     .html {
-        height: 98%;
-        width: 98%;
-        top: 0px;
         margin-top: 0px;
         padding-top: 0px;
     }
@@ -229,7 +226,7 @@ video {
     right: 0;
     padding: 0px;
     margin: 0px;
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     color: rgb(20, 20, 20);
     background-color: #b9c1c3;
     border: 2px solid black;
@@ -1168,6 +1165,7 @@ video {
     /* font-size: xx-large;     */
     width: fit-content;
     right: 0px;
+    bottom: 0%;
     padding-left: 10px;
     padding-top: 15px;
     position: absolute;
@@ -1185,11 +1183,12 @@ video {
 } */
 /* The side navigation menu */
 .sidenav {
-    height: fit-content;
+    height: 50%;
     width: 0;
     position: fixed;
     z-index: 2500;
-    top: 0;
+    /* top: 0; */
+    bottom: 0px;
     right: 0;
     background-color: rgba(11, 49, 58, 0.86);
     border: 0px solid #97480f;
@@ -1225,10 +1224,12 @@ video {
 }
 
 .sidenav .closebtn {
-    position: absolute;
-    top: 2%;
+    /* position: absolute; */
+    /* top: 2%; */
+    bottom: 0px;
     right: 5px;
-    font-size: 36px;
+    height: 50px;
+    font-size: 2px;
     margin-left: 25px;
     padding: 0px;
     color: rgb(255, 242, 0);
@@ -1261,6 +1262,7 @@ video {
     background-repeat: no-repeat;
     background-position: left;
     filter: invert(0.6);
+    bottom: 0px;
 }
 
 #fs_mark:hover {
