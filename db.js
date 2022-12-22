@@ -381,17 +381,20 @@ exports.dbGetDataByScope = async function (scope) {
       " ORDER BY last_action DESC ;");
   };
   if (scope == 5) {//SCOPE REPORT WITH ORDERS MERGED BY DATE
-    data = await pool.query("SELECT sum(orders.sum) AS `sum`,DATE_FORMAT(`time`, '%d-%m-%y') AS `date`" +
-      ",GROUP_CONCAT(orders.info SEPARATOR ',') AS `info`,orders.client AS `client`,clients.account AS `account`"+
-      // " ,GROUP_CONCAT(orders.info SEPARATOR ',') " +
-      " FROM " + tableOrders +
-      " INNER JOIN "+ tableClients + " ON orders.clientid = clients.id " +
+    data = await pool.query("SELECT sum("+
+      tableOrders+".sum) AS `sum`"+
+      ",DATE_FORMAT(`time`, '%d-%m-%y') AS `date`" +
+      ",GROUP_CONCAT("+
+      tableOrders+".info SEPARATOR ',') AS `info`,"+
+      tableOrders+".client AS `client`,"+
+      tableClients+".account AS `account`"+      
+      " FROM " +tableOrders+
+      " INNER JOIN "+tableClients+" ON "+tableOrders+".clientid = clients.id " +
       " WHERE sign = 0 AND " +
       " clientid IN ( SELECT id FROM "+ tableClients + " WHERE account >= 50 AND sum > 0)" +
       " GROUP BY date, clientid " +
       " ORDER BY orderid DESC;");
-  };
-  // console.log(await data);
+  };  
   return data;
 };
 

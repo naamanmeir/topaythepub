@@ -477,7 +477,7 @@ app.get('/createFileReportOrders/', async function (req, res) {
   data = await db.dbGetDataByScope(5);
   // console.log(JSON.stringify(data));
   for (let i = 0; i < data.length; i++) {
-    let row = ["", data[i].account, data[i].client, data[i].info ,data[i].date, "₪ " + data[i].sum];
+    let row = ["", data[i].account, data[i].client, data[i].info ,"פאב " + data[i].date, "₪ " + data[i].sum];
     stringifier.write(row);
   }  
   stringifier.pipe(writableStream);

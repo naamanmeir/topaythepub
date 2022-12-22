@@ -146,7 +146,7 @@ function showAccountOrdersTable(data) {
             const cell = document.createElement("td");
             let cellText;
             if (j == 0) { cellText = document.createTextNode(clientRow[j] + " ₪"); }
-            if (j == 1) { cellText = document.createTextNode(clientRow[j]); }
+            if (j == 1) { cellText = document.createTextNode(clientRow[j]  + " פאב"); }
             if (j > 1) { cellText = document.createTextNode(clientRow[j]); }
             cell.appendChild(cellText);
             row.appendChild(cell);
