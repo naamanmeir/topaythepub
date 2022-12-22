@@ -64,7 +64,8 @@ button {
 }
 .buttonBig{
     background-color: green;
-    font-size: xx-large;
+    font-size: larger;
+    color: whitesmoke;
 }
 .buttonSmall{
     width: fit-content;
