@@ -128,12 +128,12 @@ searchBox1.addEventListener('input', function () {
 function uiSidemenu(){
     const sideNav = document.getElementById("sideNav");
     sideNav.innerHTML = (`<a href="#" onclick="refreshPage()"">טען מחדש</a>`);
+    sideNav.innerHTML += (`<a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a>`);
     sideNav.innerHTML += (`<a href="#" class="hidden" id="user_info" onclick="getUserInfoById()">משתמש</a>`);
     sideNav.innerHTML += (`<a href="#" onclick="bgSelect(0)" onclick="clearTimeout(window.tcm)"> שחור</a>`);
     sideNav.innerHTML += (`<a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)"> ריבועים</a>`);
     sideNav.innerHTML += (`<a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)"> טבעות</a>`);    
-    sideNav.innerHTML += (`<a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)"> עיגולים</a>`);
-    // sideNav.innerHTML += (`<a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a>`);
+    sideNav.innerHTML += (`<a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)"> עיגולים</a>`);    
     sideNav.innerHTML += (`<a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><img src="img/ui/menu_close.png"></a>`);
 
 };

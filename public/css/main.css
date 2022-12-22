@@ -12,6 +12,7 @@ body {
 html,
 body,
 .content {
+    background-color: black;
     overscroll-behavior: contain;
     background-color: rgb(221, 233, 251, 0);
     direction: rtl;
@@ -1181,21 +1182,22 @@ video {
 
 } */
 /* The side navigation menu */
-.sidenav {
-    height: 50%;
+.sidenav {    
+    height: fit-content;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     width: 0;
     position: fixed;
-    z-index: 2500;
-    /* top: 0; */
+    z-index: 2500;    
     bottom: 0px;
     right: 0;
     background-color: rgba(11, 49, 58, 0.86);
     border: 0px solid #97480f;
     border-width: 0px;
-    overflow-x: hidden;
-    padding-top: 60px;
+    overflow-x: hidden;    
     transition: 0.5s;
     white-space: nowrap;
+    margin: 0px;
 }
 
 .sidenav a {
@@ -1214,7 +1216,8 @@ video {
     height: 100%;
     filter: invert(0.6);
     transform: scaleX(-1);
-
+    bottom: 0px;
+    padding-bottom: 0px;
 }
 
 .sidenav a:hover {
