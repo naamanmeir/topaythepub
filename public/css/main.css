@@ -85,10 +85,10 @@ video {
     margin: auto;
     margin-bottom: 0px;
     padding: 0px;
-    margin-top: 2em;
+    margin-top: 1.6em;
     padding-bottom: 0.2em;
     border-radius: 1em;
-    background-size: 250% auto;
+    /* background-size: 250% auto; */
 }
 
 .shadow1 {
@@ -155,7 +155,7 @@ video {
 .searchBoxDiv {
     margin: auto;
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     height: 4rem;
     margin-bottom: 3rem;
     align-items: center;
@@ -542,7 +542,9 @@ video {
     text-align: left;
 }
 
-.item counts {}
+.item counts {
+    z-index: 500;
+}
 
 .item count {
     z-index: 500;
