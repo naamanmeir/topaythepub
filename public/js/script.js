@@ -164,13 +164,13 @@ function displayItems() {
         // console.log(index);
         let itemDiv = document.createElement("div");
         itemDiv.innerHTML = (`<p class="itemName" id="name${index}">${item[1]}</p>;
-        <img src="${item[3]}" onpointerup="addItem(${index})">
+        <img src="${item[3]}" onmousedown="addItem(${index})">
         <p class="itemPrice p2">₪${item[2]}</p>
         <count class="counts" id="count${index}"></count>        
         `);
         itemDiv.className = ("item");
         items.appendChild(itemDiv);
-        itemDiv.onmouseup = function () {
+        itemDiv.onclick = function () {
             addItem(index);
         };
         // replaceItems();
