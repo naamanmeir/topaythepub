@@ -454,10 +454,10 @@ app.get('/accountant', async function (req, res) {
 
 //-----------------------WRITE REPORT FILE WITH ORDERS SCHEME---------------------//
 app.get('/createFileReportOrders/', async function (req, res) {
-  console.log("REPORT FILE CREATE ON "+Date())
+  console.log("REPORT FILE CREATE ON " + Date())
   let fileDate = new Date();
   var month = fileDate.getMonth();
-  month = month+1;
+  month = month + 1;
   var minutes = fileDate.getMinutes();
   minutes = ("0" + minutes).slice(-2);
   fileDate = (fileDate.getFullYear().toString().substr(-2) + "-" + month + "-" +
@@ -477,9 +477,9 @@ app.get('/createFileReportOrders/', async function (req, res) {
   data = await db.dbGetDataByScope(5);
   // console.log(JSON.stringify(data));
   for (let i = 0; i < data.length; i++) {
-    let row = ["", data[i].account, data[i].client, data[i].info ,"פאב " + data[i].date, "₪ " + data[i].sum];
+    let row = ["", data[i].account, data[i].client, data[i].info, "פאב " + data[i].date, "₪ " + data[i].sum];
     stringifier.write(row);
-  }  
+  }
   stringifier.pipe(writableStream);
   res.setHeader('Content-disposition', "'attachment; filename=" + filename + "'");
   res.set('Content-Type', 'text/csv; charset=utf-8');
@@ -542,34 +542,101 @@ app.get('/resetClientsDataAfterRead/', async function (req, res) {
   console.log(resetClientsData);
   res.send(resetClientsData);
 });
+
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));
 
+//--------------------------EVENTS---------------------------------------//
+// app.get("/events", (req, res) => {  
+//   res.writeHead(200, "Content-Type", "text/event-stream");
+//   res.write("data: " + "01\n\n");
+//   res.write("data: " + "02\n\n");
+//   res.write("data: " + dataSource + "\n\n");
+// })
+
+function eventsHandler(request, response, next) {
+  const headers = {
+    'Content-Type': 'text/event-stream',
+    'Connection': 'keep-alive',
+    'Cache-Control': 'no-cache'
+  };
+  response.writeHead(200, headers);
+
+  const data = `data: ${JSON.stringify(facts)}\n\n`;
+
+  response.write(data);
+
+  const clientId = Date.now();
+
+  const newClient = {
+    id: clientId,
+    response
+  };
+
+  clients.push(newClient);
+
+  request.on('close', () => {
+    console.log(`${clientId} Connection closed`);
+    clients = clients.filter(client => client.id !== clientId);
+  });
+}
+
+app.get('/rss', function(req,res){
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive'
+  })
+  getValues(res);
+});
+
+function getValues(res){
+  res.write("data: " + dataSource + "\n\n")
+  console.log("data: " + dataSource + "\n\n")
+  if (dataSource)
+    setTimeout(() => getValues(res), 5000)
+  else
+    res.end()
+}
+
+let clients = [];
+let facts = [];
+app.get('/status', (request, response) => response.json({clients: clients.length}));
 
 // A simple dataSource that changes over time
 let dataSource = 0;
 const updateDataSource = () => {
   const delta = Math.random();
   dataSource += delta;
+  console.log(dataSource);
 }
 
-setInterval(()=> updateDataSource(), 500);
+setInterval(() => updateDataSource(), 5000);
 
+//--------------------------------------------------------------------------------//
+/*
+ * send interval in millis
+ */
+var sendInterval = 5000;
 
-const requestListener = function (req, res) {
-  if (req.url === '/ticker') {
-    res.statusCode = 200;
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("connection", "keep-alive");
-    res.setHeader("Content-Type", "text/event-stream");
+function sendServerSendEvent(req, res) {
+ res.writeHead(200, {
+ 'Content-Type' : 'text/event-stream',
+ 'Cache-Control' : 'no-cache',
+ 'Connection' : 'keep-alive'
+ });
+ 
+ var sseId = (new Date()).toLocaleTimeString();
 
-    setInterval(() => {
-      const data = JSON.stringify({ ticker: dataSource });
-      res.write(`id: ${(new Date()).toLocaleTimeString()}\ndata: ${data}\n\n`);
-    }, 1000);
-  } else {
-    res.statusCode = 404;
-    res.end("resource does not exist");
-  }
-};
+ setInterval(function() {
+ writeServerSendEvent(res, sseId, (new Date()).toLocaleTimeString());
+ }, sendInterval);
+
+ writeServerSendEvent(res, sseId, (new Date()).toLocaleTimeString());
+}
+
+function writeServerSendEvent(res, sseId, data) {
+ res.write('id: ' + sseId + '\n');
+ res.write("data: new server event " + data + '\n\n');
+}
+

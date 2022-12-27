@@ -612,10 +612,11 @@ function userAutoLogout(reset) {
 };
 
 function startRefreshDataInterval() {
-    const refreshDataInterval = setInterval(function () {
-        getProducts();
-        displayItems();
-    }, refreshDataIntervalTime);
+    // if (refreshDataInterval){clearInterval(refreshDataInterval);}
+    // const refreshDataInterval = setInterval(function () {
+    //     getProducts();
+    //     displayItems();
+    // }, refreshDataIntervalTime);
 };
 
 function stopRefreshDataInterval() {
@@ -921,14 +922,45 @@ function pointerEnableIn(i) {
     }, i);
 };
 
-const sseSource = new EventSource("./ticker");
+// const sseSource = new EventSource("./events");
  
- sseSource.onmessage = function (event) {
-    console.log(event);
+//  sseSource.onmessage = function (event) {
+    // console.log(event);
 //    const dataElement = document.getElementById("data"); // a DOM element in the UI.
 //    const { ticker } = JSON.parse(event.data);
 //    dataElement.textContent = ticker;
- };
+//  };
  
  const closeStream = () => sseSource.close(); // to be used as an event listener, e.g: a button in UI to close the stream.
 
+// ---------------------------------------------//
+
+if (!!window.EventSource) {
+    var source = new EventSource('./rss')
+
+    source.addEventListener('message', function(event) {
+    //   document.getElementById('data').innerHTML = e.data
+      console.log(event.data);
+    }, false)
+
+    source.addEventListener('open', function(e) {
+    //   document.getElementById('state').innerHTML = "Connected"
+    console.log("connected");
+    }, false)
+
+    source.addEventListener('error', function(e) {
+    //   const id_state = document.getElementById('state')
+      if (e.eventPhase == EventSource.CLOSED)
+        console.log("closing connection");
+        source.close()
+      if (e.target.readyState == EventSource.CLOSED) {
+        // id_state.innerHTML = "Disconnected"
+      }
+      else if (e.target.readyState == EventSource.CONNECTING) {
+            console.log("connecting");
+        // id_state.innerHTML = "Connecting..."
+      }
+    }, false)
+  } else {
+    console.log("Your browser doesn't support SSE")
+  }
