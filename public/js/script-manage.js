@@ -778,3 +778,17 @@ function loadUtiliti() {
     }, 400);
 
 };
+
+function refreshAllClients(){
+    if (window.confirm("לטעון מחדש את המסופים המחוברים?")) {
+        xhttp.open("GET", "./refreshClients/", true);
+        xhttp.send();
+    };
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);            
+            return;
+        }
+    };
+};
+

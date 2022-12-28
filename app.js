@@ -19,6 +19,8 @@ const { response } = require("express");
 const app = express();
 const port = 3090;
 
+let clients = [];
+
 const session_secret = process.env.SESSION_SECRET;
 const user_masof = process.env.USER_MASOF;
 const pass_masof = process.env.PASS_MASOF;
@@ -260,7 +262,6 @@ app.get('/getProducts/', async (req, res) => {
   let products = [];
   let listFromDb;
   listFromDb = await db.dbGetProductsAll();
-
   listFromDb.forEach(element => {
     products.push([JSON.parse(JSON.stringify(element.itemname))]);
   });
@@ -274,6 +275,7 @@ app.post('/insertProduct/:data', async (req, res, next) => {
   console.log("APP: ADD NEW PRODUCTS: " + newItem);
   var response;
   response = await db.dbInsertProduct(newItem).then((res) => { return (res) })
+  sendEvents("reloadItems");
   res.send(response);
 });
 
@@ -284,6 +286,7 @@ app.post('/editProduct/:data', async (req, res) => {
   // let productID = newArray[0];
   var response;
   response = await db.dbEditProduct(newArray).then((res) => { return (res) })
+  sendEvents("reloadItems");
   res.send(response);
 });
 
@@ -292,6 +295,7 @@ app.post('/deleteProduct/:data', async (req, res, next) => {
   console.log("APP: DELETE PRODUCT: " + productID);
   var response;
   response = await db.dbDeleteProduct(productID).then((res) => { return (res) })
+  sendEvents("reloadItems");
   res.send(response);
 });
 
@@ -326,7 +330,6 @@ app.post('/backupTable/', async (req, res) => {
 function releaseLimit() {
   (limit = false);
 };
-
 
 // ------------------------  CLIENT VIEW  ----------------------- //
 app.get('', async function (req, res) {
@@ -543,52 +546,44 @@ app.get('/resetClientsDataAfterRead/', async function (req, res) {
   res.send(resetClientsData);
 });
 
+app.get('/refreshClients', function(req,res){
+  sendEvents("refresh");
+});
+
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));
 
 //--------------------------EVENTS---------------------------------------//
-// app.get("/events", (req, res) => {  
-//   res.writeHead(200, "Content-Type", "text/event-stream");
-//   res.write("data: " + "01\n\n");
-//   res.write("data: " + "02\n\n");
-//   res.write("data: " + dataSource + "\n\n");
-// })
+app.get('/status', (req, res) => res.json({clients: clients.length}));
 
-function eventsHandler(request, response, next) {
-  const headers = {
-    'Content-Type': 'text/event-stream',
-    'Connection': 'keep-alive',
-    'Cache-Control': 'no-cache'
-  };
-  response.writeHead(200, headers);
-
-  const data = `data: ${JSON.stringify(facts)}\n\n`;
-
-  response.write(data);
-
-  const clientId = Date.now();
-
-  const newClient = {
-    id: clientId,
-    response
-  };
-
-  clients.push(newClient);
-
-  request.on('close', () => {
-    console.log(`${clientId} Connection closed`);
-    clients = clients.filter(client => client.id !== clientId);
-  });
-}
-
-app.get('/rss', function(req,res){
+app.get('/events', function(req,res){
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
     'Connection': 'keep-alive'
   })
-  getValues(res);
+  const clientId = Date.now();
+  const newClient = {
+    id: clientId,
+    res
+  };
+  clients.push(newClient);
+  req.on('close', () => {
+    console.log(`${clientId} Connection closed`);
+    clients = clients.filter(client => client.id !== clientId);
+  });
+  // getValues(res);
+  getEvents(res);
 });
+
+function getEvents(res){
+
+}
+
+function sendEvents(event){
+  console.log("SENDING SERVER SIDE EVENT: "+JSON.stringify(event));
+  clients.forEach(client => client.res.write(`data: ${JSON.stringify(event)}\n\n`))
+}
 
 function getValues(res){
   res.write("data: " + dataSource + "\n\n")
@@ -599,10 +594,6 @@ function getValues(res){
     res.end()
 }
 
-let clients = [];
-let facts = [];
-app.get('/status', (request, response) => response.json({clients: clients.length}));
-
 // A simple dataSource that changes over time
 let dataSource = 0;
 const updateDataSource = () => {
@@ -610,33 +601,4 @@ const updateDataSource = () => {
   dataSource += delta;
   console.log(dataSource);
 }
-
-setInterval(() => updateDataSource(), 5000);
-
-//--------------------------------------------------------------------------------//
-/*
- * send interval in millis
- */
-var sendInterval = 5000;
-
-function sendServerSendEvent(req, res) {
- res.writeHead(200, {
- 'Content-Type' : 'text/event-stream',
- 'Cache-Control' : 'no-cache',
- 'Connection' : 'keep-alive'
- });
- 
- var sseId = (new Date()).toLocaleTimeString();
-
- setInterval(function() {
- writeServerSendEvent(res, sseId, (new Date()).toLocaleTimeString());
- }, sendInterval);
-
- writeServerSendEvent(res, sseId, (new Date()).toLocaleTimeString());
-}
-
-function writeServerSendEvent(res, sseId, data) {
- res.write('id: ' + sseId + '\n');
- res.write("data: new server event " + data + '\n\n');
-}
-
+// setInterval(() => updateDataSource(), 5000);
