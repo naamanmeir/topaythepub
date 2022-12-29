@@ -792,3 +792,8 @@ function refreshAllClients(){
     };
 };
 
+function connectedTerminalsStatus() {    
+    let connectedTerminals = document.getElementById("connectedTerminals");
+    connectedTerminals.innerText = ("1234");
+}
+

@@ -7,7 +7,7 @@ let timerLogout;
 
 var refreshDataIntervalTime = 120000;
 
-const refreshDataInterval = setInterval(startRefreshDataInterval, refreshDataIntervalTime);
+// const refreshDataInterval = setInterval(startRefreshDataInterval, refreshDataIntervalTime);
 
 var item1 = 0;
 var item2 = 0;
@@ -127,13 +127,13 @@ searchBox1.addEventListener('input', function () {
 
 function uiSidemenu(){
     const sideNav = document.getElementById("sideNav");
-    sideNav.innerHTML = (`<a href="#" onclick="refreshPage()"">טען מחדש</a>`);
+    // sideNav.innerHTML = (`<a href="#" onclick="refreshPage()"">טען מחדש</a>`);
     sideNav.innerHTML += (`<a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a>`);
     sideNav.innerHTML += (`<a href="#" class="hidden" id="user_info" onclick="getUserInfoById()">משתמש</a>`);
-    sideNav.innerHTML += (`<a href="#" onclick="bgSelect(0)" onclick="clearTimeout(window.tcm)"> שחור</a>`);
-    sideNav.innerHTML += (`<a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)"> ריבועים</a>`);
-    sideNav.innerHTML += (`<a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)"> טבעות</a>`);    
-    sideNav.innerHTML += (`<a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)"> עיגולים</a>`);    
+    // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(0)" onclick="clearTimeout(window.tcm)"> שחור</a>`);
+    // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)"> ריבועים</a>`);
+    // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)"> טבעות</a>`);    
+    // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)"> עיגולים</a>`);    
     sideNav.innerHTML += (`<a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><img src="img/ui/menu_close.png"></a>`);
 
 };
@@ -333,19 +333,12 @@ function addItem(item) {
 }
 
 function orderButtons(btn) {
-    if (btn == 2) { // CANCEL ITEMS AND CLEAR ARRAY
-        const counts = document.getElementsByClassName("counts");
-        vibrate(75);
-        item1 = 0;
-        item2 = 0;
-        item3 = 0;
-        item4 = 0;
-        if (counts[0]) counts[0].innerText = "";
-        if (counts[1]) counts[1].innerText = "";
-        if (counts[2]) counts[2].innerText = "";
-        if (counts[3]) counts[3].innerText = "";
+    if (btn == 2) { // CANCEL ITEMS AND CLEAR ARRAY        
+        let counts = document.getElementsByClassName("counts");        
+        counts = [].slice.call(counts);
+        counts.forEach(removeItems);
         orderArray = [];
-        // userLogout();
+        vibrate(75);
         return;
     }
     if (btn == 1) { // PLACE ORDER IF ENOUGHT DATA
@@ -363,69 +356,65 @@ function orderButtons(btn) {
     }
 }
 
-function add(item) {
-    if (sideMenu) { return };
-    const counts = document.getElementsByClassName("counts");
-    const buttonsDiv = document.getElementById("buttons");
-    if (item == 0) {
-        if (item1 == 99) { return };
-        vibrate(45);
-        item1 = item1 + 1;
-        counts[0].innerText = item1;
-    }
-    if (item == 1) {
-        if (item2 == 99) { return };
-        vibrate(55);
-        item2 = item2 + 1;
-        counts[1].innerText = item2;
-    }
-    if (item == 2) {
-        if (item3 == 99) { return };
-        vibrate(65);
-        item3 = item3 + 1;
-        counts[2].innerText = item3;
-    }
-    if (item == 3) {
-        if (item4 == 99) { return };
-        vibrate(75);
-        item4 = item4 + 1;
-        counts[3].innerText = item4;
-    }
-    if (item == 101) {
-        vibrate(75);
-        item1 = 0;
-        item2 = 0;
-        item3 = 0;
-        item4 = 0;
-        if (counts[0]) counts[0].innerText = "";
-        if (counts[1]) counts[1].innerText = "";
-        if (counts[2]) counts[2].innerText = "";
-        if (counts[3]) counts[3].innerText = "";
-        orderArray = [];
-        // userLogout();
-        return;
-    }
-    if (item == 100) {
-        vibrate(200);
-        if (clientNick == null) {
-            errorMessage(1);
-            return;
-        }
-        if (item1 + item2 + item3 + item4 == 0) {
-            vibrate(200);
+function removeItems(item){
+    item.innerText = "";
+}
 
-            errorMessage(2);
-            return;
-        }
-        if (clientNick != null) {
-            vibrate(75);
-            var orderPack = [];
-            orderPack.push([clientId, item1, item2, item3, item4]);
-            orderConfirm(orderPack, false);
-            add(101);
-        }
-    }
-};
+// function add(item) {
+//     if (sideMenu) { return };
+//     const counts = document.getElementsByClassName("counts");
+//     const buttonsDiv = document.getElementById("buttons");
+//     if (item == 0) {
+//         if (item1 == 99) { return };
+//         vibrate(45);
+//         item1 = item1 + 1;
+//         counts[0].innerText = item1;
+//     }
+//     if (item == 1) {
+//         if (item2 == 99) { return };
+//         vibrate(55);
+//         item2 = item2 + 1;
+//         counts[1].innerText = item2;
+//     }
+//     if (item == 2) {
+//         if (item3 == 99) { return };
+//         vibrate(65);
+//         item3 = item3 + 1;
+//         counts[2].innerText = item3;
+//     }
+//     if (item == 3) {
+//         if (item4 == 99) { return };
+//         vibrate(75);
+//         item4 = item4 + 1;
+//         counts[3].innerText = item4;
+//     }
+//     if (item == 101) {
+//         vibrate(75);
+//         orderArray = [];
+//         // userLogout();
+//         return;
+//     }
+//     if (item == 100) {
+//         vibrate(200);
+//         if (clientNick == null) {
+//             errorMessage(1);
+//             return;
+//         }
+//         if (item1 + item2 + item3 + item4 == 0) {
+//             vibrate(200);
+
+//             errorMessage(2);
+//             return;
+//         }
+//         if (clientNick != null) {
+//             vibrate(75);
+//             var orderPack = [];
+//             orderPack.push([clientId, item1, item2, item3, item4]);
+//             orderConfirm(orderPack, false);
+//             add(101);
+//         }
+//     }
+// };
 
 function vibrate(length) {
     if (!("vibrate" in navigator)) { console.log("Vibrate not supported!"); return; }
@@ -569,13 +558,14 @@ function userLogged() {
     searchBox1.classList.remove("searchBoxNotLogged");
     document.getElementById("user_info").style.display = "block";
     userAutoLogout(45000);
-    stopRefreshDataInterval();
+    // stopRefreshDataInterval();
 };
 
 function userLogout() {
     searchBox1.value = ("");
     userSearchMessage(0);
-    add(101);
+    orderButtons(2);
+    // add(101);
     clientName = null;
     clientNick = null;
     clientId = null;
@@ -597,7 +587,7 @@ function userLogout() {
     pointerEnableIn(3000);
     getProducts();
     displayItems();
-    startRefreshDataInterval();
+    // startRefreshDataInterval();
     allElements(1);
 };
 
@@ -611,17 +601,17 @@ function userAutoLogout(reset) {
     }, timeOut);
 };
 
-function startRefreshDataInterval() {
-    // if (refreshDataInterval){clearInterval(refreshDataInterval);}
-    // const refreshDataInterval = setInterval(function () {
-    //     getProducts();
-    //     displayItems();
-    // }, refreshDataIntervalTime);
-};
+// function startRefreshDataInterval() {
+//     if (refreshDataInterval){clearInterval(refreshDataInterval);}
+//     const refreshDataInterval = setInterval(function () {
+//         getProducts();
+//         displayItems();
+//     }, refreshDataIntervalTime);
+// };
 
-function stopRefreshDataInterval() {
-    clearInterval(refreshDataInterval);
-};
+// function stopRefreshDataInterval() {
+//     clearInterval(refreshDataInterval);
+// };
 
 function userSearchMessage(select) {
     let textBox = document.getElementById("searchBox");
@@ -938,9 +928,9 @@ function connectEventSource(){
 
         source.addEventListener('error', function(e) {        
         if (e.eventPhase == EventSource.CLOSED)
-            console.log("closing connection");
+            console.log("closing connection and recall function");
             source.close()
-            // connectEventSource();
+            connectEventSource();
         if (e.target.readyState == EventSource.CLOSED) {            
             connectEventSource();
         }

@@ -1261,8 +1261,8 @@ video {
     background-image: url("../img/fs2.png");
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: left;
-    filter: invert(0.6);
+    background-position: center;
+    /* filter: invert(0.6); */
     bottom: 0px;
 }
 
