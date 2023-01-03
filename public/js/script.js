@@ -34,7 +34,7 @@ window.addEventListener('load', loadUtiliti, false);
 
 function loadUtiliti() {
     setTimeout(function () {
-        viewport.setAttribute("content", "width=" + window.innerWidth + ", height=" + window.innerHeight + ", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+        viewport.setAttribute("content", "width=" + window.innerWidth + ", height=" + window.innerHeight + ", initial-scale=1.0, maximum-scale=1.0, user-scalable=yes");
     }, 100);
     setTimeout(getProducts(), 300);    
     setTimeout(uiSidemenu(), 500);

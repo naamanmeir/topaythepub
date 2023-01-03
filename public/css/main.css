@@ -2,12 +2,13 @@ html,
 body {
     height: 98%;
     width: 98%;
-    height: -webkit-fill-available;
+    /* height: -webkit-fill-available; */
     margin: auto;
     top: 0px;
     margin-top: 0px;
     padding-top: 0px;
     background-color: #000000;
+    overflow: hidden
 }
 
 html,
@@ -27,8 +28,8 @@ body,
 body {
     display: flex;
     flex-direction: column;
-    /* flex-shrink: 1;
-    flex-grow: 1; */
+    flex-shrink: 1;
+    flex-grow: 1;
 }
 
 img {
@@ -65,8 +66,8 @@ video {
     }
 
     .body {
-        height: 100%;
-        width: 98%;
+        /* height: 100%; */
+        /* width: 98%; */
     }
 
     .content {
@@ -1164,9 +1165,9 @@ video {
     /* font-size: xx-large;     */
     width: fit-content;
     right: 0px;
-    bottom: 0%;
+    bottom: 0px;
     padding-left: 10px;
-    padding-top: 15px;
+    /* padding-top: 15px; */
     position: absolute;
     z-index: 2000;
 }

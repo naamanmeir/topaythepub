@@ -20,10 +20,6 @@ exports.dbCreateTableClients = async function () {
       conn.query("CREATE TABLE IF NOT EXISTS `" + tableClients +
         "`(`id` INT NOT NULL AUTO_INCREMENT," +
         "`last_action` DATETIME NOT NULL DEFAULT (now())," +
-        "`item1` INT NOT NULL DEFAULT '0'," +
-        "`item2` INT NOT NULL DEFAULT '0'," +
-        "`item3` INT NOT NULL DEFAULT '0'," +
-        "`item4` INT NOT NULL DEFAULT '0'," +
         "`sum` INT NOT NULL DEFAULT '0'," +
         "`account` INT NOT NULL DEFAULT '1'," +
         "`name` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL," +
@@ -42,15 +38,12 @@ exports.dbCreateTableOrders = async function () {
     .then(conn => {
       conn.query("CREATE TABLE IF NOT EXISTS `" + tableOrders +
         "`(`orderid` INT NOT NULL AUTO_INCREMENT," +
+        "`sign` INT NOT NULL DEFAULT '0'," +
         "`time` DATETIME NOT NULL DEFAULT (now())," +
-        "`item1` INT NOT NULL DEFAULT '0'," +
-        "`item2` INT NOT NULL DEFAULT '0'," +
-        "`item3` INT NOT NULL DEFAULT '0'," +
-        "`item4` INT NOT NULL DEFAULT '0'," +
+        "`info` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin" +
         "`sum` INT NOT NULL DEFAULT '0'," +
         "`clientid` INT NOT NULL DEFAULT '1'," +
-        "`client` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL," +
-        "`nick` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'client'," +
+        "`client` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL," +        
         "PRIMARY KEY (`orderid`));"
       )
         .then((results) => { console.log(results); return results })
@@ -69,7 +62,7 @@ exports.dbCreateTableProducts = async function () {
         "`stock` INT NOT NULL DEFAULT '0'," +
         "`price` INT NOT NULL DEFAULT '10'," +
         "`itemname` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'beer'," +
-        "`itemimgpath` VARCHAR(1024) NOT NULL DEFAULT 'img/items/soup02.png'," +
+        "`itemimgpath` VARCHAR(1024) NOT NULL DEFAULT 'img/items/2.png'," +
         "PRIMARY KEY (`itemid`));"
       )
         .then((results) => { console.log(results); return results })
