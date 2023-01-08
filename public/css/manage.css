@@ -1,20 +1,31 @@
+html {
+    overflow-y: scroll;
+}
 html,
-body,
-.grid {
-    width: 95%;
-    height: fit-content;
-    left: 1%;
-    right: 1%;
+body{
+    width: 95vw;
+    height: 100vh;
+    /* left: 1%; */
+    /* right: 1%; */
     background-color: rgb(221, 233, 251);
     direction: rtl;
     user-select: none;
-    scroll-behavior: smooth;
-    /* float: center; */
+    scroll-behavior: smooth;    
+    float: center;
+    margin: auto;
+    /* overflow:scroll; */
 }
 
 p1 {
     margin: 0px;
     padding: 0px;
+}
+
+p2 {
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 1rem;
+    font-size: xx-large;
 }
 
 .header {
@@ -36,20 +47,41 @@ p1 {
     padding-bottom: 3%;
 }
 
+.nav {
+    background-color: green;
+    display: flex;
+}
+
+.nav-links{
+    display: flex;
+    flex: 1;
+    list-style: none;
+    margin: auto;
+}
+
+.nav-links button {
+    text-decoration: none;
+    background-color: green;
+    height: fit-content;
+    border: none;
+}
+
+.nav-link {    
+    font-size: 2rem;
+    margin-left: 1rem;
+    color: yellow;    
+}
+
 body {}
 
 .content {
     height: fit-content;
-    max-width: 1200px;
-    /* float: center; */
+    max-width: 1200px;    
     left: 50%;
     right: 50%;
     display: flex;
-    margin: auto;
-    /* gap: 10px 10px; */
+    margin: auto;    
 }
-
-
 
 .column {
     flex-direction: column;

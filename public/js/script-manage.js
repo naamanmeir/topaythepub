@@ -23,6 +23,15 @@ async function createTable() {
     };
 };
 
+function navtab(select){
+    var i;
+    var x = document.getElementsByClassName("page");
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";
+    }
+    document.getElementById(select).style.display = "block";
+}
+
 const searchBox1 = document.getElementById("getUserByName");
 searchBox1.addEventListener('focus', function () {
     searchBoxClear();

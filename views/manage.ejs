@@ -13,11 +13,87 @@
 
     <%- include('./partials/headerStatic'); %>
 
-    <div class="row linebreak"></div>
+    <div class="nav nav-links" id="navbar">        
+            <button class="nav-link" onclick="navtab('products')">מוצרים</button></li>
+            <button class="nav-link" onclick="navtab('clients')">משתמשים</button></li>
+            <button class="nav-link" onclick="navtab('data')">נתונים</button></li>                
+            <button class="nav-link" onclick="navtab('manage')">ניהול</button></li>                      
+    </div>   
 
+    <!-- products -->
+    
+    <div class="content column products page" id="products">
 
-    <!-- TEXT FIELDS -->
-    <div class="content column">
+        <p2>מוצרים</p2>
+
+        <div class="row linebreak"></div>
+
+        <div class="displayProcducts">
+            <p>הצגת מוצרים </p>
+        </div>
+
+        <div class="row linebreak"></div>
+
+        <div class="editProduct">
+            <div class="row">
+                <p>עריכת מוצר קיים</p>
+                <!-- <input type="search" class="searchBoxNoLogged" id="getProductName" spellcheck="false" placeholder=" מצא מוצר מהרשימה"> -->
+                <select class="select" id="selectProduct" onchange="editProductLoad()"><option>בחר מוצר</option></select>                
+            </div>
+            <div class="row">
+                <input type="search" class="textboxShort" id="productName" spellcheck="false" placeholder="ערוך שם מוצר">                
+                <div class="row"></div>
+            </div>
+            <div class="row">
+                <input type="number" class="textboxNumber" id="productPrice" spellcheck="false" placeholder="ערוך מחיר">
+            </div>
+            <div class="row">
+                <input type="number" class="textboxNumber" id="productStock" spellcheck="false" placeholder="ערוך כמות">
+            </div>
+            <div class="row">    
+                <button class="green" onclick="editProduct()">עדכן נתונים</button>
+                <button class="red" onclick="deleteProduct()">מחיקת מוצר</button>
+            </div>
+            <br>
+            <div class="row">
+                <div class="logText" id="productsEditLog">-</div>
+            </div>
+        </div>
+
+        <div class="row linebreak"></div>
+
+        <div class="addProduct">
+            <div class="function column">
+                <p>הכנסת מוצר</p>
+                <p>שם מוצר : </p>
+                <input type="search" class="textbox" id="insertProduct" spellcheck="false" placeholder=" הכנס מוצר">
+                <p> מחיר : </p>
+                <input type="text" class="textboxNumber" id="insertPrice" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מחיר  ">
+                <p> תמונה : </p>
+                <select class="select" id="selectImg"><option value="1">מקרר</option><option value="2">בירה</option><option value="3">משקה</option><option value="4">מרק</option><option value="5">פיצה</option><option value="6">משהו מיוחד</option><option value="7">ויוורק</option><option value="8">מרק2</option><option value="9">מרק3</option><option value="10">פוקצ'ה</option></select>
+                <p> כמות : </p>
+                <input type="text" class="textboxNumber" id="insertStock" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס כמות  ">
+                <button class="green" onclick="insertProduct()">הכנס מוצר</button>
+                </p>
+            </div>
+
+            <div class="row">
+                <div class="logText" id="productsLog">-</div>
+            </div>
+
+        </div>
+
+    <div class="row linebreak"></div> 
+
+    </div>
+
+    <!-- clients -->
+    
+    <div class="content column clients page" id="clients">
+        
+        <p2>משתמשים</p2>
+
+        <div class="row linebreak"></div>
 
         <div class="editUser">            
             <div class="function">
@@ -66,62 +142,44 @@
 
         </div>
 
+    <div class="row linebreak"></div> 
+
     </div>
 
-        <div class="row linebreak"></div>
+    <!-- data -->
+    
+    <div class="content column data page" id="data">
 
-        <div class="editProduct">
-            <div class="row">
-                <p>עריכת מוצר קיים</p>
-                <!-- <input type="search" class="searchBoxNoLogged" id="getProductName" spellcheck="false" placeholder=" מצא מוצר מהרשימה"> -->
-                <select class="select" id="selectProduct" onchange="editProductLoad()"><option>בחר מוצר</option></select>
-                <div class="autoCompleteNone" id="autoComplete"></div>
-            </div>
-            <div class="row">
-                <input type="search" class="textboxShort" id="productName" spellcheck="false" placeholder="ערוך שם מוצר">                
-                <div class="row"></div>
-            </div>
-            <div class="row">
-                <input type="number" class="textboxNumber" id="productPrice" spellcheck="false" placeholder="ערוך מחיר">
-            </div>
-            <div class="row">
-                <input type="number" class="textboxNumber" id="productStock" spellcheck="false" placeholder="ערוך כמות">
-            </div>
-            <div class="row">    
-                <button class="green" onclick="editProduct()">עדכן נתונים</button>
-                <button class="red" onclick="deleteProduct()">מחיקת מוצר</button>
-            </div>
-            <br>
-            <div class="row">
-                <div class="logText" id="productsEditLog">-</div>
-            </div>
-        </div>
+        <p2>נתונים</p2>
 
         <div class="row linebreak"></div>
 
-        <div class="addProduct">
-            <div class="function column">
-                <p>הכנסת מוצר</p>
-                <p>שם מוצר : </p>
-                <input type="search" class="textbox" id="insertProduct" spellcheck="false" placeholder=" הכנס מוצר">
-                <p> מחיר : </p>
-                <input type="text" class="textboxNumber" id="insertPrice" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מחיר  ">
-                <p> תמונה : </p>
-                <select class="select" id="selectImg"><option value="1">מקרר</option><option value="2">בירה</option><option value="3">משקה</option><option value="4">מרק</option><option value="5">פיצה</option><option value="6">משהו מיוחד</option><option value="7">ויוורק</option><option value="8">מרק2</option><option value="9">מרק3</option><option value="10">פוקצ'ה</option></select>
-                <p> כמות : </p>
-                <input type="text" class="textboxNumber" id="insertStock" min="0" maxlength="4"  id="pin" pattern="\d{4}" required spellcheck="false" placeholder=" הכנס כמות  ">
-                <button class="green" onclick="insertProduct()">הכנס מוצר</button>
-                </p>
+        <button onClick="openInfotables()">הצגת  </button>            
+
+        <div class="content row">
+
+            <div class="function" id="getAccounData">
+                <button onclick="getAllData(4)">נתונים לדו"ח</button>
             </div>
 
-            <div class="row">
-                <div class="logText" id="productsLog">-</div>
+            <div class="function" id="getOrdersData">
+                <button onclick="getAllData(1)">נתוני עסקאות</button>
+            </div>
+
+            <div class="function" id="getCLientData">
+                <button onclick="getAllData(2)">נתוני משתמשים</button>
+            </div>
+
+            <div class="function" id="getCLientData">
+                <button onclick="getAllData(3)">נתוני משתמשים כולל כלבים</button>
             </div>
 
         </div>
 
-        <div class="row linebreak"></div>
+        <div class="row"></div>        
 
+        <div class="row linebreak"></div>
+        
         <div class="archive">
             <p>ארכיון</p>
             <select class="select" name="reportArchive" id="reportArchive">
@@ -139,57 +197,25 @@
             <button class="red" onclick="resetAfterReport()">איפוס נתונים לאחר קריאה</button>
         </div>
 
-        <div class="row"></div>
-        
-
-        <div class="row linebreak"></div>
-
-            <!-- BUTTONS -->
-
-            <button onClick="openInfotables()">הצגת  </button>
-
-            <!-- <button onClick="location.href='report'">הצגת נתונים </button> -->
-            <!-- <a href="./report">sdgsdgsg</a> -->
-
-    <div class="content row">
-
-        <div class="function" id="getAccounData">
-            <button onclick="getAllData(4)">נתונים לדו"ח</button>
-        </div>
-
-        <div class="function" id="getOrdersData">
-            <button onclick="getAllData(1)">נתוני עסקאות</button>
-        </div>
-
-        <div class="function" id="getCLientData">
-            <button onclick="getAllData(2)">נתוני משתמשים</button>
-        </div>
-
-        <div class="function" id="getCLientData">
-            <button onclick="getAllData(3)">נתוני משתמשים כולל כלבים</button>
-        </div>
+        <div class="row linebreak"></div> 
 
     </div>
 
-        <div class="content column"></div>
+    <!-- manage -->
 
-        <div class="row linebreak"></div>
+    <div class="content column manage page" id="manage">
 
-    <div class="content row">
+        <p2>ניהול</p2>
 
+        <div class="row linebreak"></div>        
 
-
-        <div class="function" id="createTablefunction">
+        <!-- <div class="function" id="createTablefunction">
             <button onclick="createTable()">צור טבלה נדרשת</button>
         </div>
 
         <div class="function" id="importNameListFromFile">
             <button onclick="importNameListFile()">הכנס רשימת שמות</button>
-        </div>
-
-    </div>  
-
-    <div class="row linebreak"></div>
+        </div>     -->
 
     <div class="row">
         <button onclick="refreshAllClients()">טען מחדש את כל המסופים</button>
@@ -206,14 +232,13 @@
             <button onclick="clearConsole()">clear console</button>
         </div>
         <div class="console" id="console">
-        </div>        
+    </div>
+
+    <div class="row linebreak"></div> 
 
     </div>
 
-    <br>    
-    <br>
-
-  
+    </div>
     
     <%- include('./partials/footer'); %>
 

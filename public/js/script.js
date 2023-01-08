@@ -623,7 +623,7 @@ function userSearchMessage(select) {
         userIndic.innerText = ("");
     }
     if (select == 1) {
-        userIndic.innerText = ("👎 שם לא סבבה 👎");
+        userIndic.innerText = ("👎 שם לא ברשימה 👎");
         userIndic.classList.remove("userStateIndicatorOk");
         userIndic.classList.remove("userStateIndicatorSelect");
         userIndic.classList.add("userStateIndicatorNotOk");
@@ -660,7 +660,7 @@ function errorMessage(value) {
         closeErrorMessage(message);
     };
     if (value == 2) {
-        message.innerText = ("צריך לסמן כמה משקאות");
+        message.innerText = ("צריך לסמן מה לקחתם");
         message.classList.add("errorMessageOn");
         closeErrorMessage(message);
     };
