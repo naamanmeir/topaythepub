@@ -99,6 +99,47 @@ body {}
     padding: 0px;
 }
 
+
+.displayProducts{  
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    /* flex-shrink: 100; */
+}
+
+.productRow {
+    position: relative;
+    flex-direction: column;
+    /* background-color: tomato; */
+    justify-content: top;
+    height: fit-content;
+    margin: 0px;    
+    top: 0px;
+}
+
+.productRow input {
+    align-self: center;
+    position: relative;
+    width: fit-content;
+    max-width: 49%;
+    font-size: larger;
+    justify-self: center;
+    /* margin: 1rem; */
+    top: -8px;
+}
+
+.productRow img {
+    /* flex: auto; */
+    height: 2rem;
+    width: 2rem;
+    margin: 0px;
+    margin-right: 1rem;
+}
+
+.productRow priceInput {
+    width: 2rem;
+}
+
 .searchBoxNoLogged {
     width: 75%;
     height: 2rem;

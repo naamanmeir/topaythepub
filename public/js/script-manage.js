@@ -428,10 +428,44 @@ async function getProducts() {
             // console.log(this.response);
             products = JSON.parse(this.response);
             let selectBar = document.getElementById("selectProduct");
+            let productDiv = document.getElementById("displayProducts");
             while (selectBar.childElementCount > 1) {
                 selectBar.removeChild(selectBar.lastChild);
             };
+            while (productDiv.childElementCount > 0) {
+                productDiv.removeChild(productDiv.lastChild);
+            };
             // console.log(products);
+            products.forEach(table => {
+                var productRow = document.createElement("div");
+                productRow.className = ("productRow")
+                var productName = document.createElement("input");
+                var productDisplay = document.createElement("input");
+                var productPrice = document.createElement("input");
+                var productImage = document.createElement("image");
+                // var imageSelect = document.createElement("option");
+                
+                productImage.innerHTML = `<img src="${table.itemimgpath}"/>`;
+                
+                // productImage.appendChild(imageSelect);
+
+                productName.setAttribute("type", "text");
+                productDisplay.setAttribute("type", "checkbox");
+                productPrice.setAttribute("type", "number");
+                productPrice.setAttribute("min", "0");
+                productPrice.setAttribute("max", "99");
+                
+                productName.value = table.itemname;
+                productDisplay.checked = (table.stock>0);
+                productPrice.value = table.price;
+                productPrice.style.width = ("3rem");
+                
+                productRow.appendChild(productName);
+                productRow.appendChild(productDisplay);
+                productRow.appendChild(productPrice);
+                productRow.appendChild(productImage);
+                productDiv.appendChild(productRow);
+            });
             products.forEach(table => {
                 var opt = document.createElement("option");
                 opt.value = table.itemname;
