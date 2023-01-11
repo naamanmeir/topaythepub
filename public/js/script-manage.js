@@ -438,8 +438,7 @@ async function getProducts() {
             while (productDiv.childElementCount > 1) {
                 productDiv.removeChild(productDiv.lastChild);
             };
-            console.log(products);
-            // let headerRow = document
+            // console.log(products);            
             products.forEach(table => {
                 var productRow = document.createElement("div");
                 productRow.className = ("productRow")
