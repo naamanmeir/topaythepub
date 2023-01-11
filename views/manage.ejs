@@ -29,7 +29,12 @@
         <div class="row linebreak"></div>
 
         <div class="displayProducts" id="displayProducts">
-            <p>הצגת מוצרים </p>
+            <div class="productRow">
+                <p>שם</p>
+                <p>מחיר</p>
+                <p>תמונה</p>
+                <p>הצגה בתפריט</p>
+            </div>
         </div>
 
         <div class="row linebreak"></div>
@@ -49,6 +54,9 @@
             </div>
             <div class="row">
                 <input type="number" class="textboxNumber" id="productStock" spellcheck="false" placeholder="ערוך כמות">
+            </div>
+            <div class="row">
+                <img class="productImage" id="productImage">
             </div>
             <div class="row">    
                 <button class="green" onclick="editProduct()">עדכן נתונים</button>

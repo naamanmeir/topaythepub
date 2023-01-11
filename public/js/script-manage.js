@@ -4,6 +4,9 @@ var limit = 0; // throttle limiter for db
 
 let products = [];
 let productName;
+let productPrice;
+let productImage;
+let productStock;
 let productId;
 // FUNCTIONS TO RUN SERVER ACTIONS
 async function placeOrder(orderPack) {
@@ -432,13 +435,15 @@ async function getProducts() {
             while (selectBar.childElementCount > 1) {
                 selectBar.removeChild(selectBar.lastChild);
             };
-            while (productDiv.childElementCount > 0) {
+            while (productDiv.childElementCount > 1) {
                 productDiv.removeChild(productDiv.lastChild);
             };
-            // console.log(products);
+            console.log(products);
+            // let headerRow = document
             products.forEach(table => {
                 var productRow = document.createElement("div");
                 productRow.className = ("productRow")
+                var productId = document.createElement("input");
                 var productName = document.createElement("input");
                 var productDisplay = document.createElement("input");
                 var productPrice = document.createElement("input");
@@ -448,23 +453,37 @@ async function getProducts() {
                 productImage.innerHTML = `<img src="${table.itemimgpath}"/>`;
                 
                 // productImage.appendChild(imageSelect);
-
+                productId.setAttribute("type", "number");
                 productName.setAttribute("type", "text");
                 productDisplay.setAttribute("type", "checkbox");
                 productPrice.setAttribute("type", "number");
                 productPrice.setAttribute("min", "0");
                 productPrice.setAttribute("max", "99");
                 
+                productId.value = table.itemid;
                 productName.value = table.itemname;
                 productDisplay.checked = (table.stock>0);
                 productPrice.value = table.price;
-                productPrice.style.width = ("3rem");
-                
-                productRow.appendChild(productName);
-                productRow.appendChild(productDisplay);
+                productPrice.style.width = ("3rem");                
+
+                productRow.appendChild(productName);                
                 productRow.appendChild(productPrice);
                 productRow.appendChild(productImage);
+                productRow.appendChild(productDisplay);
                 productDiv.appendChild(productRow);
+
+                productName.onchange = function () {
+                    editProductFields(
+                        table.itemid,productName.value,productPrice.value,table.itemimgpath,productDisplay.checked)};
+                productPrice.onchange = function () {
+                    editProductFields(
+                        table.itemid,productName.value,productPrice.value,table.itemimgpath,productDisplay.checked)};
+                productImage.onchange = function () {
+                    editProductFields(
+                        table.itemid,productName.value,productPrice.value,table.itemimgpath,productDisplay.checked)};
+                productDisplay.onchange = function () {
+                    editProductFields(
+                        table.itemid,productName.value,productPrice.value,table.itemimgpath,productDisplay.checked)};
             });
             products.forEach(table => {
                 var opt = document.createElement("option");
@@ -481,6 +500,7 @@ function editProductLoad() {
     let itemSelect = document.getElementById("selectProduct");
     let textName = document.getElementById("productName");
     let textPrice = document.getElementById("productPrice");
+    let itemImage = document.getElementById("productImage");
     let textStock = document.getElementById("productStock");
     let i = itemSelect.selectedIndex - 1;
     // console.log(i);
@@ -492,16 +512,31 @@ function editProductLoad() {
     productName = products[i].itemname;
     textName.value = products[i].itemname;
     textPrice.value = products[i].price;
+    itemImage.src=products[i].itemimgpath;
     textStock.value = products[i].stock;
 };
+
+function editProductFields(thisProductId,name,price,image,stock){
+    stock = stock ? 1 : 0;
+    let data = [thisProductId, name, price, image, stock];
+    // console.log(data);
+    document.getElementById("productName").value = name;
+    document.getElementById("productPrice").value = price;    
+    document.getElementById("productImage").src = image;
+    document.getElementById("productStock").value = stock;
+    productId = thisProductId;
+    productName = name;
+    editProduct();
+}
 
 function editProduct() {
     if (productId == null || productId == "") { console.log("this is stupid"); return };
     let newName = document.getElementById("productName");
     let newPrice = document.getElementById("productPrice");
+    let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/','').replace('.png','');
     let newStock = document.getElementById("productStock");
-    let data = [productId, newName.value, newPrice.value, newStock.value];
-    console.log(data);
+    let data = [productId, newName.value, newPrice.value,newImage,newStock.value];
+    // console.log(data);
     if (window.confirm("לערוך נתונים של " + productName + "?")) {
         xhttp.open("POST", "./editProduct/" + data, true);
         xhttp.send();

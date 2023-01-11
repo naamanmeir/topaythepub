@@ -108,8 +108,10 @@ body {}
 }
 
 .productRow {
-    position: relative;
+    display: flex;
     flex-direction: column;
+    position: relative;
+    flex-direction: row;
     /* background-color: tomato; */
     justify-content: top;
     height: fit-content;
@@ -117,14 +119,25 @@ body {}
     top: 0px;
 }
 
-.productRow input {
+.productRow p {
     align-self: center;
     position: relative;
     width: fit-content;
     max-width: 49%;
     font-size: larger;
     justify-self: center;
-    /* margin: 1rem; */
+    margin: 1rem;
+    top: -8px;
+}
+
+.productRow input {
+    align-self: center;
+    position: relative;
+    /* width: fit-content; */
+    max-width: 49%;
+    font-size: larger;
+    justify-self: center;
+    margin-left: 1rem;
     top: -8px;
 }
 
@@ -132,8 +145,8 @@ body {}
     /* flex: auto; */
     height: 2rem;
     width: 2rem;
-    margin: 0px;
-    margin-right: 1rem;
+    margin: 0px;    
+    margin-left: 1rem;
 }
 
 .productRow priceInput {
@@ -175,6 +188,11 @@ input:valid {
 
 input:invalid {
     color: red;
+}
+
+.productImage {
+    height: 50px;
+    width: 50px;
 }
 
 .green {
