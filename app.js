@@ -83,8 +83,22 @@ app.get('/manage', async function (req, res) {
   }
   console.log("LOGIN TO MANAGE PANEL ON: " + Date());
   // req.session = true;
+  imgToArray();
   res.render('manage', {})
 });
+
+const imgFolder = path.join(__dirname, '/public/img/items');
+var imgArray = [];
+function imgToArray() {
+  // var regExpFormat = new RegExp(fileFormat,"g");
+  imgArray = fs.readdirSync(imgFolder);
+  imgArray.forEach(function(img,index){
+          var imgName = new String(img);          
+          imgName = imgName.substring(0, imgName.length - 4);            
+          imgArray.push(imgName);
+  });  
+  console.log(imgArray);
+};
 
 // ------------------------  MANAGE REPORT VIEW  ----------------------- //
 app.get('/infotables', async function (req, res) {
@@ -126,7 +140,7 @@ app.get('/retable/', async function (req, res) {
   createTableProducts = await db.dbCreateTableProducts().then((res) => { return (res) });
   createTableUsers = await db.dbCreateTableUsers().then((res) => { return (res) });
   res.send(createTableOrders);
-})
+});
 
 //-----------READ NAMES FILE --------------
 app.post('/updateNameList/', async (req, res) => {
@@ -147,6 +161,8 @@ app.post('/updateNameList/', async (req, res) => {
     console.log(await insertClientResponse)
   }
 });
+
+//-----------------GET ITEMS IMG
 
 // SERACH CLIENT IN DB BY SEARCHBOX
 app.post('/searchNameManage/:data', async (req, res) => {
