@@ -500,6 +500,9 @@ exports.dbEditProduct = async function (values) {
     });
   // console.log("clientID: "+clientId+" Column: "+field+" Value: "+value);
   console.log(editProductRes);
+  console.log("Total connections: ", pool.totalConnections());
+  console.log("Active connections: ", pool.activeConnections());
+  console.log("Idle connections: ", pool.idleConnections());
   return (editProductRes);
 }
 
