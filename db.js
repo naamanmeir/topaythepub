@@ -462,7 +462,7 @@ exports.dbInsertProduct = async function (newProduct) {
   let price = newProduct[1].replace(/\'/g, "''");
   let img = newProduct[2];
   let stock = newProduct[3];
-  img = ("img/items/" + img + ".png");
+  img = ("img/items/" + img);
   console.log(img);
   let messageReturn;
   console.log("PRODUCT NAME AVAILABLE");

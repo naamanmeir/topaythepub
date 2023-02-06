@@ -6,15 +6,16 @@ const path = require('node:path');
 const fs = require('fs');
 const readline = require('readline');
 const { stringify } = require("csv-stringify");
+const { createPool } = require("mariadb");
+const { response } = require("express");
+const { Script } = require("node:vm");
 
 var SSE = require('express-sse');
 var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
 
 const db = require('./db.js');
-const { Script } = require("node:vm");
+const functions = require('./functions.js');
 const strings = require('./strings.js');
-const { createPool } = require("mariadb");
-const { response } = require("express");
 
 const app = express();
 const port = 3090;
@@ -34,10 +35,11 @@ console.log("System Startup Time : " + Date());
 console.log("System Startup Time : " + now.getTime());
 
 app.use(express.static(__dirname + 'public'));
-app.use('/css', express.static(__dirname + '/public/css'))
-app.use('/js', express.static(__dirname + '/public/js'))
-app.use('/img', express.static(__dirname + '/public/img'))
-app.use('/report', express.static(__dirname + '/public/report'))
+app.use('/css', express.static(__dirname + '/public/css'));
+app.use('/js', express.static(__dirname + '/public/js'));
+app.use('/img', express.static(__dirname + '/public/img'));
+app.use('/report', express.static(__dirname + '/public/report'));
+app.use('/items', express.static(__dirname + '/public/img/items'));
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
 
 app.set('views', './views');
@@ -83,21 +85,15 @@ app.get('/manage', async function (req, res) {
   }
   console.log("LOGIN TO MANAGE PANEL ON: " + Date());
   // req.session = true;
-  imgToArray();
-  res.render('manage', {})
+  imgToArray();  
+  console.log(imgArray);
+  res.render('manage', {imgArray : imgArray})
 });
 
 const imgFolder = path.join(__dirname, '/public/img/items');
 var imgArray = [];
-function imgToArray() {
-  // var regExpFormat = new RegExp(fileFormat,"g");
-  imgArray = fs.readdirSync(imgFolder);
-  imgArray.forEach(function(img,index){
-          var imgName = new String(img);          
-          imgName = imgName.substring(0, imgName.length - 4);            
-          imgArray.push(imgName);
-  });  
-  console.log(imgArray);
+function imgToArray() {  
+  imgArray = fs.readdirSync(imgFolder);  
 };
 
 // ------------------------  MANAGE REPORT VIEW  ----------------------- //

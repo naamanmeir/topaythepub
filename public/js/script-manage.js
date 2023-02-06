@@ -35,48 +35,9 @@ function navtab(select){
     document.getElementById(select).style.display = "block";
 };
 
-function addImgDropdown(){
-    let menuDiv = document.getElementById("imgDropdownDiv");
-
-    menuDiv.innerHTML = (
-        `<button onclick="myFunction()" class="dropbtn">תמונה</button>
-        <div id="myDropdown" class="dropdown-content">
-        <option value="1"><img src="img/items/1.png" width="50px" height="50px"></option>
-        <option value="2"><img src="img/items/2.png" width="50px" height="50px"></option>
-        <option value="3"><img src="img/items/3.png" width="50px" height="50px"></option>
-        <option value="4"><img src="img/items/4.png" width="50px" height="50px"></option>
-        <option value="5"><img src="img/items/5.png" width="50px" height="50px"></option>
-        <option value="6"><img src="img/items/6.png" width="50px" height="50px"></option>
-        <option value="7"><img src="img/items/7.png" width="50px" height="50px"></option>
-        <option value="8"><img src="img/items/8.png" width="50px" height="50px"></option>
-        <option value="9"><img src="img/items/9.png" width="50px" height="50px"></option>
-        <option value="10"><img src="img/items/10.png" width="50px" height="50px"></option>
-        <option value="11"><img src="img/items/11.png" width="50px" height="50px"></option>
-        
-        `
-        );
-    menuDiv.setAttribute("border", "1");
-    function myFunction() {
-        document.getElementById("myDropdown").classList.toggle("show");
-      }
-};
-function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-  }
-  window.onclick = function(event) {
-    if (!event.target.matches('.dropbtn')) {
-      var dropdowns = document.getElementsByClassName("dropdown-content");
-      var i;
-      for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-          openDropdown.classList.remove('show');
-        }
-      }
-    }
-  }
-addImgDropdown();
-
+function addImgDropdown(){    
+    let imgDiv = document.getElementById("imgDiv");
+}
 const searchBox1 = document.getElementById("getUserByName");
 searchBox1.addEventListener('focus', function () {
     searchBoxClear();
@@ -593,13 +554,27 @@ function editProduct() {
     };
 };
 
+let imgSelect;
+function imgClickSelect(img,imgId) {    
+    imgSelect = img;
+    let imgSelector = document.getElementsByClassName("imgSelector");
+    var arr = [...imgSelector];
+    arr.forEach(element => {
+        element.style.backgroundColor = "transparent";
+    });
+    window.onclick = e => {
+        document.getElementById(imgId).style.backgroundColor = "green";
+    } 
+
+}
+
 function insertProduct() {
     let newItem = document.getElementById("insertProduct");
     let newPrice = document.getElementById("insertPrice");
     let newStock = document.getElementById("insertStock");
-    let newImg = document.getElementById("selectImg");
-    if (newItem.value == '' | newPrice.value == '' | newStock.value == '') { return };
-    let newData = [newItem.value, newPrice.value, newImg.value, newStock.value];
+    let newImg = imgSelect;
+    if (newItem.value == '' | newPrice.value == '' | newStock.value == '' | newImg == '') { return };
+    let newData = [newItem.value, newPrice.value, newImg, newStock.value];
     newData = JSON.stringify(newData);
     newItem.value = '';
     newPrice.value = '';
