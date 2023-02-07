@@ -485,7 +485,7 @@ exports.dbEditProduct = async function (values) {
   let productId = values[0];
   let newName = values[1];
   let newPrice = values[2];
-  let newImage = "img/items/"+values[3]+".png";
+  let newImage = "img/items/"+values[3];
   let newStock = values[4];  
   let editProductRes;
   editProductRes = await pool.query("UPDATE " + tableProducts +

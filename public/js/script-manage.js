@@ -537,7 +537,8 @@ function editProduct() {
     if (productId == null || productId == "") { console.log("this is stupid"); return };
     let newName = document.getElementById("productName");
     let newPrice = document.getElementById("productPrice");
-    let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/','').replace('.png','');
+    // let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/','').replace('.png','');
+    let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/','');
     let newStock = document.getElementById("productStock");
     let data = [productId, newName.value, newPrice.value,newImage,newStock.value];
     // console.log(data);
@@ -561,9 +562,11 @@ function imgClickSelect(img,imgId) {
     var arr = [...imgSelector];
     arr.forEach(element => {
         element.style.backgroundColor = "transparent";
+        element.style.border = "none";        
     });
     window.onclick = e => {
         document.getElementById(imgId).style.backgroundColor = "green";
+        document.getElementById(imgId).style.border = "5px solid orange";
     } 
 
 }

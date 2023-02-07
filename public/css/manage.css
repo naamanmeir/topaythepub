@@ -328,12 +328,14 @@ button {
 .imgSelector{
 
 }
-/* .imgSelector:active {
-    background-color: green;
+
+.uploadImg{
+    width: 100%;
 }
-.imgSelector:active:after {
-    background-color: green;
+.manage-button{                
+    height: fit-content;
+    min-height: 2rem;
+    width: 100%;
+    min-width: 2rem;
+    font-size: 1.6rem;
 }
-.imgSelector:target {
-    background-color: green;
-} */

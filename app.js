@@ -9,6 +9,7 @@ const { stringify } = require("csv-stringify");
 const { createPool } = require("mariadb");
 const { response } = require("express");
 const { Script } = require("node:vm");
+var formidable = require('formidable');
 
 var SSE = require('express-sse');
 var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
@@ -26,9 +27,9 @@ const session_secret = process.env.SESSION_SECRET;
 const user_masof = process.env.USER_MASOF;
 const pass_masof = process.env.PASS_MASOF;
 const user_admin = process.env.USER_ADMIN;
-const password_admin = process.env.PASS_ADMIN;
+const pass_admin = process.env.PASS_ADMIN;
 const user_accountant = process.env.USER_ACCOUNTANT;
-const password_accountant = process.env.PASS_ACCOUNTANT;
+const pass_accountant = process.env.PASS_ACCOUNTANT;
 
 var now = new Date();
 console.log("System Startup Time : " + Date());
@@ -80,13 +81,13 @@ app.get('/manage', async function (req, res) {
     .toString()
     .split(":");
 
-  if (!(username === user_admin && password === password_admin)) {
+  if (!(username === user_admin && password === pass_admin)) {
     return reject();
   }
   console.log("LOGIN TO MANAGE PANEL ON: " + Date());
   // req.session = true;
   imgToArray();  
-  console.log(imgArray);
+  // console.log(imgArray);
   res.render('manage', {imgArray : imgArray})
 });
 
@@ -117,7 +118,7 @@ app.get('/infotables', async function (req, res) {
     .toString()
     .split(":");
 
-  if (!(username === user_admin && password === password_admin)) {
+  if (!(username === user_admin && password === pass_admin)) {
     return reject();
   }
   console.log("LOGIN TO MANAGE REPORT PAGE ON: " + Date());
@@ -159,6 +160,49 @@ app.post('/updateNameList/', async (req, res) => {
 });
 
 //-----------------GET ITEMS IMG
+
+app.post('/uploadItemImg/', async  (req,res) => {  
+    // var form = new formidable.IncomingForm();
+    const options = {
+      uploadDir: __dirname + '/public/img/items',
+      filter: function ({name, originalFilename, mimetype}) {
+        // keep only images
+        return mimetype && mimetype.includes("image");
+      }
+    };
+    const form = formidable(options);
+
+    // form.on('file', function(field, file) {
+      //rename the incoming file to the file's name
+          // fs.rename(file.path, form.uploadDir + "/" + file.name);
+  // });
+    let newName;
+    let originalName;
+    form.parse(req, function (err, fields, files) {
+      // var oldpath = files.filetoupload.filepath;
+      // var newpath = 'img/items/' + files.filetoupload.originalFilename;      
+        console.log('fields:', fields);
+        console.log('files:', files);
+        console.log(files.imgUpload.newFilename);
+        console.log(files.imgUpload.originalFilename);
+        newName = files.imgUpload.filepath;
+        originalName = (__dirname + '/public/img/items/')+(files.imgUpload.originalFilename);
+        console.log(newName)
+        console.log(originalName)
+        fs.rename(newName,originalName, () => {
+      console.log("\nFile Renamed!\n");});
+        // fs.rename(files.imgUpload.newFilename, files.imgUpload.originalFilename);
+      //   res.write('File uploaded and moved!');      
+      // res.render('manage', {imgArray : imgArray})
+    });
+    console.log("----------------------------------------------");
+    console.log(newName)
+    console.log(originalName)
+    // fs.rename(newName,originalName, () => {
+      // console.log("\nFile Renamed!\n");});
+    imgToArray();
+    res.redirect('./manage');
+});
 
 // SERACH CLIENT IN DB BY SEARCHBOX
 app.post('/searchNameManage/:data', async (req, res) => {
@@ -368,7 +412,7 @@ app.get('', async function (req, res) {
     .toString()
     .split(":");
 
-  if (!(username === user_masof && password === pass_masof)) {
+  if (!(username === user_masof || username === user_admin && password === pass_masof || password === pass_admin)) {
     return reject();
   }
   console.log("LOGIN TO APP ON: " + Date());
@@ -460,7 +504,7 @@ app.get('/accountant', async function (req, res) {
     .toString()
     .split(":");
 
-  if (!(username === user_accountant && password === password_accountant)) {
+  if (!(username === user_accountant && password === pass_accountant)) {
     return reject();
   }
   console.log("LOGGED IN TO ACCOUNTANT ON: " + Date());
@@ -614,3 +658,4 @@ const updateDataSource = () => {
   console.log(dataSource);
 }
 // setInterval(() => updateDataSource(), 5000);
+
