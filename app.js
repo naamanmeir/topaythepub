@@ -1,7 +1,7 @@
 require("dotenv").config();
 var favicon = require('serve-favicon');
 const express = require('express');
-const session = require('express-session');
+const sessions = require('express-session');
 const path = require('node:path');
 const fs = require('fs');
 const readline = require('readline');
@@ -10,6 +10,12 @@ const { createPool } = require("mariadb");
 const { response } = require("express");
 const { Script } = require("node:vm");
 var formidable = require('formidable');
+const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+var morgan = require('morgan');
+const helmet = require('helmet');
+let ejs = require('ejs');
+const querystring = require('querystring');
 
 var SSE = require('express-sse');
 var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
@@ -17,11 +23,40 @@ var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
 const db = require('./db.js');
 const functions = require('./functions.js');
 const strings = require('./strings.js');
+const generateAccessToken = require("./module/tokenGen");
+const validateToken = require("./module/tokenVal");
+const sessionClassMW = require("./module/sessionClass.js");
 
-const app = express();
-const port = 3090;
+const appPort = process.env.APP_PORT;
+const appName = process.env.APP_NAME;
 
-let clients = [];
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+const COOKIE_EXPIRATION = Number(process.env.COOKIE_EXPIRATION);
+const SESSION_NAME = process.env.SESSION_NAME;
+
+morgan.token('splitter', (req) => {
+  return "\x1b[36m--------------------------------------------\x1b[0m\n";
+}); // MORGAN LOGGING COLOR CODES
+morgan.token('statusColor', (req, res, args) => {  
+  var status = (typeof res.headersSent !== 'boolean' ? Boolean(res.header) : res.headersSent)
+      ? res.statusCode
+      : undefined  
+  var color = status >= 500 ? 31 // red
+      : status >= 400 ? 33 // yellow
+          : status >= 300 ? 36 // cyan
+              : status >= 200 ? 32 // green
+                  : 0; // no color
+  return '\x1b[' + color + 'm' + status + '\x1b[0m';
+});
+morgan.token('time', function(req, res, param) {
+  return getSimpleTime();  
+});
+morgan.token('sessionid', function(req, res, param) {
+  return req.sessionID;
+});
+morgan.token('user', function(req, res, param) {
+  return req.session.user;
+});
 
 const session_secret = process.env.SESSION_SECRET;
 const user_masof = process.env.USER_MASOF;
@@ -30,6 +65,43 @@ const user_admin = process.env.USER_ADMIN;
 const pass_admin = process.env.PASS_ADMIN;
 const user_accountant = process.env.USER_ACCOUNTANT;
 const pass_accountant = process.env.PASS_ACCOUNTANT;
+
+const app = express();
+const port = 3090;
+
+app.set('trust proxy', 1);
+
+
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
+
+app.use(express.static(__dirname));
+
+app.use(sessions({
+  name: SESSION_NAME,
+  userid: `userId`,
+  sessionid: ``,
+  secret: ACCESS_TOKEN_SECRET,  
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    secure: false,
+    httpOnly: true,
+    maxAge: COOKIE_EXPIRATION
+  } 
+}));
+
+var session;
+
+let clients = [];
+
+app.use(helmet());
+
+app.use(sessionClassMW({ class: '100', name: 'name'}));
+
+app.use(morgan(`\x1b[0m:time \x1b[0m \x1b[33m:remote-addr\x1b[0m \x1b[32m:url
+  \x1b[36m:sessionid\x1b[0m \x1b[0m :response-time ms `));
 
 var now = new Date();
 console.log("System Startup Time : " + Date());
@@ -46,19 +118,38 @@ app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
-// ------------------------  SESSION SETTINGS  ----------------------- //
-app.use(session({
-  secret: session_secret,
-  resave: true,
-  saveUninitialized: true
-}));
-
-var auth = function (req, res, next) {
-  if (req.session && req.session.user === user_admin && req.session.admin)
-    return next();
-  else
-    return res.sendStatus(401);
+function getSimpleTime(){
+  const now = new Date();
+  const simpleTime = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+  return simpleTime;
 };
+
+// DB INIT
+function dbInit(){
+  db.createSessionTable();
+  db.createUserTable();
+  const connectionTestTimeout = setTimeout(callDbStatus, 1000);
+  function callDbStatus(){
+    db.connectionStatus();
+  };
+};
+dbInit();
+
+require('./routes/routes_basic')(app);
+
+// ------------------------  OLD SESSION SETTINGS  ----------------------- //
+// app.use(session({
+//   secret: session_secret,
+//   resave: true,
+//   saveUninitialized: true
+// }));
+
+// var auth = function (req, res, next) {
+//   if (req.session && req.session.user === user_admin && req.session.admin)
+//     return next();
+//   else
+//     return res.sendStatus(401);
+// };
 
 // ------------------------  MANAGE VIEW  ----------------------- //
 app.get('/manage', async function (req, res) {
@@ -96,6 +187,84 @@ var imgArray = [];
 function imgToArray() {  
   imgArray = fs.readdirSync(imgFolder);  
 };
+
+//------------------------------USER SESSION-------------------------------------//
+app.get('/', (req,res) => {
+  session=req.session;
+  if(session.userid){
+      res.redirect('./app');
+  }else{
+    res.render('login.ejs',{
+      root:__dirname,
+      message: "please enter your details"      
+    });
+  }
+});
+
+app.post("/createUser", async (req,res) => {
+  if(!req.body.name || !req.body.password){res.sendStatus(403);return}
+
+  const user = req.body.name;
+  const password = await bcrypt.hash(req.body.password,10);
+
+  // let user = generateRandomUserName(7);
+  // const password = await bcrypt.hash(user,10);
+
+  let dbResponse = await db.createUser(user,password);
+
+  console.log("DB response: "+dbResponse[2]);
+  if(dbResponse[0]==0){
+    res.sendStatus(409);
+  }
+  if(dbResponse[0]==1){
+    res.sendStatus(201);
+  }
+});
+
+app.post("/login", async (req, res)=> {
+if(!req.body.username || !req.body.password){
+  res.redirect('./');
+  console.log("ATTAMPTED LOGIN WITH NO DETAILS")
+  return;
+}
+
+const user = req.body.username;
+const password = req.body.password;
+
+let dbResponse = await db.userLogin(user,password);
+
+if(dbResponse[0]==0){
+  console.log("LOGIN ATTAMPTED WITH WRONG USERNAME")
+  const query = querystring.stringify({"message":"username invalid"});
+  res.redirect('./?' + query);
+}
+if(dbResponse[0]==1){
+  console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD")
+  const query = querystring.stringify({"message":"password invalid"});
+  res.redirect('./?' + query);
+}
+if(dbResponse[0]==2){
+  const token = generateAccessToken({user: user});
+  session=req.session;
+  session.userid=req.body.username;    
+  const userClass = await db.getUserClassByName(session.userid);    
+  session.userclass = Number(userClass);
+  const sessionStore = await db.storeSession(session.userid,userClass,token);    
+  session.sessionid = Number(sessionStore);
+  console.log(`LOGIN: USER: ${user} ,CLASS: ${userClass} ,SESSION ID: ${session.sessionid}`);
+  res.redirect('./');
+}
+});
+
+app.get("/logout", async (req,res)=>{
+if(req.session == null){res.sendStatus(403);return;}
+if (req.session.sessionid!=null){
+  const sessionRemove = await db.removeSession(req.session.sessionid);
+};
+console.log(`USER ${req.session.userid} HAS LOGGED OUT`);
+req.session.destroy();
+res.redirect('./');
+});
 
 // ------------------------  MANAGE REPORT VIEW  ----------------------- //
 app.get('/infotables', async function (req, res) {
@@ -160,7 +329,6 @@ app.post('/updateNameList/', async (req, res) => {
 });
 
 //-----------------GET ITEMS IMG
-
 app.post('/uploadItemImg/', async  (req,res) => {  
     // var form = new formidable.IncomingForm();
     const options = {
@@ -388,39 +556,50 @@ function releaseLimit() {
 };
 
 // ------------------------  CLIENT VIEW  ----------------------- //
-app.get('', async function (req, res) {
+app.get('/app', sessionClassMW(100), async function (req, res) {
   let products = [];
   products = await db.dbGetProducts();
-  // console.log(products);
-
-  const reject = () => {
-    res.setHeader("www-authenticate", "Basic", realm = "masof", uri = "/", charset = "UTF-8");
-    res.sendStatus(401);
-  };
-
-  const authorization = req.headers.authorization;
-
-  if (!authorization) {
-    console.log("FAILED LOGIN ATTEMPTED TO MASOF APP ON: " + Date());
-    return reject();
-  }
-
-  const [username, password] = Buffer.from(
-    authorization.replace("Basic ", ""),
-    "base64"
-  )
-    .toString()
-    .split(":");
-
-  if (!(username === user_masof || username === user_admin && password === pass_masof || password === pass_admin)) {
-    return reject();
-  }
   console.log("LOGIN TO APP ON: " + Date());
   res.render('index', {
     products: products,
     msg1: strings.MSG_ORDER_VALIDATE
   })
 });
+
+
+// app.get('', async function (req, res) {
+//   let products = [];
+//   products = await db.dbGetProducts();
+//   // console.log(products);
+
+//   const reject = () => {
+//     res.setHeader("www-authenticate", "Basic", realm = "masof", uri = "/", charset = "UTF-8");
+//     res.sendStatus(401);
+//   };
+
+//   const authorization = req.headers.authorization;
+
+//   if (!authorization) {
+//     console.log("FAILED LOGIN ATTEMPTED TO MASOF APP ON: " + Date());
+//     return reject();
+//   }
+
+//   const [username, password] = Buffer.from(
+//     authorization.replace("Basic ", ""),
+//     "base64"
+//   )
+//     .toString()
+//     .split(":");
+
+//   if (!(username === user_masof || username === user_admin && password === pass_masof || password === pass_admin)) {
+//     return reject();
+//   }
+//   console.log("LOGIN TO APP ON: " + Date());
+//   res.render('index', {
+//     products: products,
+//     msg1: strings.MSG_ORDER_VALIDATE
+//   })
+// });
 
 // ------------------------  CLIENT GET PRODUCTS  ----------------------- //
 app.get('/clientGetProducts/', async (req, res) => {
