@@ -1,11 +1,26 @@
 body {
+    direction: rtl;
     display: flex;
     justify-content: center;
+    background-color: #000000;
+    color: white;
+    font-size: larger;
+}
+
+h1{
+    margin: 1%;
+}
+h2{
+    margin: 1%;
+}
+h3{
+    margin: 1%;
 }
 
 form {
     display: flex;
     flex-direction: column;
+    color: white;
 }
 
 .input-field {
@@ -14,6 +29,8 @@ form {
 }
 
 .input-field input {
+    direction: ltr;
+    font-size: larger;
     padding: 0.8rem;
 }
 
@@ -22,9 +39,10 @@ form .input-field:first-child {
 }
 
 form input[type="submit"] {
-    background: black;
-    color: white;
+    background: rgb(59, 225, 73);
+    color: rgb(0, 0, 0);
     border-radius: 4px;
     margin-top: 2rem;
+    font-size: larger;
     padding: 0.4rem;
 }

@@ -1,18 +1,33 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=window-width, height=window-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">    
     <link rel="stylesheet" href="views/login.css">
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+    <title>התחברות לפאב</title>
 </head>
 <body>
-    <form action="./login" method="post" enctype="application/x-www-form-urlencoded">
-        <h2>Login</h2>
-        <h1><%= message %></h1>
-        <div class="input-field">
-            <input type="text" name="username" id="username" placeholder="Enter Username">
-        </div>
-        <div class="input-field">
-            <input type="password" name="password" id="password" placeholder="Enter Password">
-        </div>
-        <input type="submit" value="LogIn">
-    </form>
+    <div class="loginDiv">
+
+        <form action="./login" method="post" enctype="application/x-www-form-urlencoded">
+            <h1>שלום נא להתחבר למערכת</h1>
+            <h3>הסיסמא אמורה להיות שמורה </h3>
+            <h3>בגדול רק צריך ללחוץ על השורה ולבחור את הסיסמא</h3>
+            <!-- <h1><%= message %></h1> -->
+            <div class="input-field">
+                <p>שם משתמש:</p>
+                <input type="text" name="username" id="username" placeholder="משתמש">
+            </div>
+            <div class="input-field">
+                <p>סיסמא:</p>
+                <input type="password" name="password" id="password" placeholder="סיסמא">
+            </div>
+            <input type="submit" value="התחבר">
+        </form>
+    </div>
 </body>
 </html>

@@ -6,9 +6,6 @@ const path = require('node:path');
 const fs = require('fs');
 const readline = require('readline');
 const { stringify } = require("csv-stringify");
-// const { createPool } = require("mariadb");
-// const { response } = require("express");
-// const { Script } = require("node:vm");
 var formidable = require('formidable');
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
@@ -89,7 +86,6 @@ let clients = [];
 
 // app.use(helmet());
 
-
 // app.use(morgan(`\x1b[0m:time \x1b[0m \x1b[33m:remote-addr\x1b[0m \x1b[32m:url
 //   \x1b[36m:sessionid\x1b[0m \x1b[0m :response-time ms `));
 
@@ -114,7 +110,7 @@ function getSimpleTime(){
   return simpleTime;
 };
 
-// DB INIT
+// ---------------------- DB INIT ----------------------------------- //
 function dbInit(){
   db.createSessionTable();
   db.createUserTable();
@@ -125,14 +121,13 @@ function dbInit(){
 };
 dbInit();
 
-// app.use(app.router);
-
+// ----------------- DISABLED MIDDLEWARE ---------------------------- //
 // app.use(sessionClassMW({ class: '100'}));
 
-app.use((req, res, next) => {
-  console.log('-------------Time:', Date.now())
-  next()
-})
+// app.use((req, res, next) => {
+//   console.log('-------------Time:', Date.now())
+//   next()
+// })
 
 require('./routes/routes_basic')(app);
 
@@ -151,26 +146,22 @@ app.get('/', (req,res) => {
 
 app.post("/createUser", async (req,res) => {
   console.log(req.body);
-  if(!req.body.username || !req.body.password){res.sendStatus(403);return}
+  if(!req.body.username || !req.body.password || !req.body.class){res.end;return}
 
   const username = req.body.username;
   const password = await bcrypt.hash(req.body.password,10);
+  const userclass = req.body.class;
 
-  // let user = generateRandomUserName(7);
-  // const password = await bcrypt.hash(user,10);
-
-  let dbResponse = await db.createUser(username,password);
+  let dbResponse = await db.createUser(username,password,userclass);
 
   console.log("DB response: "+dbResponse[2]);
   if(dbResponse[0]==0){
-    console.log("user creation failed");
-    // res.sendStatus(409);
-    res.redirect('./secretadminpanel');
+    console.log("user creation failed");    
+    res.redirect(req.get('referer'));
   }
   if(dbResponse[0]==1){
-    console.log("user created");
-    // res.sendStatus(201);
-    res.redirect('./secretadminpanel');
+    console.log("user created");    
+    res.redirect(req.get('referer'));
   }
 });
 

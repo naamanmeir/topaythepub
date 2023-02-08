@@ -151,13 +151,13 @@ exports.connectionStatus = async function(){
 };
 
 //--------------------------------USER MANAGE--------------------------//
-exports.createUser = async function(user,password) {
+exports.createUser = async function(user,password,userclass) {
   let ifExist = await checkUserExist(user);    
   if (ifExist && ifExist.length != 0){        
       return [0,user,`A USER NAME ${user} ALLREADY EXIST IN TABLE , ABORTING`];
   }else{
       console.log("USER AVAILABLE");         
-      sql = (`INSERT INTO ${DB_TABLE_USERS} (user,password) VALUES ('${user}','${password}');`)
+      sql = (`INSERT INTO ${DB_TABLE_USERS} (user,password,class) VALUES ('${user}','${password}',${userclass});`)
       // messageReturn = await dbQuery(sql);
       let messageReturn = await pool.query(sql);
       return [1,user,`USER ${user} ADDED TO USER TABLE , CONTINUE`];

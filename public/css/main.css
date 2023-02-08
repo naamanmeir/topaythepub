@@ -46,7 +46,7 @@ video {
 
 .content {
     z-index: 5;
-    height: 100vh;
+    height: 99vh;
     width: 98%;
     left: 1%;
     right: 1%;
@@ -499,14 +499,16 @@ video {
     display: flex;
     flex: 1;
     flex-direction: row;
+    flex-grow: 2;
     /* height: 10%; */
-    max-height: 20%;
+    /* max-height: 20%; */
     /* width: 90%; */
     max-width: fit-content;
     background-color: #61584b81;
     border: 4px outset rgb(240, 152, 0);
     position: relative;
     margin: auto;
+    margin-bottom: 1rem;
     justify-content: center;
     padding: 0.2rem;
     padding-bottom: 0px;
