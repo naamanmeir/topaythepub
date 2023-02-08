@@ -58,16 +58,8 @@ const SESSION_NAME = process.env.SESSION_NAME;
 //   return req.session.user;
 // });
 
-const session_secret = process.env.SESSION_SECRET;
-const user_masof = process.env.USER_MASOF;
-const pass_masof = process.env.PASS_MASOF;
-const user_admin = process.env.USER_ADMIN;
-const pass_admin = process.env.PASS_ADMIN;
-const user_accountant = process.env.USER_ACCOUNTANT;
-const pass_accountant = process.env.PASS_ACCOUNTANT;
-
 const app = express();
-const port = 3090;
+const port = appPort;
 
 app.set('trust proxy', 1);
 
@@ -97,7 +89,6 @@ let clients = [];
 
 // app.use(helmet());
 
-app.use(sessionClassMW({ class: '100', name: 'name'}));
 
 // app.use(morgan(`\x1b[0m:time \x1b[0m \x1b[33m:remote-addr\x1b[0m \x1b[32m:url
 //   \x1b[36m:sessionid\x1b[0m \x1b[0m :response-time ms `));
@@ -134,6 +125,15 @@ function dbInit(){
 };
 dbInit();
 
+// app.use(app.router);
+
+// app.use(sessionClassMW({ class: '100'}));
+
+app.use((req, res, next) => {
+  console.log('-------------Time:', Date.now())
+  next()
+})
+
 require('./routes/routes_basic')(app);
 
 //------------------------------USER SESSION-------------------------------------//
@@ -150,26 +150,32 @@ app.get('/', (req,res) => {
 });
 
 app.post("/createUser", async (req,res) => {
-  if(!req.body.name || !req.body.password){res.sendStatus(403);return}
+  console.log(req.body);
+  if(!req.body.username || !req.body.password){res.sendStatus(403);return}
 
-  const user = req.body.name;
+  const username = req.body.username;
   const password = await bcrypt.hash(req.body.password,10);
 
   // let user = generateRandomUserName(7);
   // const password = await bcrypt.hash(user,10);
 
-  let dbResponse = await db.createUser(user,password);
+  let dbResponse = await db.createUser(username,password);
 
   console.log("DB response: "+dbResponse[2]);
   if(dbResponse[0]==0){
-    res.sendStatus(409);
+    console.log("user creation failed");
+    // res.sendStatus(409);
+    res.redirect('./secretadminpanel');
   }
   if(dbResponse[0]==1){
-    res.sendStatus(201);
+    console.log("user created");
+    // res.sendStatus(201);
+    res.redirect('./secretadminpanel');
   }
 });
 
 app.post("/login", async (req, res)=> {
+  console.log("LOGIN ATTAMPTED")
 if(!req.body.username || !req.body.password){
   res.redirect('./');
   console.log("ATTAMPTED LOGIN WITH NO DETAILS")
@@ -214,11 +220,24 @@ req.session.destroy();
 res.redirect('./');
 });
 
+// ------------------------  ADMIN VIEW  ----------------------- //
+app.get('/secretadminpanel', sessionClassMW(0), (req, res) => { 
+  console.log("LOGIN TO ADMIN PANEL ON: " + Date());  
+  let message = "message from ejs"  ;
+  res.render('admin', {
+    message : message,
+    username: session.userid
+  })
+});
+
 // ------------------------  MANAGE VIEW  ----------------------- //
-app.get('/manage', sessionClassMW(50), async function (req, res) { 
+app.get('/manage', sessionClassMW(50), (req, res) => { 
   console.log("LOGIN TO MANAGE PANEL ON: " + Date());  
   imgToArray();
-  res.render('manage', {imgArray : imgArray})
+  res.render('manage', {
+    imgArray : imgArray,
+    username: session.userid
+  })
 });
 
 const imgFolder = path.join(__dirname, '/public/img/items');
@@ -226,6 +245,12 @@ var imgArray = [];
 function imgToArray() {  
   imgArray = fs.readdirSync(imgFolder);  
 };
+
+//-------------------------ACCOUNTANT VIEW---------------------
+app.get('/accountant', sessionClassMW(75), async function (req, res) {
+  console.log("LOGGED IN TO ACCOUNTANT ON: " + Date());
+  res.render('accountant', {})
+});
 
 // ------------------------  CLIENT VIEW  ----------------------- //
 app.get('/app', sessionClassMW(100), async function (req, res) {
@@ -238,38 +263,9 @@ app.get('/app', sessionClassMW(100), async function (req, res) {
   })
 });
 
-//-------------------------ACCOUNTANT VIEW---------------------
-app.get('/accountant', sessionClassMW(75), async function (req, res) {
-  console.log("LOGGED IN TO ACCOUNTANT ON: " + Date());
-  res.render('accountant', {})
-});
-
 // ------------------------  MANAGE REPORT VIEW  ----------------------- //
-app.get('/infotables', async function (req, res) {
-  const reject = () => {
-    res.setHeader("www-authenticate", "Basic", realm = "infotables", uri = "/infotables", charset = "UTF-8");
-    res.sendStatus(401);
-  };
-
-  const authorization = req.headers.authorization;
-
-  if (!authorization) {
-    console.log("FAILED LOGIN ATTEMPTED TO MANAGE PANEL ON: " + Date());
-    return reject();
-  }
-
-  const [username, password] = Buffer.from(
-    authorization.replace("Basic ", ""),
-    "base64"
-  )
-    .toString()
-    .split(":");
-
-  if (!(username === user_admin && password === pass_admin)) {
-    return reject();
-  }
-  console.log("LOGIN TO MANAGE REPORT PAGE ON: " + Date());
-  // req.session = true;
+app.get('/infotables', sessionClassMW(75), async function (req, res) {
+  console.log("LOGIN TO MANAGE REPORT PAGE ON: " + Date());  
   res.render('infotables', {})
 });
 
@@ -513,10 +509,10 @@ app.get('/getListOfArchiveReport/', async (req, res) => {
   res.send(archiveList);
 });
 
-let limit = false;
+let dbRateLimit = false;
 app.post('/backupTable/', async (req, res) => {
-  if (!limit) {
-    limit = true;
+  if (!dbRateLimit) {
+    dbRateLimit = true;
     let dbBackup;
     let dateObj = new Date().toISOString().substr(0, 19);
     dateFormat = dateObj.replace(/-/g, '_').replace(/:/g, '_').replace(/T/g, '_');
@@ -530,7 +526,7 @@ app.post('/backupTable/', async (req, res) => {
 });
 
 function releaseLimit() {
-  (limit = false);
+  (dbRateLimit = false);
 };
 
 
