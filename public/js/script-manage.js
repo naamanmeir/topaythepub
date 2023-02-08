@@ -26,16 +26,16 @@ async function createTable() {
     };
 };
 
-function navtab(select){
+function navtab(select) {
     var i;
     var x = document.getElementsByClassName("page");
     for (i = 0; i < x.length; i++) {
-      x[i].style.display = "none";
+        x[i].style.display = "none";
     }
     document.getElementById(select).style.display = "block";
 };
 
-function addImgDropdown(){    
+function addImgDropdown() {
     let imgDiv = document.getElementById("imgDiv");
 }
 const searchBox1 = document.getElementById("getUserByName");
@@ -452,10 +452,10 @@ async function getProducts() {
                 var productDisplay = document.createElement("input");
                 var productPrice = document.createElement("input");
                 var productImage = document.createElement("image");
-                // var imageSelect = document.createElement("option");
-                
+                // var imageSelect = document.createElement("option"); 
+
                 productImage.innerHTML = `<img src="${table.itemimgpath}"/>`;
-                
+
                 // productImage.appendChild(imageSelect);
                 productId.setAttribute("type", "number");
                 productName.setAttribute("type", "text");
@@ -463,14 +463,14 @@ async function getProducts() {
                 productPrice.setAttribute("type", "number");
                 productPrice.setAttribute("min", "0");
                 productPrice.setAttribute("max", "99");
-                
+
                 productId.value = table.itemid;
                 productName.value = table.itemname;
-                productDisplay.checked = (table.stock>0);
+                productDisplay.checked = (table.stock > 0);
                 productPrice.value = table.price;
-                productPrice.style.width = ("3rem");                
+                productPrice.style.width = ("3rem");
 
-                productRow.appendChild(productName);                
+                productRow.appendChild(productName);
                 productRow.appendChild(productPrice);
                 productRow.appendChild(productImage);
                 productRow.appendChild(productDisplay);
@@ -478,16 +478,20 @@ async function getProducts() {
 
                 productName.onchange = function () {
                     editProductFields(
-                        table.itemid,productName.value,productPrice.value,table.itemimgpath,productDisplay.checked)};
+                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked)
+                };
                 productPrice.onchange = function () {
                     editProductFields(
-                        table.itemid,productName.value,productPrice.value,table.itemimgpath,productDisplay.checked)};
+                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked)
+                };
                 productImage.onchange = function () {
                     editProductFields(
-                        table.itemid,productName.value,productPrice.value,table.itemimgpath,productDisplay.checked)};
+                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked)
+                };
                 productDisplay.onchange = function () {
                     editProductFields(
-                        table.itemid,productName.value,productPrice.value,table.itemimgpath,productDisplay.checked)};
+                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked)
+                };
             });
             products.forEach(table => {
                 var opt = document.createElement("option");
@@ -516,16 +520,16 @@ function editProductLoad() {
     productName = products[i].itemname;
     textName.value = products[i].itemname;
     textPrice.value = products[i].price;
-    itemImage.src=products[i].itemimgpath;
+    itemImage.src = products[i].itemimgpath;
     textStock.value = products[i].stock;
 };
 
-function editProductFields(thisProductId,name,price,image,stock){
+function editProductFields(thisProductId, name, price, image, stock) {
     stock = stock ? 1 : 0;
     let data = [thisProductId, name, price, image, stock];
     // console.log(data);
     document.getElementById("productName").value = name;
-    document.getElementById("productPrice").value = price;    
+    document.getElementById("productPrice").value = price;
     document.getElementById("productImage").src = image;
     document.getElementById("productStock").value = stock;
     productId = thisProductId;
@@ -538,9 +542,9 @@ function editProduct() {
     let newName = document.getElementById("productName");
     let newPrice = document.getElementById("productPrice");
     // let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/','').replace('.png','');
-    let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/','');
+    let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/', '');
     let newStock = document.getElementById("productStock");
-    let data = [productId, newName.value, newPrice.value,newImage,newStock.value];
+    let data = [productId, newName.value, newPrice.value, newImage, newStock.value];
     // console.log(data);
     if (window.confirm("לערוך נתונים של " + productName + "?")) {
         xhttp.open("POST", "./editProduct/" + data, true);
@@ -556,18 +560,18 @@ function editProduct() {
 };
 
 let imgSelect;
-function imgClickSelect(img,imgId) {    
+function imgClickSelect(img, imgId) {
     imgSelect = img;
     let imgSelector = document.getElementsByClassName("imgSelector");
     var arr = [...imgSelector];
     arr.forEach(element => {
         element.style.backgroundColor = "transparent";
-        element.style.border = "none";        
+        element.style.border = "none";
     });
     window.onclick = e => {
         document.getElementById(imgId).style.backgroundColor = "green";
         document.getElementById(imgId).style.border = "5px solid orange";
-    } 
+    }
 
 }
 
@@ -878,20 +882,20 @@ function loadUtiliti() {
 
 };
 
-function refreshAllClients(){
+function refreshAllClients() {
     if (window.confirm("לטעון מחדש את המסופים המחוברים?")) {
         xhttp.open("GET", "./refreshClients/", true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);            
+            console.log(this.response);
             return;
         }
     };
 };
 
-function connectedTerminalsStatus() {    
+function connectedTerminalsStatus() {
     let connectedTerminals = document.getElementById("connectedTerminals");
     connectedTerminals.innerText = ("1234");
 }

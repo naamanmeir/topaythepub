@@ -24,48 +24,48 @@ const DB_TABLE_USERS = process.env.DB_TABLE_USERS
 const DB_TABLE_SESSIONS = process.env.DB_TABLE_SESSIONS
 
 //-----------------------------INIT----------------------------------//
-exports.dbConnectionTest = async function(){
+exports.dbConnectionTest = async function () {
   pool.getConnection()
-  .then(() => {
-  console.log("Successfully connected to database");
-  })
-  .catch((error) => {
-  console.log("database connection failed. exiting now...");
-  console.error(error);
-  process.exit(1);
-  });
+    .then(() => {
+      console.log("Successfully connected to database");
+    })
+    .catch((error) => {
+      console.log("database connection failed. exiting now...");
+      console.error(error);
+      process.exit(1);
+    });
 };
 
-exports.createUserTable = async function(){
+exports.createUserTable = async function () {
   let createUserTable;
   createUserTable = pool.query("CREATE TABLE IF NOT EXISTS `" + DB_TABLE_USERS +
-      "`(`userId` INT NOT NULL AUTO_INCREMENT," +
-      "`class` INT NOT NULL DEFAULT '100'," +
-      "`user` VARCHAR(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'user'," +
-      "`password` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'pass'," +
-      "PRIMARY KEY (`userId`));"
+    "`(`userId` INT NOT NULL AUTO_INCREMENT," +
+    "`class` INT NOT NULL DEFAULT '100'," +
+    "`user` VARCHAR(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'user'," +
+    "`password` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'pass'," +
+    "PRIMARY KEY (`userId`));"
   )
-  .catch((err) => { console.log(err) })
-  .then((results) => {         
+    .catch((err) => { console.log(err) })
+    .then((results) => {
       return results;
-  })
+    })
   return createUserTable;
 };
 
-exports.createSessionTable = async function(){
+exports.createSessionTable = async function () {
   let createSessionTable;
   createSessionTable = pool.query("CREATE TABLE IF NOT EXISTS `" + DB_TABLE_SESSIONS +
-      "`(`sessionId` INT NOT NULL AUTO_INCREMENT," +
-      "`time` DATE ," +
-      "`userClass` INT NOT NULL DEFAULT '100'," +
-      "`userName` VARCHAR(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'userDefault'," +
-      "`jwt` TEXT(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin ," +
-      "PRIMARY KEY (`sessionId`));"
+    "`(`sessionId` INT NOT NULL AUTO_INCREMENT," +
+    "`time` DATE ," +
+    "`userClass` INT NOT NULL DEFAULT '100'," +
+    "`userName` VARCHAR(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'userDefault'," +
+    "`jwt` TEXT(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin ," +
+    "PRIMARY KEY (`sessionId`));"
   )
-  .catch((err) => { console.log(err) })
-  .then((results) => {
+    .catch((err) => { console.log(err) })
+    .then((results) => {
       return results;
-  })
+    })
   return createSessionTable;
 };
 
@@ -99,7 +99,7 @@ exports.dbCreateTableOrders = async function () {
         "`info` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin" +
         "`sum` INT NOT NULL DEFAULT '0'," +
         "`clientid` INT NOT NULL DEFAULT '1'," +
-        "`client` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL," +        
+        "`client` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL," +
         "PRIMARY KEY (`orderid`));"
       )
         .then((results) => { console.log(results); return results })
@@ -144,67 +144,67 @@ exports.dbCreateTableProducts = async function () {
 //   return createTableUsers;
 // };
 
-exports.connectionStatus = async function(){
+exports.connectionStatus = async function () {
   console.log("Total connections: ", pool.totalConnections());
   console.log("Active connections: ", pool.activeConnections());
   console.log("Idle connections: ", pool.idleConnections());
 };
 
 //--------------------------------USER MANAGE--------------------------//
-exports.createUser = async function(user,password,userclass) {
-  let ifExist = await checkUserExist(user);    
-  if (ifExist && ifExist.length != 0){        
-      return [0,user,`A USER NAME ${user} ALLREADY EXIST IN TABLE , ABORTING`];
-  }else{
-      console.log("USER AVAILABLE");         
-      sql = (`INSERT INTO ${DB_TABLE_USERS} (user,password,class) VALUES ('${user}','${password}',${userclass});`)
-      // messageReturn = await dbQuery(sql);
-      let messageReturn = await pool.query(sql);
-      return [1,user,`USER ${user} ADDED TO USER TABLE , CONTINUE`];
+exports.createUser = async function (user, password, userclass) {
+  let ifExist = await checkUserExist(user);
+  if (ifExist && ifExist.length != 0) {
+    return [0, user, `A USER NAME ${user} ALLREADY EXIST IN TABLE , ABORTING`];
+  } else {
+    console.log("USER AVAILABLE");
+    sql = (`INSERT INTO ${DB_TABLE_USERS} (user,password,class) VALUES ('${user}','${password}',${userclass});`)
+    // messageReturn = await dbQuery(sql);
+    let messageReturn = await pool.query(sql);
+    return [1, user, `USER ${user} ADDED TO USER TABLE , CONTINUE`];
   }
 };
 
-exports.userLogin = async function(user,password){
+exports.userLogin = async function (user, password) {
   let userQuery = await checkUserExist(user);
-  if (userQuery && userQuery.length == 0){
-      return [0,user,`A USER NAME ${user} NOT EXIST IN TABLE , ACCESS DENIED`];
-  }else{
-      const hashedPassword = userQuery[0].password;
-      if (await bcrypt.compare(password, hashedPassword)) {
-          return [2,user,`USER ${user} IS VALID AND AUTHENTICTED, ACCESS GRANTED`];
-      }
-      else {
-          return [1,user,`USER ${user} USED WRONG PASSWORD , ACCESS DENIED`];
-      }
+  if (userQuery && userQuery.length == 0) {
+    return [0, user, `A USER NAME ${user} NOT EXIST IN TABLE , ACCESS DENIED`];
+  } else {
+    const hashedPassword = userQuery[0].password;
+    if (await bcrypt.compare(password, hashedPassword)) {
+      return [2, user, `USER ${user} IS VALID AND AUTHENTICTED, ACCESS GRANTED`];
+    }
+    else {
+      return [1, user, `USER ${user} USED WRONG PASSWORD , ACCESS DENIED`];
+    }
   }
 };
 
-async function checkUserExist(user){
-  const sql = (`SELECT * FROM ${DB_TABLE_USERS} WHERE user = '${user}';`)    
+async function checkUserExist(user) {
+  const sql = (`SELECT * FROM ${DB_TABLE_USERS} WHERE user = '${user}';`)
   let userExistance = await pool.query(sql);
   return userExistance;
 };
 
-exports.getUserClassByName = async function getUserClassByName(user){
+exports.getUserClassByName = async function getUserClassByName(user) {
   const sql = (`SELECT class FROM ${DB_TABLE_USERS} WHERE user = '${user}';`)
   let userClass = await pool.query(sql);
-  userClass = userClass[0].class;    
+  userClass = userClass[0].class;
   return userClass;
 };
 
 //----------------------------------------SESSION MANAGE-----------------------//
 
-exports.storeSession = async function storeSession(username,userclass,jwt){    
-  const sql = (`INSERT INTO ${DB_TABLE_SESSIONS} (userClass,userName,jwt)`+
-  ` VALUES ('${userclass}','${username}','${jwt}');`);
+exports.storeSession = async function storeSession(username, userclass, jwt) {
+  const sql = (`INSERT INTO ${DB_TABLE_SESSIONS} (userClass,userName,jwt)` +
+    ` VALUES ('${userclass}','${username}','${jwt}');`);
   let storeSession = await pool.query(sql);
   const sessionId = parseInt(storeSession.insertId);
   return sessionId;
 };
 
-exports.removeSession = async function removeSession(sessionId){        
+exports.removeSession = async function removeSession(sessionId) {
   const sql = (`DELETE FROM ${DB_TABLE_SESSIONS} WHERE sessionId = '${sessionId}';`);
-  let removeSession = await pool.query(sql);    
+  let removeSession = await pool.query(sql);
   return removeSession;
 };
 
@@ -472,7 +472,7 @@ exports.dbGetDataByScope = async function (scope) {
   if (scope == 1) {//SCOPE ORDERS
     data = await pool.query("SELECT orderid,DATE_FORMAT(`time`, '%d-%m-%y') AS `formatted_date`" +
       ",info,sum,clientid,client FROM " + tableOrders +
-      " WHERE clientid IN ( SELECT id FROM "+ tableClients + " WHERE account >= 50 )" +
+      " WHERE clientid IN ( SELECT id FROM " + tableClients + " WHERE account >= 50 )" +
       " ORDER BY orderid DESC;");
   };
   if (scope == 2) {//SCOPE CLIENTS ALL
@@ -494,20 +494,20 @@ exports.dbGetDataByScope = async function (scope) {
       " ORDER BY last_action DESC ;");
   };
   if (scope == 5) {//SCOPE REPORT WITH ORDERS MERGED BY DATE
-    data = await pool.query("SELECT sum("+
-      tableOrders+".sum) AS `sum`"+
+    data = await pool.query("SELECT sum(" +
+      tableOrders + ".sum) AS `sum`" +
       ",DATE_FORMAT(`time`, '%d-%m-%y') AS `date`" +
-      ",GROUP_CONCAT("+
-      tableOrders+".info SEPARATOR ',') AS `info`,"+
-      tableOrders+".client AS `client`,"+
-      tableClients+".account AS `account`"+      
-      " FROM " +tableOrders+
-      " INNER JOIN "+tableClients+" ON "+tableOrders+".clientid = clients.id " +
+      ",GROUP_CONCAT(" +
+      tableOrders + ".info SEPARATOR ',') AS `info`," +
+      tableOrders + ".client AS `client`," +
+      tableClients + ".account AS `account`" +
+      " FROM " + tableOrders +
+      " INNER JOIN " + tableClients + " ON " + tableOrders + ".clientid = clients.id " +
       " WHERE sign = 0 AND " +
-      " clientid IN ( SELECT id FROM "+ tableClients + " WHERE account >= 50 AND sum > 0)" +
+      " clientid IN ( SELECT id FROM " + tableClients + " WHERE account >= 50 AND sum > 0)" +
       " GROUP BY date, clientid " +
       " ORDER BY orderid DESC;");
-  };  
+  };
   return data;
 };
 
@@ -605,8 +605,8 @@ exports.dbEditProduct = async function (values) {
   let productId = values[0];
   let newName = values[1];
   let newPrice = values[2];
-  let newImage = "img/items/"+values[3];
-  let newStock = values[4];  
+  let newImage = "img/items/" + values[3];
+  let newStock = values[4];
   let editProductRes;
   editProductRes = await pool.query("UPDATE " + tableProducts +
     " SET itemname = '" + newName + "' ,price = '" + newPrice + "' ,itemimgpath = '" + newImage + "' ,stock = '" + newStock +

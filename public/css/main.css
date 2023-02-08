@@ -481,12 +481,12 @@ video {
 }
 
 .items {
-    height: 50vh;
-    max-height: 50vh;
+    height: 60vh;
+    /* max-height: 70vh; */
     width: 96%;
     margin: auto;
     margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0px;
     display: inline-block;
     flex-wrap: nowrap;
     flex-direction: column;
