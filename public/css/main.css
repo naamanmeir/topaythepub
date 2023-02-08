@@ -163,7 +163,7 @@ video {
     height: 4rem;
     margin-bottom: 3rem;
     align-items: center;
-    text-align: center;    
+    text-align: center;
 }
 
 .searchBox {
@@ -182,7 +182,7 @@ video {
     padding-bottom: 0px;
     margin-top: 0px;
     margin-bottom: 0px;
-    user-select: none;    
+    user-select: none;
 }
 
 ::placeholder {
@@ -481,26 +481,29 @@ video {
 }
 
 .items {
+    height: 50vh;
     max-height: 50vh;
     width: 96%;
     margin: auto;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    display: flex;
+    display: inline-block;
     flex-wrap: nowrap;
     flex-direction: column;
-    justify-content: center;    
+    /* justify-content: center;     */
     position: relative;
     transition: background-color 0.8s ease;
-    /* border: 5px solid orange; */
+    /* border: 2px solid orange; */
+    overflow-y: auto;
 }
 
 .item {
     display: flex;
-    flex: 1;
+    /* flex: 1; */
     flex-direction: row;
-    flex-grow: 2;
-    /* height: 10%; */
+    /* flex-grow: 5; */
+    height: fit-content;
+    flex-wrap: wrap;
     /* max-height: 20%; */
     /* width: 90%; */
     max-width: fit-content;
@@ -515,14 +518,17 @@ video {
     transition: background-color 0.5s ease;
     border-radius: 5%;
     /* transition: all 1s ease; */
+    flex: 0 0 25%;
+    resize: none;
+
 }
 
 .item img {
     user-select: none;
     pointer-events: none;
-    display: block;
+    display: flex;
     margin: auto;
-    top: 0px;    
+    top: 0px;
     padding: 0px;
     height: 80%;
 }
@@ -577,6 +583,47 @@ video {
 
 .itemNotActive {
     display: none;
+}
+
+@media screen and (max-height: 700px),
+(max-width: 500px) {
+    .item {
+        border: 2px outset rgb(240, 152, 0);
+        max-height: 35%;
+        /* margin-bottom: 0px; */
+    }
+
+    .item p {
+        font-size: 1.2rem;
+    }
+
+    .item img {
+        /* height: 10%; */
+        max-height: 4rem;
+    }
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-track {
+    background-color: rgb(64, 64, 64);
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 10x 5px grey;
+    border-radius: 50px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(238, 134, 23, 0.713);
+    border-radius: 2px;
+    background-clip: padding-box;
 }
 
 .break {
@@ -1192,19 +1239,19 @@ video {
 
 } */
 /* The side navigation menu */
-.sidenav {    
+.sidenav {
     height: fit-content;
     padding-top: 1rem;
     padding-bottom: 1rem;
     width: 0;
     position: fixed;
-    z-index: 2500;    
+    z-index: 2500;
     bottom: 0px;
     right: 0;
     background-color: rgba(11, 49, 58, 0.86);
     border: 0px solid #97480f;
     border-width: 0px;
-    overflow-x: hidden;    
+    overflow-x: hidden;
     transition: 0.5s;
     white-space: nowrap;
     margin: 0px;
