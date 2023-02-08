@@ -6,14 +6,14 @@ const path = require('node:path');
 const fs = require('fs');
 const readline = require('readline');
 const { stringify } = require("csv-stringify");
-const { createPool } = require("mariadb");
-const { response } = require("express");
-const { Script } = require("node:vm");
+// const { createPool } = require("mariadb");
+// const { response } = require("express");
+// const { Script } = require("node:vm");
 var formidable = require('formidable');
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
-var morgan = require('morgan');
-const helmet = require('helmet');
+// var morgan = require('morgan');
+// const helmet = require('helmet');
 let ejs = require('ejs');
 const querystring = require('querystring');
 
@@ -34,29 +34,29 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const COOKIE_EXPIRATION = Number(process.env.COOKIE_EXPIRATION);
 const SESSION_NAME = process.env.SESSION_NAME;
 
-morgan.token('splitter', (req) => {
-  return "\x1b[36m--------------------------------------------\x1b[0m\n";
-}); // MORGAN LOGGING COLOR CODES
-morgan.token('statusColor', (req, res, args) => {  
-  var status = (typeof res.headersSent !== 'boolean' ? Boolean(res.header) : res.headersSent)
-      ? res.statusCode
-      : undefined  
-  var color = status >= 500 ? 31 // red
-      : status >= 400 ? 33 // yellow
-          : status >= 300 ? 36 // cyan
-              : status >= 200 ? 32 // green
-                  : 0; // no color
-  return '\x1b[' + color + 'm' + status + '\x1b[0m';
-});
-morgan.token('time', function(req, res, param) {
-  return getSimpleTime();  
-});
-morgan.token('sessionid', function(req, res, param) {
-  return req.sessionID;
-});
-morgan.token('user', function(req, res, param) {
-  return req.session.user;
-});
+// morgan.token('splitter', (req) => {
+//   return "\x1b[36m--------------------------------------------\x1b[0m\n";
+// }); // MORGAN LOGGING COLOR CODES
+// morgan.token('statusColor', (req, res, args) => {  
+//   var status = (typeof res.headersSent !== 'boolean' ? Boolean(res.header) : res.headersSent)
+//       ? res.statusCode
+//       : undefined  
+//   var color = status >= 500 ? 31 // red
+//       : status >= 400 ? 33 // yellow
+//           : status >= 300 ? 36 // cyan
+//               : status >= 200 ? 32 // green
+//                   : 0; // no color
+//   return '\x1b[' + color + 'm' + status + '\x1b[0m';
+// });
+// morgan.token('time', function(req, res, param) {
+//   return getSimpleTime();  
+// });
+// morgan.token('sessionid', function(req, res, param) {
+//   return req.sessionID;
+// });
+// morgan.token('user', function(req, res, param) {
+//   return req.session.user;
+// });
 
 const session_secret = process.env.SESSION_SECRET;
 const user_masof = process.env.USER_MASOF;
@@ -70,7 +70,6 @@ const app = express();
 const port = 3090;
 
 app.set('trust proxy', 1);
-
 
 app.use(express.json());
 app.use(cookieParser());
@@ -96,12 +95,12 @@ var session;
 
 let clients = [];
 
-app.use(helmet());
+// app.use(helmet());
 
 app.use(sessionClassMW({ class: '100', name: 'name'}));
 
-app.use(morgan(`\x1b[0m:time \x1b[0m \x1b[33m:remote-addr\x1b[0m \x1b[32m:url
-  \x1b[36m:sessionid\x1b[0m \x1b[0m :response-time ms `));
+// app.use(morgan(`\x1b[0m:time \x1b[0m \x1b[33m:remote-addr\x1b[0m \x1b[32m:url
+//   \x1b[36m:sessionid\x1b[0m \x1b[0m :response-time ms `));
 
 var now = new Date();
 console.log("System Startup Time : " + Date());
@@ -136,57 +135,6 @@ function dbInit(){
 dbInit();
 
 require('./routes/routes_basic')(app);
-
-// ------------------------  OLD SESSION SETTINGS  ----------------------- //
-// app.use(session({
-//   secret: session_secret,
-//   resave: true,
-//   saveUninitialized: true
-// }));
-
-// var auth = function (req, res, next) {
-//   if (req.session && req.session.user === user_admin && req.session.admin)
-//     return next();
-//   else
-//     return res.sendStatus(401);
-// };
-
-// ------------------------  MANAGE VIEW  ----------------------- //
-app.get('/manage', async function (req, res) {
-  const reject = () => {
-    res.setHeader("www-authenticate", "Basic", realm = "admin", uri = "/manage", charset = "UTF-8");
-    res.sendStatus(401);
-  };
-
-  const authorization = req.headers.authorization;
-
-  if (!authorization) {
-    console.log("FAILED LOGIN ATTEMPTED TO MANAGE PANEL ON: " + Date());
-    return reject();
-  }
-
-  const [username, password] = Buffer.from(
-    authorization.replace("Basic ", ""),
-    "base64"
-  )
-    .toString()
-    .split(":");
-
-  if (!(username === user_admin && password === pass_admin)) {
-    return reject();
-  }
-  console.log("LOGIN TO MANAGE PANEL ON: " + Date());
-  // req.session = true;
-  imgToArray();  
-  // console.log(imgArray);
-  res.render('manage', {imgArray : imgArray})
-});
-
-const imgFolder = path.join(__dirname, '/public/img/items');
-var imgArray = [];
-function imgToArray() {  
-  imgArray = fs.readdirSync(imgFolder);  
-};
 
 //------------------------------USER SESSION-------------------------------------//
 app.get('/', (req,res) => {
@@ -264,6 +212,36 @@ if (req.session.sessionid!=null){
 console.log(`USER ${req.session.userid} HAS LOGGED OUT`);
 req.session.destroy();
 res.redirect('./');
+});
+
+// ------------------------  MANAGE VIEW  ----------------------- //
+app.get('/manage', sessionClassMW(50), async function (req, res) { 
+  console.log("LOGIN TO MANAGE PANEL ON: " + Date());  
+  imgToArray();
+  res.render('manage', {imgArray : imgArray})
+});
+
+const imgFolder = path.join(__dirname, '/public/img/items');
+var imgArray = [];
+function imgToArray() {  
+  imgArray = fs.readdirSync(imgFolder);  
+};
+
+// ------------------------  CLIENT VIEW  ----------------------- //
+app.get('/app', sessionClassMW(100), async function (req, res) {
+  let products = [];
+  products = await db.dbGetProducts();
+  console.log("LOGIN TO APP ON: " + Date());
+  res.render('index', {
+    products: products,
+    msg1: strings.MSG_ORDER_VALIDATE
+  })
+});
+
+//-------------------------ACCOUNTANT VIEW---------------------
+app.get('/accountant', sessionClassMW(75), async function (req, res) {
+  console.log("LOGGED IN TO ACCOUNTANT ON: " + Date());
+  res.render('accountant', {})
 });
 
 // ------------------------  MANAGE REPORT VIEW  ----------------------- //
@@ -555,16 +533,7 @@ function releaseLimit() {
   (limit = false);
 };
 
-// ------------------------  CLIENT VIEW  ----------------------- //
-app.get('/app', sessionClassMW(100), async function (req, res) {
-  let products = [];
-  products = await db.dbGetProducts();
-  console.log("LOGIN TO APP ON: " + Date());
-  res.render('index', {
-    products: products,
-    msg1: strings.MSG_ORDER_VALIDATE
-  })
-});
+
 
 
 // app.get('', async function (req, res) {
@@ -662,33 +631,7 @@ app.post('/getUserInfo/:data', async (req, res) => {
 
 });
 
-//-------------------------accountant---------------------
-app.get('/accountant', async function (req, res) {
-  const reject = () => {
-    res.setHeader("www-authenticate", "Basic", realm = "accountant", uri = "/accountant", charset = "UTF-8");
-    res.sendStatus(401);
-  };
 
-  const authorization = req.headers.authorization;
-
-  if (!authorization) {
-    console.log("FAILED LOGIN ATTEMPTED TO ACCOUNTANT ON: " + Date());
-    return reject();
-  }
-
-  const [username, password] = Buffer.from(
-    authorization.replace("Basic ", ""),
-    "base64"
-  )
-    .toString()
-    .split(":");
-
-  if (!(username === user_accountant && password === pass_accountant)) {
-    return reject();
-  }
-  console.log("LOGGED IN TO ACCOUNTANT ON: " + Date());
-  res.render('accountant', {})
-});
 
 //-----------------------WRITE REPORT FILE WITH ORDERS SCHEME---------------------//
 app.get('/createFileReportOrders/', async function (req, res) {
