@@ -36,7 +36,7 @@ function loadUtiliti() {
     setTimeout(function () {
         viewport.setAttribute("content", "width=" + window.innerWidth + ", height=" + window.innerHeight + ", initial-scale=1.0, maximum-scale=1.0, user-scalable=yes");
     }, 100);
-    setTimeout(getProducts(), 300);    
+    setTimeout(getProducts(), 300);
     setTimeout(uiSidemenu(), 500);
 
     // setTimeout(displayItems(), 6200);
@@ -125,16 +125,23 @@ searchBox1.addEventListener('input', function () {
 });
 //---------------------UI-----------------------------
 
-function uiSidemenu(){
+function uiSidemenu() {
     const sideNav = document.getElementById("sideNav");
     // sideNav.innerHTML = (`<a href="#" onclick="refreshPage()"">טען מחדש</a>`);
+
+    sideNav.innerHTML += (`<a href="#" id="aboutMenu">נוצר עבור </a>`);
+    sideNav.innerHTML += (`<a href="#" id="aboutMenu">פאב אבירים </a>`);
+    sideNav.innerHTML += (`<a href="#" id="aboutMenu"> עלידי </a>`);
+    sideNav.innerHTML += (`<a href="#" id="aboutMenu">ניבה גבינהצהובה </a>`);
+    sideNav.innerHTML += (`<a href="#" id="aboutMenu">זהו</a>`);
+    sideNav.innerHTML += (`<a href="#" id="aboutMenu">הא והטאבלט תום הביא </a>`);
     sideNav.innerHTML += (`<a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a>`);
-    sideNav.innerHTML += (`<a href="#" class="hidden" id="user_info" onclick="getUserInfoById()">משתמש</a>`);
     // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(0)" onclick="clearTimeout(window.tcm)"> שחור</a>`);
     // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)"> ריבועים</a>`);
     // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)"> טבעות</a>`);    
     // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)"> עיגולים</a>`);
     sideNav.innerHTML += (`<a href="./logout"> התנתק</a>`);
+    sideNav.innerHTML += (`<a href="#" class="hidden green" id="user_info" onclick="getUserInfoById()">משתמש</a>`);
     sideNav.innerHTML += (`<a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><img src="img/ui/menu_close.png"></a>`);
 
 };
@@ -178,7 +185,7 @@ function displayItems() {
     });
 };
 
-function refreshPage(){
+function refreshPage() {
     location.reload();
 };
 
@@ -335,7 +342,7 @@ function addItem(item) {
 
 function orderButtons(btn) {
     if (btn == 2) { // CANCEL ITEMS AND CLEAR ARRAY        
-        let counts = document.getElementsByClassName("counts");        
+        let counts = document.getElementsByClassName("counts");
         counts = [].slice.call(counts);
         counts.forEach(removeItems);
         orderArray = [];
@@ -357,7 +364,7 @@ function orderButtons(btn) {
     }
 }
 
-function removeItems(item){
+function removeItems(item) {
     item.innerText = "";
 }
 
@@ -558,6 +565,7 @@ function userLogged() {
     searchBox1.classList.add("searchBoxLogged");
     searchBox1.classList.remove("searchBoxNotLogged");
     document.getElementById("user_info").style.display = "block";
+    document.getElementById("user_info").style.color = "green";
     userAutoLogout(45000);
     // stopRefreshDataInterval();
 };
@@ -913,31 +921,35 @@ function pointerEnableIn(i) {
     }, i);
 };
 
+function about() {
+
+}
+
 // ---------------------------------------------//
-function connectEventSource(){
+function connectEventSource() {
     if (!!window.EventSource) {
         var source = new EventSource('./events')
 
-        source.addEventListener('message', function(event) {        
-        // console.log(event.data);
-        eventHandler(event);
+        source.addEventListener('message', function (event) {
+            // console.log(event.data);
+            eventHandler(event);
         }, false)
 
-        source.addEventListener('open', function(e) {        
+        source.addEventListener('open', function (e) {
             console.log("connected");
         }, false)
 
-        source.addEventListener('error', function(e) {        
-        if (e.eventPhase == EventSource.CLOSED)
-            console.log("closing connection and recall function");
+        source.addEventListener('error', function (e) {
+            if (e.eventPhase == EventSource.CLOSED)
+                console.log("closing connection and recall function");
             source.close()
             connectEventSource();
-        if (e.target.readyState == EventSource.CLOSED) {            
-            connectEventSource();
-        }
-        else if (e.target.readyState == EventSource.CONNECTING) {
-                console.log("connecting");            
-        }
+            if (e.target.readyState == EventSource.CLOSED) {
+                connectEventSource();
+            }
+            else if (e.target.readyState == EventSource.CONNECTING) {
+                console.log("connecting");
+            }
         }, false)
     } else {
         console.log("Your browser doesn't support SSE")
@@ -947,12 +959,12 @@ connectEventSource();
 
 function eventHandler(event) {
     let data = event.data;
-    console.log("event: "+data);    
-    if(JSON.parse(data) == "refresh"){
+    console.log("event: " + data);
+    if (JSON.parse(data) == "refresh") {
         console.log("MATCH REFRESH TERMINAL");
         refreshPage();
     }
-    if(JSON.parse(data) == "reloadItems"){
+    if (JSON.parse(data) == "reloadItems") {
         console.log("MATCH RELOAD ITEMS");
         getProducts();
     }
