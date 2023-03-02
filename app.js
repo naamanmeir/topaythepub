@@ -70,14 +70,14 @@ app.use(sessions({
   name: SESSION_NAME,
   userid: `userId`,
   sessionid: ``,
-  secret: ACCESS_TOKEN_SECRET,  
+  secret: ACCESS_TOKEN_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { 
+  cookie: {
     secure: false,
     httpOnly: true,
     maxAge: COOKIE_EXPIRATION
-  } 
+  }
 }));
 
 var session;
@@ -104,18 +104,18 @@ app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
-function getSimpleTime(){
+function getSimpleTime() {
   const now = new Date();
   const simpleTime = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
   return simpleTime;
 };
 
 // ---------------------- DB INIT ----------------------------------- //
-function dbInit(){
+function dbInit() {
   db.createSessionTable();
   db.createUserTable();
   const connectionTestTimeout = setTimeout(callDbStatus, 1000);
-  function callDbStatus(){
+  function callDbStatus() {
     db.connectionStatus();
   };
 };
@@ -132,109 +132,109 @@ dbInit();
 require('./routes/routes_basic')(app);
 
 //------------------------------USER SESSION-------------------------------------//
-app.get('/', (req,res) => {
-  session=req.session;
-  if(session.userid){
-      res.redirect('./app');
-  }else{
-    res.render('login.ejs',{
-      root:__dirname,
-      message: "please enter your details"      
+app.get('/', (req, res) => {
+  session = req.session;
+  if (session.userid) {
+    res.redirect('./app');
+  } else {
+    res.render('login.ejs', {
+      root: __dirname,
+      message: "please enter your details"
     });
   }
 });
 
-app.post("/createUser", async (req,res) => {
+app.post("/createUser", async (req, res) => {
   console.log(req.body);
-  if(!req.body.username || !req.body.password || !req.body.class){res.end;return}
+  if (!req.body.username || !req.body.password || !req.body.class) { res.end; return }
 
   const username = req.body.username;
-  const password = await bcrypt.hash(req.body.password,10);
+  const password = await bcrypt.hash(req.body.password, 10);
   const userclass = req.body.class;
 
-  let dbResponse = await db.createUser(username,password,userclass);
+  let dbResponse = await db.createUser(username, password, userclass);
 
-  console.log("DB response: "+dbResponse[2]);
-  if(dbResponse[0]==0){
-    console.log("user creation failed");    
+  console.log("DB response: " + dbResponse[2]);
+  if (dbResponse[0] == 0) {
+    console.log("user creation failed");
     res.redirect(req.get('referer'));
   }
-  if(dbResponse[0]==1){
-    console.log("user created");    
+  if (dbResponse[0] == 1) {
+    console.log("user created");
     res.redirect(req.get('referer'));
   }
 });
 
-app.post("/login", async (req, res)=> {
+app.post("/login", async (req, res) => {
   console.log("LOGIN ATTAMPTED")
-if(!req.body.username || !req.body.password){
-  res.redirect('./');
-  console.log("ATTAMPTED LOGIN WITH NO DETAILS")
-  return;
-}
+  if (!req.body.username || !req.body.password) {
+    res.redirect('./');
+    console.log("ATTAMPTED LOGIN WITH NO DETAILS")
+    return;
+  }
 
-const user = req.body.username;
-const password = req.body.password;
+  const user = req.body.username;
+  const password = req.body.password;
 
-let dbResponse = await db.userLogin(user,password);
+  let dbResponse = await db.userLogin(user, password);
 
-if(dbResponse[0]==0){
-  console.log("LOGIN ATTAMPTED WITH WRONG USERNAME")
-  const query = querystring.stringify({"message":"username invalid"});
-  res.redirect('./?' + query);
-}
-if(dbResponse[0]==1){
-  console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD")
-  const query = querystring.stringify({"message":"password invalid"});
-  res.redirect('./?' + query);
-}
-if(dbResponse[0]==2){
-  const token = generateAccessToken({user: user});
-  session=req.session;
-  session.userid=req.body.username;    
-  const userClass = await db.getUserClassByName(session.userid);    
-  session.userclass = Number(userClass);
-  const sessionStore = await db.storeSession(session.userid,userClass,token);    
-  session.sessionid = Number(sessionStore);
-  console.log(`LOGIN: USER: ${user} ,CLASS: ${userClass} ,SESSION ID: ${session.sessionid}`);
-  res.redirect('./');
-}
+  if (dbResponse[0] == 0) {
+    console.log("LOGIN ATTAMPTED WITH WRONG USERNAME")
+    const query = querystring.stringify({ "message": "username invalid" });
+    res.redirect('./?' + query);
+  }
+  if (dbResponse[0] == 1) {
+    console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD")
+    const query = querystring.stringify({ "message": "password invalid" });
+    res.redirect('./?' + query);
+  }
+  if (dbResponse[0] == 2) {
+    const token = generateAccessToken({ user: user });
+    session = req.session;
+    session.userid = req.body.username;
+    const userClass = await db.getUserClassByName(session.userid);
+    session.userclass = Number(userClass);
+    const sessionStore = await db.storeSession(session.userid, userClass, token);
+    session.sessionid = Number(sessionStore);
+    console.log(`LOGIN: USER: ${user} ,CLASS: ${userClass} ,SESSION ID: ${session.sessionid}`);
+    res.redirect('./');
+  }
 });
 
-app.get("/logout", async (req,res)=>{
-if(req.session == null){res.sendStatus(403);return;}
-if (req.session.sessionid!=null){
-  const sessionRemove = await db.removeSession(req.session.sessionid);
-};
-console.log(`USER ${req.session.userid} HAS LOGGED OUT`);
-req.session.destroy();
-res.redirect('./');
+app.get("/logout", async (req, res) => {
+  if (req.session == null) { res.sendStatus(403); return; }
+  if (req.session.sessionid != null) {
+    const sessionRemove = await db.removeSession(req.session.sessionid);
+  };
+  console.log(`USER ${req.session.userid} HAS LOGGED OUT`);
+  req.session.destroy();
+  res.redirect('./');
 });
 
 // ------------------------  ADMIN VIEW  ----------------------- //
-app.get('/secretadminpanel', sessionClassMW(0), (req, res) => { 
-  console.log("LOGIN TO ADMIN PANEL ON: " + Date());  
-  let message = "message from ejs"  ;
+app.get('/secretadminpanel', sessionClassMW(0), (req, res) => {
+  console.log("LOGIN TO ADMIN PANEL ON: " + Date());
+  let message = "message from ejs";
   res.render('admin', {
-    message : message,
+    message: message,
     username: session.userid
   })
 });
 
 // ------------------------  MANAGE VIEW  ----------------------- //
-app.get('/manage', sessionClassMW(50), (req, res) => { 
-  console.log("LOGIN TO MANAGE PANEL ON: " + Date());  
+app.get('/manage', sessionClassMW(50), (req, res) => {
+  console.log("LOGIN TO MANAGE PANEL ON: " + Date());
   imgToArray();
   res.render('manage', {
-    imgArray : imgArray,
+    imgArray: imgArray,
     username: session.userid
   })
 });
 
 const imgFolder = path.join(__dirname, '/public/img/items');
 var imgArray = [];
-function imgToArray() {  
-  imgArray = fs.readdirSync(imgFolder);  
+function imgToArray() {
+  imgArray = fs.readdirSync(imgFolder);
 };
 
 //-------------------------ACCOUNTANT VIEW---------------------
@@ -256,7 +256,7 @@ app.get('/app', sessionClassMW(100), async function (req, res) {
 
 // ------------------------  MANAGE REPORT VIEW  ----------------------- //
 app.get('/infotables', sessionClassMW(75), async function (req, res) {
-  console.log("LOGIN TO MANAGE REPORT PAGE ON: " + Date());  
+  console.log("LOGIN TO MANAGE REPORT PAGE ON: " + Date());
   res.render('infotables', {})
 });
 
@@ -294,47 +294,48 @@ app.post('/updateNameList/', async (req, res) => {
 });
 
 //-----------------GET ITEMS IMG
-app.post('/uploadItemImg/', async  (req,res) => {  
-    // var form = new formidable.IncomingForm();
-    const options = {
-      uploadDir: __dirname + '/public/img/items',
-      filter: function ({name, originalFilename, mimetype}) {
-        // keep only images
-        return mimetype && mimetype.includes("image");
-      }
-    };
-    const form = formidable(options);
+app.post('/uploadItemImg/', async (req, res) => {
+  // var form = new formidable.IncomingForm();
+  const options = {
+    uploadDir: __dirname + '/public/img/items',
+    filter: function ({ name, originalFilename, mimetype }) {
+      // keep only images
+      return mimetype && mimetype.includes("image");
+    }
+  };
+  const form = formidable(options);
 
-    // form.on('file', function(field, file) {
-      //rename the incoming file to the file's name
-          // fs.rename(file.path, form.uploadDir + "/" + file.name);
+  // form.on('file', function(field, file) {
+  //rename the incoming file to the file's name
+  // fs.rename(file.path, form.uploadDir + "/" + file.name);
   // });
-    let newName;
-    let originalName;
-    form.parse(req, function (err, fields, files) {
-      // var oldpath = files.filetoupload.filepath;
-      // var newpath = 'img/items/' + files.filetoupload.originalFilename;      
-        console.log('fields:', fields);
-        console.log('files:', files);
-        console.log(files.imgUpload.newFilename);
-        console.log(files.imgUpload.originalFilename);
-        newName = files.imgUpload.filepath;
-        originalName = (__dirname + '/public/img/items/')+(files.imgUpload.originalFilename);
-        console.log(newName)
-        console.log(originalName)
-        fs.rename(newName,originalName, () => {
-      console.log("\nFile Renamed!\n");});
-        // fs.rename(files.imgUpload.newFilename, files.imgUpload.originalFilename);
-      //   res.write('File uploaded and moved!');      
-      // res.render('manage', {imgArray : imgArray})
-    });
-    console.log("----------------------------------------------");
+  let newName;
+  let originalName;
+  form.parse(req, function (err, fields, files) {
+    // var oldpath = files.filetoupload.filepath;
+    // var newpath = 'img/items/' + files.filetoupload.originalFilename;      
+    console.log('fields:', fields);
+    console.log('files:', files);
+    console.log(files.imgUpload.newFilename);
+    console.log(files.imgUpload.originalFilename);
+    newName = files.imgUpload.filepath;
+    originalName = (__dirname + '/public/img/items/') + (files.imgUpload.originalFilename);
     console.log(newName)
     console.log(originalName)
-    // fs.rename(newName,originalName, () => {
-      // console.log("\nFile Renamed!\n");});
-    imgToArray();
-    res.redirect('./manage');
+    fs.rename(newName, originalName, () => {
+      console.log("\nFile Renamed!\n");
+    });
+    // fs.rename(files.imgUpload.newFilename, files.imgUpload.originalFilename);
+    //   res.write('File uploaded and moved!');      
+    // res.render('manage', {imgArray : imgArray})
+  });
+  console.log("----------------------------------------------");
+  console.log(newName)
+  console.log(originalName)
+  // fs.rename(newName,originalName, () => {
+  // console.log("\nFile Renamed!\n");});
+  imgToArray();
+  res.redirect('./manage');
 });
 
 // SERACH CLIENT IN DB BY SEARCHBOX
@@ -693,8 +694,8 @@ app.get('/removeOldBackups/', async function (req, res) {
 
 //-----------------------RESET CLIENTS TABLE AFTER REPORT---------------------//
 app.get('/resetClientsDataAfterRead/', async function (req, res) {
-  if (!limit) {
-    limit = true;
+  if (!dbRateLimit) {
+    dbRateLimit = true;
     let dbBackup;
     let dateObj = new Date().toISOString().substr(0, 19);
     dateFormat = dateObj.replace(/-/g, '_').replace(/:/g, '_').replace(/T/g, '_');
@@ -711,7 +712,7 @@ app.get('/resetClientsDataAfterRead/', async function (req, res) {
   res.send(resetClientsData);
 });
 
-app.get('/refreshClients', function(req,res){
+app.get('/refreshClients', function (req, res) {
   sendEvents("refresh");
 });
 
@@ -719,9 +720,9 @@ app.get('/refreshClients', function(req,res){
 app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));
 
 //--------------------------EVENTS---------------------------------------//
-app.get('/status', (req, res) => res.json({clients: clients.length}));
+app.get('/status', (req, res) => res.json({ clients: clients.length }));
 
-app.get('/events', function(req,res){
+app.get('/events', function (req, res) {
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
@@ -741,16 +742,16 @@ app.get('/events', function(req,res){
   getEvents(res);
 });
 
-function getEvents(res){
+function getEvents(res) {
 
 }
 
-function sendEvents(event){
-  console.log("SENDING SERVER SIDE EVENT: "+JSON.stringify(event));
+function sendEvents(event) {
+  console.log("SENDING SERVER SIDE EVENT: " + JSON.stringify(event));
   clients.forEach(client => client.res.write(`data: ${JSON.stringify(event)}\n\n`))
 }
 
-function getValues(res){
+function getValues(res) {
   res.write("data: " + dataSource + "\n\n")
   console.log("data: " + dataSource + "\n\n")
   if (dataSource)
