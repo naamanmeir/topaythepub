@@ -135,6 +135,7 @@ function uiSidemenu() {
     sideNav.innerHTML += (`<a href="#" id="aboutMenu">ניבה גבינהצהובה </a>`);
     sideNav.innerHTML += (`<a href="#" id="aboutMenu">זהו</a>`);
     sideNav.innerHTML += (`<a href="#" id="aboutMenu">הא והטאבלט תום הביא </a>`);
+    sideNav.innerHTML += (`<a href="javascript:void(0)" class="openAbout" onclick="openAbout()">אודות </a>`);
     sideNav.innerHTML += (`<a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a>`);
     // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(0)" onclick="clearTimeout(window.tcm)"> שחור</a>`);
     // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)"> ריבועים</a>`);
@@ -921,9 +922,46 @@ function pointerEnableIn(i) {
     }, i);
 };
 
-function about() {
+function openAbout() {
+    // close menu
+    closeNav();
+    // open window
+    let window = document.createElement("div");
+    window.className = "aboutWindow";
+    document.body.appendChild(window);
+    const out = document.getElementById("content");
+    out.onclick = (function () {
+        if (window) {
+            window.remove();
+            allElements(1);
+        }
+    });
+    let info = getRequest("./about");
+    console.log(info);
+    // closeButton.onclick = (function () {
+    //     if (window) {
+    //         window.remove();
+    //         allElements(1);
+    //     }
+    // });
+    // get data from server
 
+
+    // display data in window
 }
+
+async function getRequest(url, data) {
+    console.log(url);
+    if (data != null) { xhttp.open("GET", url + data, true); }
+    if (data == null) { xhttp.open("GET", url, true); }
+    xhttp.send();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log("RESPONSE: " + this.response);
+            return this.response;
+        };
+    };
+};
 
 // ---------------------------------------------//
 function connectEventSource() {

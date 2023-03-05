@@ -1398,3 +1398,13 @@ video {
     height: 0.3rem;
     margin: auto
 }
+
+.aboutWindow {
+    background: green;
+    z-index: 5000;
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 50%;
+    height: 50%;
+}

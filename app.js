@@ -261,7 +261,7 @@ app.get('/infotables', sessionClassMW(75), async function (req, res) {
 });
 
 // ------------------------  CREATE TABLE ----------------------- //
-app.get('/retable/', async function (req, res) {
+app.get('/retable/', sessionClassMW(50), async function (req, res) {
   let createTableClients;
   let createTableOrders;
   let createTableProducts;
@@ -769,3 +769,7 @@ const updateDataSource = () => {
 }
 // setInterval(() => updateDataSource(), 5000);
 
+app.get('/about', function (req, res) {
+  console.log("SEND TEST");
+  res.send("SEND TEST");
+});
