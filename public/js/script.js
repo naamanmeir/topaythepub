@@ -922,13 +922,14 @@ function pointerEnableIn(i) {
     }, i);
 };
 
-function openAbout() {
+async function openAbout() {
     // close menu
     closeNav();
     // open window
     let window = document.createElement("div");
     window.className = "aboutWindow";
     document.body.appendChild(window);
+
     const out = document.getElementById("content");
     out.onclick = (function () {
         if (window) {
@@ -936,15 +937,13 @@ function openAbout() {
             allElements(1);
         }
     });
-    let info = getRequest("./about");
-    console.log(info);
-    // closeButton.onclick = (function () {
-    //     if (window) {
-    //         window.remove();
-    //         allElements(1);
-    //     }
-    // });
+
     // get data from server
+
+    let info = await getRequest("./about");
+    console.log(await info);
+
+
 
 
     // display data in window
