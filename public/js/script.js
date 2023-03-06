@@ -128,23 +128,11 @@ searchBox1.addEventListener('input', function () {
 function uiSidemenu() {
     const sideNav = document.getElementById("sideNav");
     // sideNav.innerHTML = (`<a href="#" onclick="refreshPage()"">טען מחדש</a>`);
-
-    sideNav.innerHTML += (`<a href="#" id="aboutMenu">נוצר עבור </a>`);
-    sideNav.innerHTML += (`<a href="#" id="aboutMenu">פאב אבירים </a>`);
-    sideNav.innerHTML += (`<a href="#" id="aboutMenu"> עלידי </a>`);
-    sideNav.innerHTML += (`<a href="#" id="aboutMenu">ניבה גבינהצהובה </a>`);
-    sideNav.innerHTML += (`<a href="#" id="aboutMenu">זהו</a>`);
-    sideNav.innerHTML += (`<a href="#" id="aboutMenu">הא והטאבלט תום הביא </a>`);
     sideNav.innerHTML += (`<a href="javascript:void(0)" class="openAbout" onclick="openAbout()">אודות </a>`);
     sideNav.innerHTML += (`<a href="#" id="fs_mark" onclick="fullScreen()">מסך מלא</a>`);
-    // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(0)" onclick="clearTimeout(window.tcm)"> שחור</a>`);
-    // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(2)" onclick="clearTimeout(window.tcm)"> ריבועים</a>`);
-    // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(3)" onclick="clearTimeout(window.tcm)"> טבעות</a>`);    
-    // sideNav.innerHTML += (`<a href="#" onclick="bgSelect(1)" onclick="clearTimeout(window.tcm)"> עיגולים</a>`);
     sideNav.innerHTML += (`<a href="./logout"> התנתק</a>`);
     sideNav.innerHTML += (`<a href="#" class="hidden green" id="user_info" onclick="getUserInfoById()">משתמש</a>`);
     sideNav.innerHTML += (`<a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><img src="img/ui/menu_close.png"></a>`);
-
 };
 
 function replaceItems() {
@@ -890,6 +878,12 @@ function allElements(action) {
     if (action == 1) {
         classes.forEach(elementOn);
     }
+    if (action == 2) {
+        classes.forEach(pointerAll);
+    }
+    if (action == 3) {
+        classes.forEach(pointerNone);
+    }
 };
 
 function elementOff(element) {
@@ -922,41 +916,61 @@ function pointerEnableIn(i) {
     }, i);
 };
 
-async function openAbout() {
+function openAbout() {
     // close menu
     closeNav();
-    // open window
+    // disable other windows
+    allElements(3);
+    // close window if
+    if (document.getElementById("aboutWindow")) document.getElementById("aboutWindow").remove;
+    // add window
     let window = document.createElement("div");
     window.className = "aboutWindow";
+    window.id = "aboutWindow";
     document.body.appendChild(window);
 
+    // get data from server and pass to next function
+    getRequest(displayAbout, "./about");
+    // set interval refresh window
+    let refreshAboutInterval = setInterval(refreshAbout, 5000);
+    // set close window
     const out = document.getElementById("content");
     out.onclick = (function () {
-        if (window) {
-            window.remove();
-            allElements(1);
-        }
-    });
-
-    // get data from server
-
-    let info = await getRequest("./about");
-    console.log(await info);
-
-
-
-
-    // display data in window
+        closeAbout(window, refreshAboutInterval);
+    }
+    );
+    window.onclick = (function () {
+        closeAbout(window, refreshAboutInterval);
+    }
+    );
 }
 
-async function getRequest(url, data) {
-    console.log(url);
+function closeAbout(window, refreshAboutInterval) {
+    window.remove();
+    clearInterval(refreshAboutInterval);
+    allElements(2);
+}
+
+function displayAbout(content) {
+    // display data in window
+    let window = document.getElementById("aboutWindow");
+    window.innerHTML = (content);
+}
+
+function refreshAbout() {
+    getRequest(displayAbout, "./about");
+}
+
+//------------------------SEND GET REQUEST WITH -> callback function , url , data----------------
+async function getRequest(callback, url, data) {
+    console.log("SENDING GET REQUEST TO: " + url);
     if (data != null) { xhttp.open("GET", url + data, true); }
     if (data == null) { xhttp.open("GET", url, true); }
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            console.log("RESPONSE: " + this.response);
+            // console.log("RESPONSE: " + this.response);
+            callback(this.response);
             return this.response;
         };
     };

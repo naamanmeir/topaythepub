@@ -770,6 +770,7 @@ const updateDataSource = () => {
 // setInterval(() => updateDataSource(), 5000);
 
 app.get('/about', function (req, res) {
-  console.log("SEND TEST");
-  res.send("SEND TEST");
+  console.log("SEND ABOUT");
+  res.render('about');
+  // res.send("SEND TEST");
 });

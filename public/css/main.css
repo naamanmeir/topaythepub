@@ -643,8 +643,8 @@ video {
     height: 4em;
     margin: auto;
     margin-top: 1rem;
-    margin-bottom: 1rem;
-    bottom: 1rem;
+    /* margin-bottom: 1rem; */
+    bottom: 10%;
     left: 10%;
     right: 10%;
     text-align: center;
@@ -652,7 +652,7 @@ video {
 }
 
 .buttons button {
-    margin: auto;
+    /* margin: auto; */
     width: 100%;
     height: fit-content;
     color: black;
@@ -1400,11 +1400,15 @@ video {
 }
 
 .aboutWindow {
-    background: green;
+    /* background: black; */
+    /* border: solid 2px orange; */
     z-index: 5000;
     position: absolute;
-    top: 50px;
-    left: 50px;
-    width: 50%;
-    height: 50%;
+    display: block;
+    top: 15%;
+    left: 15%;
+    right: 15%;
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
 }
