@@ -112,7 +112,7 @@ function searchQuery(query, dest) {
     };
     if (query != "") {
         query = JSON.stringify(query);
-        xhttp.open("POST", "./searchNameManage/" + query, true);
+        xhttp.open("POST", "./manage/searchNameManage/" + query, true);
         xhttp.send();
     } else {
         clients = null;
@@ -214,7 +214,7 @@ function userSearchMessage(select) {
 
 function getUserDetailsById() {
     console.log(clientId);
-    xhttp.open("POST", "./getUserDetails/" + clientId, true);
+    xhttp.open("POST", "./manage/getUserDetails/" + clientId, true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -250,7 +250,7 @@ function editClient(field, value) {
         value = document.getElementById(value).value;
         // console.log(field,value);
         let data = [clientId, field, value];
-        xhttp.open("POST", "./editClientFields/" + data, true);
+        xhttp.open("POST", "./manage/editClientFields/" + data, true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
@@ -264,7 +264,7 @@ function editClient(field, value) {
 function clientDeleteLastOrder() {
     if (clientId == null || clientId == "") { return };
     if (window.confirm("למחוק רשימה אחרונה של משתמש?")) {
-        xhttp.open("POST", "./deleteLastOrder/" + clientId, true);
+        xhttp.open("POST", "./manage/deleteLastOrder/" + clientId, true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
@@ -278,7 +278,7 @@ function clientDeleteLastOrder() {
 
 function clientGetOrderHistory() {
     if (clientId == null) { return };
-    xhttp.open("POST", "./getUserOrders/" + clientId, true);
+    xhttp.open("POST", "./manage/getUserOrders/" + clientId, true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -354,7 +354,7 @@ function insertName() {
     newName.value = '';
     newNick.value = '';
     newNumber.value = '';
-    xhttp.open("POST", "./insertClient/" + newData, true);
+    xhttp.open("POST", "./manage/insertClient/" + newData, true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -375,7 +375,7 @@ function deleteClient() {
     if (clientId == null || clientId == '') { return };
     if (window.confirm("למחוק את " + clientName + " ?")) {
         if (window.confirm("בטוח בטוח " + clientName + "," + clientNick + "," + clientId + " ???")) {
-            xhttp.open("POST", "./deleteClient/" + clientId, true);
+            xhttp.open("POST", "./manage/deleteClient/" + clientId, true);
             xhttp.send();
         }
     }
@@ -393,7 +393,7 @@ async function getAllData(scope) {
     let itemsBought;
     // itemsBought = await this.getItemsBought().then((buys) => {return (buys)});   
     // console.log(itemsBought);
-    xhttp.open("POST", "./getAllData/" + scope, true);
+    xhttp.open("POST", "./manage/getAllData/" + scope, true);
     xhttp.send();
     xhttp.onreadystatechange = async function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -417,7 +417,7 @@ async function getAllData(scope) {
 };
 
 async function getItemsBought() {
-    xhttp.open("GET", "./getItemsBought/", false);
+    xhttp.open("GET", "./manage/getItemsBought/", false);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -429,7 +429,7 @@ async function getItemsBought() {
 };
 
 async function getProducts() {
-    xhttp.open("GET", "./getProducts/", true);
+    xhttp.open("GET", "./manage/getProducts/", true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -547,7 +547,7 @@ function editProduct() {
     let data = [productId, newName.value, newPrice.value, newImage, newStock.value];
     // console.log(data);
     if (window.confirm("לערוך נתונים של " + productName + "?")) {
-        xhttp.open("POST", "./editProduct/" + data, true);
+        xhttp.open("POST", "./manage/editProduct/" + data, true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
@@ -586,7 +586,7 @@ function insertProduct() {
     newItem.value = '';
     newPrice.value = '';
     if (window.confirm("להכניס מוצר?")) {
-        xhttp.open("POST", "./insertProduct/" + newData, true);
+        xhttp.open("POST", "./manage/insertProduct/" + newData, true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
@@ -602,7 +602,7 @@ function insertProduct() {
 function deleteProduct() {
     if (!productId) return;
     if (window.confirm("למחוק " + productName + "?")) {
-        xhttp.open("POST", "./deleteProduct/" + productId, true);
+        xhttp.open("POST", "./manage/deleteProduct/" + productId, true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
@@ -619,10 +619,10 @@ function openInfotables() {
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             console.log(this.response);
-            window.open("./infotables", "_blank");
+            window.open("./manage/infotables", "_blank");
         }
     };
-    xhttp.open("GET", "./infotables", false);
+    xhttp.open("GET", "./manage/infotables", false);
     xhttp.send();
 }
 
@@ -739,7 +739,7 @@ function showAccountTable(data, itemsBought) {
 
 function backupTable() {
     if (window.confirm("לייצר גיבוי חדש לטבלת המשתמשים?")) {
-        xhttp.open("POST", "./backupTable/", true);
+        xhttp.open("POST", "./manage/backupTable/", true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
@@ -754,7 +754,7 @@ function backupTable() {
 function requestReportArchive() {
     let selectBar = document.getElementById("reportArchive");
     data = selectBar.value;
-    xhttp.open("POST", "./requestReportArchive/" + data, true);
+    xhttp.open("POST", "./manage/requestReportArchive/" + data, true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -766,7 +766,7 @@ function requestReportArchive() {
 };
 
 function getReportArchiveList() {
-    xhttp.open("GET", "./getListOfArchiveReport/", true);
+    xhttp.open("GET", "./manage/getListOfArchiveReport/", true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -788,7 +788,7 @@ function getReportArchiveList() {
 
 function resetAfterReport() {
     if (window.confirm("פעולה זו תנקה נתונים לאחר הפקת דוח דו חודשי")) {
-        xhttp.open("GET", "./resetClientsDataAfterRead/", true);
+        xhttp.open("GET", "./manage/resetClientsDataAfterRead/", true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
@@ -801,7 +801,7 @@ function resetAfterReport() {
 
 function removeOldBackups() {
     if (window.confirm("זה כאילו למחוק את כל הגיבויים עד עכשיו לא ללחוץ סתם")) {
-        xhttp.open("GET", "./removeOldBackups/", true);
+        xhttp.open("GET", "./manage/removeOldBackups/", true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
@@ -852,7 +852,7 @@ function login(name) {
     };
     if (name != "") {
         name = JSON.stringify(name);
-        xhttp.open("POST", "./searchNameManage/" + name, true);
+        xhttp.open("POST", "./manage/searchNameManage/" + name, true);
         xhttp.send();
     };
 };
@@ -884,7 +884,7 @@ function loadUtiliti() {
 
 function refreshAllClients() {
     if (window.confirm("לטעון מחדש את המסופים המחוברים?")) {
-        xhttp.open("GET", "./refreshClients/", true);
+        xhttp.open("GET", "./events/refreshClients", true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {

@@ -45,7 +45,7 @@ function loadUtiliti() {
 };
 
 function getProducts() {
-    xhttp.open("GET", "./clientGetProducts/", true);
+    xhttp.open("GET", "./app/getProducts/", true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -216,7 +216,7 @@ function orderSubmitted(data) {
 
 async function placeOrder(orderPack) {
 
-    xhttp.open("GET", "./order/" + orderPack, true);
+    xhttp.open("GET", "./app/placeOrder/" + orderPack, true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -475,7 +475,7 @@ function searchQuery(query, dest) {
     };
     if (query != "") {
         query = JSON.stringify(query);
-        xhttp.open("POST", "./searchName/" + query, true);
+        xhttp.open("POST", "./app/searchName/" + query, true);
         xhttp.send();
     } else {
         clients = null;
@@ -534,7 +534,7 @@ function loginFunction(name) {
     if (name != "") {
         name = name.replace(/\'/g, "''");
         name = JSON.stringify(name);
-        xhttp.open("POST", "./searchName/" + name, true);
+        xhttp.open("POST", "./app/searchName/" + name, true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
@@ -740,7 +740,7 @@ async function getUserInfoById() {
         };
     };
     if (clientId == null) { return };
-    xhttp.open("POST", "./getUserInfo/" + clientId, true);
+    xhttp.open("POST", "./app/getUserInfo/" + clientId, true);
     xhttp.send();
 };
 //-------------------PRINT USER INFO TO TABLE
@@ -854,7 +854,7 @@ async function userInfo(uData) {
 
 function clientDeleteLastOrder() {
     if (clientId == null) { return };
-    xhttp.open("POST", "./deleteLastOrder/" + clientId, true);
+    xhttp.open("POST", "./client/deleteLastOrder/" + clientId, true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -930,7 +930,7 @@ function openAbout() {
     document.body.appendChild(window);
 
     // get data from server and pass to next function
-    getRequest(displayAbout, "./about");
+    getRequest(displayAbout, "./app/about");
     // set interval refresh window
     let refreshAboutInterval = setInterval(refreshAbout, 5000);
     // set close window
@@ -958,7 +958,7 @@ function displayAbout(content) {
 }
 
 function refreshAbout() {
-    getRequest(displayAbout, "./about");
+    getRequest(displayAbout, "./app/about");
 }
 
 //------------------------SEND GET REQUEST WITH -> callback function , url , data----------------

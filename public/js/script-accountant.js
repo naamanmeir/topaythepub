@@ -13,11 +13,11 @@ function editLog(text) {
 
 function getAllData(scope) {
     // console.log(scope);
-    xhttp.open("POST", "./getAllData/" + scope, true);
+    xhttp.open("POST", "./accountant/getAllData/" + scope, true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);
+            // console.log(this.response);
             if (scope == 1) {
                 showOrdersTable(JSON.parse(this.response));
             }
@@ -146,7 +146,7 @@ function showAccountOrdersTable(data) {
             const cell = document.createElement("td");
             let cellText;
             if (j == 0) { cellText = document.createTextNode(clientRow[j] + " ₪"); }
-            if (j == 1) { cellText = document.createTextNode(clientRow[j]  + " פאב"); }
+            if (j == 1) { cellText = document.createTextNode(clientRow[j] + " פאב"); }
             if (j > 1) { cellText = document.createTextNode(clientRow[j]); }
             cell.appendChild(cellText);
             row.appendChild(cell);
@@ -167,7 +167,7 @@ function showAccountOrdersTable(data) {
 };
 
 function createReportFileOrders() {
-    xhttp.open("GET", "./createFileReportOrders/", true);
+    xhttp.open("GET", "./accountant/createFileReportOrders/", true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -179,7 +179,7 @@ function createReportFileOrders() {
 };
 
 function createReportFileClients() {
-    xhttp.open("GET", "./createFileReportClients/", true);
+    xhttp.open("GET", "./accountant/createFileReportClients/", true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -192,7 +192,7 @@ function createReportFileClients() {
 
 function resetAfterReport() {
     if (window.confirm("פעולה זו תנקה נתונים לאחר הפקת דוח דו חודשי")) {
-        xhttp.open("GET", "./resetClientsDataAfterRead/", true);
+        xhttp.open("GET", "./accountant/resetClientsDataAfterRead/", true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
@@ -205,7 +205,7 @@ function resetAfterReport() {
 
 function backupTable() {
     if (window.confirm("לייצר גיבוי חדש לטבלת המשתמשים?")) {
-        xhttp.open("POST", "./backupTable/", true);
+        xhttp.open("POST", "./accountant/backupTable/", true);
         xhttp.send();
     };
     xhttp.onreadystatechange = function () {
@@ -221,22 +221,7 @@ function requestReportArchive() {
     let selectBar = document.getElementById("reportArchive");
     console.log(selectBar.value);
     data = selectBar.value;
-    xhttp.open("POST", "./requestReportArchive/" + data, true);
-    xhttp.send();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);
-            showAccountTable(JSON.parse(this.response));
-            return;
-        }
-    };
-};
-
-function requestReportArchive() {
-    let selectBar = document.getElementById("reportArchive");
-    console.log(selectBar.value);
-    data = selectBar.value;
-    xhttp.open("POST", "./requestReportArchive/" + data, true);
+    xhttp.open("POST", "./accountant/requestReportArchive/" + data, true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -248,7 +233,7 @@ function requestReportArchive() {
 };
 
 function getReportArchiveList() {
-    xhttp.open("GET", "./getListOfArchiveReport/", true);
+    xhttp.open("GET", "./accountant/getListOfArchiveReport/", true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {

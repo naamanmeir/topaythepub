@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" id="viewport" content="width=window-width, height=window-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">    
-    <link rel="stylesheet" href="views/login.css">
+    <meta name="apple-mobile-web-app-capable" content="yes" />    
+    <link rel="stylesheet" type="text/css" href="css/login.css">
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
     <title>התחברות לפאב</title>
 </head>
 <body>
 
-    <!-- <%- include('./partials/header'); %> -->
+    <%- include('./partials/header'); %>
 
     <div class="loginDiv">
 
@@ -29,7 +28,7 @@
                 <p>סיסמא:</p>
                 <input type="password" name="password" id="password" placeholder="סיסמא">
             </div>
-            <input type="submit" value="התחבר">
+            <input class="inputButton" type="submit" value="התחבר">
         </form>
     </div>
 </body>
