@@ -603,10 +603,10 @@ exports.dbEditProduct = async function (values) {
   console.log("DB EDIT PRODUCT");
   console.log(values);
   let productId = values[0];
-  let newName = values[1];
-  let newPrice = values[2];
+  let newName = values[1].replace(/\'/g, "''");;
+  let newPrice = values[2].replace(/\'/g, "''");;
   let newImage = "img/items/" + values[3];
-  let newStock = values[4];
+  let newStock = values[4].replace(/\'/g, "''");;
   let editProductRes;
   editProductRes = await pool.query("UPDATE " + tableProducts +
     " SET itemname = '" + newName + "' ,price = '" + newPrice + "' ,itemimgpath = '" + newImage + "' ,stock = '" + newStock +

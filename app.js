@@ -97,7 +97,6 @@ let clients = [];
 
 var now = new Date();
 console.log("System Startup Time : " + Date());
-console.log("System Startup Time : " + now.getTime());
 
 app.use(express.static(__dirname + 'public'));
 app.use('/css', express.static(__dirname + '/public/css'));
@@ -206,7 +205,7 @@ app.use('/client', routerClient);
 app.use('/events', routerClientEvents);
 
 //-------------------------SERVER-----------------------------------//
-app.listen(port, () => console.info(`App topaythepub is listening on port ${port}`));
+app.listen(port, () => console.info(`App ${appName} is listening on port ${port}`));
 
 //-------------------------SOME UTILITIES-----------------------------------//
 

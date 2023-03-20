@@ -928,11 +928,10 @@ function openAbout() {
     window.className = "aboutWindow";
     window.id = "aboutWindow";
     document.body.appendChild(window);
-
     // get data from server and pass to next function
     getRequest(displayAbout, "./app/about");
     // set interval refresh window
-    let refreshAboutInterval = setInterval(refreshAbout, 5000);
+    let refreshAboutInterval = setInterval(refreshAbout, 2000);
     // set close window
     const out = document.getElementById("content");
     out.onclick = (function () {

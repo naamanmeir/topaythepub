@@ -23,6 +23,7 @@ body,
     -o-user-select: none;
     user-select: none;
     scroll-behavior: smooth;
+    white-space: nowrap;
 }
 
 body {
@@ -46,7 +47,7 @@ video {
 
 .content {
     z-index: 5;
-    height: 99vh;
+    height: 100vh;
     width: 98%;
     left: 1%;
     right: 1%;
@@ -482,14 +483,14 @@ video {
 
 .items {
     height: 60vh;
-    /* max-height: 70vh; */
+    max-height: 60vh;
     width: 96%;
     margin: auto;
     margin-top: 1rem;
     margin-bottom: 0px;
     display: inline-block;
-    flex-wrap: nowrap;
-    flex-direction: column;
+    /* flex-wrap: nowrap; */
+    /* flex-direction: column; */
     /* justify-content: center;     */
     position: relative;
     transition: background-color 0.8s ease;
@@ -499,11 +500,11 @@ video {
 
 .item {
     display: flex;
-    /* flex: 1; */
+    flex: 8 2 25%;
     flex-direction: row;
-    /* flex-grow: 5; */
-    height: fit-content;
     flex-wrap: wrap;
+    flex: 0 0 25%;
+    height: fit-content;
     /* max-height: 20%; */
     /* width: 90%; */
     max-width: fit-content;
@@ -518,19 +519,15 @@ video {
     transition: background-color 0.5s ease;
     border-radius: 5%;
     /* transition: all 1s ease; */
-    flex: 0 0 25%;
     resize: none;
-
 }
 
 .item img {
     user-select: none;
     pointer-events: none;
-    display: flex;
-    margin: auto;
     top: 0px;
     padding: 0px;
-    height: 80%;
+    max-height: 7rem;
 }
 
 .item:active {
@@ -543,7 +540,7 @@ video {
 .item p {
     padding: 0px;
     margin: 0px;
-    font-size: 1.3rem;
+    font-size: 1.7rem;
     padding-right: 1rem;
     color: #deb911;
     text-shadow: 1px 1px 1px #000000;
@@ -635,16 +632,20 @@ video {
 }
 
 .buttons {
-    /* position: relative; */
+    position: sticky;
     display: flex;
     flex: 1;
     flex-direction: row;
-    width: 80%;
-    height: 4em;
+    overflow: hidden;
+    float: none;
+    width: 100%;
+    height: fit-content;
+    /* padding: 1rem; */
     margin: auto;
     margin-top: 1rem;
-    /* margin-bottom: 1rem; */
-    bottom: 10%;
+    margin-bottom: 1rem;
+    top: 1rem;
+    bottom: 0px;
     left: 10%;
     right: 10%;
     text-align: center;
@@ -653,10 +654,13 @@ video {
 
 .buttons button {
     /* margin: auto; */
+    min-width: 0px;
+    min-height: 0px;
     width: 100%;
     height: fit-content;
     color: black;
-    font-size: 2rem;
+    font-size: 175%;
+    /* padding: 0rem 1rem 0rem 1rem; */
     text-shadow: 5px 1px 10px #a49c9c;
     border: 3px outset rgba(230, 145, 9, 0.495);
 }
@@ -1390,25 +1394,7 @@ video {
     color: green;
 }
 
-#aboutMenu {
-    font-size: small;
-    /* background-color: violet; */
-    border-radius: 25%;
-    /* width: 100%; */
-    height: 0.3rem;
-    margin: auto
-}
-
 .aboutWindow {
-    /* background: black; */
-    /* border: solid 2px orange; */
     z-index: 5000;
     position: absolute;
-    display: block;
-    top: 15%;
-    left: 15%;
-    right: 15%;
-    width: fit-content;
-    height: fit-content;
-    margin: auto;
 }
