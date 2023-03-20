@@ -361,7 +361,7 @@ exports.dbInsertOrderToOrders = async function (orderTime, clientId, orderInfo, 
   let insertClientData;
   clientName = await this.dbGetClientNameById(clientId);
   clientName[0].name = clientName[0].name.replace(/\'/g, "''");
-  // console.log(orderInfo);
+  orderInfo = orderInfo.replace(/\'/g, "''");
   insertReturn = await pool.query("INSERT INTO " + tableOrders +
     " (info,sum,clientid,client)" +
     " VALUES ('" + orderInfo + "'," + totalPrice + "," + clientId + ",'" + clientName[0].name + "');")
