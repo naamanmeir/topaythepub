@@ -68,11 +68,6 @@ video {
         padding-top: 0px;
     }
 
-    .body {
-        /* height: 100%; */
-        /* width: 98%; */
-    }
-
     .content {
         height: 100%;
         width: 100%;
@@ -224,7 +219,6 @@ video {
     right: 0;
     padding: 0px;
     margin: 0px;
-    /* font-size: xx-large; */
     font-size: 2.2rem;
     color: rgb(20, 20, 20);
     background-color: #b9c1c3;
@@ -736,11 +730,13 @@ video {
 .confirmButtons {
     z-index: 3000;
     position: relative;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 4rem;
     color: black;
     border: 3px outset orange;
-    font-size: x-large;
+    font-size: 250%;
 }
 
 .confirmButtons:active {
@@ -748,11 +744,13 @@ video {
 }
 
 .confirmButtonsYes {
+    padding-right: 2rem;
     margin-top: 1rem;
     background-color: greenyellow;
 }
 
 .confirmButtonsNo {
+    padding-right: 2rem;
     margin-top: 0.45em;
     margin-bottom: 1em;
     background-color: red;
@@ -1023,11 +1021,9 @@ video {
         min-width: 6em;
         height: 5rem;
         padding: 0px;
-        margin: 0px;
     }
 
     .confirmButtonsYes {
-        margin: 0px;
         margin-top: 2em;
         position: fixed;
         padding: 0px;
@@ -1036,7 +1032,6 @@ video {
     }
 
     .confirmButtonsNo {
-        margin: 0px;
         margin-bottom: 2em;
         position: fixed;
         padding: 0px;
@@ -1229,7 +1224,7 @@ video {
     /* font-size: xx-large;     */
     width: fit-content;
     right: 0px;
-    bottom: 0px;
+    bottom: 30%;
     padding-left: 10px;
     /* padding-top: 15px; */
     position: absolute;

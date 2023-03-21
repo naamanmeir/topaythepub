@@ -234,7 +234,7 @@ function cancelOrder(message) {
 };
 
 function orderConfirm(orderArray2, abort) {
-    userAutoLogout(60000); // LOGOUT AFTER ONE MINUTE
+    userAutoLogout(660000); // LOGOUT AFTER ONE MINUTE
     // console.log("orderConfirm");
     const message = document.getElementById("messageBox");
     if (abort) { message.innerHTML = (""); message.classList.remove("messageBoxOn"); return };
