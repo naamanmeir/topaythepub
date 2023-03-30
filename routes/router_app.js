@@ -8,29 +8,63 @@ var now = new Date();
 
 //--------------------------------UI-------------------------------//
 
-routerApp.get('/', sessionClassMW(100), async function (req, res) {
+routerApp.get('/', async function (req, res) {
     let session = req.session;
-    let products = [];
-    products = await db.dbGetProducts();
     console.log("LOGIN TO APP ON: " + Date());
-    res.render('index', {
-        products: products
-    })
+    res.render('index');
+});
+
+routerApp.get('/header', function (req, res) {
+    console.log("SEND HEADER");
+    res.render('header');
+});
+
+routerApp.get('/topMenu', function (req, res) {
+    console.log("SEND SIDEMENU");
+    res.render('topMenu');
+});
+
+routerApp.get('/sideMenu', function (req, res) {
+    console.log("SEND TOPMENU");
+    res.render('sideMenu');
+});
+
+routerApp.get('/floatMenu', function (req, res) {
+    console.log("SEND FLOATMENU");
+    res.render('floatMenu');
+});
+
+routerApp.get('/content', function (req, res) {
+    console.log("SEND CONTENT DIV");
+    res.render('content');
+});
+
+routerApp.get('/contentScript', function (req, res) {
+    console.log("SEND CONTENT SCRIPT");
+    res.render('contentScript');
+});
+
+routerApp.get('/footer', function (req, res) {
+    console.log("SEND FOOTER");
+    res.render('footer');
 });
 
 routerApp.get('/about', function (req, res) {
     console.log("SEND ABOUT");
     res.render('about');
-    // res.send("SEND TEST");
-});
-
-routerApp.get('/sideMenu', function (req, res) {
-    console.log("SEND SIDE MENU");
-    res.render('sideMenu');
-    // res.send("SEND TEST");
 });
 
 //--------------------------------PRODUCTS-------------------------------//
+
+routerApp.get('/getProductsHtml/', async (req, res) => {
+    let itemArrayToHtml = require("../module/buildItemHtml");
+    console.log(itemArrayToHtml);
+    let listFromDb = await db.dbGetProducts();
+    let html = itemArrayToHtml.buildItemHtml(listFromDb);
+    res.send(html);
+    delete require.cache[require.resolve("../module/buildItemHtml")];
+    return;
+});
 
 routerApp.get('/getProducts/', async (req, res) => {
     let products = [];

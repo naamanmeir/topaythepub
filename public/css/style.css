@@ -1,0 +1,11 @@
+.hidden {
+    display: none;
+}
+
+.flex {
+    display: flex;
+}
+
+.bgr {
+    background-color: red;
+}

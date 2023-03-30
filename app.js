@@ -139,6 +139,7 @@ dbInit();
 
 //------------------------------USER SESSION-------------------------------------//
 app.get('/', (req, res) => {
+  if (!req || req == null) { res.sendStatus(401).end(); };
   session = req.session;
   if (session.userid) {
     res.redirect('./app');
@@ -197,12 +198,12 @@ app.get("/logout", async (req, res) => {
 });
 
 // ------------------------ ROUTERS ----------------------- //
-app.use('/secretadminpanel', routerAdmin);
-app.use('/manage', routerManage);
-app.use('/accountant', routerAccountant);
-app.use('/app', routerApp);
-app.use('/client', routerClient);
-app.use('/events', routerClientEvents);
+app.use('/secretadminpanel', sessionClassMW(0), routerAdmin);
+app.use('/manage', sessionClassMW(50), routerManage);
+app.use('/accountant', sessionClassMW(75), routerAccountant);
+app.use('/app', sessionClassMW(100), routerApp);
+app.use('/client', sessionClassMW(100), routerClient);
+app.use('/events', sessionClassMW(100), routerClientEvents);
 
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App ${appName} is listening on port ${port}`));

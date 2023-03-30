@@ -10,7 +10,7 @@ const clientEvents = require('./router_client_events');
 
 //---------------------MANAGE MAIN PAGE-----------------------------//
 
-routerManage.get('/', sessionClassMW(50), (req, res) => {
+routerManage.get('/', (req, res) => {
     console.log("LOGIN TO MANAGE PANEL ON: " + Date());
     let itemImgArray = functions.itemImgArray();
     let session = req.session;
@@ -124,7 +124,7 @@ routerManage.post('/deleteProduct/:data', async (req, res, next) => {
     res.send(response);
 });
 
-routerManage.post('/uploadItemImg', sessionClassMW(50), async (req, res) => {
+routerManage.post('/uploadItemImg', async (req, res) => {
     const options = {
         uploadDir: __dirname + '/../public/img/items',
         filter: function ({ name, originalFilename, mimetype }) {
@@ -204,7 +204,7 @@ routerManage.post('/deleteLastOrder/:data', async (req, res) => {
 
 //--------------------- UTILS -------------------------------------------------//
 
-routerManage.get('/removeOldBackups/', sessionClassMW(75), async function (req, res) {
+routerManage.get('/removeOldBackups/', async function (req, res) {
     let removedOldBackups;
     removedOldBackups = await db.dbDeleteOldBackups();
 
@@ -213,7 +213,7 @@ routerManage.get('/removeOldBackups/', sessionClassMW(75), async function (req, 
     res.send(removedOldBackups);
 });
 
-routerManage.get('/resetClientsDataAfterRead/', sessionClassMW(75), async function (req, res) {
+routerManage.get('/resetClientsDataAfterRead/', async function (req, res) {
     if (!dbRateLimit) {
         dbRateLimit = true;
         let dbBackup;
@@ -232,12 +232,12 @@ routerManage.get('/resetClientsDataAfterRead/', sessionClassMW(75), async functi
     res.send(resetClientsData);
 });
 
-routerManage.get('/infotables', sessionClassMW(75), async function (req, res) {
+routerManage.get('/infotables', async function (req, res) {
     console.log("LOGIN TO MANAGE REPORT PAGE ON: " + Date());
     res.render('infotables', {})
 });
 
-routerManage.get('/retable/', sessionClassMW(50), async function (req, res) {
+routerManage.get('/retable/', async function (req, res) {
     let createTableClients;
     let createTableOrders;
     let createTableProducts;
