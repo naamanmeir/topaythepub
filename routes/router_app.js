@@ -56,9 +56,8 @@ routerApp.get('/about', function (req, res) {
 
 //--------------------------------PRODUCTS-------------------------------//
 
-routerApp.get('/getProductsHtml/', async (req, res) => {
+routerApp.get('/getProducts/', async (req, res) => {
     let itemArrayToHtml = require("../module/buildItemHtml");
-    console.log(itemArrayToHtml);
     let listFromDb = await db.dbGetProducts();
     let html = itemArrayToHtml.buildItemHtml(listFromDb);
     res.send(html);
@@ -66,7 +65,7 @@ routerApp.get('/getProductsHtml/', async (req, res) => {
     return;
 });
 
-routerApp.get('/getProducts/', async (req, res) => {
+routerApp.get('/getProductsJson/', async (req, res) => {
     let products = [];
     let listFromDb;
     listFromDb = await db.dbGetProducts();

@@ -11,10 +11,10 @@ module.exports = function (limit) {
             // console.log(`CREDENTIALS ${limit} MATCH GOTO NEXT()`)
             next();
         } else {
-            // console.log(`CREDENTIALS NEEDED ${limit} AND SESSIONCLASS FOUND NO REQUEST DATA AT: ${Date()}`)
+            console.log(`CREDENTIALS NEEDED ${limit} AND SESSIONCLASS FOUND NO REQUEST DATA AT: ${Date()}`)
             // console.log(req);
-            // res.redirect('./');
-            res.sendStatus(401).end();
+            res.redirect('/apps/topaythepub');
+            // res.sendStatus(401).end();
             return;
         }
     };
