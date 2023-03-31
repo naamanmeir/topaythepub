@@ -61,6 +61,7 @@ routerApp.get('/getProducts/', async (req, res) => {
     let listFromDb = await db.dbGetProducts();
     let html = itemArrayToHtml.buildItemHtml(listFromDb);
     res.send(html);
+    console.log("SENT PRODUCTS")
     delete require.cache[require.resolve("../module/buildItemHtml")];
     return;
 });

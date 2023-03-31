@@ -1,0 +1,74 @@
+html {
+    direction: rtl;
+    background-color: rgb(0, 0, 0);
+    overscroll-behavior: contain;
+    direction: rtl;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    scroll-behavior: smooth;
+    white-space: nowrap;
+}
+
+.grid {
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "topmenu topmenu"
+        "content content"
+        "input input"
+        "products products"
+        "buttons buttons"
+        "footer footer"
+    ;
+    height: 100%;
+    width: 98%;
+    margin: auto;
+}
+
+.header {
+    grid-area: header;
+    background-color: red;
+    display: flex;
+}
+
+.topmenu {
+    grid-area: topmenu;
+    background-color: green;
+}
+
+.content {
+    grid-area: content;
+    background-color: blue;
+    height: 80%;
+}
+
+.input {
+    grid-area: input;
+    background-color: red;
+    height: 20%;
+}
+
+.products {
+    grid-area: products;
+    background-color: green;
+    height: 60%;
+}
+
+.buttons {
+    grid-area: buttons;
+    background-color: blue;
+    height: 20%;
+}
+
+.footer {
+    grid-area: footer;
+    background-color: red;
+}
+
+/* ----------------- UTILITIES ----------------- */
+.hidden {
+    display: none;
+}

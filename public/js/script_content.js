@@ -1,4 +1,4 @@
-divContent.style.backgroundColor = generateRandomColor();
+// divContent.style.backgroundColor = generateRandomColor();
 
 function generateRandomColor() {
     let maxVal = 0xFFFFFF; // 16777215

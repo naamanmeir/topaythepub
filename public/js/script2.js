@@ -1,6 +1,6 @@
-const timerRefreshMainDivsTime = 595000;
-const timerRefreshElementsTime = 555000;
-const timerRefreshCssTime = 555000;
+const timerRefreshMainDivsTime = 995000;
+const timerRefreshElementsTime = 9995000;
+const timerRefreshCssTime = 5000;
 
 const divHeader = document.getElementById("divHeader");
 const divTopMenu = document.getElementById("divTopMenu");
@@ -53,6 +53,7 @@ function displayContent(content) {
     script.src = (scriptSrc.src);
     scriptSrc.remove();
     divContent.append(script);
+    populateProducts();
 };
 function displayFooter(content) {
     divFooter.innerHTML = (content);
