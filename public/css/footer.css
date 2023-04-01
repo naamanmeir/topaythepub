@@ -1,0 +1,20 @@
+.footer {
+    /* max-width: 800px; */
+    z-index: -1;
+    color: black;
+    flex: 1;
+    text-align: center;
+    font-size: x-small;
+    width: 100%;
+    border-radius: 2em;
+    bottom: 1em;
+    margin: auto;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgb(2, 140, 246, 0.526), rgba(2, 140, 246, 0.526), rgba(0, 0, 0, 0));
+}
+
+.footer P {
+    height: fit-content;
+    padding: 0px;
+    margin: 0px;
+    line-height: 100%;
+}
