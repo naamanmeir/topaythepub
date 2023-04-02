@@ -1,4 +1,4 @@
-divContent.style.backgroundColor = "black";
+// divContent.style.backgroundColor = "black";
 // divContent.style.backgroundColor = generateRandomColor();
 
 function generateRandomColor() {
@@ -10,10 +10,15 @@ function generateRandomColor() {
     return `#${randColor.toUpperCase()}`
 };
 
-searchBox1 = document.getElementById("searchBox");
+//------------------------ PARAMS AND OBJECT DECLATE ------------------------//
+const maxAutoCompleteResults = 4;
+const searchBox1 = document.getElementById("searchBox");
+const autoCompleteDiv = document.getElementById("autoComplete");
+
+//------------------------ OBJECT EVENT LISTENERS ------------------------//
 searchBox1.addEventListener('focus', function () {
     console.log("focus");
-    searchBoxClear();
+    searchBox1.placeholder = ("👉👉התחילו לכתוב את שמכם");
     if (searchBox1.value.length > 0) { searchBox1.placeholder = (""); };
 });
 searchBox1.addEventListener('blur', function () {
@@ -27,64 +32,75 @@ searchBox1.addEventListener('input', function () {
 });
 
 async function sendQuery(query) {
-    let response = await postRequest('./app/searchName/', window.parent.parseQuery, query);
+    query = JSON.stringify({ "name": query });
+    console.log("send query: '" + query + "'");
+    await postRequest('./app/searchName/', window.parent.parseQuery, query);
+    return;
 };
 
 function parseQuery(data) {
     data = JSON.parse(data);
-    console.log(data);
     autoComplete(data);
 };
 
 function searchBoxClear() {
     clearAutoComplete(document.getElementById("autoComplete"));
-    const searchBox = document.getElementById("searchBox");
-    if (searchBox1.value.length == 0) { userSearchMessage(0); };
-    if (searchBox.value == "") { userSearchMessage(0); };
-};
-
-function foundNames(query, clients, dest) {
-    // console.log(clients);
-    names = [];
-    for (i = 0; i < clients.length; i++) {
-        names.push(clients[i].nick);
-    };
-    autoComplete(names);
+    if (searchBox1.value.length == 0) { searchIndicator(0); };
 };
 
 function autoComplete(names) {
-    const autoDiv = document.getElementById("autoComplete");
-    clearAutoComplete(autoDiv);
-    autoDiv.className = "autoCompleteSuggestions";
-    for (i = 0; i < names.length && i < 4; i++) {
-        const para = document.createElement("p");
-        para.className = "autocomplete-items";
-        if (i % 2 === 0) { para.classList.add("autocomplete-itemsEven"); }
-        para.innerText = names[i].nick;
-        autoDiv.appendChild(para);
-        para.onclick = function () {
-            copyTextToSearchBox(para.innerText);
-            loginFunction(para.innerText);
-            clearAutoComplete(autoDiv);
-        }
+    clearAutoComplete(autoCompleteDiv);
+    if (names.length == 0) { searchIndicator(1) };
+    autoCompleteDiv.className = "autoCompleteSuggestions";
+    for (i = 0; i < names.length && i < maxAutoCompleteResults; i++) {
+        const row = document.createElement("p");
+        row.className = "autocomplete-items";
+        if (i % 2 === 0) { row.classList.add("autocomplete-itemsEven"); }
+        row.innerText = names[i].nick;
+        autoCompleteDiv.appendChild(row);
+        row.onclick = function () {
+            searchBox1.value = row.innerText;
+            clearAutoComplete(autoCompleteDiv);
+            searchIndicator(3);
+        };
     };
     if (names[0] == searchBox1.value) {
-        clearAutoComplete(autoDiv);
-        userSearchMessage(3);
+        clearAutoComplete(autoCompleteDiv);
+        searchIndicator(3);
         searchBox1.blur();
     };
-    if (searchBox1.value.length == 0) { userSearchMessage(0); };
-    if (searchBox1.value == "") { clearAutoComplete(autoDiv); }
+    if (searchBox1.value.length == 0) { searchIndicator(0); };
+    if (searchBox1.value == "") { clearAutoComplete(autoCompleteDiv); }
 };
 
-function clearAutoComplete(autoDiv) {
-    autoDiv.className = "autoCompleteNone";
-    while (autoDiv.hasChildNodes()) {
-        autoDiv.removeChild(autoDiv.firstChild);
+function clearAutoComplete(autoCompleteDiv) {
+    autoCompleteDiv.className = "autoCompleteNone";
+    while (autoCompleteDiv.hasChildNodes()) {
+        autoCompleteDiv.removeChild(autoCompleteDiv.firstChild);
     };
+    return;
 };
 
-function copyTextToSearchBox(text) {
-    const searchBox = document.getElementById("searchBox");
-    searchBox.value = text;
+function searchIndicator(state) {
+    switch (state) {
+        case 0:
+            console.log("USER STATE INDIC: " + state);
+            console.log("USER STATE INDIC: EMPTY");
+            break;
+        case 1:
+            console.log("USER STATE INDIC: " + state);
+            console.log("USER STATE INDIC: NOT IN LIST");
+            break;
+        case 2:
+            console.log("USER STATE INDIC: " + state);
+            console.log("USER STATE INDIC: SELECT FROM LIST");
+            break;
+        case 3:
+            console.log("USER STATE INDIC: " + state);
+            console.log("USER STATE INDIC: ACCEPTED");
+            break;
+        default:
+            console.log("USER STATE INDIC OUT OF SCOPE")
+            break;
+    };
 };

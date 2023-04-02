@@ -13,8 +13,6 @@ const divFooter = document.getElementById("divFooter");
 
 let appendedScriptObjectContent;
 
-let searchBox1;
-
 window.addEventListener('load', loadUtiliti, false);
 function loadUtiliti() {
     setTimeout(populateMainDivs(), 100);
@@ -99,11 +97,28 @@ async function getRequest(url, callback, data) {
     };
 
 };
-//------------------------SEND PORT REQUEST TO: url WITH -> callback function AND APPENDED data----------------
+//------------------------SEND POST REQUEST TO: url WITH -> callback function AND APPENDED data----------------
 async function postRequest(url, callback, data) {
+    if (data == null) { return; }
     var xhttp = new XMLHttpRequest();
     console.log("SENDING POST REQUEST TO: " + url);
-    if (data != null) { xhttp.open("POST", url + data, true); }
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    console.log("SENDING DATA AS JSON: " + data);
+    xhttp.send(data);
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            // console.log("RESPONSE: " + this.response);
+            if (callback != null) { callback(this.response); }
+            return this.response;
+        };
+    };
+
+};
+async function postRequest_bk(url, callback, data) {
+    var xhttp = new XMLHttpRequest();
+    console.log("SENDING POST REQUEST TO: " + url);
+    if (data != null || data == " ") { xhttp.open("POST", url + data, true); }
     if (data == null) { xhttp.open("POST", url, true); }
     xhttp.send();
     xhttp.onreadystatechange = function () {

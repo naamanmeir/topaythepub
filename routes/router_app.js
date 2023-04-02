@@ -106,8 +106,8 @@ routerApp.get('/placeOrder/:data', async function (req, res) {
 
 //--------------------------------USERS-------------------------------//
 
-routerApp.post('/searchName/:data', async (req, res) => {
-    var query = (req.params.data).replace(/\"/g, '');
+routerApp.post('/searchName/', async (req, res) => {
+    var query = (req.body.name).replace(/\"/g, '');
     if (query == "-") {
         res.send(JSON.stringify("clear"));
         return;
