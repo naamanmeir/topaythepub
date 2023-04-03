@@ -40,6 +40,7 @@ async function sendQuery(query) {
 
 function parseQuery(data) {
     data = JSON.parse(data);
+    console.log(data);
     autoComplete(data);
 };
 
@@ -57,16 +58,17 @@ function autoComplete(names) {
         row.className = "autocomplete-items";
         if (i % 2 === 0) { row.classList.add("autocomplete-itemsEven"); }
         row.innerText = names[i].nick;
+        row.setAttribute('id', names[i].id);
         autoCompleteDiv.appendChild(row);
         row.onclick = function () {
+            searchIndicator(3, row.getAttribute('id'));
             searchBox1.value = row.innerText;
             clearAutoComplete(autoCompleteDiv);
-            searchIndicator(3);
         };
     };
-    if (names[0] == searchBox1.value) {
+    if (names[0].nick == searchBox1.value) {
+        searchIndicator(3, names[0].id);
         clearAutoComplete(autoCompleteDiv);
-        searchIndicator(3);
         searchBox1.blur();
     };
     if (searchBox1.value.length == 0) { searchIndicator(0); };
@@ -81,7 +83,7 @@ function clearAutoComplete(autoCompleteDiv) {
     return;
 };
 
-function searchIndicator(state) {
+function searchIndicator(state, id) {
     switch (state) {
         case 0:
             console.log("USER STATE INDIC: " + state);
@@ -98,9 +100,20 @@ function searchIndicator(state) {
         case 3:
             console.log("USER STATE INDIC: " + state);
             console.log("USER STATE INDIC: ACCEPTED");
+            userLogin(id);
             break;
         default:
             console.log("USER STATE INDIC OUT OF SCOPE")
             break;
     };
 };
+
+function userLogin(id) {
+    console.log("LOGIN USER: " + id);
+    id = JSON.stringify({ "id": id });
+    postRequest('./client/userLogin/', window.parent.userLogged, id);
+};
+
+function userLogged(data) {
+    console.log("CURRENT USER LOGGED: " + data);
+}

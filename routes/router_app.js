@@ -2,7 +2,6 @@ const express = require('express');
 const routerApp = express.Router();
 const functions = require('../functions');
 const db = require('../db');
-const sessionClassMW = require("../module/sessionClass");
 
 var now = new Date();
 
@@ -107,6 +106,7 @@ routerApp.get('/placeOrder/:data', async function (req, res) {
 //--------------------------------USERS-------------------------------//
 
 routerApp.post('/searchName/', async (req, res) => {
+    if (!req.body.name || req.body.name == null) { res.end(); return; }
     var query = (req.body.name).replace(/\"/g, '');
     if (query == "-") {
         res.send(JSON.stringify("clear"));

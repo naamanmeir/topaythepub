@@ -2,22 +2,17 @@ const express = require('express');
 const routerClient = express.Router();
 const functions = require('../functions');
 const db = require('../db');
-const sessionClassMW = require("../module/sessionClass");
-
-routerClient.get('/', sessionClassMW(100), async function (req, res) {
-    let session = req.session;
-    let products = [];
-    products = await db.dbGetProducts();
-    console.log("LOGIN TO APP ON: " + Date());
-    res.render('index', {
-        products: products
-    })
-});
 
 //------------------------CLIENT UI COMMANDS-------------------//
 
 
 //------------------------CLIENT USER COMMANDS-------------------//
+routerClient.post('/userLogin/', async (req, res) => {
+    if (!req.body.id || req.body.id == null) { res.end(); return; }
+    console.log("USER LOGIN ACCEPTED");
+    console.log(req.body.id);
+});
+
 
 routerClient.post('/deleteLastOrder/:data', async (req, res) => {
     let clientID = JSON.parse(req.params.data);
