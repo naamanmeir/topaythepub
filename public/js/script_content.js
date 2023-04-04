@@ -1,6 +1,8 @@
 // divContent.style.backgroundColor = "black";
 // divContent.style.backgroundColor = generateRandomColor();
 
+let currentUserLogged;
+
 function generateRandomColor() {
     let maxVal = 0xFFFFFF; // 16777215
     let randomNumber = Math.random() * maxVal;
@@ -13,25 +15,46 @@ function generateRandomColor() {
 //------------------------ PARAMS AND OBJECT DECLATE ------------------------//
 const maxAutoCompleteResults = 4;
 const searchBox1 = document.getElementById("searchBox");
+const buttonOrder = document.getElementById("buttonOrder");
+const buttonCancel = document.getElementById("buttonCancel");
+const errorMessage = document.getElementById("errorMessage");
 const autoCompleteDiv = document.getElementById("autoComplete");
 
+const contentDiv = document.getElementById("divContent");
+
 //------------------------ OBJECT EVENT LISTENERS ------------------------//
+
+window.onkeydown = function () { searchBox1.focus(); }
+
 searchBox1.addEventListener('focus', function () {
-    console.log("focus");
+    // console.log("focus");
     searchBox1.placeholder = ("👉👉התחילו לכתוב את שמכם");
     if (searchBox1.value.length > 0) { searchBox1.placeholder = (""); };
 });
 searchBox1.addEventListener('blur', function () {
-    console.log("blur");
+    // console.log("blur");
     searchBox1.placeholder = ("שלום הכניסו שם✍👉👉");
 });
 searchBox1.addEventListener('input', function () {
-    console.log("input");
+    // console.log("input");
     let input = searchBox1.value;
     sendQuery(input);
 });
+buttonOrder.addEventListener('click', function () {
+    console.log("button order click");
+    buttonOrderClick();
+});
+buttonCancel.addEventListener('click', function () {
+    console.log("button cancel click");
+    buttonCancelClick();
+});
+
+buttonOrder.style.backgroundColor = ("green");
+buttonCancel.style.backgroundColor = ("red");
+
 
 async function sendQuery(query) {
+    if (query == "" || query == null) { return; };
     query = JSON.stringify({ "name": query });
     console.log("send query: '" + query + "'");
     await postRequest('./app/searchName/', window.parent.parseQuery, query);
@@ -40,7 +63,7 @@ async function sendQuery(query) {
 
 function parseQuery(data) {
     data = JSON.parse(data);
-    console.log(data);
+    // console.log(data);
     autoComplete(data);
 };
 
@@ -51,7 +74,7 @@ function searchBoxClear() {
 
 function autoComplete(names) {
     clearAutoComplete(autoCompleteDiv);
-    if (names.length == 0) { searchIndicator(1) };
+    if (names.length == 0) { searchIndicator(1); return; };
     autoCompleteDiv.className = "autoCompleteSuggestions";
     for (i = 0; i < names.length && i < maxAutoCompleteResults; i++) {
         const row = document.createElement("p");
@@ -66,7 +89,8 @@ function autoComplete(names) {
             clearAutoComplete(autoCompleteDiv);
         };
     };
-    if (names[0].nick == searchBox1.value) {
+    if (names[0].nick == searchBox1.value || names[0].name == searchBox1.value) {
+        searchBox1.value = names[0].nick;
         searchIndicator(3, names[0].id);
         clearAutoComplete(autoCompleteDiv);
         searchBox1.blur();
@@ -116,4 +140,15 @@ function userLogin(id) {
 
 function userLogged(data) {
     console.log("CURRENT USER LOGGED: " + data);
-}
+    currentUserLogged = data;
+};
+
+function buttonOrderClick() {
+
+};
+function buttonCancelClick() {
+
+};
+function errorMessageShow() {
+
+};

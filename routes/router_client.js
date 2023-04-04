@@ -9,8 +9,8 @@ const db = require('../db');
 //------------------------CLIENT USER COMMANDS-------------------//
 routerClient.post('/userLogin/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
-    console.log("USER LOGIN ACCEPTED");
-    console.log(req.body.id);
+    console.log("USER LOGIN ACCEPTED: " + req.body.id);
+    res.send("USER LOGIN ACCEPTED: " + req.body.id);
 });
 
 
