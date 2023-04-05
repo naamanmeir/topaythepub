@@ -27,7 +27,7 @@ module.exports = function () {
         if (req.body.id && req.body.id != '' || req.body.id != null) {
             console.log("VALIDATING ID AS A VALID NUMBER");
             var idNumber = req.body.id;
-            if (!validator.isInt(idNumber)) {
+            if (!idNumber > 0 && !idNumber < 9999) {
                 console.log("ID TAG VALIDATE FALSE");
                 res.write("ERROR FROM DB: NON VALID USER ID");
                 res.end();
