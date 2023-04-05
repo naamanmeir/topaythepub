@@ -1,5 +1,3 @@
-// const bcrypt = require("bcrypt");
-
 module.exports = function (limit) {
     // console.log("SESSIONCLASS MODULE CHECKING FOR CREDENTIALS: " + Date())
     return async function (req, res, next) {

@@ -14,6 +14,8 @@ const cookieParser = require("cookie-parser");
 let ejs = require('ejs');
 const querystring = require('querystring');
 
+var validator = require('validator');
+
 var SSE = require('express-sse');
 var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
 
@@ -22,6 +24,7 @@ const functions = require('./functions.js');
 const generateAccessToken = require("./module/tokenGen");
 const validateToken = require("./module/tokenVal");
 const sessionClassMW = require("./module/sessionClass.js");
+const validatorClient = require("./module/validatorClient.js");
 
 const routerAdmin = require('./routes/router_admin');
 const routerManage = require('./routes/router_manage');
@@ -158,23 +161,29 @@ app.post("/login", async (req, res) => {
     console.log("ATTAMPTED LOGIN WITH NO DETAILS")
     return;
   }
+  if (!validator.isAlphanumeric(req.body.username)) { console.log("USERNAME NOT VALID"); loginAction(req, res, 0, null, null); }
+  if (!validator.isAlphanumeric(req.body.password)) { console.log("PASSWORD NOT VALID"); loginAction(req, res, 1, null.null); }
 
   const user = req.body.username;
   const password = req.body.password;
 
   let dbResponse = await db.userLogin(user, password);
 
-  if (dbResponse[0] == 0) {
+  loginAction(req, res, dbResponse);
+});
+
+async function loginAction(req, res, reply, user, password) {
+  if (reply[0] == 0) {
     console.log("LOGIN ATTAMPTED WITH WRONG USERNAME")
     const query = querystring.stringify({ "message": "username invalid" });
     res.redirect('./?' + query);
   } // WRONG USER
-  if (dbResponse[0] == 1) {
+  if (reply[0] == 1) {
     console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD")
     const query = querystring.stringify({ "message": "password invalid" });
     res.redirect('./?' + query);
   } // WRONG PASS
-  if (dbResponse[0] == 2) {
+  if (reply[0] == 2) {
     const token = generateAccessToken({ user: user });
     session = req.session;
     session.userid = req.body.username;
@@ -185,7 +194,8 @@ app.post("/login", async (req, res) => {
     console.log(`LOGIN: USER: ${user} ,CLASS: ${userClass} ,SESSION ID: ${session.sessionid}`);
     res.redirect('./');
   }// LOGIN OK
-});
+  return;
+}
 
 app.get("/logout", async (req, res) => {
   if (req.session == null) { res.sendStatus(403); return; }
@@ -202,7 +212,7 @@ app.use('/secretadminpanel', sessionClassMW(0), routerAdmin);
 app.use('/manage', sessionClassMW(50), routerManage);
 app.use('/accountant', sessionClassMW(75), routerAccountant);
 app.use('/app', sessionClassMW(100), routerApp);
-app.use('/client', sessionClassMW(100), routerClient);
+app.use('/client', sessionClassMW(100), validatorClient(), routerClient);
 app.use('/events', sessionClassMW(100), routerClientEvents);
 
 //-------------------------SERVER-----------------------------------//

@@ -1,7 +1,6 @@
 // divContent.style.backgroundColor = "black";
 // divContent.style.backgroundColor = generateRandomColor();
 
-let currentUserLogged;
 
 function generateRandomColor() {
     let maxVal = 0xFFFFFF; // 16777215
@@ -36,8 +35,11 @@ searchBox1.addEventListener('blur', function () {
     searchBox1.placeholder = ("שלום הכניסו שם✍👉👉");
 });
 searchBox1.addEventListener('input', function () {
-    // console.log("input");
+    // console.log("input");    
     let input = searchBox1.value;
+    input = inputSanitize(input);
+    console.log('------------------------' + input);
+    searchBox1.value = input;
     sendQuery(input);
 });
 buttonOrder.addEventListener('click', function () {
@@ -57,7 +59,7 @@ async function sendQuery(query) {
     if (query == "" || query == null) { return; };
     query = JSON.stringify({ "name": query });
     console.log("send query: '" + query + "'");
-    await postRequest('./app/searchName/', window.parent.parseQuery, query);
+    await postRequest('./client/searchName/', window.parent.parseQuery, query);
     return;
 };
 
@@ -139,8 +141,14 @@ function userLogin(id) {
 };
 
 function userLogged(data) {
-    console.log("CURRENT USER LOGGED: " + data);
-    currentUserLogged = data;
+    if (data == null || data == '') { console.log("ERROR WITH DB"); return; }
+    console.log(JSON.parse(data));
+    currentUserLogged = JSON.parse(data);
+    console.log(`CURRENT USER LOGGED: 
+    ${currentUserLogged.nick} , 
+    ${currentUserLogged.name} , 
+    ${currentUserLogged.account} ,
+    ${currentUserLogged.id}`);
 };
 
 function buttonOrderClick() {

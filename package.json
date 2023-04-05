@@ -26,6 +26,7 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "express-sse": "^0.5.3",
+    "express-validator": "^6.15.0",
     "formidable": "^2.1.1",
     "fs": "0.0.1-security",
     "googleapis": "^105.0.0",
@@ -40,7 +41,9 @@
     "querystring": "^0.2.1",
     "serve-favicon": "^2.5.0",
     "stream": "^0.0.2",
-    "upgrade": "^1.1.0"
+    "string-sanitizer": "^2.0.2",
+    "upgrade": "^1.1.0",
+    "validator": "^13.9.0"
   },
   "repository": {
     "type": "git",

@@ -1,8 +1,12 @@
+//-----------------DEVELOPE PARAMS-----------------//
 const timerRefreshMainDivsTime = 9995000;
 const timerRefreshContentTime = 9995000;
 const timerRefreshElementsTime = 9995000;
 const timerRefreshCssTime = 9995000;
 
+//-----------------RUNTIME PARAMS-----------------//
+const timerClearLoggedUSerTIme = 999999;
+let currentUserLogged;
 
 const divHeader = document.getElementById("divHeader");
 const divTopMenu = document.getElementById("divTopMenu");
@@ -136,7 +140,8 @@ async function responseToNull(res) {
     console.log(res);
     res = null;
     delete res;
-}
+};
+
 function refreshCss() {
     let links = document.getElementsByTagName('link');
     for (let i = 0; i < links.length; i++) {
@@ -154,3 +159,21 @@ function randomNumberGen() {
     var val = Math.floor(1000 + Math.random() * 9000);
     return val;
 };
+
+function inputSanitize(input) {
+    input = input.replace(/\\/g, '');
+    input = input.replace(/\//g, '');
+    input = input.replace(/[0-9]/g, '');
+    input = input.replace(/\./g, '');
+    input = input.replace(/\,/g, '');
+    input = input.replace(/\`/g, '');
+    input = input.replace(/\"/g, '');
+    input = input.replace(/\;/g, '');
+    input = input.replace(/\[/g, '');
+    input = input.replace(/\]/g, '');
+    input = input.replace(/\)/g, '');
+    input = input.replace(/\(/g, '');
+    input = input.substring(0, 42);
+    // input = input.replace(/\'/g, "''");
+    return input;
+}

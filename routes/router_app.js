@@ -105,24 +105,4 @@ routerApp.get('/placeOrder/:data', async function (req, res) {
 
 //--------------------------------USERS-------------------------------//
 
-routerApp.post('/searchName/', async (req, res) => {
-    if (!req.body.name || req.body.name == null) { res.end(); return; }
-    var query = (req.body.name).replace(/\"/g, '');
-    if (query == "-") {
-        res.send(JSON.stringify("clear"));
-        return;
-    };
-    let names = [];
-    names = (await db.dbGetNameBySearch(query));
-    res.send(names);
-});
-
-routerApp.post('/getUserInfo/:data', async (req, res) => {
-    let clientId = JSON.parse(req.params.data);
-    let clientInfo = await db.dbGetClientInfoById(clientId);
-    // console.log(JSON.stringify(clientInfo));
-    res.send(clientInfo)
-
-});
-
 module.exports = routerApp;
