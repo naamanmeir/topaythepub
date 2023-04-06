@@ -7,9 +7,16 @@ module.exports = function () {
         if (!req.body || req.body == null) { res.end(); return; }
         console.log(req.body);
         if (req.body.name && req.body.name != '' || req.body.name != null) {
+            if (!validator.isLength(req.body.name, { min: 0, max: 40 })) {
+                console.log("VALIDATE FALSE: LONGER THEN 40 CHARS");
+                res.send(JSON.stringify({ 'error': 'name is too long' }));
+                res.end();
+                return;
+            }
             if (!validator.isAlphanumeric(req.body.name, 'he', opts)) {
                 if (!validator.contains(req.body.name, `'`)) {
                     console.log("VALIDATE FALSE: NON VALID CHARS");
+                    res.send(JSON.stringify({ 'error': 'name contain forbidden characters' }));
                     res.end();
                     return;
                 }
@@ -18,18 +25,14 @@ module.exports = function () {
                     req.body.name = (req.body.name).replace(/\'/g, `''`);
                 }
             }
-            if (!validator.isLength(req.body.name, { min: 0, max: 40 })) {
-                console.log("VALIDATE FALSE: LONGER THEN 40 CHARS");
-                res.end();
-                return;
-            }
+
         }
         if (req.body.id && req.body.id != '' || req.body.id != null) {
             console.log("VALIDATING ID AS A VALID NUMBER");
             var idNumber = req.body.id;
             if (!idNumber > 0 && !idNumber < 9999) {
                 console.log("ID TAG VALIDATE FALSE");
-                res.write("ERROR FROM DB: NON VALID USER ID");
+                res.send(JSON.stringify({ 'error': 'not a valid user id' }));
                 res.end();
                 return;
             }

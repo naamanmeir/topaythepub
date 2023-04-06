@@ -59,14 +59,15 @@ async function sendQuery(query) {
     if (query == "" || query == null) { return; };
     query = JSON.stringify({ "name": query });
     console.log("send query: '" + query + "'");
-    await postRequest('./client/searchName/', window.parent.parseQuery, query);
+    await postRequest('./client/searchName/', window.parent.parseResponse, query);
     return;
 };
 
-function parseQuery(data) {
+function parseResponse(data) {
     data = JSON.parse(data);
     // console.log(data);
-    autoComplete(data);
+    if (!data.error) { autoComplete(data); return; }
+    if (data.error) { console.log(data);; return; }
 };
 
 function searchBoxClear() {
