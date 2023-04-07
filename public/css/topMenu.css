@@ -1,0 +1,69 @@
+.topMenuDiv {
+    direction: ltr;
+    display: flex;
+    flex-direction: row;
+    flex-basis: auto;
+    max-width: 800px;
+    margin: auto;
+    color: aliceblue;
+    text-align: center;
+    justify-content: center;
+}
+
+.topMenuDiv>div {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    margin: 0% 10% 0% 10%;
+}
+
+#userIndic {
+    /* background-color: green; */
+}
+
+#userPage {
+    border: 2px outset orange;
+    padding: 0.2rem;
+}
+
+.userPageHidden {
+    opacity: 0;
+}
+
+.userPageShow {
+    opacity: 1;
+}
+
+#userPage:active {
+    border: 2px inset orange;
+}
+
+#conIndic {}
+
+.connectionIndic {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+}
+
+.conOk {
+    animation: indicOk 5s linear infinite;
+}
+
+@keyframes indicOk {
+    0% {
+        background-color: black;
+    }
+
+    15% {
+        background-color: green;
+    }
+
+    85% {
+        background-color: green;
+    }
+
+    100% {
+        background-color: black;
+    }
+}

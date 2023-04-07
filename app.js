@@ -26,6 +26,8 @@ const validateToken = require("./module/tokenVal");
 const sessionClassMW = require("./module/sessionClass.js");
 const validatorClient = require("./module/validatorClient.js");
 
+let messagesJson = require('./messages.json');
+
 const routerAdmin = require('./routes/router_admin');
 const routerManage = require('./routes/router_manage');
 const routerAccountant = require('./routes/router_accountant');

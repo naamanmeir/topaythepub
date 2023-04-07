@@ -2,7 +2,8 @@ const express = require('express');
 const routerClient = express.Router();
 const functions = require('../functions');
 const db = require('../db');
-var validator = require('validator');
+let messagesJson = require('../messages.json');
+let messageClient = messagesJson.client[0];
 
 //------------------------CLIENT UI COMMANDS-------------------//
 
@@ -17,6 +18,11 @@ routerClient.post('/searchName/', async (req, res) => {
     };
     let names = [];
     names = (await db.dbGetNameBySearch(query));
+    if (names.length == 0) {
+        res.send(JSON.stringify({ 'errorClient': messageClient.notExist }));
+        return;
+    };
+    names = JSON.stringify(names);
     res.send(names);
 });
 
@@ -30,7 +36,8 @@ routerClient.post('/userLogin/', async (req, res) => {
         'id': req.body.id,
         'name': loggedUserDetails[0].name,
         'nick': loggedUserDetails[0].nick,
-        'account': loggedUserDetails[0].account
+        'account': loggedUserDetails[0].account,
+        'message': messageClient.logged
     });
     console.log("LOGGED USER DETAILS: " + loggedUserDetails)
     res.send(loggedUserDetails);
@@ -39,7 +46,6 @@ routerClient.post('/userLogin/', async (req, res) => {
 routerClient.post('/getUserInfo/:data', async (req, res) => {
     let clientId = JSON.parse(req.params.data);
     let clientInfo = await db.dbGetClientInfoById(clientId);
-    // console.log(JSON.stringify(clientInfo));
     res.send(clientInfo)
 });
 

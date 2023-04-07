@@ -2,6 +2,9 @@ const express = require('express');
 const routerApp = express.Router();
 const functions = require('../functions');
 const db = require('../db');
+let messagesJson = require('../messages.json');
+const { json } = require('stream/consumers');
+let messageUi = messagesJson.ui[0];
 
 var now = new Date();
 
@@ -11,6 +14,13 @@ routerApp.get('/', async function (req, res) {
     let session = req.session;
     console.log("LOGIN TO APP ON: " + Date());
     res.render('index');
+});
+
+routerApp.get('/messages', async function (req, res) {
+    console.log("SEND MESSAGES OBJECT");
+    messageUi = (messageUi);
+    console.log(messageUi);
+    res.send(messageUi);
 });
 
 routerApp.get('/header', function (req, res) {

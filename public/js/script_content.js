@@ -20,6 +20,8 @@ const errorMessage = document.getElementById("errorMessage");
 const autoCompleteDiv = document.getElementById("autoComplete");
 
 const contentDiv = document.getElementById("divContent");
+const userPage = document.getElementById("userPage");
+const userIndic = document.getElementById("userIndic");
 
 //------------------------ OBJECT EVENT LISTENERS ------------------------//
 
@@ -35,10 +37,11 @@ searchBox1.addEventListener('blur', function () {
     searchBox1.placeholder = ("שלום הכניסו שם✍👉👉");
 });
 searchBox1.addEventListener('input', function () {
-    // console.log("input");    
+    // console.log("input");
+    if (searchBox1.value == '') { userIndicMessage('') };
+    if (searchBox1.value != '') { userIndicMessage('בחרו שם מהרשימה'); };
     let input = searchBox1.value;
     input = inputSanitize(input);
-    console.log('------------------------' + input);
     searchBox1.value = input;
     sendQuery(input);
 });
@@ -54,7 +57,6 @@ buttonCancel.addEventListener('click', function () {
 buttonOrder.style.backgroundColor = ("green");
 buttonCancel.style.backgroundColor = ("red");
 
-
 async function sendQuery(query) {
     if (query == "" || query == null) { return; };
     query = JSON.stringify({ "name": query });
@@ -66,8 +68,14 @@ async function sendQuery(query) {
 function parseResponse(data) {
     data = JSON.parse(data);
     // console.log(data);
-    if (!data.error) { autoComplete(data); return; }
-    if (data.error) { console.log(data);; return; }
+    if (!data.errorLog && !data.errorClient) { autoComplete(data); return; }
+    if (data.errorLog) { console.log(data); return; }
+    if (data.errorClient) {
+        console.log(data);
+        userIndicMessage(data.errorClient);
+        clearAutoComplete(autoCompleteDiv);
+        return;
+    }
 };
 
 function searchBoxClear() {
@@ -150,6 +158,29 @@ function userLogged(data) {
     ${currentUserLogged.name} , 
     ${currentUserLogged.account} ,
     ${currentUserLogged.id}`);
+    displayUserPage();
+    userIndicLogged();
+};
+
+function displayUserPage() {
+    if (currentUserLogged != null);
+    userPage.className = "userPageShow";
+};
+
+function userIndicLogged() {
+    let par = document.createElement("p");
+    par.innerText = currentUserLogged.message;
+    console.log(par);
+    userIndic.innerHTML = "";
+    userIndic.append(par);
+};
+
+function userIndicMessage(message) {
+    let par = document.createElement("p");
+    par.innerText = message;
+    console.log(par);
+    userIndic.innerHTML = "";
+    userIndic.append(par);
 };
 
 function buttonOrderClick() {

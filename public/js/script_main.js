@@ -7,6 +7,8 @@ const timerRefreshCssTime = 9995000;
 //-----------------RUNTIME PARAMS-----------------//
 const timerClearLoggedUSerTIme = 999999;
 let currentUserLogged;
+let messageUi;
+let regexBlock;
 
 const divHeader = document.getElementById("divHeader");
 const divTopMenu = document.getElementById("divTopMenu");
@@ -28,6 +30,7 @@ function loadUtiliti() {
 };
 
 function populateMainDivs() {
+    getRequest("./app/messages", buildMessage);
     getRequest("./app/header", displayHeader);
     getRequest("./app/topMenu", displayTopMenu);
     getRequest("./app/sideMenu", displaySideMenu);
@@ -42,6 +45,14 @@ function populateContent() {
 
 function populateElements() {
     getRequest("./app/getProducts", displayProducts);
+};
+
+function buildMessage(content) {
+    messageUi = JSON.parse(content);
+    console.log(messageUi.regexBlock);
+    const stringed = JSON.stringify(messageUi.regexBlock);
+    console.log(stringed);
+    regexBlock = new RegExp(stringed, "g");
 };
 
 function displayHeader(content) {
@@ -161,19 +172,20 @@ function randomNumberGen() {
 };
 
 function inputSanitize(input) {
-    input = input.replace(/\\/g, '');
-    input = input.replace(/\//g, '');
-    input = input.replace(/[0-9]/g, '');
-    input = input.replace(/\./g, '');
-    input = input.replace(/\,/g, '');
-    input = input.replace(/\`/g, '');
-    input = input.replace(/\"/g, '');
-    input = input.replace(/\;/g, '');
-    input = input.replace(/\[/g, '');
-    input = input.replace(/\]/g, '');
-    input = input.replace(/\)/g, '');
-    input = input.replace(/\(/g, '');
+    input = input.replace(regexBlock, "");
+    // input = input.replace(/\\/g, '');
+    // input = input.replace(/\//g, '');
+    // input = input.replace(/[0-9]/g, '');
+    // input = input.replace(/\./g, '');
+    // input = input.replace(/\,/g, '');
+    // input = input.replace(/\`/g, '');
+    // input = input.replace(/\"/g, '');
+    // input = input.replace(/\;/g, '');
+    // input = input.replace(/\[/g, '');
+    // input = input.replace(/\]/g, '');
+    // input = input.replace(/\)/g, '');
+    // input = input.replace(/\(/g, '');
     input = input.substring(0, 42);
     // input = input.replace(/\'/g, "''");
     return input;
-}
+};

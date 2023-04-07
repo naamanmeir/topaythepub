@@ -1,0 +1,21 @@
+{
+    "client": [
+        {
+            "logged": "משתמש מחובר",
+            "notExist": "משתמש לא קיים",
+            "enterName": "בחרו את שמכם מהרשימה",
+            "notUsed": "הכניסו שם"
+        }
+    ],
+    "ui": [
+        {
+            "header": "לרשום בפאב",
+            "buttonOrder": "בצע רישום",
+            "buttonCancel": "בטל",
+            "menuFloating": "כפתור",
+            "menuSide": "תפריט",
+            "userPage": "דף משתמש",
+            "regexBlock": "\\\/~!@#$%^&*()-=_+[]{}?\/>.<,;|."
+        }
+    ]
+}
