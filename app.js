@@ -163,8 +163,8 @@ app.post("/login", async (req, res) => {
     console.log("ATTAMPTED LOGIN WITH NO DETAILS")
     return;
   }
-  if (!validator.isAlphanumeric(req.body.username)) { console.log("USERNAME NOT VALID"); loginAction(req, res, 0, null, null); }
-  if (!validator.isAlphanumeric(req.body.password)) { console.log("PASSWORD NOT VALID"); loginAction(req, res, 1, null.null); }
+  if (!validator.isAlphanumeric(req.body.username)) { console.log("USERNAME NOT VALID"); loginAction(req, res, 0, null, null); return; }
+  if (!validator.isAlphanumeric(req.body.password)) { console.log("PASSWORD NOT VALID"); loginAction(req, res, 1, null, null); return; }
 
   const user = req.body.username;
   const password = req.body.password;
@@ -179,11 +179,13 @@ async function loginAction(req, res, reply, user, password) {
     console.log("LOGIN ATTAMPTED WITH WRONG USERNAME")
     const query = querystring.stringify({ "message": "username invalid" });
     res.redirect('./?' + query);
+    return;
   } // WRONG USER
   if (reply[0] == 1) {
     console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD")
     const query = querystring.stringify({ "message": "password invalid" });
     res.redirect('./?' + query);
+    return;
   } // WRONG PASS
   if (reply[0] == 2) {
     const token = generateAccessToken({ user: user });
@@ -195,6 +197,7 @@ async function loginAction(req, res, reply, user, password) {
     session.sessionid = Number(sessionStore);
     console.log(`LOGIN: USER: ${user} ,CLASS: ${userClass} ,SESSION ID: ${session.sessionid}`);
     res.redirect('./');
+    return;
   }// LOGIN OK
   return;
 }

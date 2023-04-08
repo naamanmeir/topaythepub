@@ -28,7 +28,7 @@ routerClient.post('/searchName/', async (req, res) => {
 
 routerClient.post('/userLogin/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
-    console.log("login function")
+    // console.log("login function")
     console.log("USER LOGIN ACCEPTED: " + req.body.id);
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
@@ -41,6 +41,19 @@ routerClient.post('/userLogin/', async (req, res) => {
     });
     console.log("LOGGED USER DETAILS: " + loggedUserDetails)
     res.send(loggedUserDetails);
+});
+
+routerClient.post('/getUserPage/', async (req, res) => {
+    if (!req.body.id || req.body.id == null) { res.end(); return; }
+    let reqId = req.body.id;
+    console.log("GET USER DATA FOR: " + reqId);
+    let userPageModule = require("../module/buildUserPage");
+    let userDataFromDb = await db.dbGetClientInfoById(reqId);
+    let html = userPageModule.buildUserPage(userDataFromDb);
+    res.send(html);
+    console.log("SENT USER INFO AS HTML")
+    delete require.cache[require.resolve("../module/buildUserPage")];
+    return;
 });
 
 routerClient.post('/getUserInfo/:data', async (req, res) => {

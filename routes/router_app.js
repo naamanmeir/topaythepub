@@ -19,7 +19,6 @@ routerApp.get('/', async function (req, res) {
 routerApp.get('/messages', async function (req, res) {
     console.log("SEND MESSAGES OBJECT");
     messageUi = (messageUi);
-    console.log(messageUi);
     res.send(messagesJson);
 });
 

@@ -42,7 +42,7 @@ searchBox1.addEventListener('input', function () {
     let input = searchBox1.value;
     input = inputSanitize(input);
     searchBox1.value = input;
-    if (input == '' || input == null) { return; }
+    if (input == '' || input == null) { clearAutoComplete(autoCompleteDiv); return; }
     if (searchBox1.value == '') { userIndicMessage('') };
     if (searchBox1.value != '') { userIndicMessage(messageClient.enterName); };
     sendQuery(input);
@@ -160,13 +160,27 @@ function userLogged(data) {
     ${currentUserLogged.name} , 
     ${currentUserLogged.account} ,
     ${currentUserLogged.id}`);
-    displayUserPage();
+    displayUserPageButton();
     userIndicLogged();
 };
 
-function displayUserPage() {
+function displayUserPageButton() {
     if (currentUserLogged != null);
     userPage.className = "userPageShow";
+    userPage.addEventListener("click", function () {
+        requestUserPage(currentUserLogged.id);
+    })
+};
+
+function requestUserPage(id) {
+    console.log(id);
+    id = JSON.stringify({ "id": id });
+    postRequest('./client/getUserPage/', window.parent.openUserPage, id);
+    return;
+};
+
+function openUserPage(content) {
+    console.log(content);
 };
 
 function userIndicLogged() {
