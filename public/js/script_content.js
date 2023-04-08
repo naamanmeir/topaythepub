@@ -25,6 +25,8 @@ const userIndic = document.getElementById("userIndic");
 
 //------------------------ OBJECT EVENT LISTENERS ------------------------//
 
+// searchBox1.setAttribute("pattern", regexBlock);
+
 window.onkeydown = function () { searchBox1.focus(); }
 
 searchBox1.addEventListener('focus', function () {
@@ -37,12 +39,12 @@ searchBox1.addEventListener('blur', function () {
     searchBox1.placeholder = ("שלום הכניסו שם✍👉👉");
 });
 searchBox1.addEventListener('input', function () {
-    // console.log("input");
-    if (searchBox1.value == '') { userIndicMessage('') };
-    if (searchBox1.value != '') { userIndicMessage('בחרו שם מהרשימה'); };
     let input = searchBox1.value;
     input = inputSanitize(input);
     searchBox1.value = input;
+    if (input == '' || input == null) { return; }
+    if (searchBox1.value == '') { userIndicMessage('') };
+    if (searchBox1.value != '') { userIndicMessage(messageClient.enterName); };
     sendQuery(input);
 });
 buttonOrder.addEventListener('click', function () {
@@ -170,7 +172,6 @@ function displayUserPage() {
 function userIndicLogged() {
     let par = document.createElement("p");
     par.innerText = currentUserLogged.message;
-    console.log(par);
     userIndic.innerHTML = "";
     userIndic.append(par);
 };
@@ -178,7 +179,6 @@ function userIndicLogged() {
 function userIndicMessage(message) {
     let par = document.createElement("p");
     par.innerText = message;
-    console.log(par);
     userIndic.innerHTML = "";
     userIndic.append(par);
 };
