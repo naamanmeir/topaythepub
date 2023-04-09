@@ -460,9 +460,8 @@ p {
     flex: 1;
 }
 
-
-.userInfo {
-    /* display: none; */
+/* 
+.userInfo {    
     z-index: 4500;
     position: absolute;
     max-height: 90%;
@@ -570,7 +569,7 @@ p {
 
 .deleteOrderConfirmNo {
     background-color: green;
-}
+} */
 
 /* .footer {
     max-width: 800px;

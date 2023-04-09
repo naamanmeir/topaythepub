@@ -27,6 +27,8 @@ const sessionClassMW = require("./module/sessionClass.js");
 const validatorClient = require("./module/validatorClient.js");
 
 let messagesJson = require('./messages.json');
+let messageClient = messagesJson.client[0];
+let messageUi = messagesJson.ui[0];
 
 const routerAdmin = require('./routes/router_admin');
 const routerManage = require('./routes/router_manage');

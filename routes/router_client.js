@@ -4,6 +4,7 @@ const functions = require('../functions');
 const db = require('../db');
 let messagesJson = require('../messages.json');
 let messageClient = messagesJson.client[0];
+let messageUi = messagesJson.ui[0];
 
 //------------------------CLIENT UI COMMANDS-------------------//
 
@@ -48,8 +49,18 @@ routerClient.post('/getUserPage/', async (req, res) => {
     let reqId = req.body.id;
     console.log("GET USER DATA FOR: " + reqId);
     let userPageModule = require("../module/buildUserPage");
+    let loggedUserDetails = [];
+    loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
+    loggedUserDetails = JSON.stringify({
+        'id': req.body.id,
+        'name': loggedUserDetails[0].name,
+        'nick': loggedUserDetails[0].nick,
+        'account': loggedUserDetails[0].account,
+        'message': messageClient.logged
+    });
+    loggedUserDetails = JSON.parse(loggedUserDetails);
     let userDataFromDb = await db.dbGetClientInfoById(reqId);
-    let html = userPageModule.buildUserPage(userDataFromDb);
+    let html = userPageModule.buildUserPage(loggedUserDetails, userDataFromDb);
     res.send(html);
     console.log("SENT USER INFO AS HTML")
     delete require.cache[require.resolve("../module/buildUserPage")];

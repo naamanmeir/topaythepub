@@ -180,7 +180,17 @@ function requestUserPage(id) {
 };
 
 function openUserPage(content) {
-    console.log(content);
+    let userWindow = document.createElement('div');
+    userWindow.className = ("userInfo");
+    userWindow.innerHTML = (content);
+    document.body.appendChild(userWindow);
+    let closeButton = document.getElementById("userPageCloseButton");
+    closeButton.addEventListener('click', function () {
+        userWindow.remove();
+    });
+    divFullPage.addEventListener('click', function () {
+        userWindow.remove();
+    })
 };
 
 function userIndicLogged() {

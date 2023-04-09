@@ -1,0 +1,154 @@
+.tableEven {
+    background-color: lightblue;
+}
+
+.tableOdd {
+    background-color: lightskyblue;
+}
+
+.userInfoChangeNick {
+    background-color: rgb(106, 106, 106);
+}
+
+.userInfoTable {
+    direction: ltr;
+}
+
+.userInfo {
+    z-index: 4500;
+    position: absolute;
+    max-height: 90%;
+    height: 95%;
+    width: 90%;
+    top: 5%;
+    left: 5%;
+    margin: 0px 0px 0px 0px;
+    padding: 5px 5px 5px 5px;
+    background-color: rgb(0, 0, 0);
+    border: 2px groove orange;
+    border-radius: 3rem;
+    margin: auto;
+    text-align: right;
+}
+
+.userInfoTop {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.userInfoText {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    margin-right: 7%;
+    color: rgb(201, 138, 3);
+}
+
+.userInfoChangeNickDiv {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.userInfoChangeNickText {
+    width: 90%;
+    height: 2rem;
+    color: grey;
+    font-size: 1rem;
+    padding: 0px;
+    max-height: 3rem;
+    justify-content: center;
+    margin: auto;
+    resize: none;
+}
+
+.userInfoChangeNickButton {
+    width: fit-content;
+    height: 2rem;
+    text-align: left;
+    color: black;
+    margin: auto;
+    background-color: rgb(140, 228, 255);
+    border: 3px outset grey;
+}
+
+.userInfoChangeNickButton:active {
+    border: 3px inset grey;
+}
+
+.userInfoCloseButton {
+    text-align: left;
+    float: left;
+    width: 2rem;
+    margin: auto;
+    padding-top: 0px;
+    padding-left: 2%;
+    color: red;
+    font-size: xx-large;
+}
+
+.userInfoTableDiv {
+    position: relative;
+    max-height: 70%;
+    width: 95%;
+    top: 0px;
+    height: auto;
+    border-radius: 5px;
+    margin: auto;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    text-align: right;
+    overflow: auto;
+}
+
+.userInfoTable {
+    width: 95%;
+    border: 0px;
+    margin: auto;
+    margin-bottom: 0px;
+    padding: 0px 0px 0px 0px;
+    font-size: 100%;
+    background-color: lightskyblue;
+}
+
+.deleteOrderButton {
+    width: 50%;
+    height: 100%;
+    max-height: 2rem;
+    margin: auto;
+    text-align: center;
+    color: black;
+    background-color: red;
+    border: 3px outset grey;
+}
+
+.deleteOrderButton:active {
+    border: 3px inset grey;
+}
+
+.userInfoOrderDeleteConfirm {
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
+}
+
+.deleteOrderConfirm {
+    margin: auto;
+    text-align: center;
+    color: black;
+    height: 3rem;
+    background-color: red;
+    border: 3px outset grey;
+}
+
+.deleteOrderConfirm:active {
+    border: 3px inset grey;
+}
+
+.deleteOrderConfirmYes {
+    background-color: red;
+}
+
+.deleteOrderConfirmNo {
+    background-color: green;
+}

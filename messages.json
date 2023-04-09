@@ -1,13 +1,27 @@
 {
     "ui": [
         {
+            "regexBlock": "[~!@#\\$%^&\\*\\(\\)-\\\\=_\\+\\[\\]\\{\\}\\?>/\\.<\\,;\\|]",
             "header": "לרשום בפאב",
             "buttonOrder": "בצע רישום",
             "buttonCancel": "בטל",
             "menuFloating": "כפתור",
             "menuSide": "תפריט",
             "userPage": "דף משתמש",
-            "regexBlock": "[~!@#\\$%^&\\*\\(\\)-\\\\=_\\+\\[\\]\\{\\}\\?>/\\.<\\,;\\|]"
+            "userPageHeader": "דף משתמש",
+            "userPageName": "שם:",
+            "userPageNick": "כינוי:",
+            "userPageAccount": "מספר משלם:",
+            "userPageId": "מספר זיהוי:",
+            "userPageNickButtonYes": "החלפת כינוי",
+            "userPageNickButtonNo": "ביטול החלפת כינוי",
+            "userPageTableId": "מס. רישום",
+            "userPageTableDate": "זמן רישום",
+            "userPageTableDetails": "פרטים",
+            "userPageTableSum": "סכום",
+            "userPageButtonDeleteOrder": "למחוק רישום אחרון",
+            "userPageButtonDeleteOrderYes": "בצע מחיקה",
+            "userPageButtonDeleteOrderNo": "בטל מחיקה"
         }
     ],
     "client": [

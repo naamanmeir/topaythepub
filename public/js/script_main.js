@@ -11,6 +11,7 @@ let messageUi;
 let messageClient;
 let regexBlock;
 
+const divFullPage = document.getElementById("divFullPage");
 const divHeader = document.getElementById("divHeader");
 const divTopMenu = document.getElementById("divTopMenu");
 const divSideMenu = document.getElementById("divSideMenu");
