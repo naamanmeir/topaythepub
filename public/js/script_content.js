@@ -173,15 +173,17 @@ function displayUserPageButton() {
 };
 
 function requestUserPage(id) {
-    console.log(id);
+    console.log("request user page for user: " + id);
     id = JSON.stringify({ "id": id });
     postRequest('./client/getUserPage/', window.parent.openUserPage, id);
     return;
 };
 
 function openUserPage(content) {
+    if (document.getElementById("userInfoWindow")) { document.getElementById("userInfoWindow").remove; };
     let userWindow = document.createElement('div');
     userWindow.className = ("userInfo");
+    userWindow.setAttribute("id", "userInfoWindow");
     userWindow.innerHTML = (content);
     document.body.appendChild(userWindow);
     let closeButton = document.getElementById("userPageCloseButton");
@@ -190,8 +192,19 @@ function openUserPage(content) {
     });
     divFullPage.addEventListener('click', function () {
         userWindow.remove();
+    });
+    let deleteOrderButton = document.getElementById("deleteOrderButton");
+    deleteOrderButton.addEventListener('click', function () {
+        deleteLastOrder(currentUserLogged.id);
+        requestUserPage(currentUserLogged.id);
     })
 };
+
+function deleteLastOrder(id) {
+    id = JSON.stringify({ "id": id });
+    let deleteOrderResponse = postRequest('./client/deleteLastOrder/', null, id);
+    return;
+}
 
 function userIndicLogged() {
     let par = document.createElement("p");

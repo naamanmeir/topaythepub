@@ -4,7 +4,7 @@ module.exports = function () {
         var validator = require('validator');
         const opts = { 'ignore': ' ' };
         if (!req.body || req.body == null) { res.end(); return; }
-        // console.log(req.body);
+        // console.log(req);
         if (req.body.name && req.body.name != '' || req.body.name != null) {
             if (!validator.isLength(req.body.name, { min: 0, max: 40 })) {
                 console.log("VALIDATE FALSE: LONGER THEN 40 CHARS");

@@ -34,7 +34,7 @@ exports.buildUserPage = function (userInfo, userData) {
 
     html += `</tbody></table></div>`;
 
-    html += `<div class="deleteOrderButton">${messageUi.userPageButtonDeleteOrder}</div>`;
+    html += `<div class="deleteOrderButton" id="deleteOrderButton">${messageUi.userPageButtonDeleteOrder}</div>`;
     html += `</div>`;
     return html;
 };

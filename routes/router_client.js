@@ -73,12 +73,12 @@ routerClient.post('/getUserInfo/:data', async (req, res) => {
     res.send(clientInfo)
 });
 
-routerClient.post('/deleteLastOrder/:data', async (req, res) => {
-    let clientID = JSON.parse(req.params.data);
-    console.log("APP: DELETE LAST ORDER FROM ID: " + clientID);
-    var deleteLastOrderResponse;
-    deleteLastOrderResponse = await db.dbDeleteLastOrderById(clientID).then((res) => { return (res) })
-    console.log(deleteLastOrderResponse)
+routerClient.post('/deleteLastOrder/', async (req, res) => {
+    if (!req.body.id || req.body.id == null) { res.end(); return; }
+    let clientId = JSON.parse(req.body.id);
+    let deleteLastOrderResponse;
+    deleteLastOrderResponse = await db.dbDeleteLastOrderById(clientId);
+    console.log(deleteLastOrderResponse);
     res.send(deleteLastOrderResponse);
 });
 
