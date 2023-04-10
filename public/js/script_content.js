@@ -23,6 +23,8 @@ const contentDiv = document.getElementById("divContent");
 const userPage = document.getElementById("userPage");
 const userIndic = document.getElementById("userIndic");
 
+let userWindow;
+
 //------------------------ OBJECT EVENT LISTENERS ------------------------//
 
 // searchBox1.setAttribute("pattern", regexBlock);
@@ -164,6 +166,19 @@ function userLogged(data) {
     userIndicLogged();
 };
 
+function addItem(item) {
+    // if (sideMenu) { return };
+    const counts = document.getElementsByClassName("counts");
+    if (counts[item].innerText == "" || counts[item].innerText == null) {
+        counts[item].innerText = 1;
+    } else {
+        let current = counts[item].innerText;
+        if (current < 99) counts[item].innerText = (parseInt(current) + 1);
+    }
+    let itemsBought = parseInt(counts[item].innerText);
+    // orderArray[item] = [itemsBought, products[item][1], products[item][2]];
+};
+
 function displayUserPageButton() {
     if (currentUserLogged != null);
     userPage.className = "userPageShow";
@@ -181,7 +196,8 @@ function requestUserPage(id) {
 
 function openUserPage(content) {
     if (document.getElementById("userInfoWindow")) { document.getElementById("userInfoWindow").remove; };
-    let userWindow = document.createElement('div');
+    userWindow = null;
+    userWindow = document.createElement('div');
     userWindow.className = ("userInfo");
     userWindow.setAttribute("id", "userInfoWindow");
     userWindow.innerHTML = (content);
@@ -196,6 +212,7 @@ function openUserPage(content) {
     let deleteOrderButton = document.getElementById("deleteOrderButton");
     deleteOrderButton.addEventListener('click', function () {
         deleteLastOrder(currentUserLogged.id);
+        userWindow.remove();
         requestUserPage(currentUserLogged.id);
     })
 };
@@ -203,7 +220,7 @@ function openUserPage(content) {
 function deleteLastOrder(id) {
     id = JSON.stringify({ "id": id });
     let deleteOrderResponse = postRequest('./client/deleteLastOrder/', null, id);
-    return;
+    return deleteOrderResponse;
 }
 
 function userIndicLogged() {
