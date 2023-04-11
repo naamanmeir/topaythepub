@@ -372,12 +372,12 @@
     text-align: left;
 }
 
-.item counts {
+.itemCount {
     z-index: 500;
 }
 
-.item count {
-    z-index: 500;
+.itemCount {
+    z-index: 5500;
     width: auto;
     height: 100%;
     display: block;
