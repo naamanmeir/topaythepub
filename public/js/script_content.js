@@ -26,7 +26,7 @@ const userIndic = document.getElementById("userIndic");
 let userWindow;
 
 //-----------------FUNCTIONAL GLOBALS-----------------//
-let orderData = [];
+let orderData = {};
 
 //------------------------ OBJECT EVENT LISTENERS ------------------------//
 
@@ -53,7 +53,6 @@ searchBox1.addEventListener('input', function () {
     sendQuery(input);
 });
 buttonOrder.addEventListener('click', function () {
-    console.log("button order click");
     buttonOrderClick();
 });
 buttonCancel.addEventListener('click', function () {
@@ -170,46 +169,34 @@ function userLogged(data) {
 };
 
 function orderManage(data) {
-    console.log(data);
-    console.log(orderData);
     if (data === "abort") { console.log("abort"); return; }
     if (data === "placeOrder") {
-        console.log("placeOrder");
         if (orderData.length == 0) { console.log("no order yet"); return; }
-        let countItems = {};
         console.log(orderData);
-        orderData.forEach(item => {
-            countItems[item] = (countItems[item] || 0) + 1
-        });
-        console.log(countItems);
-        return;
-    }
-    if (Number.isInteger(data)) {
-        orderData.push(data);
+        orderData['userId'] = currentUserLogged.id;
+        console.log("place order:");
         console.log(orderData);
         return;
     }
+};
+
+function requestOrderPage(order) {
+    console.log("request order page for order: " + order);
+    order = JSON.stringify({ "order": order });
+    postRequest('./client/requestOrderPage/', window.parent.openOrderConfirm, order);
+    return;
+};
+
+function openOrderConfirm(content) {
+    console.log("ORDER CONFIRM PAGE");
+    console.log(content);
 }
 
 function addItem(item) {
     console.log(item);
-    if (Number(item) < 100 && Number(item) > 0) {
-        orderManage(Number(item));
-    };
+    orderData[item] = (orderData[item] || 0) + 1;
+    console.log(orderData);
     return;
-
-
-    // if (sideMenu) { return };
-    // const itemCount = Array.from(document.getElementsByClassName("itemCount"));
-    // console.log(itemCount);
-    // if (itemCount[item].innerText == "" || itemCount[item].innerText == null) {
-    //     itemCount[item].innerText = 1;
-    // } else {
-    //     let current = itemCount[item].innerText;
-    //     if (current < 99) itemCount[item].innerText = (parseInt(current) + 1);
-    // }
-    // let itemsBought = parseInt(itemCount[item].innerText);
-    // orderArray[item] = [itemsBought, products[item][1], products[item][2]];
 };
 
 function displayUserPageButton() {

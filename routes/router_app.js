@@ -62,7 +62,7 @@ routerApp.get('/about', function (req, res) {
     res.render('about');
 });
 
-//--------------------------------PRODUCTS-------------------------------//
+//--------------------------------ELEMENTS-------------------------------//
 
 routerApp.get('/getProducts/', async (req, res) => {
     let itemArrayToHtml = require("../module/buildItemHtml");
@@ -83,33 +83,6 @@ routerApp.get('/getProductsJson/', async (req, res) => {
         products.push(JSON.parse(JSON.stringify(row)));
     });
     res.send(products);
-});
-
-routerApp.get('/placeOrder/:data', async function (req, res) {
-    console.log("ORDER: ");
-    console.log(now);
-    // console.log(req.params.data);
-    const orderData = (req.params.data).split(',');
-    // console.log(orderData);
-    let clientId = orderData[orderData.length - 1];
-    let totalPrice = orderData[orderData.length - 2];
-    // console.log(clientId);
-    // console.log(totalPrice);
-    let orderInfo;
-    for (let i = 0; i < orderData.length - 2; i = i + 2) {
-        if (orderInfo == null || orderInfo == "") {
-            orderInfo = (orderData[i] + "-" + orderData[i + 1] + ".");
-        } else {
-            orderInfo += (orderData[i] + "-" + orderData[i + 1] + ".");
-        }
-    }
-    console.log("order info: " + orderInfo);
-    var orderDate = now;
-    var orderTime = now;
-    // console.log("date: "+orderDate+" time: "+orderTime+" id: "+id+" ,item1: "+item1+" ,item2:"+item2+" ,item3: "+item3+" ,item4: "+item4);
-    let orderResult;
-    orderResult = await db.dbInsertOrderToOrders(orderTime, clientId, orderInfo, totalPrice).then((orderResult) => { return (orderResult) });
-    res.send(orderResult);
 });
 
 //--------------------------------USERS-------------------------------//
