@@ -1,20 +1,4 @@
-.tableEven {
-    background-color: lightblue;
-}
-
-.tableOdd {
-    background-color: lightskyblue;
-}
-
-.userInfoChangeNick {
-    background-color: rgb(106, 106, 106);
-}
-
-.userInfoTable {
-    direction: ltr;
-}
-
-.userInfo {
+.window {
     z-index: 4500;
     position: absolute;
     max-height: 90%;
@@ -31,17 +15,33 @@
     text-align: right;
 }
 
-.userInfoTop {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.userInfoText {
+.window p {
     margin: 0px 0px 0px 0px;
     padding: 0px 0px 0px 0px;
     margin-right: 7%;
     color: rgb(201, 138, 3);
+}
+
+.tableEven {
+    background-color: lightblue;
+}
+
+.tableOdd {
+    background-color: lightskyblue;
+}
+
+.userInfoChangeNick {
+    background-color: rgb(106, 106, 106);
+}
+
+.userInfoTable {
+    direction: ltr;
+}
+
+.windowTop {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .userInfoChangeNickDiv {
@@ -88,7 +88,7 @@
 }
 
 .userInfoTableDiv {
-    position: relative;
+    /* position: relative; */
     max-height: 70%;
     width: 95%;
     top: 0px;

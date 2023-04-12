@@ -80,8 +80,8 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
     if (!req.body.order && !req.body.userId) { res.end(); return; }
     let orderData = Object.entries(req.body.order);
     for (i = 0; i < orderData.length; i++) {
-        if (orderData[i][0] < 0 ||
-            orderData[i][0] > 99 ||
+        if (orderData[i][1] < 0 ||
+            orderData[i][1] > 99 ||
             !Number.isInteger(orderData[i][1])) {
             console.log("ERROR WITH ITEMS QUANTITY");
             res.send(JSON.stringify({ 'errorClient': messageError.orderQuantity }));
@@ -102,7 +102,6 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
         let itemRaw = [orderData[i][1], itemData[0].itemname, itemData[0].price, (itemData[0].price * orderData[i][1]), itemData[0].itemimgpath]
         orderBuiltData[i] = itemRaw;
         orderPriceSum += (itemData[0].price * orderData[i][1]);
-        console.log(orderPriceSum);
     };
     console.log(orderBuiltData);
     console.log(orderPriceSum);
@@ -110,14 +109,14 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(userId);
     loggedUserDetails = JSON.stringify({
-        'id': req.body.id,
+        'id': userId,
         'name': loggedUserDetails[0].name,
         'nick': loggedUserDetails[0].nick,
         'account': loggedUserDetails[0].account,
         'message': messageClient.logged
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
-    let html = orderConfirmPage.buildOrderConfirm(loggedUserDetails, orderData);
+    let html = orderConfirmPage.buildOrderConfirm(loggedUserDetails, orderBuiltData);
     res.send(html);
     console.log("SENT ORDER CONFIRMATION PAGE AS HTML")
     delete require.cache[require.resolve("../module/buildOrderConfirm")];

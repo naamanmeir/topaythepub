@@ -206,18 +206,14 @@ function openOrderConfirm(content) {
     orderConfirmWindow.setAttribute("id", "userInfoWindow");
     orderConfirmWindow.innerHTML = (content);
     document.body.appendChild(orderConfirmWindow);
+    let closeButton = document.getElementById("orderConfirmCloseButton");
+    closeButton.addEventListener('click', function () {
+        orderConfirmWindow.remove();
+    });
     divFullPage.addEventListener('click', function () {
         orderConfirmWindow.remove();
     });
-    let deleteOrderButton = document.getElementById("deleteOrderButton");
-    deleteOrderButton.addEventListener('click', function () {
-        deleteLastOrder(currentUserLogged.id);
-        orderConfirmWindow.remove();
-        requestUserPage(currentUserLogged.id);
-    })
-}
-
-
+};
 
 function displayUserPageButton() {
     if (currentUserLogged != null);
@@ -254,7 +250,7 @@ function openUserPage(content) {
         deleteLastOrder(currentUserLogged.id);
         userWindow.remove();
         requestUserPage(currentUserLogged.id);
-    })
+    });
 };
 
 function deleteLastOrder(id) {

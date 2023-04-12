@@ -21,7 +21,12 @@
             "userPageTableSum": "סכום",
             "userPageButtonDeleteOrder": "למחוק רישום אחרון",
             "userPageButtonDeleteOrderYes": "בצע מחיקה",
-            "userPageButtonDeleteOrderNo": "בטל מחיקה"
+            "userPageButtonDeleteOrderNo": "בטל מחיקה",
+            "orderConfirmButtonYes": "בצע רישום",
+            "orderConfirmButtonNo": "בטל רישום",
+            "orderConfirmTitle": "אישור רישום",
+            "orderConfirmHello": "היי",
+            "orderConfirmText1": "נא לאשר רישום של:"
         }
     ],
     "client": [
