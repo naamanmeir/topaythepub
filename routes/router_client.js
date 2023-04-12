@@ -5,6 +5,7 @@ const db = require('../db');
 let messagesJson = require('../messages.json');
 let messageClient = messagesJson.client[0];
 let messageUi = messagesJson.ui[0];
+let messageError = messagesJson.error[0];
 
 //------------------------CLIENT UI COMMANDS-------------------//
 
@@ -67,46 +68,67 @@ routerClient.post('/getUserPage/', async (req, res) => {
     return;
 });
 
-routerClient.post('/getUserInfo/:data', async (req, res) => {
-    let clientId = JSON.parse(req.params.data);
-    let clientInfo = await db.dbGetClientInfoById(clientId);
-    res.send(clientInfo)
-});
+// routerClient.post('/getUserInfo/:data', async (req, res) => {
+//     let clientId = JSON.parse(req.params.data);
+//     let clientInfo = await db.dbGetClientInfoById(clientId);
+//     res.send(clientInfo)
+// });
 
 //------------------------CLIENT USER ACTIONS-------------------//
+
+routerClient.post('/requestOrderPage/', async (req, res) => {
+    if (!req.body.order && !req.body.userId) { res.end(); return; }
+    let orderData = Object.entries(req.body.order);
+    for (i = 0; i < orderData.length; i++) {
+        if (orderData[i][0] < 0 ||
+            orderData[i][0] > 99 ||
+            !Number.isInteger(orderData[i][1])) {
+            console.log("ERROR WITH ITEMS QUANTITY");
+            res.send(JSON.stringify({ 'errorClient': messageError.orderQuantity }));
+            res.end();
+            return;
+        };
+    };
+    let userId = req.body.userId;
+    console.log("request order confirmation for order: ");
+    console.log(orderData);
+    console.log("for user id: ");
+    console.log(userId);
+    let orderConfirmPage = require("../module/buildOrderConfirm");
+    let orderBuiltData = [];
+    var orderPriceSum = 0;
+    for (i = 0; i < orderData.length; i++) {
+        let itemData = await db.dbGetProductDetailsById(orderData[i][0])
+        let itemRaw = [orderData[i][1], itemData[0].itemname, itemData[0].price, (itemData[0].price * orderData[i][1]), itemData[0].itemimgpath]
+        orderBuiltData[i] = itemRaw;
+        orderPriceSum += (itemData[0].price * orderData[i][1]);
+        console.log(orderPriceSum);
+    };
+    console.log(orderBuiltData);
+    console.log(orderPriceSum);
+
+    let loggedUserDetails = [];
+    loggedUserDetails = await db.dbGetClientDetailsById(userId);
+    loggedUserDetails = JSON.stringify({
+        'id': req.body.id,
+        'name': loggedUserDetails[0].name,
+        'nick': loggedUserDetails[0].nick,
+        'account': loggedUserDetails[0].account,
+        'message': messageClient.logged
+    });
+    loggedUserDetails = JSON.parse(loggedUserDetails);
+    let html = orderConfirmPage.buildOrderConfirm(loggedUserDetails, orderData);
+    res.send(html);
+    console.log("SENT ORDER CONFIRMATION PAGE AS HTML")
+    delete require.cache[require.resolve("../module/buildOrderConfirm")];
+    return;
+});
 
 routerClient.post('/placeOrder/', async function (req, res) {
     console.log("ORDER: ");
     console.log(now);
     console.log(req.body.orderData);
     const orderData = (req.body.orderData);
-    let clientId = orderData[orderData.length - 1];
-    let totalPrice = orderData[orderData.length - 2];
-    // console.log(clientId);
-    // console.log(totalPrice);
-    let orderInfo;
-    for (let i = 0; i < orderData.length - 2; i = i + 2) {
-        if (orderInfo == null || orderInfo == "") {
-            orderInfo = (orderData[i] + "-" + orderData[i + 1] + ".");
-        } else {
-            orderInfo += (orderData[i] + "-" + orderData[i + 1] + ".");
-        }
-    }
-    console.log("order info: " + orderInfo);
-    var orderDate = now;
-    var orderTime = now;
-    // console.log("date: "+orderDate+" time: "+orderTime+" id: "+id+" ,item1: "+item1+" ,item2:"+item2+" ,item3: "+item3+" ,item4: "+item4);
-    let orderResult;
-    orderResult = await db.dbInsertOrderToOrders(orderTime, clientId, orderInfo, totalPrice).then((orderResult) => { return (orderResult) });
-    res.send(orderResult);
-});
-
-routerClient.get('/placeOrder/:data', async function (req, res) {
-    console.log("ORDER: ");
-    console.log(now);
-    // console.log(req.params.data);
-    const orderData = (req.params.data).split(',');
-    // console.log(orderData);
     let clientId = orderData[orderData.length - 1];
     let totalPrice = orderData[orderData.length - 2];
     // console.log(clientId);

@@ -168,21 +168,30 @@ function userLogged(data) {
     userIndicLogged();
 };
 
+function addItem(item) {
+    // item = "item" + item;
+    console.log(item);
+    orderData[item] = (orderData[item] || 0) + 1;
+    console.log(orderData);
+    return;
+};
+
 function orderManage(data) {
     if (data === "abort") { console.log("abort"); return; }
     if (data === "placeOrder") {
         if (orderData.length == 0) { console.log("no order yet"); return; }
+        // console.log(orderData);
+        // orderData['userId'] = currentUserLogged.id;
+        orderData = JSON.stringify({ "order": orderData, "userId": parseInt(currentUserLogged.id) });
+        console.log("request order confirm:");
         console.log(orderData);
-        orderData['userId'] = currentUserLogged.id;
-        console.log("place order:");
-        console.log(orderData);
+        requestOrderPage(orderData)
         return;
     }
 };
 
 function requestOrderPage(order) {
     console.log("request order page for order: " + order);
-    order = JSON.stringify({ "order": order });
     postRequest('./client/requestOrderPage/', window.parent.openOrderConfirm, order);
     return;
 };
@@ -190,14 +199,25 @@ function requestOrderPage(order) {
 function openOrderConfirm(content) {
     console.log("ORDER CONFIRM PAGE");
     console.log(content);
+    if (document.getElementById("orderConfirmPage")) { document.getElementById("orderConfirmPage").remove; };
+    let orderConfirmWindow = null;
+    orderConfirmWindow = document.createElement('div');
+    orderConfirmWindow.className = ("userInfo");
+    orderConfirmWindow.setAttribute("id", "userInfoWindow");
+    orderConfirmWindow.innerHTML = (content);
+    document.body.appendChild(orderConfirmWindow);
+    divFullPage.addEventListener('click', function () {
+        orderConfirmWindow.remove();
+    });
+    let deleteOrderButton = document.getElementById("deleteOrderButton");
+    deleteOrderButton.addEventListener('click', function () {
+        deleteLastOrder(currentUserLogged.id);
+        orderConfirmWindow.remove();
+        requestUserPage(currentUserLogged.id);
+    })
 }
 
-function addItem(item) {
-    console.log(item);
-    orderData[item] = (orderData[item] || 0) + 1;
-    console.log(orderData);
-    return;
-};
+
 
 function displayUserPageButton() {
     if (currentUserLogged != null);

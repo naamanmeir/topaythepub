@@ -665,4 +665,12 @@ exports.dbGetItemsBought = async function () {
   return itemsBought;
 };
 
+//----------------------GET PRODUCTS INFO FOR ORDER---------------------//
+
+exports.dbGetProductDetailsById = async function (itemId) {
+  itemDetails = await pool.query(`SELECT itemnumber,itemname,price,itemimgpath FROM ${tableProducts}
+ WHERE itemid = ${itemId};`);
+  return itemDetails;
+};
+
   // this.dbGetItemsBought();
