@@ -1,39 +1,36 @@
-exports.buildOrderConfirm = function (userInfo, orderData) {
+exports.buildOrderConfirm = function (userInfo, orderData, orderPriceSum) {
     let messagesJson = require('../messages.json');
     let messageClient = messagesJson.client[0];
     let messageUi = messagesJson.ui[0];
 
     console.log("REQUEST ORDER CONFIRM MODULE START");
-    console.log(userInfo);
     let html = ``;
     html += `<head>
             <link rel="stylesheet" href="./css/windowStyle.css">
-            </head>
+            </head>            
             <div class="window" id="OrderConfirmWindow">
-            <div class="userInfoCloseButton" id="orderConfirmCloseButton">X</div>
-            <div class="windowTop">
-            <div><p>${messageUi.orderConfirmTitle}</p></div>
-            <br>
-            <div><p>${messageUi.orderConfirmHello} ${userInfo.nick}</p></div>
-            <div><p></p></div>
-            </div>
+            <div class="windowTop"><p>${messageUi.orderConfirmTitle}</p></div>
+            <div class="userInfoCloseButton" id="orderConfirmCloseButton">X</div>            
+            <div class="windowTop"><p>${messageUi.orderConfirmHello} ${userInfo.nick}</p></div>
+            <div><p></p></div>            
             <br>
             <div class="orderInfo">
-            <p>${messageUi.orderConfirmText1}<p>`
+            <p>${messageUi.orderConfirmPleaseAprove}<p>`
     for (i = 0; i < orderData.length; i++) {
         html += `<div class="orderConfirmItem">
-        <p>${orderData[i][0]} ${orderData[i][1]} ${orderData[i][2]}
-        ${orderData[i][3]}</p>
-        <img src="${orderData[i][4]}" width="50px" height="50px">
+        <p>${orderData[i][0]} ${orderData[i][1]} ${messageUi.orderConfirmPrice} ${messageUi.orderConfirmCurrency}${orderData[i][2]}
+        ${messageUi.orderConfirmSum} ${messageUi.orderConfirmCurrency}${orderData[i][3]}
+                <img src="${orderData[i][4]}" width="30px" height="30px"></p>        
         </div>`
     };
+    html += `<br><p>${messageUi.orderConfirmTotalSum} ${messageUi.orderConfirmCurrency}${orderPriceSum}</p>`
+    html += `<br><p>${messageUi.orderConfirmToName} ${userInfo.name} &emsp;
+    ${messageUi.orderConfirmToAccount} ${userInfo.account}</p>><br>`
+
     html += `</div><div class="windowButtons">`
-    html += `<button class="'windowButton'" id="orderConfirmNoButton">${messageUi.orderConfirmButtonNo}</button>`;
-    html += `<button class="'windowButton'" id="orderConfirmYesButton">${messageUi.orderConfirmButtonYes}</button>`;
+    html += `<button class="windowButton" id="orderConfirmButtonNo">${messageUi.orderConfirmButtonNo}</button>`;
+    html += `<button class="windowButton" id="orderConfirmButtonYes">${messageUi.orderConfirmButtonYes}</button>`;
     html += `</div>
         </div>`;
     return html;
 };
-
-{/* <p>${messageUi.userPageAccount}${userInfo.account}</p> */ }
-{/* <p>${messageUi.userPageId}${userInfo.id}</p>=> */ }

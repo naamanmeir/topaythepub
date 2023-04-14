@@ -26,7 +26,13 @@
             "orderConfirmButtonNo": "בטל רישום",
             "orderConfirmTitle": "אישור רישום",
             "orderConfirmHello": "היי",
-            "orderConfirmText1": "נא לאשר רישום של:"
+            "orderConfirmPleaseAprove": "נא לאשר רישום של:",
+            "orderConfirmCurrency": "₪",
+            "orderConfirmSum": "בסך הכל :",
+            "orderConfirmPrice": "שעולה :",
+            "orderConfirmTotalSum": "סך כל הרישום :",
+            "orderConfirmToName": "לחשבון :",
+            "orderConfirmToAccount": "מספר :"
         }
     ],
     "client": [
@@ -34,7 +40,8 @@
             "logged": "משתמש מחובר",
             "notExist": "משתמש לא קיים",
             "enterName": "בחרו את שמכם מהרשימה",
-            "notUsed": "הכניסו שם"
+            "notUsed": "הכניסו שם",
+            "orderMessage": "הזמנה נרשמת"
         }
     ],
     "error": [

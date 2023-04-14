@@ -12,6 +12,7 @@ let messageError = messagesJson.error[0];
 //------------------------CLIENT USER COMMANDS-------------------//
 
 routerClient.post('/searchName/', async (req, res) => {
+    if (!req.body || req.body == null) { res.end(); return; };
     console.log(req.body);
     var query = (req.body.name);
     if (query == "-") {
@@ -78,6 +79,7 @@ routerClient.post('/getUserPage/', async (req, res) => {
 
 routerClient.post('/requestOrderPage/', async (req, res) => {
     if (!req.body.order && !req.body.userId) { res.end(); return; }
+    let orderDataRaw = req.body;
     let orderData = Object.entries(req.body.order);
     for (i = 0; i < orderData.length; i++) {
         if (orderData[i][1] < 0 ||
@@ -98,14 +100,13 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
     let orderBuiltData = [];
     var orderPriceSum = 0;
     for (i = 0; i < orderData.length; i++) {
-        let itemData = await db.dbGetProductDetailsById(orderData[i][0])
-        let itemRaw = [orderData[i][1], itemData[0].itemname, itemData[0].price, (itemData[0].price * orderData[i][1]), itemData[0].itemimgpath]
+        let itemData = await db.dbGetProductDetailsById(orderData[i][0]);
+        let itemRaw = [orderData[i][1], itemData[0].itemname, itemData[0].price, (itemData[0].price * orderData[i][1]), itemData[0].itemimgpath];
         orderBuiltData[i] = itemRaw;
         orderPriceSum += (itemData[0].price * orderData[i][1]);
     };
     console.log(orderBuiltData);
     console.log(orderPriceSum);
-
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(userId);
     loggedUserDetails = JSON.stringify({
@@ -113,39 +114,40 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
         'name': loggedUserDetails[0].name,
         'nick': loggedUserDetails[0].nick,
         'account': loggedUserDetails[0].account,
-        'message': messageClient.logged
+        'message': messageClient.orderMessage
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
-    let html = orderConfirmPage.buildOrderConfirm(loggedUserDetails, orderBuiltData);
-    res.send(html);
+    let html = orderConfirmPage.buildOrderConfirm(loggedUserDetails, orderBuiltData, orderPriceSum);
+    orderBuiltData = JSON.stringify(orderBuiltData);
+    let htmlOrderData = { "html": html, "orderData": orderDataRaw, "totalSum": orderPriceSum };
+    orderBuiltData = JSON.stringify(htmlOrderData);
+    // console.log(htmlOrderData);
+    res.send(htmlOrderData);
     console.log("SENT ORDER CONFIRMATION PAGE AS HTML")
     delete require.cache[require.resolve("../module/buildOrderConfirm")];
     return;
 });
 
 routerClient.post('/placeOrder/', async function (req, res) {
-    console.log("ORDER: ");
-    console.log(now);
-    console.log(req.body.orderData);
-    const orderData = (req.body.orderData);
-    let clientId = orderData[orderData.length - 1];
-    let totalPrice = orderData[orderData.length - 2];
-    // console.log(clientId);
-    // console.log(totalPrice);
-    let orderInfo;
-    for (let i = 0; i < orderData.length - 2; i = i + 2) {
-        if (orderInfo == null || orderInfo == "") {
-            orderInfo = (orderData[i] + "-" + orderData[i + 1] + ".");
-        } else {
-            orderInfo += (orderData[i] + "-" + orderData[i + 1] + ".");
-        }
-    }
+    if (!req.body.order && !req.body.userId) { res.end(); return; };
+    var now = new Date();
+    let orderData = Object.entries(req.body.order);
+    let userId = req.body.userId;
+    let orderInfo = '';
+    var orderPriceSum = 0;
+    for (i = 0; i < orderData.length; i++) {
+        let itemData = await db.dbGetProductDetailsById(orderData[i][0]);
+        orderInfo += (itemData[0].itemname + " - " + orderData[i][1] + ", ");
+        orderPriceSum += (itemData[0].price * orderData[i][1]);
+    };
+    console.log("NEW ORDER: ");
     console.log("order info: " + orderInfo);
-    var orderDate = now;
+    console.log("total sum: " + orderPriceSum);
+    console.log("user id: " + userId);
+    console.log("at time: " + now);
     var orderTime = now;
-    // console.log("date: "+orderDate+" time: "+orderTime+" id: "+id+" ,item1: "+item1+" ,item2:"+item2+" ,item3: "+item3+" ,item4: "+item4);
     let orderResult;
-    orderResult = await db.dbInsertOrderToOrders(orderTime, clientId, orderInfo, totalPrice).then((orderResult) => { return (orderResult) });
+    orderResult = await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) });
     res.send(orderResult);
 });
 

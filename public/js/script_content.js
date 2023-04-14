@@ -157,7 +157,6 @@ function userLogin(id) {
 
 function userLogged(data) {
     if (data == null || data == '') { console.log("ERROR WITH DB"); return; }
-    console.log(JSON.parse(data));
     currentUserLogged = JSON.parse(data);
     console.log(`CURRENT USER LOGGED: 
     ${currentUserLogged.nick} , 
@@ -169,10 +168,7 @@ function userLogged(data) {
 };
 
 function addItem(item) {
-    // item = "item" + item;
-    console.log(item);
     orderData[item] = (orderData[item] || 0) + 1;
-    console.log(orderData);
     return;
 };
 
@@ -180,8 +176,6 @@ function orderManage(data) {
     if (data === "abort") { console.log("abort"); return; }
     if (data === "placeOrder") {
         if (orderData.length == 0) { console.log("no order yet"); return; }
-        // console.log(orderData);
-        // orderData['userId'] = currentUserLogged.id;
         orderData = JSON.stringify({ "order": orderData, "userId": parseInt(currentUserLogged.id) });
         console.log("request order confirm:");
         console.log(orderData);
@@ -198,7 +192,10 @@ function requestOrderPage(order) {
 
 function openOrderConfirm(content) {
     console.log("ORDER CONFIRM PAGE");
-    console.log(content);
+    orderDataReturn = JSON.parse(content).orderData;
+    orderDataReturn = JSON.stringify(orderDataReturn);
+    totalSumReturn = JSON.parse(content).totalSum;
+    content = JSON.parse(content).html;
     if (document.getElementById("orderConfirmPage")) { document.getElementById("orderConfirmPage").remove; };
     let orderConfirmWindow = null;
     orderConfirmWindow = document.createElement('div');
@@ -207,13 +204,44 @@ function openOrderConfirm(content) {
     orderConfirmWindow.innerHTML = (content);
     document.body.appendChild(orderConfirmWindow);
     let closeButton = document.getElementById("orderConfirmCloseButton");
+    let orderConfirmButtonNo = document.getElementById("orderConfirmButtonNo");
     closeButton.addEventListener('click', function () {
+        orderClear();
         orderConfirmWindow.remove();
     });
-    divFullPage.addEventListener('click', function () {
+    orderConfirmButtonNo.addEventListener('click', function () {
+        orderClear();
+        orderConfirmWindow.remove();
+    });
+    orderConfirmButtonYes.addEventListener('click', function () {
+        if (!validateOrder(orderDataReturn)) { console.log("error with order validation"); return; }
+        placeOrder(orderDataReturn)
         orderConfirmWindow.remove();
     });
 };
+
+function validateOrder(orderDataReturn) {
+    return (orderDataReturn === orderData);
+};
+
+function placeOrder(orderDataReturn) {
+    console.log("place order : " + orderDataReturn);
+    postRequest('./client/placeOrder/', window.parent.orderComplete, orderDataReturn);
+    orderClear()
+    return;
+};
+
+function orderClear() {
+    orderData = null;
+    orderData = {};
+    console.log("clear orderData");
+    console.log(orderData);
+};
+
+function orderComplete(content) {
+    console.log(content);
+    console.log("order complete");
+}
 
 function displayUserPageButton() {
     if (currentUserLogged != null);
