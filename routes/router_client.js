@@ -13,7 +13,6 @@ let messageError = messagesJson.error[0];
 
 routerClient.post('/searchName/', async (req, res) => {
     if (!req.body || req.body == null) { res.end(); return; };
-    console.log(req.body);
     var query = (req.body.name);
     if (query == "-") {
         res.send(JSON.stringify("clear"));
@@ -27,11 +26,11 @@ routerClient.post('/searchName/', async (req, res) => {
     };
     names = JSON.stringify(names);
     res.send(names);
+    return;
 });
 
 routerClient.post('/userLogin/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
-    // console.log("login function")
     console.log("USER LOGIN ACCEPTED: " + req.body.id);
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
@@ -44,6 +43,7 @@ routerClient.post('/userLogin/', async (req, res) => {
     });
     console.log("LOGGED USER DETAILS: " + loggedUserDetails)
     res.send(loggedUserDetails);
+    return;
 });
 
 routerClient.post('/getUserPage/', async (req, res) => {
@@ -68,12 +68,6 @@ routerClient.post('/getUserPage/', async (req, res) => {
     delete require.cache[require.resolve("../module/buildUserPage")];
     return;
 });
-
-// routerClient.post('/getUserInfo/:data', async (req, res) => {
-//     let clientId = JSON.parse(req.params.data);
-//     let clientInfo = await db.dbGetClientInfoById(clientId);
-//     res.send(clientInfo)
-// });
 
 //------------------------CLIENT USER ACTIONS-------------------//
 
@@ -105,8 +99,6 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
         orderBuiltData[i] = itemRaw;
         orderPriceSum += (itemData[0].price * orderData[i][1]);
     };
-    console.log(orderBuiltData);
-    console.log(orderPriceSum);
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(userId);
     loggedUserDetails = JSON.stringify({
@@ -121,7 +113,6 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
     orderBuiltData = JSON.stringify(orderBuiltData);
     let htmlOrderData = { "html": html, "orderData": orderDataRaw, "totalSum": orderPriceSum };
     orderBuiltData = JSON.stringify(htmlOrderData);
-    // console.log(htmlOrderData);
     res.send(htmlOrderData);
     console.log("SENT ORDER CONFIRMATION PAGE AS HTML")
     delete require.cache[require.resolve("../module/buildOrderConfirm")];
@@ -130,7 +121,8 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
 
 routerClient.post('/placeOrder/', async function (req, res) {
     if (!req.body.order && !req.body.userId) { res.end(); return; };
-    var now = new Date();
+    var orderTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+    orderTime = orderTime.toString().replace(',', '');
     let orderData = Object.entries(req.body.order);
     let userId = req.body.userId;
     let orderInfo = '';
@@ -144,11 +136,11 @@ routerClient.post('/placeOrder/', async function (req, res) {
     console.log("order info: " + orderInfo);
     console.log("total sum: " + orderPriceSum);
     console.log("user id: " + userId);
-    console.log("at time: " + now);
-    var orderTime = now;
+    console.log("at time: " + orderTime);
     let orderResult;
     orderResult = await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) });
     res.send(orderResult);
+    return;
 });
 
 routerClient.post('/deleteLastOrder/', async (req, res) => {
@@ -156,8 +148,8 @@ routerClient.post('/deleteLastOrder/', async (req, res) => {
     let clientId = JSON.parse(req.body.id);
     let deleteLastOrderResponse;
     deleteLastOrderResponse = await db.dbDeleteLastOrderById(clientId);
-    console.log(deleteLastOrderResponse);
     res.send(deleteLastOrderResponse);
+    return;
 });
 
 module.exports = routerClient;

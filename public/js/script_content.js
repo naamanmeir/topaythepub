@@ -66,7 +66,6 @@ buttonCancel.style.backgroundColor = ("red");
 async function sendQuery(query) {
     if (query == "" || query == null) { return; };
     query = JSON.stringify({ "name": query });
-    console.log("send query: '" + query + "'");
     await postRequest('./client/searchName/', window.parent.parseResponse, query);
     return;
 };
@@ -169,6 +168,14 @@ function userLogged(data) {
 
 function addItem(item) {
     orderData[item] = (orderData[item] || 0) + 1;
+    console.log(orderData);
+    const count = document.getElementById(`itemCount${item}`)
+    if (count.innerText == "" || count.innerText == null) {
+        count.innerText = 1;
+    } else {
+        let current = count.innerText;
+        if (current < 99) count.innerText = (parseInt(current) + 1);
+    }
     return;
 };
 
@@ -227,7 +234,8 @@ function validateOrder(orderDataReturn) {
 function placeOrder(orderDataReturn) {
     console.log("place order : " + orderDataReturn);
     postRequest('./client/placeOrder/', window.parent.orderComplete, orderDataReturn);
-    orderClear()
+    orderClear();
+    clearCounts();
     return;
 };
 
@@ -235,8 +243,17 @@ function orderClear() {
     orderData = null;
     orderData = {};
     console.log("clear orderData");
-    console.log(orderData);
 };
+
+function clearCounts() {
+    let counts = document.getElementsByClassName("itemCount");
+    counts = Array.from(counts);
+    console.log(counts);
+    counts.forEach(count => {
+        count.innerText = "";
+    });
+    return;
+}
 
 function orderComplete(content) {
     console.log(content);
@@ -302,6 +319,15 @@ function userIndicMessage(message) {
 };
 
 function buttonOrderClick() {
+    if (!currentUserLogged || currentUserLogged == null || currentUserLogged.userId == '') {
+        console.log("no user logged");
+        return;
+    }
+    if (!orderData || orderData == null || (Object.keys(orderData).length) <= 0) {
+        console.log("order data is empty");
+        console.log(orderData);
+        return;
+    };
     orderManage("placeOrder");
 };
 function buttonCancelClick() {

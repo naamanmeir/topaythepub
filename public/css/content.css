@@ -377,17 +377,18 @@
 }
 
 .itemCount {
-    z-index: 5500;
+    /* z-index: 5500; */
     width: auto;
     height: 100%;
     display: block;
     transition: 1s;
-    position: absolute;
+    position: relative;
     margin: auto;
+    padding: 0px;
     top: 0px;
     left: 20%;
     bottom: 50%;
-    /* right: 7%; */
+    /* right: 50%; */
     font-size: 6rem;
     color: rgb(0, 255, 55);
     font-style: oblique;

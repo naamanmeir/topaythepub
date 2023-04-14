@@ -8,7 +8,7 @@ exports.buildItemHtml = function (array) {
         <p class="itemName">${item.itemname}</p>
         <img src="${item.itemimgpath}" height="100px">
         <p class="itemPrice">₪${item.price}
-        <div class="itemCount" id="itemCount${item.itemid}">2</div>
+        <div class="itemCount" id="itemCount${item.itemid}"></div>
         </div>
         
         `;

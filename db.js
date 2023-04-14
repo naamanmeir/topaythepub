@@ -362,9 +362,9 @@ exports.dbInsertOrderToOrders = async function (orderTime, clientId, orderInfo, 
   clientName = await this.dbGetClientNameById(clientId);
   clientName[0].name = clientName[0].name.replace(/\'/g, "''");
   orderInfo = orderInfo.replace(/\'/g, "''");
-  insertReturn = await pool.query("INSERT INTO " + tableOrders +
-    " (info,sum,clientid,client)" +
-    " VALUES ('" + orderInfo + "'," + totalPrice + "," + clientId + ",'" + clientName[0].name + "');")
+  insertReturn = await pool.query(`INSERT INTO ${tableOrders} 
+     (time,info,sum,clientid,client)
+      VALUES (now() , '${orderInfo}' , ${totalPrice} , ${clientId} , '${clientName[0].name}');`)
     .then((rows) => {
       // console.log(rows);
       return (rows)
@@ -564,6 +564,7 @@ exports.dbDeleteOldBackups = async function (time) {
     tableDropResponse = await pool.query("DROP TABLE " + tableName + ";");
     console.log(tableDropResponse);
   }
+  return;
 };
 
 //-----------------------RESET CLIENTS ORDERS AFTER REPORT-----------------------//
@@ -573,6 +574,7 @@ exports.dbResetClientOrders = async function () {
   resetClientOrders = await pool.query("UPDATE " + tableClients + " SET sum=0;");
   resetOrders = await pool.query("UPDATE " + tableOrders + " SET sign=1 WHERE sign = 0;");
   console.log(resetClientOrders);
+  return;
 };
 
 //--------------------INSERT NEW PRODUCTS TO DB----------------//
