@@ -364,7 +364,7 @@ exports.dbInsertOrderToOrders = async function (orderTime, clientId, orderInfo, 
   orderInfo = orderInfo.replace(/\'/g, "''");
   insertReturn = await pool.query(`INSERT INTO ${tableOrders} 
      (time,info,sum,clientid,client)
-      VALUES (now() , '${orderInfo}' , ${totalPrice} , ${clientId} , '${clientName[0].name}');`)
+      VALUES ('${orderTime}', '${orderInfo}' , ${totalPrice} , ${clientId} , '${clientName[0].name}');`)
     .then((rows) => {
       // console.log(rows);
       return (rows)
