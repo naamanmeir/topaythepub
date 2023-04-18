@@ -121,8 +121,9 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
 
 routerClient.post('/placeOrder/', async function (req, res) {
     if (!req.body.order && !req.body.userId) { res.end(); return; };
-    // var orderTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
-    var orderTime = new Date().toISOString("HE", { timeZone: "Asia/Jerusalem" }).slice(0, 19).replace('T', ' ');
+    var orderTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+    // var orderTime = new Date().("HE", { timeZone: "Asia/Jerusalem" });
+    orderTime = orderTime.slice(0, 19).replace('T', ' ');
     console.log(orderTime);
     // orderTime = orderTime.toString().replace(',', '');
     let orderData = Object.entries(req.body.order);

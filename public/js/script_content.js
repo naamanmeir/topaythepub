@@ -166,16 +166,17 @@ function userLogged(data) {
     userIndicLogged();
 };
 
-function addItem(item) {
-    orderData[item] = (orderData[item] || 0) + 1;
+function addItem(item) {    
+    if(orderData[item]==99){console.log("MAx is 99");return;};
+    orderData[item] = (orderData[item] || 0) + 1;    
     console.log(orderData);
     const count = document.getElementById(`itemCount${item}`)
-    if (count.innerText == "" || count.innerText == null) {
+    if (count.innerText < (parseInt(1) )) {
         count.innerText = 1;
     } else {
         let current = count.innerText;
         if (current < 99) count.innerText = (parseInt(current) + 1);
-    }
+    };
     return;
 };
 

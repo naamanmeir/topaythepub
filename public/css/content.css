@@ -309,25 +309,24 @@
 
 
 .items {
+    display: flex;
+    flex-direction: column;
     margin: 0 auto;
     width: 100%;
     height: 60%;
     margin-top: 0px;
     margin-bottom: 0px;
     transition: background-color 0.8s ease;
-    /* border: 2px solid orange; */
     overflow-y: auto;
     overflow-x: hidden;
     clear: both;
-    flex-shrink: 2;
 }
 
 .item {
     display: flex;
     flex-direction: row;
-    width: fit-content;
-    max-width: 70%;
-    /* max-height: fit-content; */
+    width: max-content;
+    max-height: fit-content;
     background-color: #61584b81;
     border: 4px outset rgb(240, 152, 0);
     margin: auto;
@@ -346,7 +345,6 @@
     top: 0px;
     padding: 0px;
     margin: 0px;
-    /* height: 5rem; */
     max-width: 6rem;
     clear: both;
 }
@@ -374,8 +372,6 @@
 }
 
 .itemCount {
-    z-index: 5500;
-    /* max-width: 50%; */
     max-height: 100px;
     display: block;
     transition: 1s;
@@ -385,7 +381,6 @@
     top: 0px;
     left: 20%;
     bottom: 50%;
-    /* right: 50%; */
     font-size: 6rem;
     color: rgb(0, 255, 55);
     font-style: oblique;

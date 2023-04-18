@@ -26,8 +26,11 @@ exports.buildUserPage = function (userInfo, userData) {
             <th>${messageUi.userPageTableId}</th></tr>`
         userData.forEach((order, i) => {
                 var bg;
+                let timezone = "Indian/Kerguelen";
+                let time = new Date(order.formatted_date).toLocaleString("he-IL", { timeZone: timezone});
+                console.log(time);
                 if (i % 2 === 0) { bg = 'class="tableEven"' } else { bg = 'class="tableOdd"' };
-                html += `<tr ${bg}><td>${order.sum}</td><td>${order.info}</td><td>${order.formatted_date}</td><td>${order.orderid}</td></tr>`
+                html += `<tr ${bg}><td>${order.sum}</td><td>${order.info}</td><td>${time}</td><td>${order.orderid}</td></tr>`
         });
         html += `</tbody></table></div>`;
         html += `<div class="deleteOrderButton" id="deleteOrderButton">${messageUi.userPageButtonDeleteOrder}</div>`;
