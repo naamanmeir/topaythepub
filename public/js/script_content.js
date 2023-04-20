@@ -38,19 +38,40 @@ searchBox1.addEventListener('focus', function () {
     // console.log("focus");
     searchBox1.placeholder = ("👉👉התחילו לכתוב את שמכם");
     if (searchBox1.value.length > 0) { searchBox1.placeholder = (""); };
+    if (searchBox1.value.length < 1) { searchBox1.placeholder = ("👉👉התחילו לכתוב את שמכם"); };
+    let input = searchBox1.value;
+    input = inputSanitize(input);
+    searchBox1.value = input;
+    if (input == '' || input == null) {
+        clearAutoComplete(autoCompleteDiv);
+        searchIndicator(0, null);
+        return;
+    };
 });
 searchBox1.addEventListener('blur', function () {
     // console.log("blur");
     searchBox1.placeholder = ("שלום הכניסו שם✍👉👉");
+    let input = searchBox1.value;
+    input = inputSanitize(input);
+    searchBox1.value = input;
+    if (input == '' || input == null) {
+        clearAutoComplete(autoCompleteDiv);
+        searchIndicator(0, null);
+        return;
+    };
 });
 searchBox1.addEventListener('input', function () {
     let input = searchBox1.value;
     input = inputSanitize(input);
     searchBox1.value = input;
-    if (input == '' || input == null) { clearAutoComplete(autoCompleteDiv); return; }
+    if (input == '' || input == null) {
+        clearAutoComplete(autoCompleteDiv);
+        searchIndicator(0, null);
+        return;
+    };
     if (searchBox1.value == '') { userIndicMessage('') };
     if (searchBox1.value != '') { userIndicMessage(messageClient.enterName); };
-    sendQuery(input);
+    sendNameSearchQuery(input);
 });
 buttonOrder.addEventListener('click', function () {
     buttonOrderClick();
@@ -63,16 +84,16 @@ buttonCancel.addEventListener('click', function () {
 buttonOrder.style.backgroundColor = ("green");
 buttonCancel.style.backgroundColor = ("red");
 
-async function sendQuery(query) {
+async function sendNameSearchQuery(query) {
     if (query == "" || query == null) { return; };
     query = JSON.stringify({ "name": query });
-    await postRequest('./client/searchName/', window.parent.parseResponse, query);
+    await postRequest('./client/searchName/', window.parent.parseNameSearchResponse, query);
     return;
 };
 
-function parseResponse(data) {
+function parseNameSearchResponse(data) {
     data = JSON.parse(data);
-    // console.log(data);
+    console.log(data);
     if (!data.errorLog && !data.errorClient) { autoComplete(data); return; }
     if (data.errorLog) { console.log(data); return; }
     if (data.errorClient) {
@@ -111,6 +132,9 @@ function autoComplete(names) {
         clearAutoComplete(autoCompleteDiv);
         searchBox1.blur();
     };
+    if (names[0].nick != searchBox1.value || names[0].name != searchBox1.value){
+        searchIndicator(2, names[0].id);
+    }
     if (searchBox1.value.length == 0) { searchIndicator(0); };
     if (searchBox1.value == "") { clearAutoComplete(autoCompleteDiv); }
 };
@@ -128,14 +152,18 @@ function searchIndicator(state, id) {
         case 0:
             console.log("USER STATE INDIC: " + state);
             console.log("USER STATE INDIC: EMPTY");
+            userIndicMessage(messageClient.notUsed);
+            userLogout();
             break;
         case 1:
             console.log("USER STATE INDIC: " + state);
             console.log("USER STATE INDIC: NOT IN LIST");
+            userLogout();
             break;
         case 2:
             console.log("USER STATE INDIC: " + state);
             console.log("USER STATE INDIC: SELECT FROM LIST");
+            userLogout();
             break;
         case 3:
             console.log("USER STATE INDIC: " + state);
@@ -149,6 +177,7 @@ function searchIndicator(state, id) {
 };
 
 function userLogin(id) {
+    currentUserLogged = null;
     console.log("LOGIN USER: " + id);
     id = JSON.stringify({ "id": id });
     postRequest('./client/userLogin/', window.parent.userLogged, id);
@@ -166,8 +195,14 @@ function userLogged(data) {
     userIndicLogged();
 };
 
+function userLogout(){
+    currentUserLogged = null;
+    hideUserPageButton();
+    userIndicMessage(messageClient.notUsed);
+};
+
 function addItem(item) {    
-    if(orderData[item]==99){console.log("MAx is 99");return;};
+    if(orderData[item]==99){console.log("Max is 99");return;};
     orderData[item] = (orderData[item] || 0) + 1;    
     console.log(orderData);
     const count = document.getElementById(`itemCount${item}`)
@@ -264,9 +299,20 @@ function orderComplete(content) {
 function displayUserPageButton() {
     if (currentUserLogged != null);
     userPage.className = "userPageShow";
-    userPage.addEventListener("click", function () {
-        requestUserPage(currentUserLogged.id);
-    })
+    if(userPage.getAttribute('userPageButtonEnableListener')!= 1){
+        userPage.addEventListener("click", function callRequestUserPage() {
+            userPage.setAttribute('userPageButtonEnableListener', 1);
+            requestUserPage(currentUserLogged.id);
+        })
+    };    
+};
+
+function hideUserPageButton() {
+    if (currentUserLogged == null);
+    userPage.className = "userPageHidden";
+    if(userPage.getAttribute('userPageButtonEnableListener')== 1){
+        userPage.removeEventListener("click", requestUserPage)
+    };    
 };
 
 function requestUserPage(id) {
@@ -285,19 +331,26 @@ function openUserPage(content) {
     userWindow.innerHTML = (content);
     document.body.appendChild(userWindow);
     let closeButton = document.getElementById("userPageCloseButton");
-    closeButton.addEventListener('click', function () {
+    closeButton.addEventListener('click', function () {        
+        closeButton.remove();
         userWindow.remove();
     });
     divFullPage.addEventListener('click', function () {
+        closeButton.remove();
         userWindow.remove();
     });
     let deleteOrderButton = document.getElementById("deleteOrderButton");
     deleteOrderButton.addEventListener('click', function () {
         deleteLastOrder(currentUserLogged.id);
+        closeButton.remove();
         userWindow.remove();
         requestUserPage(currentUserLogged.id);
     });
 };
+
+function closeUserWindow(){
+
+}
 
 function deleteLastOrder(id) {
     id = JSON.stringify({ "id": id });

@@ -8,7 +8,7 @@ exports.buildUserPage = function (userInfo, userData) {
             <link rel="stylesheet" href="./css/windowStyle.css">
             </head>
             <div class="window" id="userPageWindow">
-            <div class="userInfoCloseButton" id="userPageCloseButton">X</div>
+            <div class="userInfoCloseButton" id="userPageCloseButton" onClick="closeUserWindow()">X</div>
             <div class="windowTop">
             <p>${messageUi.userPageName}${userInfo.name}</p>
             <p>${messageUi.userPageAccount}${userInfo.account}</p>
@@ -27,8 +27,7 @@ exports.buildUserPage = function (userInfo, userData) {
         userData.forEach((order, i) => {
                 var bg;
                 let timezone = "Indian/Kerguelen";
-                let time = new Date(order.formatted_date).toLocaleString("he-IL", { timeZone: timezone});
-                console.log(time);
+                let time = new Date(order.formatted_date).toLocaleString("he-IL", { timeZone: timezone});                
                 if (i % 2 === 0) { bg = 'class="tableEven"' } else { bg = 'class="tableOdd"' };
                 html += `<tr ${bg}><td>${order.sum}</td><td>${order.info}</td><td>${time}</td><td>${order.orderid}</td></tr>`
         });

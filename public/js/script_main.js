@@ -3,6 +3,7 @@ const timerRefreshMainDivsTime = 9995000;
 const timerRefreshContentTime = 9995000;
 const timerRefreshElementsTime = 9995000;
 const timerRefreshCssTime = 9995000;
+const logOutTime = 40000;
 
 //-----------------RUNTIME PARAMS-----------------//
 const timerClearLoggedUSerTIme = 999999;
@@ -173,6 +174,6 @@ function randomNumberGen() {
 
 function inputSanitize(input) {
     input = input.replace(regexBlock, '');
-    input = input.substring(0, 42);
+    input = input.substring(0, 42);    
     return input;
 };
