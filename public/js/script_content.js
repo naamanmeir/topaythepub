@@ -92,8 +92,7 @@ async function sendNameSearchQuery(query) {
 };
 
 function parseNameSearchResponse(data) {
-    data = JSON.parse(data);
-    console.log(data);
+    data = JSON.parse(data);    
     if (!data.errorLog && !data.errorClient) { autoComplete(data); return; }
     if (data.errorLog) { console.log(data); return; }
     if (data.errorClient) {
@@ -132,7 +131,7 @@ function autoComplete(names) {
         clearAutoComplete(autoCompleteDiv);
         searchBox1.blur();
     };
-    if (names[0].nick != searchBox1.value || names[0].name != searchBox1.value){
+    if (names.length > 0 && names[0].nick != searchBox1.value || names[0].name != searchBox1.value){
         searchIndicator(2, names[0].id);
     }
     if (searchBox1.value.length == 0) { searchIndicator(0); };
@@ -147,31 +146,32 @@ function clearAutoComplete(autoCompleteDiv) {
     return;
 };
 
+//---------------------- USER SEARCH INDICATOR ----------------------//
 function searchIndicator(state, id) {
     switch (state) {
         case 0:
-            console.log("USER STATE INDIC: " + state);
-            console.log("USER STATE INDIC: EMPTY");
+            // console.log("USER STATE INDIC: " + state);
+            // console.log("USER STATE INDIC: EMPTY");
             userIndicMessage(messageClient.notUsed);
             userLogout();
             break;
         case 1:
-            console.log("USER STATE INDIC: " + state);
-            console.log("USER STATE INDIC: NOT IN LIST");
+            // console.log("USER STATE INDIC: " + state);
+            // console.log("USER STATE INDIC: NOT IN LIST");
             userLogout();
             break;
         case 2:
-            console.log("USER STATE INDIC: " + state);
-            console.log("USER STATE INDIC: SELECT FROM LIST");
+            // console.log("USER STATE INDIC: " + state);
+            // console.log("USER STATE INDIC: SELECT FROM LIST");
             userLogout();
             break;
         case 3:
-            console.log("USER STATE INDIC: " + state);
-            console.log("USER STATE INDIC: ACCEPTED");
+            // console.log("USER STATE INDIC: " + state);
+            // console.log("USER STATE INDIC: ACCEPTED");
             userLogin(id);
             break;
         default:
-            console.log("USER STATE INDIC OUT OF SCOPE")
+            // console.log("USER STATE INDIC OUT OF SCOPE")
             break;
     };
 };
@@ -197,8 +197,7 @@ function userLogged(data) {
 
 function userLogout(){
     currentUserLogged = null;
-    hideUserPageButton();
-    userIndicMessage(messageClient.notUsed);
+    hideUserPageButton();    
 };
 
 function addItem(item) {    
