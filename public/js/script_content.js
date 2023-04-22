@@ -24,6 +24,7 @@ const userPage = document.getElementById("userPage");
 const userIndic = document.getElementById("userIndic");
 
 let userWindow;
+let messageWindow;
 
 //-----------------FUNCTIONAL GLOBALS-----------------//
 let orderData = {};
@@ -32,13 +33,15 @@ let orderData = {};
 
 // searchBox1.setAttribute("pattern", regexBlock);
 
-window.onkeydown = function () { searchBox1.focus(); }
+searchBox1.placeholder = (messageClient.inputPlaceholder);
+
+window.onkeydown = function () { searchBox1.focus(); };
 
 searchBox1.addEventListener('focus', function () {
     // console.log("focus");
-    searchBox1.placeholder = ("👉👉התחילו לכתוב את שמכם");
+    searchBox1.placeholder = (messageClient.inputPlaceholder);
     if (searchBox1.value.length > 0) { searchBox1.placeholder = (""); };
-    if (searchBox1.value.length < 1) { searchBox1.placeholder = ("👉👉התחילו לכתוב את שמכם"); };
+    if (searchBox1.value.length < 1) { searchBox1.placeholder = (messageClient.inputPlaceholder); };
     let input = searchBox1.value;
     input = inputSanitize(input);
     searchBox1.value = input;
@@ -50,7 +53,7 @@ searchBox1.addEventListener('focus', function () {
 });
 searchBox1.addEventListener('blur', function () {
     // console.log("blur");
-    searchBox1.placeholder = ("שלום הכניסו שם✍👉👉");
+    searchBox1.placeholder = (messageClient.inputPlaceholder);
     let input = searchBox1.value;
     input = inputSanitize(input);
     searchBox1.value = input;
@@ -92,7 +95,7 @@ async function sendNameSearchQuery(query) {
 };
 
 function parseNameSearchResponse(data) {
-    data = JSON.parse(data);    
+    data = JSON.parse(data);
     if (!data.errorLog && !data.errorClient) { autoComplete(data); return; }
     if (data.errorLog) { console.log(data); return; }
     if (data.errorClient) {
@@ -347,7 +350,13 @@ function openUserPage(content) {
     });
 };
 
-function closeUserWindow(){
+function openMessageWindow(message){
+    console.log("message:"+message);
+    // messageWindow = document.createElement('div');
+    // messageWindow.className = ("errorMessage");
+    // messageWindow.innerHTML = (message);
+    // document.body.appendChild(messageWindow);
+
 
 }
 
@@ -355,7 +364,7 @@ function deleteLastOrder(id) {
     id = JSON.stringify({ "id": id });
     let deleteOrderResponse = postRequest('./client/deleteLastOrder/', null, id);
     return deleteOrderResponse;
-}
+};
 
 function userIndicLogged() {
     let par = document.createElement("p");

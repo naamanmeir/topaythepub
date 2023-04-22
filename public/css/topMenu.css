@@ -14,11 +14,12 @@
     display: inline-block;
     vertical-align: top;
     text-align: center;
-    margin: 0% 10% 0% 10%;
+    margin: 0px 4rem 0px 4rem;
 }
 
 #userIndic {
     /* background-color: green; */
+    width: 4rem;
 }
 
 #userPage {

@@ -14,10 +14,6 @@ let messageError = messagesJson.error[0];
 routerClient.post('/searchName/', async (req, res) => {
     if (!req.body || req.body == null) { res.end(); return; };
     var query = (req.body.name);
-    if (query == "-") {
-        res.send(JSON.stringify("clear"));
-        return;
-    };
     let names = [];
     names = (await db.dbGetNameBySearch(query));
     if (names.length == 0) {

@@ -38,10 +38,11 @@
     ],
     "client": [
         {
+            "inputPlaceholder": "👉👉התחילו לכתוב את שמכם",
             "logged": "משתמש מחובר",
             "notExist": "משתמש לא קיים",
             "enterName": "בחרו את שמכם מהרשימה",
-            "notUsed": "הכניסו שם",
+            "notUsed": "נא לכתוב שם משתמש",
             "orderMessage": "הזמנה נרשמת"
         }
     ],

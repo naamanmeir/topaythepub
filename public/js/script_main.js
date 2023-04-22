@@ -107,7 +107,10 @@ async function getRequest(url, callback, data) {
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             // console.log("RESPONSE: " + this.response);
-            if (callback != null) { callback(this.response); }
+            if (this.response.errorClient){
+                window.parent.openMessageWindow(this.response.errorClient)
+            };
+            if (callback != null) { callback(this.response); }            
             return this.response;
         };
     };
@@ -123,8 +126,13 @@ async function postRequest(url, callback, data) {
     console.log("SENDING DATA AS JSON: " + data);
     xhttp.send(data);
     xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            // console.log("RESPONSE: " + this.response);
+        if (this.readyState == 4 && this.status == 200) {            
+            console.log("RESPONSE: ");
+            // console.log(this.response);
+            let parsedReponse = JSON.parse(this.response);
+            if (parsedReponse.errorClient){
+                window.parent.openMessageWindow(parsedReponse.errorClient)
+            };
             if (callback != null) { callback(this.response); }
             return this.response;
         };
@@ -140,6 +148,9 @@ async function postRequest_bk(url, callback, data) {
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             // console.log("RESPONSE: " + this.response);
+            if (this.response.errorClient){
+                window.parent.openMessageWindow(this.response.errorClient)
+            };
             if (callback != null) { callback(this.response); }
             return this.response;
         };
