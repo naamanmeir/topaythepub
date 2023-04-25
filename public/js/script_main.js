@@ -127,13 +127,14 @@ async function postRequest(url, callback, data) {
     xhttp.send(data);
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {            
-            console.log("RESPONSE: ");
+            // console.log("RESPONSE: ");
             // console.log(this.response);
             let parsedReponse = JSON.parse(this.response);
+            // console.log(parsedReponse);
             if (parsedReponse.errorClient){
                 window.parent.openMessageWindow(parsedReponse.errorClient)
             };
-            if (callback != null) { callback(this.response); }
+            if (callback != null) { callback(parsedReponse); }
             return this.response;
         };
     };

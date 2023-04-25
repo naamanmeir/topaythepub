@@ -94,8 +94,7 @@ async function sendNameSearchQuery(query) {
     return;
 };
 
-function parseNameSearchResponse(data) {
-    data = JSON.parse(data);
+function parseNameSearchResponse(data) {    
     if (!data.errorLog && !data.errorClient) { autoComplete(data); return; }
     if (data.errorLog) { console.log(data); return; }
     if (data.errorClient) {
@@ -188,7 +187,7 @@ function userLogin(id) {
 
 function userLogged(data) {
     if (data == null || data == '') { console.log("ERROR WITH DB"); return; }
-    currentUserLogged = JSON.parse(data);
+    currentUserLogged = data;
     console.log(`CURRENT USER LOGGED: 
     ${currentUserLogged.nick} , 
     ${currentUserLogged.name} , 
@@ -237,10 +236,10 @@ function requestOrderPage(order) {
 
 function openOrderConfirm(content) {
     console.log("ORDER CONFIRM PAGE");
-    orderDataReturn = JSON.parse(content).orderData;
+    orderDataReturn = content.orderData;
     orderDataReturn = JSON.stringify(orderDataReturn);
-    totalSumReturn = JSON.parse(content).totalSum;
-    content = JSON.parse(content).html;
+    totalSumReturn = content.totalSum;
+    content = content.html;
     if (document.getElementById("orderConfirmPage")) { document.getElementById("orderConfirmPage").remove; };
     let orderConfirmWindow = null;
     orderConfirmWindow = document.createElement('div');
@@ -294,8 +293,8 @@ function clearCounts() {
 }
 
 function orderComplete(content) {
-    console.log(content);
     console.log("order complete");
+    console.log(content);    
 }
 
 function displayUserPageButton() {
@@ -343,7 +342,8 @@ function openUserPage(content) {
     });
     let deleteOrderButton = document.getElementById("deleteOrderButton");
     deleteOrderButton.addEventListener('click', function () {
-        deleteLastOrder(currentUserLogged.id);
+        // deleteLastOrder(currentUserLogged.id);
+        deleteLastOrderConfirm(currentUserLogged.id);
         closeButton.remove();
         userWindow.remove();
         requestUserPage(currentUserLogged.id);
@@ -360,10 +360,26 @@ function openMessageWindow(message){
 
 }
 
+function deleteLastOrderConfirm(id){
+    id = JSON.stringify({ "id": id });
+    let deleteOrderResponse = postRequest('./client/deleteLastOrderConfirm/', openDeleteOrderConfirm, id);
+    console.log(deleteOrderResponse);
+    return deleteOrderResponse;
+};
+
+function openDeleteOrderConfirm(content){
+    console.log(content);
+};
+
 function deleteLastOrder(id) {
     id = JSON.stringify({ "id": id });
-    let deleteOrderResponse = postRequest('./client/deleteLastOrder/', null, id);
+    let deleteOrderResponse = postRequest('./client/deleteLastOrder/', openDeleteOrderResults, id);
+    console.log(deleteOrderResponse);
     return deleteOrderResponse;
+};
+
+function openDeleteOrderResults(content){
+    console.log(content);
 };
 
 function userIndicLogged() {

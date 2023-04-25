@@ -15,12 +15,12 @@ routerClient.post('/searchName/', async (req, res) => {
     if (!req.body || req.body == null) { res.end(); return; };
     var query = (req.body.name);
     let names = [];
-    names = (await db.dbGetNameBySearch(query));
+    names = JSON.stringify(await db.dbGetNameBySearch(query));
     if (names.length == 0) {
         res.send(JSON.stringify({ 'errorClient': messageClient.notExist }));
         return;
     };
-    names = JSON.stringify(names);
+    // console.log(names);
     res.send(names);
     return;
 });
@@ -58,7 +58,8 @@ routerClient.post('/getUserPage/', async (req, res) => {
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
     let userDataFromDb = await db.dbGetClientInfoById(reqId);
-    let html = userPageModule.buildUserPage(loggedUserDetails, userDataFromDb);
+    let html = JSON.stringify(userPageModule.buildUserPage(loggedUserDetails, userDataFromDb));
+    // console.log(html);
     res.send(html);
     console.log("SENT USER INFO AS HTML")
     delete require.cache[require.resolve("../module/buildUserPage")];
@@ -137,8 +138,19 @@ routerClient.post('/placeOrder/', async function (req, res) {
     console.log("user id: " + userId);
     console.log("at time: " + orderTime);
     let orderResult;
-    orderResult = await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) });
+    orderResult = JSON.stringify(await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) }));
+    console.log(orderResult);
     res.send(orderResult);
+    return;
+});
+
+routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {
+    if (!req.body.id || req.body.id == null) { res.end(); return; }
+    let clientId = JSON.parse(req.body.id);
+    let confirmDeleteLastOrderResponse;
+    confirmDeleteLastOrderResponse = JSON.stringify(await db.dbConfirmDeleteLastOrderById(clientId));
+    console.log(confirmDeleteLastOrderResponse);
+    res.send(confirmDeleteLastOrderResponse);
     return;
 });
 
@@ -146,7 +158,7 @@ routerClient.post('/deleteLastOrder/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let clientId = JSON.parse(req.body.id);
     let deleteLastOrderResponse;
-    deleteLastOrderResponse = await db.dbDeleteLastOrderById(clientId);
+    deleteLastOrderResponse = JSON.stringify(await db.dbDeleteLastOrderById(clientId));
     res.send(deleteLastOrderResponse);
     return;
 });

@@ -8,7 +8,7 @@ exports.buildUserPage = function (userInfo, userData) {
             <link rel="stylesheet" href="./css/windowStyle.css">
             </head>
             <div class="window" id="userPageWindow">
-            <div class="userInfoCloseButton" id="userPageCloseButton" onClick="closeUserWindow()">X</div>
+            <div class="userInfoCloseButton" id="userPageCloseButton">X</div>
             <div class="windowTop">
             <p>${messageUi.userPageName}${userInfo.name}</p>
             <p>${messageUi.userPageAccount}${userInfo.account}</p>
