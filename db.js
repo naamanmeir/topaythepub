@@ -277,7 +277,8 @@ exports.dbEditClient = async function (clientId, field, value) {
 //--------------------VALIDATE LAST ORDER EXIST BY CLIEND ID----------------//
 exports.dbConfirmDeleteLastOrderById = async function (clientId) {
   // if order exist in user columns
-  let lastOrderDetails = await pool.query("SELECT orderid,sum,info,time,client FROM " + tableOrders +
+  let lastOrderDetails = await pool.query("SELECT orderid,sum,info,"+
+  "DATE_FORMAT(`time`, '%Y-%m-%d %H:%i') AS `time`,client FROM " + tableOrders +
     " WHERE clientid = " + clientId + " ORDER BY orderid DESC LIMIT 1;")
     .catch((err) => {
       console.log(err)

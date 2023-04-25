@@ -146,11 +146,34 @@ routerClient.post('/placeOrder/', async function (req, res) {
 
 routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
-    let clientId = JSON.parse(req.body.id);
-    let confirmDeleteLastOrderResponse;
-    confirmDeleteLastOrderResponse = JSON.stringify(await db.dbConfirmDeleteLastOrderById(clientId));
-    console.log(confirmDeleteLastOrderResponse);
-    res.send(confirmDeleteLastOrderResponse);
+    let userId = JSON.parse(req.body.id);
+    let orderInfo;
+    orderInfo = await db.dbConfirmDeleteLastOrderById(userId);
+    console.log(orderInfo);
+    orderInfo = JSON.stringify({
+        'orderId': orderInfo.orderid,
+        'sum': orderInfo.sum,
+        'info': orderInfo.info,
+        'time': orderInfo.time
+    });
+    orderInfo = JSON.parse(orderInfo);
+    console.log(orderInfo);
+    loggedUserDetails = await db.dbGetClientDetailsById(userId);
+    loggedUserDetails = JSON.stringify({
+        'id': userId,
+        'name': loggedUserDetails[0].name,
+        'nick': loggedUserDetails[0].nick,
+        'account': loggedUserDetails[0].account
+    });
+    loggedUserDetails = JSON.parse(loggedUserDetails);
+    // console.log("request delete confirmation for order: ");
+    // console.log(orderInfo);
+    // console.log("for user id: ");
+    // console.log(userId);
+    let deleteOrderConfirmPage = require("../module/buildOrderDeleteConfirmation");
+    let html = JSON.stringify(deleteOrderConfirmPage.buildOrderDeleteConfirmation(loggedUserDetails, orderInfo));
+    // console.log(html);
+    res.send(html);
     return;
 });
 

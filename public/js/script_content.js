@@ -10,9 +10,11 @@ function generateRandomColor() {
     let randColor = randomNumber.padStart(6, 0);
     return `#${randColor.toUpperCase()}`
 };
-
-//------------------------ PARAMS AND OBJECT DECLATE ------------------------//
+//------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
+
+//------------------------ UI ELEMENTS DECLATE ------------------------//
+
 const searchBox1 = document.getElementById("searchBox");
 const buttonOrder = document.getElementById("buttonOrder");
 const buttonCancel = document.getElementById("buttonCancel");
@@ -25,6 +27,7 @@ const userIndic = document.getElementById("userIndic");
 
 let userWindow;
 let messageWindow;
+
 
 //-----------------FUNCTIONAL GLOBALS-----------------//
 let orderData = {};
@@ -352,12 +355,10 @@ function openUserPage(content) {
 
 function openMessageWindow(message){
     console.log("message:"+message);
-    // messageWindow = document.createElement('div');
-    // messageWindow.className = ("errorMessage");
-    // messageWindow.innerHTML = (message);
-    // document.body.appendChild(messageWindow);
-
-
+    messageWindow = document.createElement('div');
+    messageWindow.className = ("window");
+    messageWindow.innerHTML = (message);
+    document.body.appendChild(messageWindow);
 }
 
 function deleteLastOrderConfirm(id){
@@ -369,6 +370,10 @@ function deleteLastOrderConfirm(id){
 
 function openDeleteOrderConfirm(content){
     console.log(content);
+    messageWindow = document.createElement('div');
+    messageWindow.className = ("window");
+    messageWindow.innerHTML = (content);
+    document.body.appendChild(messageWindow);
 };
 
 function deleteLastOrder(id) {

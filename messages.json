@@ -33,7 +33,14 @@
             "orderConfirmPrice": "שעולה :",
             "orderConfirmTotalSum": "סך כל הרישום :",
             "orderConfirmToName": "לחשבון :",
-            "orderConfirmToAccount": "מספר :"
+            "orderConfirmToAccount": "מספר :",
+            "deleteorderConfirmDate": "האם למחוק רישום שנרשם ב :",
+            "deleteorderConfirmInfo": "ומכיל :",
+            "deleteorderConfirmSum": "בסכום :",
+            "deleteorderConfirmAccount": "מחשבון :",
+            "deleteorderConfirmClient": "על שם :",
+            "deleteorderConfirmButtonNo": "בטל מחיקת הזמנה הפאב צריך את הכסף",
+            "deleteorderConfirmButtonYes": " אשר מחיקת הזמנה עצוב"
         }
     ],
     "client": [
