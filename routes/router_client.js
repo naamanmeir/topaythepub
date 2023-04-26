@@ -148,16 +148,14 @@ routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let userId = JSON.parse(req.body.id);
     let orderInfo;
-    orderInfo = await db.dbConfirmDeleteLastOrderById(userId);
-    console.log(orderInfo);
+    orderInfo = await db.dbConfirmDeleteLastOrderById(userId);    
     orderInfo = JSON.stringify({
         'orderId': orderInfo.orderid,
         'sum': orderInfo.sum,
         'info': orderInfo.info,
         'time': orderInfo.time
     });
-    orderInfo = JSON.parse(orderInfo);
-    console.log(orderInfo);
+    orderInfo = JSON.parse(orderInfo);    
     loggedUserDetails = await db.dbGetClientDetailsById(userId);
     loggedUserDetails = JSON.stringify({
         'id': userId,

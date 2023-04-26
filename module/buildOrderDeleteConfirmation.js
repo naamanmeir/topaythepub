@@ -10,7 +10,8 @@ exports.buildOrderDeleteConfirmation = function (userInfo,orderInfo) {
         `;
         html +=
             `
-            <div class="message">
+            <div id="deleteOrderConfirmWindow">
+            <div>
             <p>${messageUi.deleteorderConfirmDate} ${orderInfo.time}<p>
             <p>${messageUi.deleteorderConfirmInfo} ${orderInfo.info}<p>
             <p>${messageUi.deleteorderConfirmSum} ${messageUi.orderConfirmCurrency}${orderInfo.sum}<p>
@@ -18,10 +19,12 @@ exports.buildOrderDeleteConfirmation = function (userInfo,orderInfo) {
             <p>${messageUi.deleteorderConfirmClient} ${userInfo.name}<p>
             </div>`
 
-        html += `</div><div class="windowButtons">`
-        html += `<button class="windowButton" id="orderConfirmButtonNo">${messageUi.deleteorderConfirmButtonNo}</button>`;
-        html += `<button class="windowButton" id="orderConfirmButtonYes">${messageUi.deleteorderConfirmButtonYes}</button>`;
-        html += `</div>
+        html += `
+            <div class="windowButtons">
+            <button class="windowButton no" id="deleteOrderConfirmButtonNo">${messageUi.deleteorderConfirmButtonNo}</button>
+            <button class="windowButton yes" id="deleteOrderConfirmButtonYes">${messageUi.deleteorderConfirmButtonYes}</button>
+            </div>
             `
+        html += `</div>`
     return html;
 };

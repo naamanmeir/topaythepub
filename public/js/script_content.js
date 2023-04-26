@@ -12,6 +12,7 @@ function generateRandomColor() {
 };
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
+const messageTimeoutTime = 4000;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 
@@ -27,6 +28,7 @@ const userIndic = document.getElementById("userIndic");
 
 let userWindow;
 let messageWindow;
+let deleteOrderWindow;
 
 
 //-----------------FUNCTIONAL GLOBALS-----------------//
@@ -208,7 +210,7 @@ function userLogout(){
 function addItem(item) {    
     if(orderData[item]==99){console.log("Max is 99");return;};
     orderData[item] = (orderData[item] || 0) + 1;    
-    console.log(orderData);
+    // console.log(orderData);
     const count = document.getElementById(`itemCount${item}`)
     if (count.innerText < (parseInt(1) )) {
         count.innerText = 1;
@@ -246,10 +248,9 @@ function openOrderConfirm(content) {
     if (document.getElementById("orderConfirmPage")) { document.getElementById("orderConfirmPage").remove; };
     let orderConfirmWindow = null;
     orderConfirmWindow = document.createElement('div');
-    orderConfirmWindow.className = ("userInfo");
-    orderConfirmWindow.setAttribute("id", "userInfoWindow");
+    orderConfirmWindow.className = ("window");    
     orderConfirmWindow.innerHTML = (content);
-    document.body.appendChild(orderConfirmWindow);
+    divContent.appendChild(orderConfirmWindow);
     let closeButton = document.getElementById("orderConfirmCloseButton");
     let orderConfirmButtonNo = document.getElementById("orderConfirmButtonNo");
     closeButton.addEventListener('click', function () {
@@ -258,6 +259,7 @@ function openOrderConfirm(content) {
     });
     orderConfirmButtonNo.addEventListener('click', function () {
         orderClear();
+        clearCounts();
         orderConfirmWindow.remove();
     });
     orderConfirmButtonYes.addEventListener('click', function () {
@@ -288,7 +290,7 @@ function orderClear() {
 function clearCounts() {
     let counts = document.getElementsByClassName("itemCount");
     counts = Array.from(counts);
-    console.log(counts);
+    // console.log(counts);
     counts.forEach(count => {
         count.innerText = "";
     });
@@ -297,7 +299,8 @@ function clearCounts() {
 
 function orderComplete(content) {
     console.log("order complete");
-    console.log(content);    
+    console.log(content);
+    openMessageWindow(content);
 }
 
 function displayUserPageButton() {
@@ -345,46 +348,68 @@ function openUserPage(content) {
     });
     let deleteOrderButton = document.getElementById("deleteOrderButton");
     deleteOrderButton.addEventListener('click', function () {
-        // deleteLastOrder(currentUserLogged.id);
-        deleteLastOrderConfirm(currentUserLogged.id);
+        // deleteLastOrder(currentUserLogged.id);        
         closeButton.remove();
         userWindow.remove();
-        requestUserPage(currentUserLogged.id);
+        return deleteLastOrderConfirm(currentUserLogged.id);
     });
 };
 
-function openMessageWindow(message){
+function openMessageWindow(message,className){
     console.log("message:"+message);
     messageWindow = document.createElement('div');
-    messageWindow.className = ("window");
-    messageWindow.innerHTML = (message);
-    document.body.appendChild(messageWindow);
+    messageWindow.className = ("messageWindow");
+    let p = document.createElement('p');
+    p.className = (className);
+    p.innerHTML = (message);
+    messageWindow.appendChild(p);
+    divContent.appendChild(messageWindow);
+    let messageTimeout = setTimeout(closeMessageWindow,messageTimeoutTime);
+    return;
+}
+
+function closeMessageWindow(){    
+    while (messageWindow.hasChildNodes()) {
+        messageWindow.removeChild(messageWindow.firstChild);
+    };
+    messageWindow.remove();
+    return;
 }
 
 function deleteLastOrderConfirm(id){
     id = JSON.stringify({ "id": id });
-    let deleteOrderResponse = postRequest('./client/deleteLastOrderConfirm/', openDeleteOrderConfirm, id);
-    console.log(deleteOrderResponse);
+    let deleteOrderResponse = postRequest('./client/deleteLastOrderConfirm/', openDeleteOrderConfirm, id);    
     return deleteOrderResponse;
 };
 
-function openDeleteOrderConfirm(content){
-    console.log(content);
-    messageWindow = document.createElement('div');
-    messageWindow.className = ("window");
-    messageWindow.innerHTML = (content);
-    document.body.appendChild(messageWindow);
+function openDeleteOrderConfirm(content){    
+    userWindow.remove();
+    deleteOrderWindow = document.createElement('div');
+    deleteOrderWindow.className = ("window fontLarge");
+    deleteOrderWindow.innerHTML = (content);
+    document.body.appendChild(deleteOrderWindow);    
+    let deleteOrderConfirmButtonNo = document.getElementById("deleteOrderConfirmButtonNo");
+    let deleteOrderConfirmButtonYes = document.getElementById("deleteOrderConfirmButtonYes");
+    deleteOrderConfirmButtonNo.addEventListener('click', function () {        
+        deleteOrderWindow.remove();
+        return requestUserPage(currentUserLogged.id);        
+    });    
+    deleteOrderConfirmButtonYes.addEventListener('click', function () {        
+        deleteOrderWindow.remove();
+        return deleteLastOrder(currentUserLogged.id);        
+    });
 };
 
 function deleteLastOrder(id) {
     id = JSON.stringify({ "id": id });
-    let deleteOrderResponse = postRequest('./client/deleteLastOrder/', openDeleteOrderResults, id);
-    console.log(deleteOrderResponse);
-    return deleteOrderResponse;
+    let deleteOrderResponse = postRequest('./client/deleteLastOrder/', openDeleteOrderResults, id);    
+    return;
 };
 
 function openDeleteOrderResults(content){
     console.log(content);
+    openMessageWindow(content,'red big');
+    return requestUserPage(currentUserLogged.id);
 };
 
 function userIndicLogged() {

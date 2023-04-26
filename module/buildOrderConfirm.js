@@ -7,8 +7,8 @@ exports.buildOrderConfirm = function (userInfo, orderData, orderPriceSum) {
     let html = ``;
     html += `<head>
             <link rel="stylesheet" href="./css/windowStyle.css">
-            </head>            
-            <div class="window" id="OrderConfirmWindow">
+            </head>
+            <div id="OrderConfirmWindow">
             <div class="windowTop"><p>${messageUi.orderConfirmTitle}</p></div>
             <div class="userInfoCloseButton" id="orderConfirmCloseButton">X</div>            
             <div class="windowTop"><p>${messageUi.orderConfirmHello} ${userInfo.nick}</p></div>
@@ -28,8 +28,8 @@ exports.buildOrderConfirm = function (userInfo, orderData, orderPriceSum) {
     ${messageUi.orderConfirmToAccount} ${userInfo.account}</p>><br>`
 
     html += `</div><div class="windowButtons">`
-    html += `<button class="windowButton" id="orderConfirmButtonNo">${messageUi.orderConfirmButtonNo}</button>`;
-    html += `<button class="windowButton" id="orderConfirmButtonYes">${messageUi.orderConfirmButtonYes}</button>`;
+    html += `<button class="windowButton no" id="orderConfirmButtonNo">${messageUi.orderConfirmButtonNo}</button>`;
+    html += `<button class="windowButton yes" id="orderConfirmButtonYes">${messageUi.orderConfirmButtonYes}</button>`;
     html += `</div>
         </div>`;
     return html;

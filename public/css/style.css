@@ -131,7 +131,7 @@ p {
 } */
 
 .menu {
-    z-index: 3000;
+    z-index: 40;
     top: 0px;
     right: 0px;
     margin: 0px;
@@ -692,7 +692,7 @@ p {
 
 .endAnimation {
     opacity: 0;
-    z-index: 2500;
+    z-index: 40;
     position: fixed;
     margin: auto;
     top: 50%;
@@ -843,7 +843,7 @@ p {
 /* demo */
 #textbox {
     position: absolute;
-    z-index: 2000;
+    z-index: 70;
     top: 0px;
     left: 50%;
     right: 50%;
@@ -860,8 +860,8 @@ p {
     transition: 1s;
 }
 
-.elementOpen {
-    /* color: rgb(255, 242, 0); */
+.openSideMenu {
+    color: rgb(255, 242, 0);
     /* font-size: xx-large;     */
     width: fit-content;
     right: 0px;
@@ -869,10 +869,10 @@ p {
     padding-left: 10px;
     /* padding-top: 15px; */
     position: absolute;
-    z-index: 2000;
+    z-index: 30;
 }
 
-.elementOpen img {
+.openSideMenu img {
     width: 55%;
     height: 55%;
     filter: invert(0.6);
@@ -986,6 +986,7 @@ p {
 
 .hidden {
     display: none;
+    transition: all 1s;
 }
 
 .block {
@@ -997,7 +998,7 @@ p {
 }
 
 .aboutWindow {
-    z-index: 5000;
+    z-index: 80;
     position: absolute;
 }
 
@@ -1005,7 +1006,7 @@ p {
     position: absolute;
     height: fit-content;
     width: fit-content;
-    z-index: 5500;
+    z-index: 40;
     bottom: 50%;
     left: 0;
     border-radius: 50%;
@@ -1014,14 +1015,14 @@ p {
 }
 
 .floatMenuDiv p {
-    z-index: 5100;
+    z-index: 40;
     color: whitesmoke;
     font-size: 50%;
     margin: auto;
 }
 
 .floatMenuDiv a {
-    z-index: 5100;
+    z-index: 40;
     color: whitesmoke;
     text-decoration: none;
     padding: 8px 32px 18px 8px;
@@ -1036,7 +1037,40 @@ p {
 
 .floatMenuDiv a:hover {
     border-radius: 50%;
-    z-index: 5100;
+    z-index: 40;
     background-color: #7b6f6fd8;
     color: #ffffff;
+}
+
+.messageWindow {
+    z-index: 100;
+    position: absolute;
+    max-height: 20%;
+    height: fit-content;
+    max-width: 95%;
+    width: 95%;
+    top: 30%;
+    padding: 5px 5px 5px 5px;
+    background-color: rgb(0, 0, 0);
+    border: 2px groove orange;
+    border-radius: 3rem;
+    margin: auto;
+}
+
+.messageWindow p {
+    color: orange;
+    text-align: center;
+    font-size: larger;
+}
+
+.messageWindow .green {
+    color: green;
+}
+
+.messageWindow .red {
+    color: red;
+}
+
+.messageWindow .big {
+    font-size: x-large;
 }

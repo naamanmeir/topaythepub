@@ -20,6 +20,8 @@ const divFloatMenu = document.getElementById("divFloatMenu");
 const divContent = document.getElementById("divContent");
 const divFooter = document.getElementById("divFooter");
 
+const openSideMenu = document.getElementById("openSideMenu");
+
 let appendedScriptObjectContent;
 
 window.addEventListener('load', loadUtiliti, false);
@@ -64,8 +66,23 @@ function displayTopMenu(content) {
 };
 function displaySideMenu(content) {
     divSideMenu.innerHTML = (content);
-    divSideMenu.className = "hidden";
+    divSideMenu.className = "sideMenu";
+    openSideMenu.addEventListener("click",openSideMenuFunc);
 };
+
+function openSideMenuFunc(){    
+    divSideMenu.style.transition = "all 1.5s";
+    divSideMenu.style.width = "10rem";
+    divSideMenu.style.borderWidth = "2px";
+    let closeSideMenu = document.getElementById("closeSideMenu");
+    closeSideMenu.addEventListener("click",closeSideMenuFunc);
+};
+
+function closeSideMenuFunc(){
+    divSideMenu.style.width = "0px";
+    divSideMenu.style.borderWidth = "0px";
+};
+
 function displayFloatMenu(content) {
     divFloatMenu.innerHTML = (content);
 };

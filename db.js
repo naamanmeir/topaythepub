@@ -294,7 +294,6 @@ exports.dbConfirmDeleteLastOrderById = async function (clientId) {
 
 // return order DATA to be insertedinto html from MODULE
 lastOrderDetails = lastOrderDetails[0];
-console.log(lastOrderDetails);
 return lastOrderDetails;
 
 

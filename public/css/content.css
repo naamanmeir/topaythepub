@@ -64,7 +64,7 @@
 }
 
 .autoCompleteSuggestions {
-    z-index: 3000;
+    z-index: 30;
     position: relative;
     height: 2em;
     width: 100%;
@@ -76,7 +76,7 @@
 }
 
 .autocomplete-items {
-    z-index: 3000;
+    z-index: 31;
     left: 0;
     right: 0;
     padding: 0px;
@@ -107,7 +107,7 @@
 }
 
 .userStateIndicator {
-    z-index: 4000;
+    z-index: 40;
     pointer-events: none;
     height: 2em;
     margin: auto;
@@ -197,7 +197,7 @@
 }
 
 .userStateIndicatorSelect {
-    z-index: 4000;
+    z-index: 40;
     display: flex;
     flex-direction: row;
     flex-shrink: 1;
@@ -215,7 +215,7 @@
 }
 
 .userStateIndicator p {
-    z-index: 4001;
+    z-index: 41;
     top: 0px;
     margin: 0px;
     padding: 0px;
@@ -224,7 +224,7 @@
 }
 
 .userStateIndicatorSelect img {
-    z-index: 4000;
+    z-index: 40;
     flex-direction: row;
     transition: all 1s;
     text-align: center;
@@ -489,7 +489,7 @@
 
 .messageBox {
     display: none;
-    z-index: 2500;
+    z-index: 80;
     position: absolute;
     height: fit-content;
     width: 80%;
@@ -534,7 +534,7 @@
 }
 
 .confirmButtons {
-    z-index: 3000;
+    z-index: 40;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -575,14 +575,14 @@
 }
 
 .errorMessageOn {
-    z-index: 2500;
+    z-index: 80;
     display: block;
     pointer-events: none;
 }
 
 .finaleMessageBox {
     /* display: none; */
-    z-index: 2500;
+    z-index: 80;
     position: absolute;
     height: fit-content;
     width: 70%;
