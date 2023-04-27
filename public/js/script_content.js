@@ -29,14 +29,13 @@ const userIndic = document.getElementById("userIndic");
 let userWindow;
 let messageWindow;
 let deleteOrderWindow;
+let userPageButton = document.getElementById("userPageButton");
 
 
 //-----------------FUNCTIONAL GLOBALS-----------------//
 let orderData = {};
 
-//------------------------ OBJECT EVENT LISTENERS ------------------------//
-
-// searchBox1.setAttribute("pattern", regexBlock);
+//------------------------ ELEMENTS ------------------------//
 
 searchBox1.placeholder = (messageClient.inputPlaceholder);
 
@@ -92,13 +91,42 @@ buttonCancel.addEventListener('click', function () {
 buttonOrder.style.backgroundColor = ("green");
 buttonCancel.style.backgroundColor = ("red");
 
+//-------------------------AT LOAD CONTENT WINDOW-------------------------//
+function loadUtiliti() {    
+    userIndicMessage(messageClient.notUsed);
+    userPageButton.innerHTML = messageUi.userPageLable;
+};
+loadUtiliti();
+
+//-------------------------MESSAGE FLOATING WINDOW-------------------------//
+function openMessageWindow(message,className){
+    console.log("message:"+message);
+    messageWindow = document.createElement('div');
+    messageWindow.className = ("messageWindow");
+    let p = document.createElement('p');
+    p.className = (className);
+    p.innerHTML = (message);
+    messageWindow.appendChild(p);
+    divContent.appendChild(messageWindow);
+    let messageTimeout = setTimeout(closeMessageWindow,messageTimeoutTime);
+    return;
+};
+function closeMessageWindow(){    
+    while (messageWindow.hasChildNodes()) {
+        messageWindow.removeChild(messageWindow.firstChild);
+    };
+    messageWindow.remove();
+    return;
+};
+
+//-------------------------NAME SEARCH FUNCTIONS-------------------------//
+
 async function sendNameSearchQuery(query) {
     if (query == "" || query == null) { return; };
     query = JSON.stringify({ "name": query });
     await postRequest('./client/searchName/', window.parent.parseNameSearchResponse, query);
     return;
 };
-
 function parseNameSearchResponse(data) {    
     if (!data.errorLog && !data.errorClient) { autoComplete(data); return; }
     if (data.errorLog) { console.log(data); return; }
@@ -109,12 +137,10 @@ function parseNameSearchResponse(data) {
         return;
     }
 };
-
 function searchBoxClear() {
     clearAutoComplete(document.getElementById("autoComplete"));
     if (searchBox1.value.length == 0) { searchIndicator(0); };
 };
-
 function autoComplete(names) {
     clearAutoComplete(autoCompleteDiv);
     if (names.length == 0) { searchIndicator(1); return; };
@@ -144,7 +170,6 @@ function autoComplete(names) {
     if (searchBox1.value.length == 0) { searchIndicator(0); };
     if (searchBox1.value == "") { clearAutoComplete(autoCompleteDiv); }
 };
-
 function clearAutoComplete(autoCompleteDiv) {
     autoCompleteDiv.className = "autoCompleteNone";
     while (autoCompleteDiv.hasChildNodes()) {
@@ -153,7 +178,7 @@ function clearAutoComplete(autoCompleteDiv) {
     return;
 };
 
-//---------------------- USER SEARCH INDICATOR ----------------------//
+//---------------------- USER LOGIN FUNCTIONS ----------------------//
 function searchIndicator(state, id) {
     switch (state) {
         case 0:
@@ -182,14 +207,12 @@ function searchIndicator(state, id) {
             break;
     };
 };
-
 function userLogin(id) {
     currentUserLogged = null;
     console.log("LOGIN USER: " + id);
     id = JSON.stringify({ "id": id });
     postRequest('./client/userLogin/', window.parent.userLogged, id);
 };
-
 function userLogged(data) {
     if (data == null || data == '') { console.log("ERROR WITH DB"); return; }
     currentUserLogged = data;
@@ -201,11 +224,24 @@ function userLogged(data) {
     displayUserPageButton();
     userIndicLogged();
 };
-
 function userLogout(){
     currentUserLogged = null;
     hideUserPageButton();    
 };
+function userIndicLogged() {
+    let par = document.createElement("p");
+    par.innerText = currentUserLogged.message;
+    userIndic.innerHTML = "";
+    userIndic.append(par);
+};
+function userIndicMessage(message) {
+    let par = document.createElement("p");
+    par.innerText = message;
+    userIndic.innerHTML = "";
+    userIndic.append(par);
+};
+
+//---------------------- ORDER MANGE FUNCTIONS ----------------------//
 
 function addItem(item) {    
     if(orderData[item]==99){console.log("Max is 99");return;};
@@ -220,7 +256,6 @@ function addItem(item) {
     };
     return;
 };
-
 function orderManage(data) {
     if (data === "abort") { console.log("abort"); return; }
     if (data === "placeOrder") {
@@ -232,13 +267,11 @@ function orderManage(data) {
         return;
     }
 };
-
 function requestOrderPage(order) {
     console.log("request order page for order: " + order);
     postRequest('./client/requestOrderPage/', window.parent.openOrderConfirm, order);
     return;
 };
-
 function openOrderConfirm(content) {
     console.log("ORDER CONFIRM PAGE");
     orderDataReturn = content.orderData;
@@ -268,11 +301,9 @@ function openOrderConfirm(content) {
         orderConfirmWindow.remove();
     });
 };
-
 function validateOrder(orderDataReturn) {
     return (orderDataReturn === orderData);
 };
-
 function placeOrder(orderDataReturn) {
     console.log("place order : " + orderDataReturn);
     postRequest('./client/placeOrder/', window.parent.orderComplete, orderDataReturn);
@@ -280,13 +311,11 @@ function placeOrder(orderDataReturn) {
     clearCounts();
     return;
 };
-
 function orderClear() {
     orderData = null;
     orderData = {};
     console.log("clear orderData");
 };
-
 function clearCounts() {
     let counts = document.getElementsByClassName("itemCount");
     counts = Array.from(counts);
@@ -295,40 +324,38 @@ function clearCounts() {
         count.innerText = "";
     });
     return;
-}
-
+};
 function orderComplete(content) {
     console.log("order complete");
     console.log(content);
     openMessageWindow(content);
-}
+};
+
+//---------------------- USER MANAGE FUNCTIONS ----------------------//
 
 function displayUserPageButton() {
     if (currentUserLogged != null);
-    userPage.className = "userPageShow";
-    if(userPage.getAttribute('userPageButtonEnableListener')!= 1){
-        userPage.addEventListener("click", function callRequestUserPage() {
-            userPage.setAttribute('userPageButtonEnableListener', 1);
+    userPageButton.className = "userPageShow";
+    if(userPageButton.getAttribute('userPageButtonEnableListener')!= 1){
+        userPageButton.addEventListener("click", function callRequestUserPage() {
+            userPageButton.setAttribute('userPageButtonEnableListener', 1);
             requestUserPage(currentUserLogged.id);
         })
     };    
 };
-
 function hideUserPageButton() {
     if (currentUserLogged == null);
-    userPage.className = "userPageHidden";
-    if(userPage.getAttribute('userPageButtonEnableListener')== 1){
-        userPage.removeEventListener("click", requestUserPage)
+    userPageButton.className = "userPageHidden";
+    if(userPageButton.getAttribute('userPageButtonEnableListener')== 1){
+        userPageButton.removeEventListener("click", requestUserPage)
     };    
 };
-
 function requestUserPage(id) {
     console.log("request user page for user: " + id);
     id = JSON.stringify({ "id": id });
     postRequest('./client/getUserPage/', window.parent.openUserPage, id);
     return;
 };
-
 function openUserPage(content) {
     if (document.getElementById("userInfoWindow")) { document.getElementById("userInfoWindow").remove; };
     userWindow = null;
@@ -354,34 +381,11 @@ function openUserPage(content) {
         return deleteLastOrderConfirm(currentUserLogged.id);
     });
 };
-
-function openMessageWindow(message,className){
-    console.log("message:"+message);
-    messageWindow = document.createElement('div');
-    messageWindow.className = ("messageWindow");
-    let p = document.createElement('p');
-    p.className = (className);
-    p.innerHTML = (message);
-    messageWindow.appendChild(p);
-    divContent.appendChild(messageWindow);
-    let messageTimeout = setTimeout(closeMessageWindow,messageTimeoutTime);
-    return;
-}
-
-function closeMessageWindow(){    
-    while (messageWindow.hasChildNodes()) {
-        messageWindow.removeChild(messageWindow.firstChild);
-    };
-    messageWindow.remove();
-    return;
-}
-
 function deleteLastOrderConfirm(id){
     id = JSON.stringify({ "id": id });
     let deleteOrderResponse = postRequest('./client/deleteLastOrderConfirm/', openDeleteOrderConfirm, id);    
     return deleteOrderResponse;
 };
-
 function openDeleteOrderConfirm(content){    
     userWindow.remove();
     deleteOrderWindow = document.createElement('div');
@@ -399,43 +403,31 @@ function openDeleteOrderConfirm(content){
         return deleteLastOrder(currentUserLogged.id);        
     });
 };
-
 function deleteLastOrder(id) {
     id = JSON.stringify({ "id": id });
     let deleteOrderResponse = postRequest('./client/deleteLastOrder/', openDeleteOrderResults, id);    
     return;
 };
-
 function openDeleteOrderResults(content){
     console.log(content);
     openMessageWindow(content,'red big');
     return requestUserPage(currentUserLogged.id);
 };
 
-function userIndicLogged() {
-    let par = document.createElement("p");
-    par.innerText = currentUserLogged.message;
-    userIndic.innerHTML = "";
-    userIndic.append(par);
-};
-
-function userIndicMessage(message) {
-    let par = document.createElement("p");
-    par.innerText = message;
-    userIndic.innerHTML = "";
-    userIndic.append(par);
-};
+//---------------------- UI INTERACTIONS ----------------------//
 
 function buttonOrderClick() {
     if (!currentUserLogged || currentUserLogged == null || currentUserLogged.userId == '') {
         console.log("no user logged");
+        openMessageWindow(messageError.orderNoLoggedUSer,"green bottom")
         return;
     }
     if (!orderData || orderData == null || (Object.keys(orderData).length) <= 0) {
-        console.log("order data is empty");
-        console.log(orderData);
+        console.log("order data is empty");        
+        openMessageWindow(messageError.orderNoOrderData,"green bottom")
         return;
     };
+
     orderManage("placeOrder");
 };
 function buttonCancelClick() {

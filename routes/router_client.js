@@ -3,8 +3,8 @@ const routerClient = express.Router();
 const functions = require('../functions');
 const db = require('../db');
 let messagesJson = require('../messages.json');
-let messageClient = messagesJson.client[0];
 let messageUi = messagesJson.ui[0];
+let messageClient = messagesJson.client[0];
 let messageError = messagesJson.error[0];
 
 //------------------------CLIENT UI COMMANDS-------------------//
@@ -58,8 +58,7 @@ routerClient.post('/getUserPage/', async (req, res) => {
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
     let userDataFromDb = await db.dbGetClientInfoById(reqId);
-    let html = JSON.stringify(userPageModule.buildUserPage(loggedUserDetails, userDataFromDb));
-    // console.log(html);
+    let html = JSON.stringify(userPageModule.buildUserPage(loggedUserDetails, userDataFromDb));    
     res.send(html);
     console.log("SENT USER INFO AS HTML")
     delete require.cache[require.resolve("../module/buildUserPage")];

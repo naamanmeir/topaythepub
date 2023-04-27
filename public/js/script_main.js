@@ -4,6 +4,7 @@ const timerRefreshContentTime = 9995000;
 const timerRefreshElementsTime = 9995000;
 const timerRefreshCssTime = 9995000;
 const logOutTime = 40000;
+const closeSideMenuTimeoutTime = 10000;
 
 //-----------------RUNTIME PARAMS-----------------//
 const timerClearLoggedUSerTIme = 999999;
@@ -55,6 +56,7 @@ function populateElements() {
 function buildMessage(content) {
     messageUi = JSON.parse(content).ui[0];
     messageClient = JSON.parse(content).client[0];
+    messageError = JSON.parse(content).error[0];
     regexBlock = new RegExp(messageUi.regexBlock, "g");
 };
 
@@ -62,7 +64,7 @@ function displayHeader(content) {
     divHeader.innerHTML = (content);
 };
 function displayTopMenu(content) {
-    divTopMenu.innerHTML = (content);
+    divTopMenu.innerHTML = (content);    
 };
 function displaySideMenu(content) {
     divSideMenu.innerHTML = (content);
@@ -76,11 +78,16 @@ function openSideMenuFunc(){
     divSideMenu.style.borderWidth = "2px";
     let closeSideMenu = document.getElementById("closeSideMenu");
     closeSideMenu.addEventListener("click",closeSideMenuFunc);
+    openSideMenu.removeEventListener("click",openSideMenuFunc);
+    openSideMenu.addEventListener("click",closeSideMenuFunc);
+    setTimeout(closeSideMenuFunc,closeSideMenuTimeoutTime)
 };
 
 function closeSideMenuFunc(){
     divSideMenu.style.width = "0px";
     divSideMenu.style.borderWidth = "0px";
+    openSideMenu.removeEventListener("click",closeSideMenuFunc);
+    openSideMenu.addEventListener("click",openSideMenuFunc);
 };
 
 function displayFloatMenu(content) {

@@ -2,9 +2,12 @@ const express = require('express');
 const routerApp = express.Router();
 const functions = require('../functions');
 const db = require('../db');
-let messagesJson = require('../messages.json');
 const { json } = require('stream/consumers');
+
+let messagesJson = require('../messages.json');
 let messageUi = messagesJson.ui[0];
+let messageClient = messagesJson.client[0];
+let messageError = messagesJson.error[0];
 
 var now = new Date();
 
@@ -28,7 +31,7 @@ routerApp.get('/header', function (req, res) {
 });
 
 routerApp.get('/topMenu', function (req, res) {
-    console.log("SEND SIDEMENU");
+    console.log("SEND SIDEMENU");    
     res.render('topMenu');
 });
 

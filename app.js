@@ -27,8 +27,9 @@ const sessionClassMW = require("./module/sessionClass.js");
 const validatorClient = require("./module/validatorClient.js");
 
 let messagesJson = require('./messages.json');
-let messageClient = messagesJson.client[0];
 let messageUi = messagesJson.ui[0];
+let messageClient = messagesJson.client[0];
+let messageError = messagesJson.error[0];
 
 const routerAdmin = require('./routes/router_admin');
 const routerManage = require('./routes/router_manage');
@@ -43,6 +44,7 @@ const appName = process.env.APP_NAME;
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const COOKIE_EXPIRATION = Number(process.env.COOKIE_EXPIRATION);
 const SESSION_NAME = process.env.SESSION_NAME;
+
 
 // morgan.token('splitter', (req) => {
 //   return "\x1b[36m--------------------------------------------\x1b[0m\n";
