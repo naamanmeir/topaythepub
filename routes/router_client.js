@@ -15,13 +15,13 @@ routerClient.post('/searchName/', async (req, res) => {
     if (!req.body || req.body == null) { res.end(); return; };
     var query = (req.body.name);
     let names = [];
-    names = JSON.stringify(await db.dbGetNameBySearch(query));
+    names = await db.dbGetNameBySearch(query);
     if (names.length == 0) {
         res.send(JSON.stringify({ 'errorClient': messageClient.notExist }));
         return;
     };
-    // console.log(names);
-    res.send(names);
+    console.log(names.length);
+    res.send(JSON.stringify(names));
     return;
 });
 

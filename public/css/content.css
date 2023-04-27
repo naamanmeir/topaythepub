@@ -106,7 +106,7 @@
     color: #ffffff;
 }
 
-.userStateIndicator {
+/* .userStateIndicator {
     z-index: 40;
     pointer-events: none;
     height: 2em;
@@ -237,9 +237,9 @@
 
 .userStateIndicatorSelectimg1 {
     animation: upDown1 1.5s ease 0s infinite;
-}
+} */
 
-@keyframes upDown1 {
+/* @keyframes upDown1 {
     0% {
         transform: translateY(0px);
     }
@@ -255,9 +255,9 @@
 
 .userStateIndicatorSelectimg2 {
     animation: upDown2 1.5s linear 0.25s infinite;
-}
+} */
 
-@keyframes upDown2 {
+/* @keyframes upDown2 {
     0% {
         transform: translateY(0px);
     }
@@ -305,7 +305,7 @@
     100% {
         transform: translateY(0px);
     }
-}
+} */
 
 
 .items {

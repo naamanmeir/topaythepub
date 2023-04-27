@@ -51,7 +51,9 @@
             "notExist": "משתמש👨‍💻לא🧑‍🔧קיים",
             "enterName": "👇🏼בחרו👇🏼את👇🏼שמכם👇🏼מהרשימה👇🏼",
             "notUsed": "👇 שלום הכניסו את שמכם בשורה למטה 👇",
-            "orderMessage": "רישום נרשם"
+            "orderMessage": "רישום נרשם",
+            "orderAbortButton": "בוטל⌛️יצירת🔌רישום🗑ומהתחלה",
+            "noOrderToAbortButton": "🤦‍♂️ 🤷‍♀️ 🤷 🤷‍♂️"
         }
     ],
     "error": [

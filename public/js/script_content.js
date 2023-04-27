@@ -101,7 +101,8 @@ loadUtiliti();
 //-------------------------MESSAGE FLOATING WINDOW-------------------------//
 function openMessageWindow(message,className){
     console.log("message:"+message);
-    messageWindow = document.createElement('div');
+    if(messageWindow != undefined) {messageWindow.remove();};
+    messageWindow = document.createElement('div');    
     messageWindow.className = ("messageWindow");
     let p = document.createElement('p');
     p.className = (className);
@@ -111,10 +112,10 @@ function openMessageWindow(message,className){
     let messageTimeout = setTimeout(closeMessageWindow,messageTimeoutTime);
     return;
 };
-function closeMessageWindow(){    
+function closeMessageWindow(){
     while (messageWindow.hasChildNodes()) {
         messageWindow.removeChild(messageWindow.firstChild);
-    };
+    };    
     messageWindow.remove();
     return;
 };
@@ -431,7 +432,14 @@ function buttonOrderClick() {
     orderManage("placeOrder");
 };
 function buttonCancelClick() {
-    orderManage("abort");
+    if (Object.keys(orderData).length == 0) { 
+        openMessageWindow(messageClient.noOrderToAbortButton);
+        return;
+    };
+    console.log(orderData.length);
+    orderClear();
+    clearCounts();
+    openMessageWindow(messageClient.orderAbortButton);
 };
 function errorMessageShow() {
 
