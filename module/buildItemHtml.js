@@ -3,10 +3,14 @@ exports.buildItemHtml = function (array) {
     array.forEach(item => {
         html +=
             `
-        <div class="item" id="item${item.itemid}"
+        <div style="background-image: url('${item.itemimgpath}')";
+        class="item" id="item${item.itemid}"
         onmousedown="addItem(${item.itemid})">
         <p class="itemName">${item.itemname}</p>
-        <img src="${item.itemimgpath}" height="100px">
+        <style>
+            
+        </style>
+        <img src="${item.itemimgpath}">
         <p class="itemPrice">₪${item.price}
         <div class="itemCount" id="itemCount${item.itemid}">&nbsp;&nbsp;</div>
         </div>

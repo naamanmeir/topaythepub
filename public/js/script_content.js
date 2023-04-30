@@ -51,7 +51,7 @@ searchBox1.addEventListener('focus', function () {
     searchBox1.value = input;
     if (input == '' || input == null) {
         clearAutoComplete(autoCompleteDiv);
-        searchIndicator(0, null);
+        userIndicState(0, null);
         return;
     };
 });
@@ -63,7 +63,7 @@ searchBox1.addEventListener('blur', function () {
     searchBox1.value = input;
     if (input == '' || input == null) {
         clearAutoComplete(autoCompleteDiv);
-        searchIndicator(0, null);
+        userIndicState(0, null);
         return;
     };
 });
@@ -73,11 +73,10 @@ searchBox1.addEventListener('input', function () {
     searchBox1.value = input;
     if (input == '' || input == null) {
         clearAutoComplete(autoCompleteDiv);
-        searchIndicator(0, null);
+        userIndicState(0, null);
         return;
     };
     if (searchBox1.value == '') { userIndicMessage('') };
-    if (searchBox1.value != '') { userIndicMessage(messageClient.enterName); };
     sendNameSearchQuery(input);
 });
 buttonOrder.addEventListener('click', function () {
@@ -140,11 +139,11 @@ function parseNameSearchResponse(data) {
 };
 function searchBoxClear() {
     clearAutoComplete(document.getElementById("autoComplete"));
-    if (searchBox1.value.length == 0) { searchIndicator(0); };
+    if (searchBox1.value.length == 0) { userIndicState(0); };
 };
 function autoComplete(names) {
     clearAutoComplete(autoCompleteDiv);
-    if (names.length == 0) { searchIndicator(1); return; };
+    if (names.length == 0) { userIndicState(1); return; };
     autoCompleteDiv.className = "autoCompleteSuggestions";
     for (i = 0; i < names.length && i < maxAutoCompleteResults; i++) {
         const row = document.createElement("p");
@@ -154,21 +153,21 @@ function autoComplete(names) {
         row.setAttribute('id', names[i].id);
         autoCompleteDiv.appendChild(row);
         row.onclick = function () {
-            searchIndicator(3, row.getAttribute('id'));
+            userIndicState(3, row.getAttribute('id'));
             searchBox1.value = row.innerText;
             clearAutoComplete(autoCompleteDiv);
         };
     };
     if (names[0].nick == searchBox1.value || names[0].name == searchBox1.value) {
         searchBox1.value = names[0].nick;
-        searchIndicator(3, names[0].id);
+        userIndicState(3, names[0].id);
         clearAutoComplete(autoCompleteDiv);
         searchBox1.blur();
     };
     if (names.length > 0 && names[0].nick != searchBox1.value || names[0].name != searchBox1.value){
-        searchIndicator(2, names[0].id);
+        userIndicState(2, names[0].id);
     }
-    if (searchBox1.value.length == 0) { searchIndicator(0); };
+    if (searchBox1.value.length == 0) { userIndicState(0); };
     if (searchBox1.value == "") { clearAutoComplete(autoCompleteDiv); }
 };
 function clearAutoComplete(autoCompleteDiv) {
@@ -180,7 +179,7 @@ function clearAutoComplete(autoCompleteDiv) {
 };
 
 //---------------------- USER LOGIN FUNCTIONS ----------------------//
-function searchIndicator(state, id) {
+function userIndicState(state, id) {
     switch (state) {
         case 0:
             // console.log("USER STATE INDIC: " + state);
@@ -196,6 +195,7 @@ function searchIndicator(state, id) {
         case 2:
             // console.log("USER STATE INDIC: " + state);
             // console.log("USER STATE INDIC: SELECT FROM LIST");
+            if (searchBox1.value != '') { userIndicMessage(messageClient.enterName); };
             userLogout();
             break;
         case 3:

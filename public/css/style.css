@@ -505,3 +505,10 @@ p {
 .messageWindow .big {
     font-size: x-large;
 }
+
+.divFullPage {
+    /* background-color: green; */
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
