@@ -30,8 +30,8 @@
 #userPageButton {
     border: 3px outset rgb(17, 69, 118);
     border-radius: 50%;
-    padding: 0.2rem;
-    margin-right: 0px;
+    padding: 0.5rem;
+    margin-right: 0;
     position: absolute;
     right: 10px;
 }

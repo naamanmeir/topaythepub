@@ -30,7 +30,7 @@
     text-shadow: 1px 0px 0px #000000;
     border-radius: 25px;
     /* border: 3px double orange; */
-    background-color: rgba(142, 128, 103, 0.584);
+    background-color: rgba(9, 40, 67, 0.368);
     height: 100%;
     width: 100%;
     font-size: 1.6em;
@@ -337,8 +337,8 @@
     /* width: max-content; */
     max-height: 50%;
     max-width: 50%;
-    background-color: #4b5b6181;
-    /* border: 4px outset rgb(240, 152, 0); */
+    background-color: #07204681;
+    border: 4px outset rgb(13, 21, 110);
     margin: auto;
     /* margin-top: 0.5rem; */
     /* margin-bottom: 0.5rem; */
@@ -346,7 +346,7 @@
     /* padding: 0.2rem; */
     padding-bottom: 0px;
     transition: background-color 0.5s ease;
-    transition: background-size 0.5s ease;
+    transition: background-size 0.2s linear;
     border-radius: 50%;
     background-size: 50%;
     background-repeat: no-repeat;
@@ -369,11 +369,11 @@
 }
 
 .item:active {
-    border: 4px inset rgb(240, 152, 0);
-    background-color: rgba(0, 140, 240, 0.332);
+    border: 4px inset rgba(9, 111, 155, 0.676);
+    background-color: rgba(3, 35, 125, 0.332);
     transition: none;
     user-select: none;
-    transition: background-size 0.2s ease;
+    transition: background-size 0.1s linear;
     background-size: 55%;
 }
 
