@@ -46,11 +46,11 @@
     ],
     "client": [
         {
-            "inputPlaceholder": "👉👉 שלום הכניסו את שמכם",
-            "logged": "👋👍 משתמש מחובר",
+            "inputPlaceholder": "נא להכניס שם 👉👉",
+            "logged": "👋👍",
             "notExist": "משתמש👨‍💻לא🧑‍🔧קיים",
             "enterName": "👇🏼בחרו👇🏼את👇🏼שמכם👇🏼מהרשימה👇🏼",
-            "notUsed": "👇 שלום הכניסו את שמכם בשורה למטה 👇",
+            "notUsed": "👇👇",
             "orderMessage": "רישום נרשם",
             "orderAbortButton": "בוטל⌛️יצירת🔌רישום🗑ומהתחלה",
             "noOrderToAbortButton": "🤦‍♂️ 🤷‍♀️ 🤷 🤷‍♂️"

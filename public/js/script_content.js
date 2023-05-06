@@ -12,7 +12,7 @@ function generateRandomColor() {
 };
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
-const messageTimeoutTime = 4000;
+const messageTimeoutTime = 2500;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 
@@ -87,8 +87,8 @@ buttonCancel.addEventListener('click', function () {
     buttonCancelClick();
 });
 
-buttonOrder.style.backgroundColor = ("green");
-buttonCancel.style.backgroundColor = ("red");
+// buttonOrder.style.backgroundColor = ("green");
+// buttonCancel.style.backgroundColor = ("red");
 
 //-------------------------AT LOAD CONTENT WINDOW-------------------------//
 function loadUtiliti() {    
@@ -289,6 +289,7 @@ function openOrderConfirm(content) {
     let orderConfirmButtonNo = document.getElementById("orderConfirmButtonNo");
     closeButton.addEventListener('click', function () {
         orderClear();
+        clearCounts();
         orderConfirmWindow.remove();
     });
     orderConfirmButtonNo.addEventListener('click', function () {
@@ -433,13 +434,13 @@ function buttonOrderClick() {
 };
 function buttonCancelClick() {
     if (Object.keys(orderData).length == 0) { 
-        openMessageWindow(messageClient.noOrderToAbortButton);
+        // openMessageWindow(messageClient.noOrderToAbortButton);
         return;
     };
     console.log(orderData.length);
     orderClear();
     clearCounts();
-    openMessageWindow(messageClient.orderAbortButton);
+    // openMessageWindow(messageClient.orderAbortButton);
 };
 function errorMessageShow() {
 

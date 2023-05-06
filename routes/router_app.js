@@ -55,14 +55,14 @@ routerApp.get('/contentScript', function (req, res) {
     res.render('contentScript');
 });
 
-routerApp.get('/footer', function (req, res) {
-    console.log("SEND FOOTER");
-    res.render('footer');
-});
-
 routerApp.get('/about', function (req, res) {
     console.log("SEND ABOUT");
     res.render('about');
+});
+
+routerApp.get('/footer', function (req, res) {
+    console.log("SEND FOOTER");
+    res.render('footer');
 });
 
 //--------------------------------ELEMENTS-------------------------------//

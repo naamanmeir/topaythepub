@@ -5,6 +5,7 @@ const timerRefreshElementsTime = 9995000;
 const timerRefreshCssTime = 9995000;
 const logOutTime = 40000;
 const closeSideMenuTimeoutTime = 10000;
+const sideMenuSlideTime = "0.6s";
 
 //-----------------RUNTIME PARAMS-----------------//
 const timerClearLoggedUSerTIme = 999999;
@@ -19,6 +20,7 @@ const divTopMenu = document.getElementById("divTopMenu");
 const divSideMenu = document.getElementById("divSideMenu");
 const divFloatMenu = document.getElementById("divFloatMenu");
 const divContent = document.getElementById("divContent");
+const divAbout = document.getElementById("divAbout");
 const divFooter = document.getElementById("divFooter");
 
 const openSideMenu = document.getElementById("openSideMenu");
@@ -73,21 +75,28 @@ function displaySideMenu(content) {
 };
 
 function openSideMenuFunc(){    
-    divSideMenu.style.transition = "all 1.5s";
+    divSideMenu.style.transition = `all ${sideMenuSlideTime}`;
     divSideMenu.style.width = "10rem";
     divSideMenu.style.borderWidth = "2px";
     let closeSideMenu = document.getElementById("closeSideMenu");
     closeSideMenu.addEventListener("click",closeSideMenuFunc);
     openSideMenu.removeEventListener("click",openSideMenuFunc);
     openSideMenu.addEventListener("click",closeSideMenuFunc);
-    setTimeout(closeSideMenuFunc,closeSideMenuTimeoutTime)
+    divContent.addEventListener('click',() =>{
+        closeSideMenuFunc();
+    });
+    setTimeout(closeSideMenuFunc,closeSideMenuTimeoutTime);
 };
 
 function closeSideMenuFunc(){
+    console.log("FFFFF")
     divSideMenu.style.width = "0px";
     divSideMenu.style.borderWidth = "0px";
     openSideMenu.removeEventListener("click",closeSideMenuFunc);
     openSideMenu.addEventListener("click",openSideMenuFunc);
+    divContent.removeEventListener('click',() =>{
+        closeSideMenuFunc();
+    });
 };
 
 function displayFloatMenu(content) {
@@ -120,6 +129,24 @@ function displayProducts(content) {
     productsDiv.className = "items";
     productsDiv.innerHTML = content;
 };
+
+function populateAbout() {
+    getRequest("./app/about", displayAbout);
+};
+function displayAbout(content) {
+    closeSideMenuFunc();  
+    divAbout.className = "divAbout";
+    divAbout.innerHTML = content;
+    divFullPage.addEventListener('click',() =>{
+        closeAbout();
+    })
+};
+function closeAbout(){
+    divAbout.className = "divAboutClose";
+    divAbout.innerHTML = "";
+    divFullPage.removeEventListener('click',() =>{
+        closeAbout();
+    })};
 
 //------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
 async function getRequest(url, callback, data) {
@@ -201,6 +228,10 @@ function refreshCss() {
             links[i].setAttribute('href', newHref);
         }
     }
+};
+
+function refreshPage() {
+    location.reload();
 };
 
 function randomNumberGen() {

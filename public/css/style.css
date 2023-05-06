@@ -512,3 +512,22 @@ p {
     margin: 0px;
     padding: 0px;
 }
+
+.divAbout {
+    display: block;
+    z-index: 100;
+    position: absolute;
+    top: 25%;
+    left: 15%;
+    margin: auto;
+    background-color: black;
+    border: 2px solid orange;
+    border-radius: 15%;
+    padding: 5%;
+    color: aliceblue;
+    font-size: 2rem;
+}
+
+.divAboutClose {
+    display: hidden;
+}
