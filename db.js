@@ -82,7 +82,9 @@ exports.dbCreateTableClients = async function () {
         "`nick` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL," +
         "PRIMARY KEY (`id`));"
       )
-        .then((results) => { console.log(results); return results })
+        .then((results) => { 
+          // console.log(results);
+          return results })
         .catch((err) => { console.log(err) })
     });
   return createTableClients;
@@ -96,13 +98,16 @@ exports.dbCreateTableOrders = async function () {
         "`(`orderid` INT NOT NULL AUTO_INCREMENT," +
         "`sign` INT NOT NULL DEFAULT '0'," +
         "`time` DATETIME NOT NULL DEFAULT (now())," +
-        "`info` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin" +
+        "`info` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin," +
         "`sum` INT NOT NULL DEFAULT '0'," +
         "`clientid` INT NOT NULL DEFAULT '1'," +
         "`client` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL," +
         "PRIMARY KEY (`orderid`));"
       )
-        .then((results) => { console.log(results); return results })
+        .then((results) => {
+          //  console.log(results);
+            return results;
+          })
         .catch((err) => { console.log(err) })
     });
   return createTableOrders;
@@ -121,28 +126,13 @@ exports.dbCreateTableProducts = async function () {
         "`itemimgpath` VARCHAR(1024) NOT NULL DEFAULT 'img/items/2.png'," +
         "PRIMARY KEY (`itemid`));"
       )
-        .then((results) => { console.log(results); return results })
+        .then((results) => { 
+          // console.log(results); 
+          return results })
         .catch((err) => { console.log(err) })
     });
   return createTableProducts;
 };
-
-// exports.dbCreateTableUsers = async function () {
-//   let createTableUsers;
-//   createTableUsers = await pool.getConnection()
-//     .then(conn => {
-//       conn.query("CREATE TABLE IF NOT EXISTS `" + tableUsers +
-//         "`(`userid` INT NOT NULL AUTO_INCREMENT," +
-//         "`class` INT NOT NULL DEFAULT '0'," +
-//         "`password` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'pass'," +
-//         "`name` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'user'," +
-//         "PRIMARY KEY (`userid`));"
-//       )
-//         .then((results) => { console.log(results); return results })
-//         .catch((err) => { console.log(err) })
-//     });
-//   return createTableUsers;
-// };
 
 exports.connectionStatus = async function () {
   console.log("Total connections: ", pool.totalConnections());
@@ -292,11 +282,9 @@ exports.dbConfirmDeleteLastOrderById = async function (clientId) {
   " WHERE id = " + clientId + ";");
   if (lastOrderDetails[0].sum > clientDetail[0].sum) { console.log("ERROR SUM IS NO LOGICAL"); return ("ERROR WITH THE NUMBERS") };
 
-// return order DATA to be insertedinto html from MODULE
+// return order DATA to be inserted into html from MODULE
 lastOrderDetails = lastOrderDetails[0];
 return lastOrderDetails;
-
-
 }
 
 //--------------------DELETE LAST ORDER BY CLIEND ID----------------//

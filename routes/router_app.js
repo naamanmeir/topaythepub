@@ -20,48 +20,48 @@ routerApp.get('/', async function (req, res) {
 });
 
 routerApp.get('/messages', async function (req, res) {
-    console.log("SEND MESSAGES OBJECT");
+    // console.log("SEND MESSAGES OBJECT");
     messageUi = (messageUi);
     res.send(messagesJson);
 });
 
 routerApp.get('/header', function (req, res) {
-    console.log("SEND HEADER");
+    // console.log("SEND HEADER");
     res.render('header');
 });
 
 routerApp.get('/topMenu', function (req, res) {
-    console.log("SEND SIDEMENU");    
+    // console.log("SEND SIDEMENU");    
     res.render('topMenu');
 });
 
 routerApp.get('/sideMenu', function (req, res) {
-    console.log("SEND TOPMENU");
+    // console.log("SEND TOPMENU");
     res.render('sideMenu');
 });
 
 routerApp.get('/floatMenu', function (req, res) {
-    console.log("SEND FLOATMENU");
+    // console.log("SEND FLOATMENU");
     res.render('floatMenu');
 });
 
 routerApp.get('/content', function (req, res) {
-    console.log("SEND CONTENT DIV");
+    // console.log("SEND CONTENT DIV");
     res.render('content');
 });
 
 routerApp.get('/contentScript', function (req, res) {
-    console.log("SEND CONTENT SCRIPT");
+    // console.log("SEND CONTENT SCRIPT");
     res.render('contentScript');
 });
 
 routerApp.get('/about', function (req, res) {
-    console.log("SEND ABOUT");
+    // console.log("SEND ABOUT");
     res.render('about');
 });
 
 routerApp.get('/footer', function (req, res) {
-    console.log("SEND FOOTER");
+    // console.log("SEND FOOTER");
     res.render('footer');
 });
 
@@ -72,7 +72,7 @@ routerApp.get('/getProducts/', async (req, res) => {
     let listFromDb = await db.dbGetProducts();
     let html = itemArrayToHtml.buildItemHtml(listFromDb);
     res.send(html);
-    console.log("SENT PRODUCTS")
+    // console.log("SENT PRODUCTS")
     delete require.cache[require.resolve("../module/buildItemHtml")];
     return;
 });

@@ -369,7 +369,7 @@ p {
 .openSideMenu {
     color: rgb(255, 242, 0);
     /* font-size: xx-large;     */
-    width: fit-content;
+    width: 20%;
     right: 0px;
     bottom: 30%;
     padding-left: 10px;

@@ -3,7 +3,7 @@ exports.buildOrderConfirm = function (userInfo, orderData, orderPriceSum) {
     let messageClient = messagesJson.client[0];
     let messageUi = messagesJson.ui[0];
 
-    console.log("REQUEST ORDER CONFIRM MODULE START");
+    // console.log("REQUEST ORDER CONFIRM MODULE START");
     let html = ``;
     html += `<head>
             <link rel="stylesheet" href="./css/windowStyle.css">
@@ -27,9 +27,10 @@ exports.buildOrderConfirm = function (userInfo, orderData, orderPriceSum) {
     html += `<br><p>${messageUi.orderConfirmToName} ${userInfo.name} &emsp;
     ${messageUi.orderConfirmToAccount} ${userInfo.account}</p>><br>`
 
-    html += `</div><div class="windowButtons">`
-    html += `<button class="windowButton no" id="orderConfirmButtonNo">${messageUi.orderConfirmButtonNo}</button>`;
-    html += `<button class="windowButton yes" id="orderConfirmButtonYes">${messageUi.orderConfirmButtonYes}</button>`;
+    html += `</div>
+    <div id="windowButtons">`
+    html += `<button id="orderConfirmButtonNo">${messageUi.orderConfirmButtonNo}</button>`;
+    html += `<button id="orderConfirmButtonYes">${messageUi.orderConfirmButtonYes}</button>`;
     html += `</div>
         </div>`;
     return html;

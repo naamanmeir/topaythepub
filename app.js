@@ -126,25 +126,18 @@ function getSimpleTime() {
 
 // ---------------------- DB INIT ----------------------------------- //
 function dbInit() {
-  db.createSessionTable();
   db.createUserTable();
+  db.createSessionTable();
+  db.dbCreateTableClients();
+  db.dbCreateTableOrders();
+  db.dbCreateTableProducts();
+
   const connectionTestTimeout = setTimeout(callDbStatus, 1000);
   function callDbStatus() {
-    db.connectionStatus();
+    // db.connectionStatus();
   };
 };
 dbInit();
-
-// ----------------- MAIN APP LOGIN ROUTE ---------------------------- //
-// app.use(sessionClassMW({ class: '100'}));
-
-// app.use((req, res, next) => {
-//   console.log('-------------Time:', Date.now())
-//   next()
-// })
-
-// require('./routes/routes_basic')(app);
-// require('./routes/router_manage')(app);
 
 //------------------------------USER SESSION-------------------------------------//
 app.get('/', (req, res) => {
@@ -161,7 +154,7 @@ app.get('/', (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  console.log("LOGIN ATTAMPTED")
+  // console.log("LOGIN ATTAMPTED")
   if (!req.body.username || !req.body.password) {
     res.redirect('./');
     console.log("ATTAMPTED LOGIN WITH NO DETAILS")
@@ -175,7 +168,7 @@ app.post("/login", async (req, res) => {
 
   let dbResponse = await db.userLogin(user, password);
 
-  loginAction(req, res, dbResponse);
+  loginAction(req, res, dbResponse,user,password);
 });
 
 async function loginAction(req, res, reply, user, password) {

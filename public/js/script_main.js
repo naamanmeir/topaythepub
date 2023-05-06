@@ -88,8 +88,7 @@ function openSideMenuFunc(){
     setTimeout(closeSideMenuFunc,closeSideMenuTimeoutTime);
 };
 
-function closeSideMenuFunc(){
-    console.log("FFFFF")
+function closeSideMenuFunc(){    
     divSideMenu.style.width = "0px";
     divSideMenu.style.borderWidth = "0px";
     openSideMenu.removeEventListener("click",closeSideMenuFunc);

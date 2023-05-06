@@ -72,6 +72,7 @@ searchBox1.addEventListener('input', function () {
     input = inputSanitize(input);
     searchBox1.value = input;
     if (input == '' || input == null) {
+        searchBox1.placeholder = (messageClient.inputPlaceholder);
         clearAutoComplete(autoCompleteDiv);
         userIndicState(0, null);
         return;
@@ -225,10 +226,19 @@ function userLogged(data) {
     displayUserPageButton();
     userIndicLogged();
 };
-function userLogout(){
-    currentUserLogged = null;
-    hideUserPageButton();    
+function userLogout(){    
+    if(currentUserLogged!=null){        
+        let id = JSON.stringify({"id": currentUserLogged.id});
+        postRequest('./client/userLogout/', window.parent.userLoggedOut, id);
+        currentUserLogged = null;
+        hideUserPageButton();
+    };    
 };
+
+function userLoggedOut(data){
+    console.log(data);
+};
+
 function userIndicLogged() {
     let par = document.createElement("p");
     par.innerText = currentUserLogged.message;
@@ -273,8 +283,7 @@ function requestOrderPage(order) {
     postRequest('./client/requestOrderPage/', window.parent.openOrderConfirm, order);
     return;
 };
-function openOrderConfirm(content) {
-    console.log("ORDER CONFIRM PAGE");
+function openOrderConfirm(content) {    
     orderDataReturn = content.orderData;
     orderDataReturn = JSON.stringify(orderDataReturn);
     totalSumReturn = content.totalSum;
@@ -285,8 +294,11 @@ function openOrderConfirm(content) {
     orderConfirmWindow.className = ("window");    
     orderConfirmWindow.innerHTML = (content);
     divContent.appendChild(orderConfirmWindow);
-    let closeButton = document.getElementById("orderConfirmCloseButton");
+    let closeButton = document.getElementById("orderConfirmCloseButton");    
     let orderConfirmButtonNo = document.getElementById("orderConfirmButtonNo");
+    let orderConfirmButtonYes = document.getElementById("orderConfirmButtonYes");
+    orderConfirmButtonNo.className = ("windowButton no");
+    orderConfirmButtonYes.className = ("windowButton yes");
     closeButton.addEventListener('click', function () {
         orderClear();
         clearCounts();
@@ -362,20 +374,30 @@ function openUserPage(content) {
     if (document.getElementById("userInfoWindow")) { document.getElementById("userInfoWindow").remove; };
     userWindow = null;
     userWindow = document.createElement('div');
-    userWindow.className = ("userInfo");
-    userWindow.setAttribute("id", "userInfoWindow");
+    userWindow.className = ("window");
+    userWindow.setAttribute("id", "userPageWindow");
     userWindow.innerHTML = (content);
     document.body.appendChild(userWindow);
     let closeButton = document.getElementById("userPageCloseButton");
+    let windowButtons = document.getElementById("windowButtons");
+    windowButtons.className = ("windowbuttons");
+    let closeWindowButton = document.getElementById("closeWindowButton");
+    closeWindowButton.className = ("windowButton yes");
+    let deleteOrderButton = document.getElementById("deleteOrderButton");
+    deleteOrderButton.className = ("windowButton no");
+
     closeButton.addEventListener('click', function () {        
         closeButton.remove();
+        userWindow.remove();
+    });
+    closeWindowButton.addEventListener('click', function () {        
+        closeWindowButton.remove();
         userWindow.remove();
     });
     divFullPage.addEventListener('click', function () {
         closeButton.remove();
         userWindow.remove();
     });
-    let deleteOrderButton = document.getElementById("deleteOrderButton");
     deleteOrderButton.addEventListener('click', function () {
         // deleteLastOrder(currentUserLogged.id);        
         closeButton.remove();
@@ -393,9 +415,13 @@ function openDeleteOrderConfirm(content){
     deleteOrderWindow = document.createElement('div');
     deleteOrderWindow.className = ("window fontLarge");
     deleteOrderWindow.innerHTML = (content);
-    document.body.appendChild(deleteOrderWindow);    
+    document.body.appendChild(deleteOrderWindow);
+    let windowButtons = document.getElementById("windowButtons");
+    windowButtons.className = ("windowbuttons"); 
     let deleteOrderConfirmButtonNo = document.getElementById("deleteOrderConfirmButtonNo");
+    deleteOrderConfirmButtonNo.className = ("windowButton yes");
     let deleteOrderConfirmButtonYes = document.getElementById("deleteOrderConfirmButtonYes");
+    deleteOrderConfirmButtonYes.className = ("windowButton no");
     deleteOrderConfirmButtonNo.addEventListener('click', function () {        
         deleteOrderWindow.remove();
         return requestUserPage(currentUserLogged.id);        

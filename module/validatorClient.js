@@ -1,5 +1,5 @@
 module.exports = function () {
-    console.log("LOADING VALIDATOR MIDDLEWARE");
+    // console.log("LOADING VALIDATOR MIDDLEWARE");
     var validator = require('validator');
     return async function (req, res, next) {
         const regexEmoji = /[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}\u{1F9B0}-\u{1F9B3}]/u        
@@ -32,7 +32,6 @@ module.exports = function () {
 
         }
         if (req.body.id && req.body.id != '' || req.body.id != null) {
-            console.log("VALIDATING ID AS A VALID NUMBER");
             var idNumber = req.body.id;
             if (!idNumber > 0 && !idNumber < 9999) {
                 console.log("ID TAG VALIDATE FALSE");
@@ -41,7 +40,7 @@ module.exports = function () {
                 return;
             }
         }
-        console.log("END OF VALIDATOR CLIENT");
+        // console.log("END OF VALIDATOR CLIENT");
         // console.log(req.body);
         next();
     };

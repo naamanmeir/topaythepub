@@ -20,9 +20,9 @@ exports.buildOrderDeleteConfirmation = function (userInfo,orderInfo) {
             </div>`
 
         html += `
-            <div class="windowButtons">
-            <button class="windowButton no" id="deleteOrderConfirmButtonNo">${messageUi.deleteorderConfirmButtonNo}</button>
-            <button class="windowButton yes" id="deleteOrderConfirmButtonYes">${messageUi.deleteorderConfirmButtonYes}</button>
+            <div id="windowButtons">
+            <button id="deleteOrderConfirmButtonNo">${messageUi.deleteorderConfirmButtonNo}</button>
+            <button id="deleteOrderConfirmButtonYes">${messageUi.deleteorderConfirmButtonYes}</button>
             </div>
             `
         html += `</div>`

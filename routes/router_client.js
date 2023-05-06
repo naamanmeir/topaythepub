@@ -19,8 +19,7 @@ routerClient.post('/searchName/', async (req, res) => {
     if (names.length == 0) {
         res.send(JSON.stringify({ 'errorClient': messageClient.notExist }));
         return;
-    };
-    console.log(names.length);
+    };    
     res.send(JSON.stringify(names));
     return;
 });
@@ -30,15 +29,33 @@ routerClient.post('/userLogin/', async (req, res) => {
     console.log("USER LOGIN ACCEPTED: " + req.body.id);
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
+    console.log(`
+    LOGGED USER : 
+    ${loggedUserDetails[0].name},
+    ${loggedUserDetails[0].nick},
+    ${loggedUserDetails[0].account})
+    `);
     loggedUserDetails = JSON.stringify({
         'id': req.body.id,
         'name': loggedUserDetails[0].name,
         'nick': loggedUserDetails[0].nick,
         'account': loggedUserDetails[0].account,
         'message': messageClient.logged
-    });
-    console.log("LOGGED USER DETAILS: " + loggedUserDetails)
+    });    
     res.send(loggedUserDetails);
+    return;
+});
+
+routerClient.post('/userLogout/', async (req,res)=>{    
+    if(req.body.id){
+        if(req.body.id > 0 && req.body.id < 1000){
+            console.log("CLIENT USER LOGOUT:");
+            console.log(req.body.id);
+            res.send(JSON.stringify({"message":`userId ${req.body.id}LogOut Verifyed on Server`}));
+            return;
+        };
+    };
+    res.send("No user data");
     return;
 });
 
@@ -60,7 +77,7 @@ routerClient.post('/getUserPage/', async (req, res) => {
     let userDataFromDb = await db.dbGetClientInfoById(reqId);
     let html = JSON.stringify(userPageModule.buildUserPage(loggedUserDetails, userDataFromDb));    
     res.send(html);
-    console.log("SENT USER INFO AS HTML")
+    // console.log("SENT USER INFO AS HTML")
     delete require.cache[require.resolve("../module/buildUserPage")];
     return;
 });
@@ -82,10 +99,10 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
         };
     };
     let userId = req.body.userId;
-    console.log("request order confirmation for order: ");
-    console.log(orderData);
-    console.log("for user id: ");
-    console.log(userId);
+    // console.log("request order confirmation for order: ");
+    // console.log(orderData);
+    // console.log("for user id: ");
+    // console.log(userId);
     let orderConfirmPage = require("../module/buildOrderConfirm");
     let orderBuiltData = [];
     var orderPriceSum = 0;
@@ -110,7 +127,7 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
     let htmlOrderData = { "html": html, "orderData": orderDataRaw, "totalSum": orderPriceSum };
     orderBuiltData = JSON.stringify(htmlOrderData);
     res.send(htmlOrderData);
-    console.log("SENT ORDER CONFIRMATION PAGE AS HTML")
+    // console.log("SENT ORDER CONFIRMATION PAGE AS HTML")
     delete require.cache[require.resolve("../module/buildOrderConfirm")];
     return;
 });
@@ -138,7 +155,7 @@ routerClient.post('/placeOrder/', async function (req, res) {
     console.log("at time: " + orderTime);
     let orderResult;
     orderResult = JSON.stringify(await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) }));
-    console.log(orderResult);
+    // console.log(orderResult);
     res.send(orderResult);
     return;
 });
