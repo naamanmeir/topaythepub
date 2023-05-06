@@ -48,7 +48,7 @@
     "client": [
         {
             "inputPlaceholder": "נא להכניס שם 👉👉",
-            "logged": "👋 👍",
+            "logged": "👋👍",
             "notExist": "משתמש👨‍💻לא🧑‍🔧קיים",
             "enterName": "👇🏼בחרו👇🏼את👇🏼שמכם👇🏼מהרשימה👇🏼",
             "notUsed": "👇👇",
