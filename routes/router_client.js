@@ -62,7 +62,7 @@ routerClient.post('/userLogout/', async (req,res)=>{
 routerClient.post('/getUserPage/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let reqId = req.body.id;
-    console.log("GET USER DATA FOR: " + reqId);
+    console.log("GET USER DATA FOR:  " + reqId);
     let userPageModule = require("../module/buildUserPage");
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
