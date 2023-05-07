@@ -54,7 +54,8 @@
             "notUsed": "👇👇",
             "orderMessage": "רישום נרשם",
             "orderAbortButton": "בוטל⌛️יצירת🔌רישום🗑ומהתחלה",
-            "noOrderToAbortButton": "🤦‍♂️ 🤷‍♀️ 🤷 🤷‍♂️"
+            "noOrderToAbortButton": "🤦‍♂️ 🤷‍♀️ 🤷 🤷‍♂️",
+            "clientAutoLogout": "💤 התנתק עקב חוסר שימוש 💤"
         }
     ],
     "error": [

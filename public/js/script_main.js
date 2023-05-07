@@ -23,6 +23,8 @@ const divContent = document.getElementById("divContent");
 const divAbout = document.getElementById("divAbout");
 const divFooter = document.getElementById("divFooter");
 
+divFullPage.style.opacity = "1";
+
 const openSideMenu = document.getElementById("openSideMenu");
 
 let appendedScriptObjectContent;
@@ -52,7 +54,7 @@ function populateContent() {
 };
 
 function populateElements() {
-    getRequest("./app/getProducts", displayProducts);
+    populateProducts();
 };
 
 function buildMessage(content) {
@@ -125,6 +127,7 @@ function populateProducts() {
 function displayProducts(content) {
     if (divContent.innerHTML == "" || divContent.innerHTML == null) { return };
     let productsDiv = document.getElementById("productsDiv");
+    productsDiv.innerHTML = '';
     productsDiv.className = "items";
     productsDiv.innerHTML = content;
 };
@@ -243,3 +246,59 @@ function inputSanitize(input) {
     input = input.substring(0, 42);    
     return input;
 };
+
+function connectEventSource() {
+    if (!!window.EventSource) {
+        var source = new EventSource('./events')
+
+        source.addEventListener('message', function (event) {
+            // console.log(event.data);
+            eventHandler(event);
+        }, false)
+
+        source.addEventListener('open', function (e) {
+            console.log("connected");
+        }, false)
+
+        source.addEventListener('error', function (e) {
+            if (e.eventPhase == EventSource.CLOSED)
+                console.log("closing connection and recall function");
+            source.close()
+            connectEventSource();
+            if (e.target.readyState == EventSource.CLOSED) {
+                connectEventSource();
+            }
+            else if (e.target.readyState == EventSource.CONNECTING) {
+                console.log("connecting");
+            }
+        }, false)
+    } else {
+        console.log("Your browser doesn't support SSE")
+    }
+}
+connectEventSource();
+
+function eventHandler(event) {
+    let data = event.data;
+    // console.log("event: " + data);
+    if (JSON.parse(data) == "refresh") {
+        console.log("MATCH REFRESH TERMINAL");
+        refreshPage();
+    }
+    if (JSON.parse(data) == "reloadItems") {
+        console.log("MATCH RELOAD ITEMS");
+        populateProducts();
+    }
+    if (JSON.parse(data) == "0") {
+        data = data.replace(/^"(.*)"$/, '$1');
+        console.log(data);
+        let conIndic = document.getElementById("conIndic");
+        conIndic.style.opacity = data;
+    }
+    if (JSON.parse(data) == "1") {
+        data = data.replace(/^"(.*)"$/, '$1');
+        console.log(data);
+        let conIndic = document.getElementById("conIndic");
+        conIndic.style.opacity = data;
+    }
+}

@@ -82,6 +82,27 @@ routerClient.post('/getUserPage/', async (req, res) => {
     return;
 });
 
+routerClient.post('/userAutoLogout/', async (req, res) => {
+    if (!req.body.id || req.body.id == null) { res.end(); return; }
+    console.log("AUTOLOGOUT BY ID: " + req.body.id);
+    let autoLoggedOutUserDetails = [];
+    autoLoggedOutUserDetails = await db.dbGetClientDetailsById(req.body.id);
+    console.log(`
+    AUTOLOGGEDOUT FROM USER : 
+    ${autoLoggedOutUserDetails[0].name},
+    ${autoLoggedOutUserDetails[0].nick},
+    ${autoLoggedOutUserDetails[0].account})
+    `);
+    autoLoggedOutUserDetails = JSON.stringify({
+        'id': req.body.id,
+        'name': autoLoggedOutUserDetails[0].name,
+        'nick': autoLoggedOutUserDetails[0].nick,
+        'account': autoLoggedOutUserDetails[0].account,
+        'message': autoLoggedOutUserDetails.logged
+    });
+    res.send(autoLoggedOutUserDetails);
+    return;
+});
 //------------------------CLIENT USER ACTIONS-------------------//
 
 routerClient.post('/requestOrderPage/', async (req, res) => {

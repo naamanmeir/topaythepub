@@ -1,22 +1,13 @@
-// divContent.style.backgroundColor = "black";
-// divContent.style.backgroundColor = generateRandomColor();
-
-
-function generateRandomColor() {
-    let maxVal = 0xFFFFFF; // 16777215
-    let randomNumber = Math.random() * maxVal;
-    randomNumber = Math.floor(randomNumber);
-    randomNumber = randomNumber.toString(16);
-    let randColor = randomNumber.padStart(6, 0);
-    return `#${randColor.toUpperCase()}`
-};
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
 const messageTimeoutTime = 2500;
+const autoLogoutTime = 30000;
+const windowFadeTime = 1400;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 
 const searchBox1 = document.getElementById("searchBox");
+const buttonsMain = document.getElementById("buttons");
 const buttonOrder = document.getElementById("buttonOrder");
 const buttonCancel = document.getElementById("buttonCancel");
 const errorMessage = document.getElementById("errorMessage");
@@ -31,9 +22,9 @@ let messageWindow;
 let deleteOrderWindow;
 let userPageButton = document.getElementById("userPageButton");
 
-
 //-----------------FUNCTIONAL GLOBALS-----------------//
 let orderData = {};
+let autoLogoutTimer;
 
 //------------------------ ELEMENTS ------------------------//
 
@@ -84,17 +75,22 @@ buttonOrder.addEventListener('click', function () {
     buttonOrderClick();
 });
 buttonCancel.addEventListener('click', function () {
-    console.log("button cancel click");
+    // console.log("button cancel click");
     buttonCancelClick();
 });
-
-// buttonOrder.style.backgroundColor = ("green");
-// buttonCancel.style.backgroundColor = ("red");
+divFullPage.addEventListener('click',function (){
+    resetAutoLogout();
+});
 
 //-------------------------AT LOAD CONTENT WINDOW-------------------------//
 function loadUtiliti() {    
     userIndicMessage(messageClient.notUsed);
     userPageButton.innerHTML = messageUi.userPageLable;
+    buttonOrder.innerHTML = messageUi.buttonOrder;
+    buttonCancel.innerHTML = messageUi.buttonCancel;
+    buttonsMain.className = ("buttons");
+    buttonOrder.className = ("placeOrder");
+    buttonCancel.className = ("cancel");
 };
 loadUtiliti();
 
@@ -224,17 +220,22 @@ function userLogged(data) {
     ${currentUserLogged.account} ,
     ${currentUserLogged.id}`);
     displayUserPageButton();
-    userIndicLogged();
-};
-function userLogout(){    
-    if(currentUserLogged!=null){        
-        let id = JSON.stringify({"id": currentUserLogged.id});
-        postRequest('./client/userLogout/', window.parent.userLoggedOut, id);
-        currentUserLogged = null;
-        hideUserPageButton();
-    };    
+    userIndicLogged();    
+    resetAutoLogout()
 };
 
+function userLogout(){
+    if(currentUserLogged!=null){
+        let id = JSON.stringify({"id": currentUserLogged.id});
+        postRequest('./client/userLogout/', window.parent.userLoggedOut, id);        
+        currentUserLogged = null;
+        hideUserPageButton();
+        searchBox1.value = '';
+        clearCounts();
+        orderClear();
+        closeWindows();
+    };    
+};
 function userLoggedOut(data){
     console.log(data);
 };
@@ -323,6 +324,7 @@ function placeOrder(orderDataReturn) {
     postRequest('./client/placeOrder/', window.parent.orderComplete, orderDataReturn);
     orderClear();
     clearCounts();
+    userLogout();
     return;
 };
 function orderClear() {
@@ -371,7 +373,7 @@ function requestUserPage(id) {
     return;
 };
 function openUserPage(content) {
-    if (document.getElementById("userInfoWindow")) { document.getElementById("userInfoWindow").remove; };
+    if (document.getElementById("userPageWindow")) { document.getElementById("userPageWindow").remove; };
     userWindow = null;
     userWindow = document.createElement('div');
     userWindow.className = ("window");
@@ -387,30 +389,35 @@ function openUserPage(content) {
     deleteOrderButton.className = ("windowButton no");
 
     closeButton.addEventListener('click', function () {        
-        closeButton.remove();
-        userWindow.remove();
+        // closeButton.remove();
+        // userWindow.remove();
+        closeWindows()
     });
     closeWindowButton.addEventListener('click', function () {        
-        closeWindowButton.remove();
-        userWindow.remove();
+        // closeWindowButton.remove();
+        // userWindow.remove();
+        closeWindows()
     });
     divFullPage.addEventListener('click', function () {
-        closeButton.remove();
-        userWindow.remove();
+        // closeButton.remove();
+        // userWindow.remove();
+        closeWindows()
     });
     deleteOrderButton.addEventListener('click', function () {
         // deleteLastOrder(currentUserLogged.id);        
-        closeButton.remove();
-        userWindow.remove();
+        // closeButton.remove();
+        // userWindow.remove();
+        closeWindows();
         return deleteLastOrderConfirm(currentUserLogged.id);
     });
 };
+
 function deleteLastOrderConfirm(id){
     id = JSON.stringify({ "id": id });
     let deleteOrderResponse = postRequest('./client/deleteLastOrderConfirm/', openDeleteOrderConfirm, id);    
     return deleteOrderResponse;
 };
-function openDeleteOrderConfirm(content){    
+function openDeleteOrderConfirm(content){
     userWindow.remove();
     deleteOrderWindow = document.createElement('div');
     deleteOrderWindow.className = ("window fontLarge");
@@ -422,13 +429,13 @@ function openDeleteOrderConfirm(content){
     deleteOrderConfirmButtonNo.className = ("windowButton yes");
     let deleteOrderConfirmButtonYes = document.getElementById("deleteOrderConfirmButtonYes");
     deleteOrderConfirmButtonYes.className = ("windowButton no");
-    deleteOrderConfirmButtonNo.addEventListener('click', function () {        
-        deleteOrderWindow.remove();
-        return requestUserPage(currentUserLogged.id);        
-    });    
-    deleteOrderConfirmButtonYes.addEventListener('click', function () {        
-        deleteOrderWindow.remove();
-        return deleteLastOrder(currentUserLogged.id);        
+    deleteOrderConfirmButtonNo.addEventListener('click', function () {
+        closeWindows();
+        return requestUserPage(currentUserLogged.id);
+    });
+    deleteOrderConfirmButtonYes.addEventListener('click', function () {
+        closeWindows();
+        return deleteLastOrder(currentUserLogged.id);
     });
 };
 function deleteLastOrder(id) {
@@ -443,15 +450,50 @@ function openDeleteOrderResults(content){
 };
 
 //---------------------- UI INTERACTIONS ----------------------//
+function closeWindows(){
+    const windows = document.querySelectorAll('.window');
+    var seconds = windowFadeTime/1000;
+    windows.forEach(window => {
+        window.style.transition = "opacity "+seconds+"s ease";
+        window.style.opacity = 0;
+    });
+    setTimeout(()=>{
+        windows.forEach(window => {
+            window.remove();
+        });
+    },windowFadeTime);
+    return;
+};
+
+function autoLogout(){
+    // console.log("autoLogout");    
+    if(currentUserLogged!=null){
+        openMessageWindow(messageClient.clientAutoLogout);
+        let id = JSON.stringify({"id": currentUserLogged.id});
+        postRequest('./client/userAutoLogout/', window.parent.userLoggedOut, id);        
+        userLogout();
+    };
+    closeWindows();
+    clearCounts();
+    orderClear();
+    searchBox1.value='';
+    searchBox1.blur();
+    userIndicMessage(messageClient.notUsed);
+};
+
+function resetAutoLogout(){
+    clearTimeout(autoLogoutTimer);
+    autoLogoutTimer = setTimeout(autoLogout,autoLogoutTime);
+};
 
 function buttonOrderClick() {
     if (!currentUserLogged || currentUserLogged == null || currentUserLogged.userId == '') {
-        console.log("no user logged");
+        // console.log("no user logged");
         openMessageWindow(messageError.orderNoLoggedUSer,"green bottom")
         return;
     }
     if (!orderData || orderData == null || (Object.keys(orderData).length) <= 0) {
-        console.log("order data is empty");        
+        // console.log("order data is empty");        
         openMessageWindow(messageError.orderNoOrderData,"green bottom")
         return;
     };
@@ -463,11 +505,19 @@ function buttonCancelClick() {
         // openMessageWindow(messageClient.noOrderToAbortButton);
         return;
     };
-    console.log(orderData.length);
+    // console.log(orderData.length);
     orderClear();
     clearCounts();
     // openMessageWindow(messageClient.orderAbortButton);
 };
 function errorMessageShow() {
-
+    console.log("errorMEssage");
+};
+function generateRandomColor() {
+    let maxVal = 0xFFFFFF; // 16777215
+    let randomNumber = Math.random() * maxVal;
+    randomNumber = Math.floor(randomNumber);
+    randomNumber = randomNumber.toString(16);
+    let randColor = randomNumber.padStart(6, 0);
+    return `#${randColor.toUpperCase()}`
 };
