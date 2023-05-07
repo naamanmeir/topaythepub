@@ -8,8 +8,7 @@ let clients = [];
 
 routerClientEvents.get('/status', sessionClassMW(100), (req, res) => res.json({ clients: clients.length }));
 
-routerClientEvents.get('/', sessionClassMW(100), function (req, res) {
-    console.log('events somthing');
+routerClientEvents.get('/', sessionClassMW(100), function (req, res) {    
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
@@ -21,7 +20,7 @@ routerClientEvents.get('/', sessionClassMW(100), function (req, res) {
         res
     };
     clients.push(newClient);
-    console.log(clientId);
+    console.log(`Client registered for SSE : ${clientId}`);
     req.on('close', () => {
         console.log(`${clientId} Connection closed`);
         clients = clients.filter(client => client.id !== clientId);
@@ -41,8 +40,7 @@ function eventSendStatus(res) {
             return;
         }
         return;
-    }, 2000);
-
+    }, 10000);
 }
 
 routerClientEvents.get('/refreshClients', function (req, res) {
@@ -50,7 +48,7 @@ routerClientEvents.get('/refreshClients', function (req, res) {
 });
 
 routerClientEvents.sendEvents = function (event) {
-    console.log("SENDING SERVER SIDE EVENT: " + JSON.stringify(event));
+    // console.log("SENDING SERVER SIDE EVENT: " + JSON.stringify(event));
     clients.forEach(client => client.res.write(`data: ${JSON.stringify(event)}\n\n`))
 }
 

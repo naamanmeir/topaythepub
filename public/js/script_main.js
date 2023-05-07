@@ -264,9 +264,10 @@ function connectEventSource() {
             if (e.eventPhase == EventSource.CLOSED)
                 console.log("closing connection and recall function");
             source.close()
-            connectEventSource();
+            // setTimeout(connectEventSource(),3000);
+            // connectEventSource();
             if (e.target.readyState == EventSource.CLOSED) {
-                connectEventSource();
+                // connectEventSource();
             }
             else if (e.target.readyState == EventSource.CONNECTING) {
                 console.log("connecting");
@@ -275,7 +276,7 @@ function connectEventSource() {
     } else {
         console.log("Your browser doesn't support SSE")
     }
-}
+};
 connectEventSource();
 
 function eventHandler(event) {
@@ -291,14 +292,14 @@ function eventHandler(event) {
     }
     if (JSON.parse(data) == "0") {
         data = data.replace(/^"(.*)"$/, '$1');
-        console.log(data);
+        // console.log(data);
         let conIndic = document.getElementById("conIndic");
         conIndic.style.opacity = data;
     }
     if (JSON.parse(data) == "1") {
         data = data.replace(/^"(.*)"$/, '$1');
-        console.log(data);
+        // console.log(data);
         let conIndic = document.getElementById("conIndic");
         conIndic.style.opacity = data;
     }
-}
+};

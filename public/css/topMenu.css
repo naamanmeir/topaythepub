@@ -1,8 +1,5 @@
 .topMenuDiv {
     direction: ltr;
-    /* display: flex;
-    flex-direction: row; */
-    /* flex-basis: auto; */
     max-width: 800px;
     margin: auto;
     color: aliceblue;
@@ -14,14 +11,12 @@
 .topMenuDiv>div {
     display: inline-block;
     vertical-align: top;
-    /* text-align: center; */
     margin: 0px 4rem 0px 4rem;
 }
 
 #userIndic {
     position: absolute;
     right: 15%;
-    border: solid 2px rgb(17, 69, 118);
     margin-right: 0px;
     margin-bottom: 1rem;
     padding: 2px;
@@ -63,7 +58,7 @@
     width: 10px;
     border-radius: 50%;
     background-color: green;
-    transition: all 2s ease;
+    transition: all 5s ease;
 
 }
 
