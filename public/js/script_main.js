@@ -29,32 +29,36 @@ const openSideMenu = document.getElementById("openSideMenu");
 
 let appendedScriptObjectContent;
 
-window.addEventListener('load', loadUtiliti, false);
+window.addEventListener('load', loadUtiliti, true);
 function loadUtiliti() {
-    setTimeout(populateMainDivs(), 100);
-    let timerRefreshMainDivs = setInterval(populateMainDivs, timerRefreshMainDivsTime);
-    let timerRefreshContent = setInterval(populateContent, timerRefreshContentTime);
-    setTimeout(populateElements(), 110);
-    let timerRefreshElements = setInterval(populateElements, timerRefreshElementsTime);
-    let timerRefreshCss = setInterval(refreshCss, timerRefreshCssTime);
+    populateUtilities();
+    // populateMainDivs();
+    // populateElements();
+};
+
+function populateUtilities(){
+    getRequest("./app/messages", buildMessage);
+    return;
 };
 
 function populateMainDivs() {
-    getRequest("./app/messages", buildMessage);
     getRequest("./app/header", displayHeader);
     getRequest("./app/topMenu", displayTopMenu);
     getRequest("./app/sideMenu", displaySideMenu);
     getRequest("./app/floatMenu", displayFloatMenu);
     getRequest("./app/content", displayContent);
     getRequest("./app/footer", displayFooter);
+    return;
 };
 
 function populateContent() {
     getRequest("./app/content", displayContent);
+    return;
 };
 
 function populateElements() {
     populateProducts();
+    return;
 };
 
 function buildMessage(content) {
@@ -62,10 +66,17 @@ function buildMessage(content) {
     messageClient = JSON.parse(content).client[0];
     messageError = JSON.parse(content).error[0];
     regexBlock = new RegExp(messageUi.regexBlock, "g");
+    return populateMainDivs();
 };
 
 function displayHeader(content) {
     divHeader.innerHTML = (content);
+    let headerText = document.getElementById("headerText");
+    let headerAnimElement1 = document.getElementById("headerAnimElement1");
+    let headerAnimElement2 = document.getElementById("headerAnimElement2");
+    headerText.innerText = messageUi.headerText;
+    headerAnimElement1.innerText = messageUi.headerAnimElement1;
+    headerAnimElement2.innerText = messageUi.headerAnimElement2;
 };
 function displayTopMenu(content) {
     divTopMenu.innerHTML = (content);    
@@ -119,6 +130,7 @@ function appendScriptContent() {
 
 function displayFooter(content) {
     divFooter.innerHTML = (content);
+    connectEventSource();
 };
 
 function populateProducts() {
@@ -277,7 +289,7 @@ function connectEventSource() {
         console.log("Your browser doesn't support SSE")
     }
 };
-connectEventSource();
+
 
 function eventHandler(event) {
     let data = event.data;

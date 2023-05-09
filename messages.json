@@ -1,6 +1,9 @@
 {
     "ui": [
         {
+            "headerText": "לרשום בפאב",
+            "headerAnimElement1": "💚",
+            "headerAnimElement2": "💙",
             "regexBlock": "[~!@#\\$%^&\\*\\(\\)-\\\\=_\\+\\[\\]\\{\\}\\?>/\\.<\\,;\\|]",
             "regexEmoji": "/[\\p{Extended_Pictographic}\\u{1F3FB}-\\u{1F3FF}\\u{1F9B0}-\\u{1F9B3}]/u",
             "userPageLable": "דף משתמש",
@@ -43,6 +46,16 @@
             "deleteorderConfirmClient": "על שם :",
             "deleteorderConfirmButtonNo": " 😬 בטל מחיקת הזמנה הפאב צריך את הכסף",
             "deleteorderConfirmButtonYes": " 😢 אשר מחיקת הזמנה עצוב"
+        }
+    ],
+    "sideMenu": [
+        {
+            "sideMenuOpenAbout": "אודות",
+            "sideMenuFullScreen": "מסך מלא",
+            "sideMenuRefreshCss": "רענן עיצוב",
+            "SideMenuRefreshPage": "טען מחדש",
+            "SideMenuLogOutClient": "נתק מסוף",
+            "SideMenuCloseSideMenu": ">>>>"
         }
     ],
     "client": [
