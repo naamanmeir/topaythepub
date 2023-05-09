@@ -3,10 +3,11 @@ exports.buildItemHtml = function (array) {
     array.forEach(item => {
         html +=
             `
-        <div style="background-image: url('${item.itemimgpath}')" 
+        <div 
         class="item" id="item${item.itemid}"
         onmousedown="addItem(${item.itemid})">
         <itemName>${item.itemname}</itemName>
+        <img src="${item.itemimgpath}">
         <itemPrice>₪${item.price}</itemPrice>
         <div class="itemCount" id="itemCount${item.itemid}"></div>
         </div>
@@ -15,4 +16,5 @@ exports.buildItemHtml = function (array) {
 
     });
     return html;
+    // style="background-image: url('${item.itemimgpath}')" 
 };

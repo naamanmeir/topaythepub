@@ -2,7 +2,7 @@
 const maxAutoCompleteResults = 4;
 const messageTimeoutTime = 2500;
 const autoLogoutTime = 30000;
-const windowFadeTime = 1400;
+const windowFadeTime = 900;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 
@@ -231,6 +231,7 @@ function userLogout(){
         currentUserLogged = null;
         hideUserPageButton();
         searchBox1.value = '';
+        userIndicMessage(messageClient.notUsed);
         clearCounts();
         orderClear();
         closeWindows();
@@ -324,7 +325,6 @@ function placeOrder(orderDataReturn) {
     postRequest('./client/placeOrder/', window.parent.orderComplete, orderDataReturn);
     orderClear();
     clearCounts();
-    userLogout();
     return;
 };
 function orderClear() {
@@ -345,6 +345,8 @@ function orderComplete(content) {
     console.log("order complete");
     console.log(content);
     openMessageWindow(content);
+    userLogout();
+    return;
 };
 
 //---------------------- USER MANAGE FUNCTIONS ----------------------//
@@ -373,8 +375,7 @@ function requestUserPage(id) {
     return;
 };
 function openUserPage(content) {
-    if (document.getElementById("userPageWindow")) { document.getElementById("userPageWindow").remove; };
-    userWindow = null;
+    if (document.contains(document.getElementById("userPageWindow"))) { document.getElementById("userPageWindow").remove; };
     userWindow = document.createElement('div');
     userWindow.className = ("window");
     userWindow.setAttribute("id", "userPageWindow");
@@ -464,6 +465,10 @@ function closeWindows(){
     },windowFadeTime);
     return;
 };
+
+function openWindows(){
+    
+}
 
 function autoLogout(){
     // console.log("autoLogout");    

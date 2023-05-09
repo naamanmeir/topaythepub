@@ -1,3 +1,19 @@
+:root {
+    --bg01: black;
+    --bg02: rgba(104, 99, 99, 0.283);
+
+    --text01: rgb(225, 168, 10);
+    --text02: rgb(255, 255, 0);
+    --text03: rgb(148, 158, 158);
+
+    --border01: rgb(194, 115, 4);
+    --border02: rgb(162, 146, 123);
+
+    --buttonYes: rgb(3, 183, 3);
+    --buttonNo: rgb(255, 83, 3);
+}
+
+
 html,
 body {
     height: 100%;
@@ -7,13 +23,8 @@ body {
     top: 0px;
     margin-top: 0px;
     padding-top: 0px;
-    background-color: #000000;
+    background-color: var(--bg01);
     overflow: hidden;
-}
-
-html,
-body {
-    background-color: rgb(0, 0, 0);
     overscroll-behavior: contain;
     direction: rtl;
     -webkit-user-select: none;
@@ -367,13 +378,11 @@ p {
 }
 
 .openSideMenu {
-    color: rgb(255, 242, 0);
-    /* font-size: xx-large;     */
+    color: var(--text02);
     width: 20%;
     right: 0px;
     bottom: 30%;
     padding-left: 10px;
-    /* padding-top: 15px; */
     position: absolute;
     z-index: 30;
 }
@@ -429,20 +438,20 @@ p {
     bottom: 50%;
     left: 0;
     border-radius: 50%;
-    border: 1px inset whitesmoke;
+    border: 1px inset var(--border02);
     transition: 0.5s;
 }
 
 .floatMenuDiv p {
     z-index: 40;
-    color: whitesmoke;
+    color: var(--text03);
     font-size: 50%;
     margin: auto;
 }
 
 .floatMenuDiv a {
     z-index: 40;
-    color: whitesmoke;
+    color: var(--text03);
     text-decoration: none;
     padding: 8px 32px 18px 8px;
     text-decoration: none;
@@ -457,8 +466,8 @@ p {
 .floatMenuDiv a:hover {
     border-radius: 50%;
     z-index: 40;
-    background-color: #7b6f6fd8;
-    color: #ffffff;
+    background-color: var(--bg02);
+    color: var(--text02);
 }
 
 .messageWindow {
@@ -470,14 +479,14 @@ p {
     width: 95%;
     top: 30%;
     padding: 5px 5px 5px 5px;
-    background-color: rgb(0, 0, 0);
-    border: 2px groove orange;
+    background-color: var(--bg01);
+    border: 2px groove var(--border01);
     border-radius: 3rem;
     margin: auto;
 }
 
 .messageWindow p {
-    color: orange;
+    color: var(--text01);
     text-align: center;
     font-size: larger;
 }
@@ -520,11 +529,11 @@ p {
     top: 25%;
     left: 15%;
     margin: auto;
-    background-color: black;
-    border: 2px solid orange;
+    background-color: var(--bg01);
+    border: 2px solid var(--border01);
     border-radius: 15%;
     padding: 5%;
-    color: aliceblue;
+    color: var(--text03);
     font-size: 2rem;
 }
 

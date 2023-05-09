@@ -10,7 +10,7 @@
     flex-direction: column;
     /* flex: 1 1; */
     /* flex-shrink: 2; */
-    max-width: 800px;
+    max-width: 1200px;
     transition: background-color 0.8s ease;
     /* border: 5px solid orange; */
 }
@@ -28,10 +28,10 @@
 
 .searchBox {
     color: rgb(245, 191, 90);
-    text-shadow: 1px 0px 0px #000000;
+    text-shadow: 1px 0px 0px var(--bg01);
     border-radius: 25px;
     /* border: 3px double orange; */
-    background-color: rgba(34, 33, 28, 0.368);
+    background-color: var(--bg01);
     height: 100%;
     width: 100%;
     font-size: 1.6em;
@@ -46,9 +46,14 @@
 }
 
 ::placeholder {
-    color: rgb(245, 191, 90);
+    color: var(--text01);
     opacity: 1;
 }
+
+*:focus {
+    outline: none;
+}
+
 
 .searchBoxLogged {
     border-color: green;
@@ -112,16 +117,15 @@
 .items {
     display: flex;
     flex-direction: space-between;
-    gap: 2%;
-    /* column-gap: 5px; */
-    /* row-gap: -220px; */
+    gap: 0px;
+    flex-shrink: 1;
     flex-wrap: wrap;
     justify-content: center;
     margin: auto;
     width: 90%;
-    height: 80%;
+    height: 90%;
     margin-top: 0px;
-    margin-bottom: 10%;
+    margin-bottom: 11%;
     transition: background-color 0.8s ease;
     overflow-y: auto;
     overflow-x: hidden;
@@ -132,35 +136,36 @@
     position: relative;
     display: flex;
     flex-direction: row;
+    /* width: fit-content; */
     width: 80%;
     height: 6rem;
     max-height: 50%;
     max-width: 70%;
     background-color: #655d5558;
     border: 3px outset rgb(203, 171, 10);
-    margin: auto;
+    margin: 0px auto 0px auto;
     margin-bottom: 1%;
     /* padding-bottom: 20px; */
     transition: background-color 0.5s ease;
-    transition: background-size 0.2s linear;
     border-radius: 8%;
-    background-size: 6rem;
+    /* transition: background-size 0.2s linear; */
+    /* background-size: 6rem;
     background-repeat: no-repeat;
     background-blend-mode: color-burn;
     background-clip: border-box;
-    background-position: 25%;
+    background-position: 25%; */
     /* background-position-y: -1rem; */
 }
 
 .item img {
-    display: none;
+    /* display: none; */
     user-select: none;
     pointer-events: none;
-    top: 0px;
-    padding: 0px;
-    margin: 0px;
-    max-width: 60px;
-    max-height: 60px;
+    top: 10px;
+    padding: 10px;
+    margin: auto auto auto 25%;
+    /* max-width: 90px; */
+    max-height: 6rem;
     clear: both;
 }
 
@@ -177,7 +182,8 @@
     right: 1px;
     padding: 0px;
     margin: 0px;
-    font-size: 2.4rem;
+    font-size: 4vw;
+    font-size: max(5px, 4vw);
     padding-right: 1rem;
     color: #deb911;
     text-shadow: 1px 1px 1px #000000;
@@ -191,8 +197,8 @@
     left: 1px;
     padding: 0px;
     margin: 0px;
-    font-size: 2.5rem;
-    padding-right: 1rem;
+    font-size: 5vw;
+    padding-left: 1rem;
     color: #e68d07;
     text-shadow: 2px 2px 2px #000000;
     user-select: none;
