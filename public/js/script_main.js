@@ -71,12 +71,12 @@ function buildMessage(content) {
 
 function displayHeader(content) {
     divHeader.innerHTML = (content);
-    let headerText = document.getElementById("headerText");
-    let headerAnimElement1 = document.getElementById("headerAnimElement1");
-    let headerAnimElement2 = document.getElementById("headerAnimElement2");
-    headerText.innerText = messageUi.headerText;
-    headerAnimElement1.innerText = messageUi.headerAnimElement1;
-    headerAnimElement2.innerText = messageUi.headerAnimElement2;
+    // let headerText = document.getElementById("headerText");
+    // let headerAnimElement1 = document.getElementById("headerAnimElement1");
+    // let headerAnimElement2 = document.getElementById("headerAnimElement2");
+    // headerText.innerText = messageUi.headerText;
+    // headerAnimElement1.innerText = messageUi.headerAnimElement1;
+    // headerAnimElement2.innerText = messageUi.headerAnimElement2;
 };
 function displayTopMenu(content) {
     divTopMenu.innerHTML = (content);    

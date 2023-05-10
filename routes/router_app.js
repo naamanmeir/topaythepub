@@ -27,22 +27,34 @@ routerApp.get('/messages', async function (req, res) {
 
 routerApp.get('/header', function (req, res) {
     // console.log("SEND HEADER");
-    res.render('header');
+    // res.render('header');
+    let renderHeader = require("../module/html/header");
+    let html = renderHeader.buildHtml(messageUi);
+    res.send(html);
 });
 
 routerApp.get('/topMenu', function (req, res) {
     // console.log("SEND SIDEMENU");    
-    res.render('topMenu');
+    // res.render('topMenu');
+    let renderTopMenu = require("../module/html/topMenu");
+    let html = renderTopMenu.buildHtml(messageUi);
+    res.send(html);
 });
 
 routerApp.get('/sideMenu', function (req, res) {
     // console.log("SEND TOPMENU");
-    res.render('sideMenu');
+    // res.render('sideMenu');
+    let renderSideMenu = require("../module/html/sideMenu");
+    let html = renderSideMenu.buildHtml(messageUi);
+    res.send(html);
 });
 
 routerApp.get('/floatMenu', function (req, res) {
     // console.log("SEND FLOATMENU");
-    res.render('floatMenu');
+    // res.render('floatMenu');
+    let renderFloatMenu = require("../module/html/floatMenu");
+    let html = renderFloatMenu.buildHtml(messageUi);
+    res.send(html);
 });
 
 routerApp.get('/content', function (req, res) {
@@ -57,7 +69,10 @@ routerApp.get('/contentScript', function (req, res) {
 
 routerApp.get('/about', function (req, res) {
     // console.log("SEND ABOUT");
-    res.render('about');
+    // res.render('about');
+    let renderAbout = require("../module/html/about");
+    let html = renderAbout.buildHtml(messageUi);
+    res.send(html);
 });
 
 routerApp.get('/footer', function (req, res) {

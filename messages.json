@@ -1,6 +1,8 @@
 {
     "ui": [
         {
+            "appName": "לרשום בפאב",
+            "appVersion": "0.3.1",
             "headerText": "לרשום בפאב",
             "headerAnimElement1": "💚",
             "headerAnimElement2": "💙",
@@ -45,7 +47,22 @@
             "deleteorderConfirmAccount": "מחשבון :",
             "deleteorderConfirmClient": "על שם :",
             "deleteorderConfirmButtonNo": " 😬 בטל מחיקת הזמנה הפאב צריך את הכסף",
-            "deleteorderConfirmButtonYes": " 😢 אשר מחיקת הזמנה עצוב"
+            "deleteorderConfirmButtonYes": " 😢 אשר מחיקת הזמנה עצוב",
+            "aboutLine1": "נוצר עבור פאב אבירים",
+            "aboutLine2": "ע'י ניבה גבינהצהובה",
+            "aboutLine3": "ותום תרם את הטאבלט",
+            "aboutLine4": "המידע המועט שנשמר פה די מוגן באינטרנט",
+            "aboutLine5": "ובסוף הופך להיות דף אקסל בהנהלת חשבונות",
+            "aboutLine6": "",
+            "aboutLink1": "https://github.com/naamanmeir/topaythepub",
+            "aboutLink1Text": "github",
+            "sideMenuOpenAbout": "אודות",
+            "sideMenuFullScreen": "מסך מלא",
+            "sideMenuRefreshCss": "רענן עיצוב",
+            "SideMenuRefreshPage": "טען מחדש",
+            "SideMenuLogOutClient": "נתק מסוף",
+            "SideMenuCloseSideMenu": "⟹",
+            "floatMenuButton": "כפתור"
         }
     ],
     "sideMenu": [
@@ -55,7 +72,7 @@
             "sideMenuRefreshCss": "רענן עיצוב",
             "SideMenuRefreshPage": "טען מחדש",
             "SideMenuLogOutClient": "נתק מסוף",
-            "SideMenuCloseSideMenu": ">>>>"
+            "SideMenuCloseSideMenu": "⟹"
         }
     ],
     "client": [
