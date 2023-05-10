@@ -62,7 +62,8 @@
             "SideMenuRefreshPage": "טען מחדש",
             "SideMenuLogOutClient": "נתק מסוף",
             "SideMenuCloseSideMenu": "⟹",
-            "floatMenuButton": "כפתור"
+            "floatMenuButton": "כפתור",
+            "footerText": " זה של הפאב ונוצר על ידי ניבה גבינהצהובה"
         }
     ],
     "sideMenu": [

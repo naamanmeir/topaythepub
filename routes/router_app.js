@@ -77,7 +77,10 @@ routerApp.get('/about', function (req, res) {
 
 routerApp.get('/footer', function (req, res) {
     // console.log("SEND FOOTER");
-    res.render('footer');
+    // res.render('footer');
+    let renderFooter = require("../module/html/footer");
+    let html = renderFooter.buildHtml(messageUi);
+    res.send(html);
 });
 
 //--------------------------------ELEMENTS-------------------------------//
