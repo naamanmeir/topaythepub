@@ -5,12 +5,21 @@
     --text01: rgb(225, 168, 10);
     --text02: rgb(255, 255, 0);
     --text03: rgb(148, 158, 158);
+    --textBlack: black;
 
-    --border01: rgb(194, 115, 4);
+    --border01: rgb(194, 172, 4);
     --border02: rgb(162, 146, 123);
 
     --buttonYes: rgb(3, 183, 3);
     --buttonNo: rgb(255, 83, 3);
+
+    --uttonBgYes: rgb(3, 183, 3);
+    --buttonBgNo: rgb(255, 83, 3);
+
+    --listItemOdd: #b9c1c3;
+    --listItemEven: #d4d4d4;
+    --listItemSelected: #699db7;
+
 }
 
 

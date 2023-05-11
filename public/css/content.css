@@ -1,6 +1,6 @@
 .content {
     z-index: 5;
-    height: 90%;
+    height: 90vh;
     width: 98%;
     left: 1%;
     right: 1%;
@@ -55,14 +55,14 @@
 }
 
 
-.searchBoxLogged {
+/* .searchBoxLogged {
     border-color: green;
     transition: all 0.2s;
 }
 
 .searchBoxNotLogged {
     border-color: orange;
-}
+} */
 
 .autoCompleteNone {
     display: none;
@@ -90,28 +90,28 @@
     margin: 0px;
     font-size: 3.5rem;
     white-space: normal;
-    color: rgb(20, 20, 20);
-    background-color: #b9c1c3;
-    border: 2px solid black;
+    color: var(--textBlack);
+    background-color: var(--listItemOdd);
+    border: 2px solid var(--textBlack);
 }
 
 .autocomplete-itemsEven {
-    background-color: #d4d4d4;
+    background-color: var(--listItemEven);
 }
 
 .autocomplete-items:hover {
-    background-color: #e9e9e9;
+    background-color: var(--listItemSelected);
 }
 
 .autocomplete-items div {
-    cursor: pointer;
-    background-color: #fff;
-    border-bottom: 1px solid #d4d4d4;
+    /* cursor: pointer; */
+    /* background-color: #fff; */
+    /* border-bottom: 1px solid #d4d4d4; */
 }
 
 .autocomplete-active {
-    background-color: DodgerBlue !important;
-    color: #ffffff;
+    /* background-color: DodgerBlue !important; */
+    /* color: #ffffff; */
 }
 
 .items {
@@ -142,7 +142,7 @@
     max-height: 50%;
     max-width: 70%;
     background-color: #655d5558;
-    border: 3px outset rgb(203, 171, 10);
+    border: 3px outset var(--border01);
     margin: 0px auto 0px auto;
     margin-bottom: 1%;
     /* padding-bottom: 20px; */
