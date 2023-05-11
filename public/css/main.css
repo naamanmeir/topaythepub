@@ -580,7 +580,7 @@ video {
 (max-width: 500px) {
     .item {
         border: 2px outset rgb(240, 152, 0);
-        max-height: 35%;
+        /* max-height: 35%; */
         /* margin-bottom: 0px; */
     }
 
@@ -626,6 +626,7 @@ video {
 }
 
 .buttons {
+    /* z-index: 2222; */
     position: sticky;
     display: flex;
     flex: 1;
@@ -634,7 +635,7 @@ video {
     float: none;
     width: 100%;
     height: fit-content;
-    /* padding: 1rem; */
+    padding: 1rem;
     margin: auto;
     margin-top: 3rem;
     margin-bottom: 1rem;
@@ -654,7 +655,7 @@ video {
     height: fit-content;
     color: black;
     font-size: 175%;
-    /* padding: 0rem 1rem 0rem 1rem; */
+    padding: 0rem 1rem 0rem 1rem;
     text-shadow: 5px 1px 10px #a49c9c;
     border: 3px outset rgba(230, 145, 9, 0.495);
 }

@@ -24,6 +24,12 @@ routerApp.get('/about', function (req, res) {
     // res.send("SEND TEST");
 });
 
+routerApp.get('/sideMenu', function (req, res) {
+    console.log("SEND SIDE MENU");
+    res.render('sideMenu');
+    // res.send("SEND TEST");
+});
+
 //--------------------------------PRODUCTS-------------------------------//
 
 routerApp.get('/getProducts/', async (req, res) => {
