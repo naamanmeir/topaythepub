@@ -1,8 +1,4 @@
-exports.buildUserPage = function (userInfo, userData) {
-        let messagesJson = require('../messages.json');
-        let messageClient = messagesJson.client[0];
-        let messageUi = messagesJson.ui[0];
-
+exports.buildHtml = function (messageUi,userInfo, userData) {
         let html = ``;
         html += `<head>
             <link rel="stylesheet" href="./css/windowStyle.css">

@@ -1,7 +1,4 @@
-exports.buildOrderConfirm = function (userInfo, orderData, orderPriceSum) {
-    let messagesJson = require('../messages.json');
-    let messageClient = messagesJson.client[0];
-    let messageUi = messagesJson.ui[0];
+exports.buildHtml = function (messageUi,userInfo, orderData, orderPriceSum) {
 
     // console.log("REQUEST ORDER CONFIRM MODULE START");
     let html = ``;

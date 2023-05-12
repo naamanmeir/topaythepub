@@ -24,7 +24,7 @@ const functions = require('./functions.js');
 const generateAccessToken = require("./module/tokenGen");
 const validateToken = require("./module/tokenVal");
 const sessionClassMW = require("./module/sessionClass.js");
-const validatorClient = require("./module/validatorClient.js");
+const validatorClient = require("./module/inputValidator/inputValidatorClient.js");
 
 let messagesJson = require('./messages.json');
 let messageUi = messagesJson.ui[0];

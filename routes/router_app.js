@@ -28,7 +28,7 @@ routerApp.get('/messages', async function (req, res) {
 routerApp.get('/header', function (req, res) {
     // console.log("SEND HEADER");
     // res.render('header');
-    let renderHeader = require("../module/html/header");
+    let renderHeader = require("../module/html/main/header");
     let html = renderHeader.buildHtml(messageUi);
     res.send(html);
 });
@@ -36,7 +36,7 @@ routerApp.get('/header', function (req, res) {
 routerApp.get('/topMenu', function (req, res) {
     // console.log("SEND SIDEMENU");    
     // res.render('topMenu');
-    let renderTopMenu = require("../module/html/topMenu");
+    let renderTopMenu = require("../module/html/main/topMenu");
     let html = renderTopMenu.buildHtml(messageUi);
     res.send(html);
 });
@@ -44,7 +44,7 @@ routerApp.get('/topMenu', function (req, res) {
 routerApp.get('/sideMenu', function (req, res) {
     // console.log("SEND TOPMENU");
     // res.render('sideMenu');
-    let renderSideMenu = require("../module/html/sideMenu");
+    let renderSideMenu = require("../module/html/main/sideMenu");
     let html = renderSideMenu.buildHtml(messageUi);
     res.send(html);
 });
@@ -52,7 +52,7 @@ routerApp.get('/sideMenu', function (req, res) {
 routerApp.get('/floatMenu', function (req, res) {
     // console.log("SEND FLOATMENU");
     // res.render('floatMenu');
-    let renderFloatMenu = require("../module/html/floatMenu");
+    let renderFloatMenu = require("../module/html/main/floatMenu");
     let html = renderFloatMenu.buildHtml(messageUi);
     res.send(html);
 });
@@ -70,7 +70,7 @@ routerApp.get('/contentScript', function (req, res) {
 routerApp.get('/about', function (req, res) {
     // console.log("SEND ABOUT");
     // res.render('about');
-    let renderAbout = require("../module/html/about");
+    let renderAbout = require("../module/html/main/about");
     let html = renderAbout.buildHtml(messageUi);
     res.send(html);
 });
@@ -78,7 +78,7 @@ routerApp.get('/about', function (req, res) {
 routerApp.get('/footer', function (req, res) {
     // console.log("SEND FOOTER");
     // res.render('footer');
-    let renderFooter = require("../module/html/footer");
+    let renderFooter = require("../module/html/main/footer");
     let html = renderFooter.buildHtml(messageUi);
     res.send(html);
 });
@@ -86,12 +86,12 @@ routerApp.get('/footer', function (req, res) {
 //--------------------------------ELEMENTS-------------------------------//
 
 routerApp.get('/getProducts/', async (req, res) => {
-    let itemArrayToHtml = require("../module/buildItemHtml");
+    let itemArrayToHtml = require("../module/html/content/productItem");
     let listFromDb = await db.dbGetProducts();
-    let html = itemArrayToHtml.buildItemHtml(listFromDb);
+    let html = itemArrayToHtml.buildHtml(messageUi,listFromDb);
     res.send(html);
     // console.log("SENT PRODUCTS")
-    delete require.cache[require.resolve("../module/buildItemHtml")];
+    delete require.cache[require.resolve("../module/html/content/productItem")];
     return;
 });
 

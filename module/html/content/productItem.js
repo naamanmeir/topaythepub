@@ -1,4 +1,4 @@
-exports.buildItemHtml = function (array) {
+exports.buildHtml = function (messageUi,array) {
     let html = ``;
     array.forEach(item => {
         html +=
@@ -8,7 +8,7 @@ exports.buildItemHtml = function (array) {
         onmousedown="addItem(${item.itemid})">
         <itemName>${item.itemname}</itemName>
         <img src="${item.itemimgpath}">
-        <itemPrice>₪${item.price}</itemPrice>
+        <itemPrice>${messageUi.orderConfirmCurrency}${item.price}</itemPrice>
         <div class="itemCount" id="itemCount${item.itemid}"></div>
         </div>
         

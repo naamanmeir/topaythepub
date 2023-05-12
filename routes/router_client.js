@@ -63,7 +63,7 @@ routerClient.post('/getUserPage/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let reqId = req.body.id;
     console.log("GET USER DATA FOR:  " + reqId);
-    let userPageModule = require("../module/buildUserPage");
+    let userPageModule = require("../module/html/content/userPage");
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
     loggedUserDetails = JSON.stringify({
@@ -75,10 +75,10 @@ routerClient.post('/getUserPage/', async (req, res) => {
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
     let userDataFromDb = await db.dbGetClientInfoById(reqId);
-    let html = JSON.stringify(userPageModule.buildUserPage(loggedUserDetails, userDataFromDb));    
+    let html = JSON.stringify(userPageModule.buildHtml(messageUi,loggedUserDetails, userDataFromDb));    
     res.send(html);
     // console.log("SENT USER INFO AS HTML")
-    delete require.cache[require.resolve("../module/buildUserPage")];
+    delete require.cache[require.resolve("../module/html/content/userPage")];
     return;
 });
 
@@ -124,7 +124,7 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
     // console.log(orderData);
     // console.log("for user id: ");
     // console.log(userId);
-    let orderConfirmPage = require("../module/buildOrderConfirm");
+    let orderConfirmPage = require("../module/html/content/orderConfirm");
     let orderBuiltData = [];
     var orderPriceSum = 0;
     for (i = 0; i < orderData.length; i++) {
@@ -143,13 +143,13 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
         'message': messageClient.orderMessage
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
-    let html = orderConfirmPage.buildOrderConfirm(loggedUserDetails, orderBuiltData, orderPriceSum);
+    let html = orderConfirmPage.buildHtml(messageUi,loggedUserDetails, orderBuiltData, orderPriceSum);
     orderBuiltData = JSON.stringify(orderBuiltData);
     let htmlOrderData = { "html": html, "orderData": orderDataRaw, "totalSum": orderPriceSum };
     orderBuiltData = JSON.stringify(htmlOrderData);
     res.send(htmlOrderData);
     // console.log("SENT ORDER CONFIRMATION PAGE AS HTML")
-    delete require.cache[require.resolve("../module/buildOrderConfirm")];
+    delete require.cache[require.resolve("../module/html/content/orderConfirm")];
     return;
 });
 
@@ -205,10 +205,11 @@ routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {
     // console.log(orderInfo);
     // console.log("for user id: ");
     // console.log(userId);
-    let deleteOrderConfirmPage = require("../module/buildOrderDeleteConfirmation");
-    let html = JSON.stringify(deleteOrderConfirmPage.buildOrderDeleteConfirmation(loggedUserDetails, orderInfo));
+    let deleteOrderConfirmPage = require("../module/html/content/orderDeleteConfirm");
+    let html = JSON.stringify(deleteOrderConfirmPage.buildHtml(messageClient,messageUi,loggedUserDetails, orderInfo));
     // console.log(html);
     res.send(html);
+    delete require.cache[require.resolve("../module/html/content/orderDeleteConfirm")];
     return;
 });
 

@@ -1,7 +1,4 @@
-exports.buildOrderDeleteConfirmation = function (userInfo,orderInfo) {
-    let messagesJson = require('../messages.json');
-    let messageClient = messagesJson.client[0];
-    let messageUi = messagesJson.ui[0];
+exports.buildHtml = function (messageClient,messageUi,userInfo,orderInfo) {
 
     let html = `
         <head>
