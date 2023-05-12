@@ -21,9 +21,9 @@ var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
 
 const db = require('./db.js');
 const functions = require('./functions.js');
-const generateAccessToken = require("./module/tokenGen");
-const validateToken = require("./module/tokenVal");
-const sessionClassMW = require("./module/sessionClass.js");
+const generateAccessToken = require("./module/session/tokenGen");
+const validateToken = require("./module/session/tokenVal");
+const sessionClassMW = require("./module/session/sessionClass.js");
 const validatorClient = require("./module/inputValidator/inputValidatorClient.js");
 
 let messagesJson = require('./messages.json');

@@ -1,6 +1,7 @@
 module.exports = function (limit) {
     // console.log("SESSIONCLASS MODULE CHECKING FOR CREDENTIALS: " + Date())
     return async function (req, res, next) {
+        if(!req||req==null||!req.session||req.session==null){res.redirect('/apps/topaythepub');return;}
         if (req.session.userclass > limit) {
             // console.log(`CREDENTIALS ${limit} FAILED REDIRECT TO /`)
             res.redirect('./');
