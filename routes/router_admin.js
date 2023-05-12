@@ -2,7 +2,7 @@ const express = require('express');
 const routerAdmin = express.Router();
 const functions = require('../functions');
 const db = require('../db');
-const sessionClassMW = require("../module/sessionClass");
+const sessionClassMW = require("../module/session/sessionClass");
 const bcrypt = require("bcrypt");
 
 routerAdmin.get('/', (req, res) => {
