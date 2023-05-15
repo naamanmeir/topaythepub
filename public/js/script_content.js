@@ -2,7 +2,7 @@
 const maxAutoCompleteResults = 4;
 const messageTimeoutTime = 2500;
 const autoLogoutTime = 30000;
-const windowFadeTime = 900;
+const windowFadeTime = 400;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 
@@ -20,6 +20,7 @@ const userIndic = document.getElementById("userIndic");
 let userWindow;
 let messageWindow;
 let deleteOrderWindow;
+let orderConfirmWindow;
 let userPageButton = document.getElementById("userPageButton");
 
 //-----------------FUNCTIONAL GLOBALS-----------------//
@@ -291,7 +292,7 @@ function openOrderConfirm(content) {
     totalSumReturn = content.totalSum;
     content = content.html;
     if (document.getElementById("orderConfirmPage")) { document.getElementById("orderConfirmPage").remove; };
-    let orderConfirmWindow = null;
+    orderConfirmWindow = null;
     orderConfirmWindow = document.createElement('div');
     orderConfirmWindow.className = ("window");    
     orderConfirmWindow.innerHTML = (content);
@@ -301,21 +302,23 @@ function openOrderConfirm(content) {
     let orderConfirmButtonYes = document.getElementById("orderConfirmButtonYes");
     orderConfirmButtonNo.className = ("windowButton no");
     orderConfirmButtonYes.className = ("windowButton yes");
+    getRequest('./client/windowIsOpen/',null,null);
     closeButton.addEventListener('click', function () {
         orderClear();
         clearCounts();
-        orderConfirmWindow.remove();
+        closeWindows();        
     });
     orderConfirmButtonNo.addEventListener('click', function () {
         orderClear();
         clearCounts();
-        orderConfirmWindow.remove();
+        closeWindows();
     });
     orderConfirmButtonYes.addEventListener('click', function () {
         if (!validateOrder(orderDataReturn)) { console.log("error with order validation"); return; }
-        placeOrder(orderDataReturn)
         orderConfirmWindow.remove();
+        placeOrder(orderDataReturn);        
     });
+    return;
 };
 function validateOrder(orderDataReturn) {
     return (orderDataReturn === orderData);
@@ -325,6 +328,7 @@ function placeOrder(orderDataReturn) {
     postRequest('./client/placeOrder/', window.parent.orderComplete, orderDataReturn);
     orderClear();
     clearCounts();
+    closeWindows();
     return;
 };
 function orderClear() {
@@ -335,7 +339,6 @@ function orderClear() {
 function clearCounts() {
     let counts = document.getElementsByClassName("itemCount");
     counts = Array.from(counts);
-    // console.log(counts);
     counts.forEach(count => {
         count.innerText = "";
     });
@@ -388,26 +391,18 @@ function openUserPage(content) {
     closeWindowButton.className = ("windowButton yes");
     let deleteOrderButton = document.getElementById("deleteOrderButton");
     deleteOrderButton.className = ("windowButton no");
+    getRequest('./client/windowIsOpen/',null,null);
 
     closeButton.addEventListener('click', function () {        
-        // closeButton.remove();
-        // userWindow.remove();
-        closeWindows()
+        closeWindows();
     });
     closeWindowButton.addEventListener('click', function () {        
-        // closeWindowButton.remove();
-        // userWindow.remove();
-        closeWindows()
+        closeWindows();
     });
     divFullPage.addEventListener('click', function () {
-        // closeButton.remove();
-        // userWindow.remove();
-        closeWindows()
+        closeWindows();
     });
     deleteOrderButton.addEventListener('click', function () {
-        // deleteLastOrder(currentUserLogged.id);        
-        // closeButton.remove();
-        // userWindow.remove();
         closeWindows();
         return deleteLastOrderConfirm(currentUserLogged.id);
     });
@@ -430,6 +425,7 @@ function openDeleteOrderConfirm(content){
     deleteOrderConfirmButtonNo.className = ("windowButton yes");
     let deleteOrderConfirmButtonYes = document.getElementById("deleteOrderConfirmButtonYes");
     deleteOrderConfirmButtonYes.className = ("windowButton no");
+    getRequest('./client/windowIsOpen/',null,null);
     deleteOrderConfirmButtonNo.addEventListener('click', function () {
         closeWindows();
         return requestUserPage(currentUserLogged.id);
@@ -462,7 +458,8 @@ function closeWindows(){
         windows.forEach(window => {
             window.remove();
         });
-    },windowFadeTime);
+        getRequest('./client/windowIsClose/',null,null);
+    },windowFadeTime);    
     return;
 };
 

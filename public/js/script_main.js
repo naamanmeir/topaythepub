@@ -160,7 +160,7 @@ function closeAbout(){
     divAbout.innerHTML = "";
     divFullPage.removeEventListener('click',() =>{
         closeAbout();
-    })};
+})};
 
 //------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
 async function getRequest(url, callback, data) {
