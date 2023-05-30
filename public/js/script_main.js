@@ -194,17 +194,38 @@ async function postRequest(url, callback, data) {
         if (this.readyState == 4 && this.status == 200) {            
             // console.log("RESPONSE: ");
             // console.log(this.response);
-            let parsedReponse = JSON.parse(this.response);
-            // console.log(parsedReponse);
-            if (parsedReponse.errorClient){
-                window.parent.openMessageWindow(parsedReponse.errorClient)
-            };
-            if (callback != null) { callback(parsedReponse); }
+            if(isJson(this.response)){
+                let parsedReponse = JSON.parse(this.response);
+                // console.log(parsedReponse);            
+                if (parsedReponse.errorClient){
+                    window.parent.openMessageWindow(parsedReponse.errorClient)
+                };
+                if (callback != null) { callback(parsedReponse); }
+                return parsedReponse;
+            }else{
+                return;
+            }
+            if (callback != null) { callback(this.response); }
             return this.response;
         };
     };
 
 };
+
+function isJson(input) {
+    console.log("testing for JSON input:");
+    // console.log(input);
+    try {        
+        JSON.parse(input);
+    } catch (e) {
+        console.log("false");
+        console.log(e);
+        return false;
+    }
+    console.log("true");
+    return true;
+};
+
 async function postRequest_bk(url, callback, data) {
     var xhttp = new XMLHttpRequest();
     console.log("SENDING POST REQUEST TO: " + url);

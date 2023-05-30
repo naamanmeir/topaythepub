@@ -1,7 +1,7 @@
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
 const messageTimeoutTime = 2500;
-const autoLogoutTime = 30000;
+const autoLogoutTime = 930000;
 const windowFadeTime = 400;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
@@ -357,21 +357,34 @@ function orderComplete(content) {
 function displayUserPageButton() {
     if (currentUserLogged != null);
     userPageButton.className = "userPageShow";
-    if(userPageButton.getAttribute('userPageButtonEnableListener')!= 1){
-        userPageButton.addEventListener("click", function callRequestUserPage() {
-            userPageButton.setAttribute('userPageButtonEnableListener', 1);
-            requestUserPage(currentUserLogged.id);
-        })
-    };    
+    enableUserPageButton();
+    return;
 };
+
+function enableUserPageButton(){
+    if(userPageButton.getAttribute('userPageButtonEnableListener')!= 1){
+        userPageButton.addEventListener('click', callRequestUserPage);
+    };
+    return;
+}
+
+function callRequestUserPage(){
+    userPageButton.setAttribute('userPageButtonEnableListener', 1);
+    userPageButton.style.pointerEvents = "none";
+    userPageButton.removeEventListener('click', callRequestUserPage);
+    console.log("clicki the user button");
+    requestUserPage(currentUserLogged.id);
+    return;
+}
 function hideUserPageButton() {
     if (currentUserLogged == null);
     userPageButton.className = "userPageHidden";
     if(userPageButton.getAttribute('userPageButtonEnableListener')== 1){
-        userPageButton.removeEventListener("click", requestUserPage)
+        userPageButton.removeEventListener('click', callRequestUserPage)
     };    
 };
 function requestUserPage(id) {
+    userPageButton.style.pointerEvents = "none";
     console.log("request user page for user: " + id);
     id = JSON.stringify({ "id": id });
     postRequest('./client/getUserPage/', window.parent.openUserPage, id);
@@ -379,6 +392,7 @@ function requestUserPage(id) {
 };
 function openUserPage(content) {
     if (document.contains(document.getElementById("userPageWindow"))) { document.getElementById("userPageWindow").remove; };
+    userPageButton.style.pointerEvents = "none";
     userWindow = document.createElement('div');
     userWindow.className = ("window");
     userWindow.setAttribute("id", "userPageWindow");
@@ -392,16 +406,16 @@ function openUserPage(content) {
     let deleteOrderButton = document.getElementById("deleteOrderButton");
     deleteOrderButton.className = ("windowButton no");
     getRequest('./client/windowIsOpen/',null,null);
-
-    closeButton.addEventListener('click', function () {        
+    closeButton.addEventListener('click', function () {
         closeWindows();
     });
     closeWindowButton.addEventListener('click', function () {        
         closeWindows();
     });
-    divFullPage.addEventListener('click', function () {
-        closeWindows();
-    });
+    // let out = document.getElementById("divFullPage");
+    // out.addEventListener('click', function divFullPageClickCloseWindow() {
+    //     closeWindows();
+    // });
     deleteOrderButton.addEventListener('click', function () {
         closeWindows();
         return deleteLastOrderConfirm(currentUserLogged.id);
@@ -448,6 +462,9 @@ function openDeleteOrderResults(content){
 
 //---------------------- UI INTERACTIONS ----------------------//
 function closeWindows(){
+    userPageButton.setAttribute('userPageButtonEnableListener', 0);
+    enableUserPageButton();
+    userPageButton.style.pointerEvents = "auto";
     const windows = document.querySelectorAll('.window');
     var seconds = windowFadeTime/1000;
     windows.forEach(window => {

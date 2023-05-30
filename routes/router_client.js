@@ -63,8 +63,12 @@ routerClient.post('/userLogout/', async (req,res)=>{
 });
 
 routerClient.post('/getUserPage/', async (req, res) => {
-    if(reqThreshFunc()){res.end();return;};
-    console.log(reqThreshFunc());
+    // console.log("start"); // DISABLED FOR TESTING causes probs with JSON res
+    // if(reqThreshFunc()){
+    //     console.log("thresh");
+    //     return;
+    // };
+    // console.log(reqThreshFunc());
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let reqId = req.body.id;
     console.log("GET USER DATA FOR:  " + reqId);
@@ -80,9 +84,10 @@ routerClient.post('/getUserPage/', async (req, res) => {
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
     let userDataFromDb = await db.dbGetClientInfoById(reqId);
-    let html = JSON.stringify(userPageModule.buildHtml(messageUi,loggedUserDetails, userDataFromDb));    
+    let html = JSON.stringify(userPageModule.buildHtml(messageUi,loggedUserDetails, userDataFromDb));
+    // console.log(html);
     res.send(html);
-    // console.log("SENT USER INFO AS HTML")
+    console.log("SENT USER INFO AS HTML");
     delete require.cache[require.resolve("../module/html/content/userPage")];
     return;
 });
@@ -111,8 +116,8 @@ routerClient.post('/userAutoLogout/', async (req, res) => {
 //------------------------CLIENT USER ACTIONS-------------------//
 
 routerClient.post('/requestOrderPage/', async (req, res) => {
-    if(reqThreshFunc()){console.log("-------------");res.end();return;};
-    console.log(reqThreshFunc());
+    // if(reqThreshFunc()){console.log("-------------");res.end();return;};
+    // console.log(reqThreshFunc());
     if (!req.body.order && !req.body.userId) { res.end(); return; };
     let orderDataRaw = req.body;
     let orderData = Object.entries(req.body.order);
@@ -151,7 +156,7 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
     let htmlOrderData = { "html": html, "orderData": orderDataRaw, "totalSum": orderPriceSum };
     orderBuiltData = JSON.stringify(htmlOrderData);
     res.send(htmlOrderData);
-    console.log(htmlOrderData);
+    // console.log(htmlOrderData);
     // console.log("SENT ORDER CONFIRMATION PAGE AS HTML");
     delete require.cache[require.resolve("../module/html/content/orderConfirm")];
     return;
@@ -186,7 +191,7 @@ routerClient.post('/placeOrder/', async function (req, res) {
 });
 
 routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {
-    if(reqThreshFunc()){res.end();return;};
+    // if(reqThreshFunc()){res.end();return;};
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let userId = JSON.parse(req.body.id);
     let orderInfo;
@@ -219,7 +224,7 @@ routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {
 });
 
 routerClient.post('/deleteLastOrder/', async (req, res) => {
-    if(reqThreshFunc){res.end();return;};
+    // if(reqThreshFunc){res.end();return;};
     if (!req.body.id || req.body.id == null) { res.end(); return; };
     let clientId = JSON.parse(req.body.id);
     let deleteLastOrderResponse;
@@ -234,7 +239,7 @@ routerClient.get('/windowIsOpen/', async(req,res) => {
     res.end();
 });
 
-routerClient.get('/windowIsClose/', async(req,res) => {
+routerClient.get('/windowIsClose/', async(req,res) => {    
     console.log("WINDOW IS CLOSE");
     // reqThreshState = 0;
     res.end();
