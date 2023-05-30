@@ -111,7 +111,7 @@ routerClient.post('/userAutoLogout/', async (req, res) => {
 //------------------------CLIENT USER ACTIONS-------------------//
 
 routerClient.post('/requestOrderPage/', async (req, res) => {
-    if(reqThreshFunc()){res.end();return;};
+    if(reqThreshFunc()){console.log("-------------");res.end();return;};
     console.log(reqThreshFunc());
     if (!req.body.order && !req.body.userId) { res.end(); return; };
     let orderDataRaw = req.body;
