@@ -44,7 +44,8 @@
     "stream": "^0.0.2",
     "string-sanitizer": "^2.0.2",
     "upgrade": "^1.1.0",
-    "validator": "^13.9.0"
+    "validator": "^13.9.0",
+    "winston": "^3.9.0"
   },
   "repository": {
     "type": "git",

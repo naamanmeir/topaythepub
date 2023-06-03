@@ -38,6 +38,7 @@ const validateToken = require("./module/session/tokenVal");
 const sessionClassMW = require("./module/session/sessionClass.js");
 const validatorClient = require("./module/input/inputValidatorClient.js");
 // const rateLimitMiddle = require("./module/input/inputThresh.js");
+const {actionsLogger, ordersLogger} = require('./module/logger');
 
 let messagesJson = require('./messages.json');
 let messageUi = messagesJson.ui[0];

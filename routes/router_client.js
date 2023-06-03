@@ -2,6 +2,7 @@ const express = require('express');
 const routerClient = express.Router();
 const functions = require('../functions');
 const db = require('../db');
+const {actionsLogger, ordersLogger} = require('../module/logger');
 let messagesJson = require('../messages.json');
 let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
@@ -191,6 +192,7 @@ routerClient.post('/placeOrder/', async function (req, res) {
     let orderResult;
     orderResult = JSON.stringify(await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) }));
     // console.log(orderResult);
+    ordersLogger.info(`time: ${orderTime} user: ${userId} sum: ${orderPriceSum} contains: ${orderInfo}`);
     res.send(orderResult);
     return;
 });
