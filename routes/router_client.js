@@ -75,6 +75,11 @@ routerClient.post('/getUserPage/', async (req, res) => {
     let userPageModule = require("../module/html/content/userPage");
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
+    if(loggedUserDetails.length<1){
+        console.log("ATTEMPTED INFO FOR INVALID USER ID");
+        res.end();
+        return;
+    };
     loggedUserDetails = JSON.stringify({
         'id': req.body.id,
         'name': loggedUserDetails[0].name,

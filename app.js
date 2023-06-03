@@ -9,8 +9,7 @@ const { stringify } = require("csv-stringify");
 var formidable = require('formidable');
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
-// var morgan = require('morgan');
-// const helmet = require('helmet');
+const helmet = require('helmet');
 let ejs = require('ejs');
 const querystring = require('querystring');
 
@@ -19,14 +18,26 @@ var validator = require('validator');
 var SSE = require('express-sse');
 var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
 
+//--------------RATE LIMIT------------------------//
+const rateLimit = require('express-rate-limit');
+const rateLimitMain = rateLimit({
+	windowMs: 1 * 25 * 1000,
+	max: 100,
+	standardHeaders: true,
+	legacyHeaders: false,  
+  handler: function(req,res){
+    console.log("--------RATE LIMIT---------")
+    return res.end();
+  }
+});
+
 const db = require('./db.js');
 const functions = require('./functions.js');
 const generateAccessToken = require("./module/session/tokenGen");
 const validateToken = require("./module/session/tokenVal");
 const sessionClassMW = require("./module/session/sessionClass.js");
 const validatorClient = require("./module/input/inputValidatorClient.js");
-const inputRate = require("./module/input/inputThresh.js");
-
+// const rateLimitMiddle = require("./module/input/inputThresh.js");
 
 let messagesJson = require('./messages.json');
 let messageUi = messagesJson.ui[0];
@@ -47,31 +58,6 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const COOKIE_EXPIRATION = Number(process.env.COOKIE_EXPIRATION);
 const SESSION_NAME = process.env.SESSION_NAME;
 
-
-// morgan.token('splitter', (req) => {
-//   return "\x1b[36m--------------------------------------------\x1b[0m\n";
-// }); // MORGAN LOGGING COLOR CODES
-// morgan.token('statusColor', (req, res, args) => {  
-//   var status = (typeof res.headersSent !== 'boolean' ? Boolean(res.header) : res.headersSent)
-//       ? res.statusCode
-//       : undefined  
-//   var color = status >= 500 ? 31 // red
-//       : status >= 400 ? 33 // yellow
-//           : status >= 300 ? 36 // cyan
-//               : status >= 200 ? 32 // green
-//                   : 0; // no color
-//   return '\x1b[' + color + 'm' + status + '\x1b[0m';
-// });
-// morgan.token('time', function(req, res, param) {
-//   return getSimpleTime();  
-// });
-// morgan.token('sessionid', function(req, res, param) {
-//   return req.sessionID;
-// });
-// morgan.token('user', function(req, res, param) {
-//   return req.session.user;
-// });
-
 const app = express();
 const port = appPort;
 
@@ -80,8 +66,6 @@ app.set('trust proxy', 1);
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-
-// app.use(express.static(__dirname));
 
 app.use(sessions({
   name: SESSION_NAME,
@@ -99,12 +83,20 @@ app.use(sessions({
 
 var session;
 
-let clients = [];
+//--------------HELMET CONFIG------------------------//
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-hashes'"],
+        "script-src-attr": ["'self'", "'unsafe-inline'"],
+      },
+    },
+  })
+);
 
-// app.use(helmet());
-
-// app.use(morgan(`\x1b[0m:time \x1b[0m \x1b[33m:remote-addr\x1b[0m \x1b[32m:url
-//   \x1b[36m:sessionid\x1b[0m \x1b[0m :response-time ms `));
+app.use(rateLimitMain);
 
 var now = new Date();
 console.log("System Startup Time : " + Date());

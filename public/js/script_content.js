@@ -1,7 +1,7 @@
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
 const messageTimeoutTime = 2500;
-const autoLogoutTime = 930000;
+const autoLogoutTime = 30000;
 const windowFadeTime = 400;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
@@ -366,7 +366,7 @@ function enableUserPageButton(){
         userPageButton.addEventListener('click', callRequestUserPage);
     };
     return;
-}
+};
 
 function callRequestUserPage(){
     userPageButton.setAttribute('userPageButtonEnableListener', 1);
@@ -375,7 +375,7 @@ function callRequestUserPage(){
     console.log("clicki the user button");
     requestUserPage(currentUserLogged.id);
     return;
-}
+};
 function hideUserPageButton() {
     if (currentUserLogged == null);
     userPageButton.className = "userPageHidden";
@@ -482,7 +482,7 @@ function closeWindows(){
 
 function openWindows(){
     
-}
+};
 
 function autoLogout(){
     // console.log("autoLogout");    
