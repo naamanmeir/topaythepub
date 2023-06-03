@@ -32,20 +32,20 @@ routerClient.post('/userLogin/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     console.log("USER LOGIN ACCEPTED: " + req.body.id);
     let loggedUserDetails = [];
-    loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
-    console.log(`
-    LOGGED USER : 
-    ${loggedUserDetails[0].name},
-    ${loggedUserDetails[0].nick},
-    ${loggedUserDetails[0].account})
-    `);
+    loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);    
+    actionsLogger.login(`
+        id: ${req.body.id} ,
+        name:${loggedUserDetails[0].name},
+        nick:${loggedUserDetails[0].nick},
+        account:${loggedUserDetails[0].account}
+        `);
     loggedUserDetails = JSON.stringify({
         'id': req.body.id,
         'name': loggedUserDetails[0].name,
         'nick': loggedUserDetails[0].nick,
         'account': loggedUserDetails[0].account,
         'message': messageClient.logged
-    });    
+    });
     res.send(loggedUserDetails);
     return;
 });
@@ -173,7 +173,7 @@ routerClient.post('/placeOrder/', async function (req, res) {
     var orderTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
     // var orderTime = new Date().("HE", { timeZone: "Asia/Jerusalem" });
     orderTime = orderTime.slice(0, 19).replace('T', ' ');
-    console.log(orderTime);
+    // console.log(orderTime);
     // orderTime = orderTime.toString().replace(',', '');
     let orderData = Object.entries(req.body.order);
     let userId = req.body.userId;
@@ -184,15 +184,20 @@ routerClient.post('/placeOrder/', async function (req, res) {
         orderInfo += (itemData[0].itemname + " - " + orderData[i][1] + ", ");
         orderPriceSum += (itemData[0].price * orderData[i][1]);
     };
-    console.log("NEW ORDER: ");
-    console.log("order info: " + orderInfo);
-    console.log("total sum: " + orderPriceSum);
-    console.log("user id: " + userId);
-    console.log("at time: " + orderTime);
+    // console.log("NEW ORDER: ");
+    // console.log("order info: " + orderInfo);
+    // console.log("total sum: " + orderPriceSum);
+    // console.log("user id: " + userId);
+    // console.log("at time: " + orderTime);
     let orderResult;
     orderResult = JSON.stringify(await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) }));
     // console.log(orderResult);
-    ordersLogger.info(`time: ${orderTime} user: ${userId} sum: ${orderPriceSum} contains: ${orderInfo}`);
+    ordersLogger.order(`
+        time: ${orderTime} 
+        user: ${userId} 
+        sum: ${orderPriceSum} 
+        contains: ${orderInfo}
+        `);
     res.send(orderResult);
     return;
 });
