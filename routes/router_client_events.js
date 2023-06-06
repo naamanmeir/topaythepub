@@ -3,6 +3,7 @@ const routerClientEvents = express.Router();
 const functions = require('../functions');
 const db = require('../db');
 const sessionClassMW = require("../module/session/sessionClass");
+const {clientLogger, errorLogger} = require('../module/logger');
 
 let clients = [];
 
@@ -20,9 +21,15 @@ routerClientEvents.get('/', sessionClassMW(100), function (req, res) {
         res
     };
     clients.push(newClient);
-    console.log(`Client registered for SSE : ${clientId}`);
+    // console.log(`Client registered for SSE : ${clientId}`);
+    clientLogger.clientRegistered(`  
+    SESSION ID: ${clientId} REGISTERED FOR SERVER EVENTS    
+    `);
     req.on('close', () => {
-        console.log(`${clientId} Connection closed`);
+        // console.log(`${clientId} Connection closed`);
+        clientLogger.clientUnregistered(`  
+        SESSION ID: ${clientId} CLOSED SESSION AND DISCONNECTED    
+        `);
         clients = clients.filter(client => client.id !== clientId);
     });
     eventSendStatus(res);

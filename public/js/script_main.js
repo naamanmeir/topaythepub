@@ -269,6 +269,12 @@ function refreshPage() {
     location.reload();
 };
 
+function clientLogout(){
+    getRequest('./logout',null,null);
+    setTimeout(refreshPage,3500)
+    return;
+}
+
 function randomNumberGen() {
     var val = Math.floor(1000 + Math.random() * 9000);
     return val;

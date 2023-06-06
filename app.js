@@ -38,7 +38,7 @@ const validateToken = require("./module/session/tokenVal");
 const sessionClassMW = require("./module/session/sessionClass.js");
 const validatorClient = require("./module/input/inputValidatorClient.js");
 // const rateLimitMiddle = require("./module/input/inputThresh.js");
-const {actionsLogger, ordersLogger} = require('./module/logger');
+const {errorLogger,clientLogger,actionsLogger,ordersLogger} = require('./module/logger');
 
 let messagesJson = require('./messages.json');
 let messageUi = messagesJson.ui[0];
@@ -137,7 +137,12 @@ dbInit();
 //------------------------------USER SESSION-------------------------------------//
 app.get('/', (req, res) => {
   if (!req || req == null) { res.sendStatus(401).end(); };
-  session = req.session;
+  if (req.session != null) {session = req.session};
+  const clientIp = req.headers['x-forwarded-for'];
+  clientLogger.clientAttempted(`
+  LOGIN PAGE VISITED FROM
+  IP: ${clientIp}
+  `);
   if (session.userid) {
     res.redirect('./app');
   } else {
@@ -149,17 +154,22 @@ app.get('/', (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
+  const clientIp = req.headers['x-forwarded-for'];
   // console.log("LOGIN ATTAMPTED")
   if (!req.body.username || !req.body.password) {
     res.redirect('./');
-    console.log("ATTAMPTED LOGIN WITH NO DETAILS")
+    // console.log("ATTAMPTED LOGIN WITH NO DETAILS")
+    clientLogger.clientAttempted(`
+    LOGIN ATTAMPTED WITH NO DETAILS
+    IP: ${clientIp}
+    `);
     return;
   }
   if (!validator.isAlphanumeric(req.body.username)) { console.log("USERNAME NOT VALID"); loginAction(req, res, 0, null, null); return; }
   if (!validator.isAlphanumeric(req.body.password)) { console.log("PASSWORD NOT VALID"); loginAction(req, res, 1, null, null); return; }
 
   const user = req.body.username;
-  const password = req.body.password;
+  const password = req.body.password;  
 
   let dbResponse = await db.userLogin(user, password);
 
@@ -167,19 +177,28 @@ app.post("/login", async (req, res) => {
 });
 
 async function loginAction(req, res, reply, user, password) {
+  const clientIp = req.headers['x-forwarded-for'];
   if (reply[0] == 0) {
-    console.log("LOGIN ATTAMPTED WITH WRONG USERNAME")
+    // console.log("LOGIN ATTAMPTED WITH WRONG USERNAME");
+    clientLogger.clientAttempted(`
+    LOGIN ATTAMPTED WITH WRONG USERNAME
+    IP: ${clientIp}
+    `);
     const query = querystring.stringify({ "message": "username invalid" });
     res.redirect('./?' + query);
     return;
   } // WRONG USER
   if (reply[0] == 1) {
-    console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD")
+    // console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD");
+    clientLogger.clientAttempted(`
+    LOGIN ATTAMPTED WITH WRONG PASSWORD
+    IP: ${clientIp}
+    `);
     const query = querystring.stringify({ "message": "password invalid" });
     res.redirect('./?' + query);
     return;
   } // WRONG PASS
-  if (reply[0] == 2) {
+  if (reply[0] == 2) {    
     const token = generateAccessToken({ user: user });
     session = req.session;
     session.userid = req.body.username;
@@ -187,21 +206,34 @@ async function loginAction(req, res, reply, user, password) {
     session.userclass = Number(userClass);
     const sessionStore = await db.storeSession(session.userid, userClass, token);
     session.sessionid = Number(sessionStore);
-    console.log(`LOGIN: USER: ${user} ,CLASS: ${userClass} ,SESSION ID: ${session.sessionid}`);
+    // console.log(`LOGIN: USER: ${user} ,CLASS: ${userClass} ,SESSION ID: ${session.sessionid}`);
+    clientLogger.clientLogin(`
+    CLIENT: ${user}
+    CLASS: ${userClass}
+    SESSION ID: ${session.sessionid}
+    CLIENT IP: ${clientIp}
+    `);
     res.redirect('./');
     return;
   }// LOGIN OK
   return;
 }
 
-app.get("/logout", async (req, res) => {
+app.get("/logout", async (req, res) => {  
   if (req.session == null) { res.sendStatus(403); return; }
+  const clientIp = req.headers['x-forwarded-for'];
   if (req.session.sessionid != null) {
     const sessionRemove = await db.removeSession(req.session.sessionid);
   };
   console.log(`USER ${req.session.userid} HAS LOGGED OUT`);
+  clientLogger.clientLogout(`
+  CLIENT: ${req.session.userid}  
+  SESSION ID: ${session.sessionid}
+  CLIENT IP: ${clientIp}
+  `);
   req.session.destroy();
   res.redirect('./');
+  return;
 });
 
 // ------------------------ ROUTERS ----------------------- //

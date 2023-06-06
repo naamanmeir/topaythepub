@@ -2,7 +2,7 @@ const express = require('express');
 const routerClient = express.Router();
 const functions = require('../functions');
 const db = require('../db');
-const {actionsLogger, ordersLogger} = require('../module/logger');
+const {actionsLogger, ordersLogger, errorLogger} = require('../module/logger');
 let messagesJson = require('../messages.json');
 let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
@@ -30,7 +30,7 @@ routerClient.post('/searchName/', async (req, res) => {
 
 routerClient.post('/userLogin/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
-    console.log("USER LOGIN ACCEPTED: " + req.body.id);
+    // console.log("USER LOGIN ACCEPTED: " + req.body.id);
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);    
     actionsLogger.login(`

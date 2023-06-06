@@ -10,7 +10,7 @@ exports.buildHtml = function (message) {
             <p id="fullScreenButton">${message.sideMenuFullScreen}</p>
             <p onclick="refreshCss()">${message.sideMenuRefreshCss}</p>
             <p onclick="refreshPage()">${message.SideMenuRefreshPage}</p>
-            <p href="./logout">${message.SideMenuLogOutClient}</p>
+            <p onclick="clientLogout()">${message.SideMenuLogOutClient}</p>
             <p id="closeSideMenu" class="closeSideMenu">${message.SideMenuCloseSideMenu}</p>
         </div>      
     `;
