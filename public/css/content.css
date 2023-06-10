@@ -19,7 +19,7 @@
     margin: auto;
     width: 80%;
     margin-top: 0.5rem;
-    height: 4rem;
+    height: 6rem;
     top: 0px;
     margin-bottom: 1rem;
     align-items: center;
@@ -30,11 +30,11 @@
     color: rgb(245, 191, 90);
     text-shadow: 1px 0px 0px var(--bg01);
     border-radius: 25px;
-    /* border: 3px double orange; */
+    border: 3px double orange;
     background-color: var(--bg01);
     height: 100%;
     width: 100%;
-    font-size: 1.6em;
+    font-size: 2rem;
     margin: auto;
     padding-top: 0px;
     padding-right: 1em;
@@ -144,7 +144,7 @@
     background-color: #61584b81;
     border: 4px outset var(--border01);
     margin: 0px auto 0px auto;
-    margin-bottom: 1%;
+    margin-bottom: 2%;
     /* padding-bottom: 20px; */
     transition: background-color 0.5s ease;
     border-radius: 5%;
