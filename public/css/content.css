@@ -179,9 +179,9 @@
 
 .item itemName {
     /* position: absolute; */
-    /* top: 15%; */
+    top: 10%;
     right: 5%;
-    padding: 0px;
+    padding: 1%;
     margin: 0px;
     font-size: 1.7rem;
     font-size: max(5px, 4vw);
