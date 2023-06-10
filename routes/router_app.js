@@ -15,8 +15,8 @@ var now = new Date();
 //--------------------------------UI-------------------------------//
 
 routerApp.get('/', async function (req, res) {
-    let session = req.session;
-    console.log("LOGIN TO APP ON: " + Date());
+    // let session = req.session;
+    // console.log("LOGIN TO APP ON: " + Date());
     res.render('index');
 });
 
