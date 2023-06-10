@@ -37,7 +37,6 @@
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "node": "^19.6.0",
-    "nodemon": "^2.0.20",
     "path": "^0.12.7",
     "querystring": "^0.2.1",
     "serve-favicon": "^2.5.0",
@@ -54,5 +53,8 @@
   "bugs": {
     "url": "https://github.com/naamanmeir/topaythepub/issues"
   },
-  "homepage": "https://github.com/naamanmeir/topaythepub#readme"
+  "homepage": "https://github.com/naamanmeir/topaythepub#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
 }
