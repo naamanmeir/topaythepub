@@ -115,7 +115,7 @@
 }
 
 .items {
-    display: flex;
+    display: inline-block;
     flex-direction: space-between;
     gap: 0px;
     flex-shrink: 1;
@@ -137,17 +137,17 @@
     display: flex;
     flex-direction: row;
     /* width: fit-content; */
-    width: 80%;
+    /* width: fit-content; */
     height: 6rem;
     max-height: 50%;
-    max-width: 70%;
-    background-color: #655d5558;
-    border: 3px outset var(--border01);
+    max-width: fit-content;
+    background-color: #61584b81;
+    border: 4px outset var(--border01);
     margin: 0px auto 0px auto;
     margin-bottom: 1%;
     /* padding-bottom: 20px; */
     transition: background-color 0.5s ease;
-    border-radius: 8%;
+    border-radius: 5%;
     /* transition: background-size 0.2s linear; */
     /* background-size: 6rem;
     background-repeat: no-repeat;
@@ -161,45 +161,46 @@
     /* display: none; */
     user-select: none;
     pointer-events: none;
-    top: 10px;
-    padding: 10px;
-    margin: auto auto auto 25%;
+    top: 0px;
+    padding: 0px;
+    margin: auto auto auto 1%;
     /* max-width: 90px; */
     max-height: 6rem;
     clear: both;
 }
 
 .item:active {
-    border: 3px inset rgba(209, 155, 17, 0.676);
+    border: 4px inset rgba(209, 155, 17, 0.676);
+    background-color: rgb(240, 152, 0, 0.6);
     transition: none;
     user-select: none;
     transition: background-size 0.1s linear;
 }
 
 .item itemName {
-    position: absolute;
-    top: 15%;
-    right: 1px;
+    /* position: absolute; */
+    /* top: 15%; */
+    right: 5%;
     padding: 0px;
     margin: 0px;
-    font-size: 4vw;
+    font-size: 1.7rem;
     font-size: max(5px, 4vw);
-    padding-right: 1rem;
-    color: #deb911;
+    /* padding-right: 1rem; */
+    color: var(--itemName);
     text-shadow: 1px 1px 1px #000000;
     user-select: none;
     pointer-events: none;
 }
 
 .item itemPrice {
-    position: absolute;
-    top: 15%;
-    left: 1px;
-    padding: 0px;
-    margin: 0px;
-    font-size: 5vw;
+    position: relative;
+    top: 10%;
+    /* left: 1px; */
+    /* padding: 0px; */
+    margin-left: 5%;
+    font-size: max(4.4vw, 4vw);
     padding-left: 1rem;
-    color: #e68d07;
+    color: var(--itemPrice);
     text-shadow: 2px 2px 2px #000000;
     user-select: none;
     pointer-events: none;
@@ -210,10 +211,11 @@
     position: absolute;
     margin: 0px;
     padding: 0px;
-    top: 0px;
+    top: -25px;
+    bottom: 5%;
     left: 30%;
-    font-size: 6rem;
-    color: rgb(0, 255, 55);
+    font-size: 8rem;
+    color: var(--itemCount);
     font-style: oblique;
     text-shadow: 5px 7px 7px #000000, 3px 3px 0px black, 1px 2px 0px black;
     pointer-events: none;
@@ -303,11 +305,11 @@
 }
 
 .cancel {
-    background-color: rgb(171, 120, 10);
+    background-color: var(--buttonNo);
 }
 
 .placeOrder {
-    background-color: rgb(11, 180, 36);
+    background-color: var(--buttonYes);
 }
 
 .pointerNone {
