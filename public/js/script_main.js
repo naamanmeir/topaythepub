@@ -304,6 +304,7 @@ function connectEventSource() {
                 console.log("closing connection and recall function");
             source.close()
             // setTimeout(connectEventSource(),3000);
+            setTimeout(refreshPage,10000);
             // connectEventSource();
             if (e.target.readyState == EventSource.CLOSED) {
                 // connectEventSource();

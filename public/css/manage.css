@@ -1,8 +1,9 @@
 html {
     overflow-y: scroll;
 }
+
 html,
-body{
+body {
     width: 95vw;
     height: 100vh;
     /* left: 1%; */
@@ -10,7 +11,7 @@ body{
     background-color: rgb(221, 233, 251);
     direction: rtl;
     user-select: none;
-    scroll-behavior: smooth;    
+    scroll-behavior: smooth;
     float: center;
     margin: auto;
     /* overflow:scroll; */
@@ -52,7 +53,7 @@ p2 {
     display: flex;
 }
 
-.nav-links{
+.nav-links {
     display: flex;
     flex: 1;
     list-style: none;
@@ -66,21 +67,21 @@ p2 {
     border: none;
 }
 
-.nav-link {    
+.nav-link {
     font-size: 1rem;
     margin-left: 1rem;
-    color: yellow;    
+    color: yellow;
 }
 
 body {}
 
 .content {
     height: fit-content;
-    max-width: 1200px;    
+    max-width: 1200px;
     left: 50%;
     right: 50%;
     display: flex;
-    margin: auto;    
+    margin: auto;
 }
 
 .column {
@@ -100,7 +101,7 @@ body {}
 }
 
 
-.displayProducts{  
+.displayProducts {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -115,7 +116,7 @@ body {}
     /* background-color: tomato; */
     justify-content: top;
     height: fit-content;
-    margin: 0px;    
+    margin: 0px;
     top: 0px;
 }
 
@@ -145,7 +146,7 @@ body {}
     /* flex: auto; */
     height: 2rem;
     width: 2rem;
-    margin: 0px;    
+    margin: 0px;
     margin-left: 1rem;
 }
 
@@ -322,20 +323,22 @@ button {
     color: #ffffff;
 }
 
-.imgDropdownDiv{        
-}
+.imgDropdownDiv {}
 
-.imgSelector{
+.imgSelector {}
 
-}
-
-.uploadImg{
+.uploadImg {
     width: 100%;
 }
-.manage-button{                
+
+.manage-button {
     height: fit-content;
     min-height: 2rem;
     width: 100%;
     min-width: 2rem;
     font-size: 1.6rem;
 }
+
+.data {}
+
+.manage {}

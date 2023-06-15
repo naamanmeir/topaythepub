@@ -68,6 +68,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
+//--------------SESSION CONFIG------------------------//
+
 app.use(sessions({
   name: SESSION_NAME,
   userid: `userId`,
@@ -76,6 +78,7 @@ app.use(sessions({
   resave: false,
   saveUninitialized: false,
   cookie: {
+    name: SESSION_NAME,
     secure: false,
     httpOnly: true,
     maxAge: COOKIE_EXPIRATION
@@ -136,8 +139,17 @@ dbInit();
 
 //------------------------------USER SESSION-------------------------------------//
 app.get('/', (req, res) => {
+  console.log(req.cookies);
+
   if (!req || req == null) { res.sendStatus(401).end(); };
   if (req.session != null) {session = req.session};
+  if (req.cookies.session != null) {
+    // console.log("sdgsdgsdgdsgdsg----------");
+    const sessionId = req.cookies.session;
+    // console.log(sessionId);    
+  }else{
+    console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+  }
   const clientIp = req.headers['x-forwarded-for'];
   clientLogger.clientAttempted(`
   LOGIN PAGE VISITED FROM
