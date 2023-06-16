@@ -9,6 +9,7 @@
 
     --border01: rgb(194, 172, 4);
     --border02: rgb(162, 146, 123);
+    --border03: rgb(29, 182, 50);
 
     --buttonYes: rgb(3, 183, 3);
     --buttonNo: rgb(255, 3, 3);
@@ -244,15 +245,18 @@ p {
     display: block;
     z-index: 100;
     position: absolute;
+    overflow-wrap: break-word;
     top: 25%;
-    left: 15%;
+    left: 0%;
+    right: 0%;
+    width: 80%;
     margin: auto;
     background-color: var(--bg01);
     border: 2px solid var(--border01);
     border-radius: 15%;
     padding: 5%;
     color: var(--text03);
-    font-size: 2rem;
+    font-size: 1.2rem;
 }
 
 .divAboutClose {

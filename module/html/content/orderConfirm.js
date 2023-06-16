@@ -25,9 +25,9 @@ exports.buildHtml = function (messageUi,userInfo, orderData, orderPriceSum) {
     ${messageUi.orderConfirmToAccount} ${userInfo.account}</p>><br>`
 
     html += `</div>
-    <div id="windowButtons">`
-    html += `<button id="orderConfirmButtonNo">${messageUi.orderConfirmButtonNo}</button>`;
+    <div id="windowButtons">`    
     html += `<button id="orderConfirmButtonYes">${messageUi.orderConfirmButtonYes}</button>`;
+    html += `<button id="orderConfirmButtonNo">${messageUi.orderConfirmButtonNo}</button>`;
     html += `</div>
         </div>`;
     return html;

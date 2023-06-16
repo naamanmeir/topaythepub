@@ -9,6 +9,8 @@ exports.buildHtml = function (message) {
         <p>${message.aboutLine3}</p>
         <p>${message.aboutLine4}</p>
         <p>${message.aboutLine5}</p>
+        <p>${message.aboutLine6}</p>
+        <p>${message.aboutLine7}</p>
         <br>
         <a href="${message.aboutLink1}" target="_blank">
             <p style="margin: 0 50% 0 50%">${message.aboutLink1Text}</p>

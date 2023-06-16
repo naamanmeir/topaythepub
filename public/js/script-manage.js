@@ -903,8 +903,8 @@ function connectedTerminalsStatus() {
     xhttp.open("GET", "./events/status", true);
     xhttp.send();    
     xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            connectedTerminals.innerText = (this.response);            
+        if (this.readyState == 4 && this.status == 200) {            
+            connectedTerminals.innerText = (JSON.parse(this.response).clients);
             return;
         }
     };
