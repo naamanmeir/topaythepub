@@ -249,14 +249,18 @@ p {
     top: 25%;
     left: 0%;
     right: 0%;
-    width: 80%;
+    width: fit-content;
     margin: auto;
     background-color: var(--bg01);
     border: 2px solid var(--border01);
     border-radius: 15%;
     padding: 5%;
     color: var(--text03);
-    font-size: 1.2rem;
+    font-size: 1.6rem;
+}
+
+.divAbout p {
+    right: 50%;
 }
 
 .divAboutClose {

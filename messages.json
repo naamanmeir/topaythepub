@@ -1,6 +1,7 @@
 {
     "ui": [
         {
+            "loginMessage": "hello_this_is_a_message_for_visitors_מה_נשמע",
             "appName": "לרשום בפאב",
             "appVersion": "0.3.1",
             "headerText": "לרשום בפאב",

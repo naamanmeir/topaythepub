@@ -2,6 +2,7 @@ require("dotenv").config();
 var favicon = require('serve-favicon');
 const express = require('express');
 const sessions = require('express-session');
+const sqlStore = require('express-mysql-session')(sessions);
 const path = require('node:path');
 const fs = require('fs');
 const readline = require('readline');
@@ -22,7 +23,7 @@ var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
 const rateLimit = require('express-rate-limit');
 const rateLimitMain = rateLimit({
 	windowMs: 1 * 25 * 1000,
-	max: 100,
+	max: 500,
 	standardHeaders: true,
 	legacyHeaders: false,  
   handler: function(req,res){
@@ -54,6 +55,8 @@ const routerApp = require('./routes/router_app');
 
 const appPort = process.env.APP_PORT;
 const appName = process.env.APP_NAME;
+const appMode = process.env.APP_MODE;
+const production = process.env.APP_MODE === "production";
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const COOKIE_EXPIRATION = Number(process.env.COOKIE_EXPIRATION);
@@ -70,6 +73,16 @@ app.use(express.urlencoded({ extended: false }));
 
 //--------------SESSION CONFIG------------------------//
 
+const sqlSessionStoreOptions = {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DB,
+};
+
+const sessionStore = new sqlStore(sqlSessionStoreOptions);
+
 app.use(sessions({
   name: SESSION_NAME,
   userid: `userId`,
@@ -77,13 +90,22 @@ app.use(sessions({
   secret: ACCESS_TOKEN_SECRET,
   resave: false,
   saveUninitialized: false,
+  store: sessionStore,
+  expires: COOKIE_EXPIRATION,
   cookie: {
     name: SESSION_NAME,
     secure: false,
     httpOnly: true,
-    maxAge: COOKIE_EXPIRATION
+    maxAge: COOKIE_EXPIRATION    
   }
 }));
+
+if(!production){
+  sessionStore.onReady().then(() => {
+	console.log('MySQLStore ready');
+  }).catch(error => {
+	console.error(error);
+});};
 
 var session;
 
@@ -138,39 +160,35 @@ function dbInit() {
 dbInit();
 
 //------------------------------USER SESSION-------------------------------------//
-app.get('/', (req, res) => {
-  console.log(req.cookies);
+app.get('/', async (req, res) => {
+  // console.log("-----------------------------------");
+  // console.log(req);
+  // console.log("-----------------------------------");
 
   if (!req || req == null) { res.sendStatus(401).end(); };
-  if (req.session != null) {session = req.session};
-  if (req.cookies.session != null) {
-    // console.log("sdgsdgsdgdsgdsg----------");
-    const sessionId = req.cookies.session;
-    // console.log(sessionId);    
-  }else{
-    console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
-  }
   const clientIp = req.headers['x-forwarded-for'];
   clientLogger.clientAttempted(`
   LOGIN PAGE VISITED FROM
   IP: ${clientIp}
   `);
+
+  if (req.session != null) {session = req.session};  
+
   if (session.userid) {
     res.redirect('./app');
+    return;
   } else {
-    res.render('login.ejs', {
-      // root: __dirname,
-      message: "wellcome message"
+    res.render('login.ejs', {      
+      message: messageUi.loginMessage
     });
+    return;
   }
 });
 
 app.post("/login", async (req, res) => {
-  const clientIp = req.headers['x-forwarded-for'];
-  // console.log("LOGIN ATTAMPTED")
+  const clientIp = req.headers['x-forwarded-for'];  
   if (!req.body.username || !req.body.password) {
-    res.redirect('./');
-    // console.log("ATTAMPTED LOGIN WITH NO DETAILS")
+    res.redirect('./');    
     clientLogger.clientAttempted(`
     LOGIN ATTAMPTED WITH NO DETAILS
     IP: ${clientIp}
@@ -186,6 +204,7 @@ app.post("/login", async (req, res) => {
   let dbResponse = await db.userLogin(user, password);
 
   loginAction(req, res, dbResponse,user,password);
+  return;
 });
 
 async function loginAction(req, res, reply, user, password) {
@@ -213,12 +232,12 @@ async function loginAction(req, res, reply, user, password) {
   if (reply[0] == 2) {    
     const token = generateAccessToken({ user: user });
     session = req.session;
-    session.userid = req.body.username;
+    let sessionName = req.cookies.sessionName;
+    session.userid = req.body.username;    
     const userClass = await db.getUserClassByName(session.userid);
-    session.userclass = Number(userClass);
-    const sessionStore = await db.storeSession(session.userid, userClass, token);
+    session.userclass = Number(userClass);    
+    const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
     session.sessionid = Number(sessionStore);
-    // console.log(`LOGIN: USER: ${user} ,CLASS: ${userClass} ,SESSION ID: ${session.sessionid}`);
     clientLogger.clientLogin(`
     CLIENT: ${user}
     CLASS: ${userClass}
@@ -240,7 +259,7 @@ app.get("/logout", async (req, res) => {
   console.log(`USER ${req.session.userid} HAS LOGGED OUT`);
   clientLogger.clientLogout(`
   CLIENT: ${req.session.userid}  
-  SESSION ID: ${session.sessionid}
+  SESSION ID: ${req.session.sessionid}
   CLIENT IP: ${clientIp}
   `);
   req.session.destroy();
@@ -257,7 +276,8 @@ app.use('/client', sessionClassMW(100), validatorClient(), routerClient);
 app.use('/events', sessionClassMW(100), routerClientEvents);
 
 //-------------------------SERVER-----------------------------------//
-app.listen(port, () => console.info(`App ${appName} is listening on port ${port}`));
+app.listen(port, () => console.info(`App ${appName} is listening on port ${port} at ${appMode} mode`));
+
 
 //-------------------------SOME UTILITIES-----------------------------------//
 

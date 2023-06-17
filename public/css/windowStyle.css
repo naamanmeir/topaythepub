@@ -67,6 +67,8 @@
     height: 5rem;
     max-height: 20rem;
     margin: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     color: black;
     border: 3px outset var(--border01);
 }
