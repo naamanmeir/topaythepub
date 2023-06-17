@@ -1,0 +1,268 @@
+:root {
+    --bg01: black;
+    --bg02: rgba(104, 99, 99, 0.283);
+
+    --text01: rgb(225, 168, 10);
+    --text02: rgb(255, 255, 0);
+    --text03: rgb(148, 158, 158);
+    --textBlack: black;
+
+    --border01: rgb(194, 172, 4);
+    --border02: rgb(162, 146, 123);
+    --border03: rgb(29, 182, 50);
+
+    --buttonYes: rgb(3, 183, 3);
+    --buttonNo: rgb(255, 3, 3);
+
+    --buttonBgYes: rgb(3, 183, 3);
+    --buttonBgNo: rgb(255, 0, 0);
+
+    --listItemOdd: #b9c1c3;
+    --listItemEven: #d4d4d4;
+    --listItemSelected: #699db7;
+
+    --itemPrice: #e68d07;
+    --itemCount: rgb(2, 255, 2);
+    --itemName: #deb911;
+
+}
+
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    top: 0px;
+    height: -webkit-fill-available;
+    overflow: hidden;
+    overscroll-behavior: contain;
+    direction: rtl;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    scroll-behavior: smooth;
+    white-space: nowrap;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg01);
+}
+
+p {
+    margin: 0px;
+    padding: 0px;
+}
+
+.menu {
+    z-index: 40;
+    top: 0px;
+    right: 0px;
+    margin: 0px;
+    width: auto;
+    padding: 0px;
+    float: right;
+    position: relative;
+}
+
+#emptyMenu {
+    color: red;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 50%;
+    font-size: 16px;
+    padding: 6px 5px 6px 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    /* flex-basis: 100%; */
+    flex: 1;
+}
+
+.openSideMenu {
+    color: var(--text02);
+    width: 15%;
+    right: 0px;
+    bottom: 30%;
+    padding-left: 10px;
+    position: absolute;
+    z-index: 30;
+}
+
+.openSideMenu img {
+    width: 55%;
+    height: 55%;
+    filter: invert(0.6);
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 20px;
+}
+
+.opacityOff {
+    transition: opacity 1s ease-out;
+    opacity: 0;
+}
+
+.opacityOn {
+    transition: opacity 1s ease;
+    opacity: 100;
+}
+
+#user_info {
+    display: none;
+}
+
+.hidden {
+    display: none;
+    transition: all 1s;
+}
+
+.block {
+    display: block;
+}
+
+.green {
+    color: green;
+}
+
+.aboutWindow {
+    z-index: 80;
+    position: absolute;
+}
+
+.floatMenuDiv {
+    position: absolute;
+    height: fit-content;
+    width: fit-content;
+    z-index: 40;
+    bottom: 50%;
+    left: 0;
+    border-radius: 50%;
+    border: 1px inset var(--border02);
+    transition: 0.5s;
+}
+
+.floatMenuDiv p {
+    z-index: 40;
+    color: var(--text03);
+    font-size: 50%;
+    margin: auto;
+}
+
+.floatMenuDiv a {
+    z-index: 40;
+    color: var(--text03);
+    text-decoration: none;
+    padding: 8px 32px 18px 8px;
+    text-decoration: none;
+    font-size: 100%;
+    text-align: center;
+    margin: auto;
+    display: block;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+.floatMenuDiv a:hover {
+    border-radius: 50%;
+    z-index: 40;
+    background-color: var(--bg02);
+    color: var(--text02);
+}
+
+.messageWindow {
+    z-index: 100;
+    position: absolute;
+    max-height: 20%;
+    height: fit-content;
+    max-width: 95%;
+    width: 95%;
+    top: 30%;
+    padding: 5px 5px 5px 5px;
+    background-color: var(--bg01);
+    border: 2px groove var(--border01);
+    border-radius: 3rem;
+    margin: auto;
+}
+
+.messageWindow p {
+    color: var(--text01);
+    text-align: center;
+    font-size: larger;
+}
+
+.messageWindow .bottom {
+    top: 10%;
+}
+
+.messageWindow .mid {
+    top: 50%;
+}
+
+.messageWindow .top {
+    top: 10%;
+}
+
+.messageWindow .green {
+    color: green;
+}
+
+.messageWindow .red {
+    color: red;
+}
+
+.messageWindow .big {
+    font-size: x-large;
+}
+
+.divFullPage {
+    /* background-color: green; */
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.divAbout {
+    display: block;
+    z-index: 100;
+    position: absolute;
+    overflow-wrap: break-word;
+    top: 25%;
+    left: 0%;
+    right: 0%;
+    width: fit-content;
+    margin: auto;
+    background-color: var(--bg01);
+    border: 2px solid var(--border01);
+    border-radius: 15%;
+    padding: 5%;
+    color: var(--text03);
+    font-size: 1.6rem;
+}
+
+.divAbout p {
+    right: 50%;
+}
+
+.divAboutClose {
+    display: hidden;
+}

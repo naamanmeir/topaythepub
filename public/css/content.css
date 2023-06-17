@@ -1,0 +1,457 @@
+.content {
+    z-index: 5;
+    height: 90vh;
+    width: 98%;
+    left: 1%;
+    right: 1%;
+    /* bottom: 20px; */
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    /* flex: 1 1; */
+    /* flex-shrink: 2; */
+    max-width: 1200px;
+    transition: background-color 0.8s ease;
+    /* border: 5px solid orange; */
+}
+
+.searchBoxDiv {
+    margin: auto;
+    width: 80%;
+    margin-top: 0.5rem;
+    height: 6rem;
+    top: 0px;
+    margin-bottom: 1rem;
+    align-items: center;
+    text-align: center;
+}
+
+.searchBox {
+    color: rgb(245, 191, 90);
+    text-shadow: 1px 0px 0px var(--bg01);
+    border-radius: 25px;
+    border: 3px double orange;
+    background-color: var(--bg01);
+    height: 100%;
+    width: 100%;
+    font-size: 2rem;
+    margin: auto;
+    padding-top: 0px;
+    padding-right: 1em;
+    padding-left: 1em;
+    padding-bottom: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    user-select: none;
+}
+
+::placeholder {
+    color: var(--text01);
+    opacity: 1;
+}
+
+*:focus {
+    outline: none;
+}
+
+
+/* .searchBoxLogged {
+    border-color: green;
+    transition: all 0.2s;
+}
+
+.searchBoxNotLogged {
+    border-color: orange;
+} */
+
+.autoCompleteNone {
+    display: none;
+    height: 0;
+}
+
+.autoCompleteSuggestions {
+    z-index: 30;
+    position: relative;
+    /* height: 3em; */
+    width: 100%;
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    border-radius: 25px;
+}
+
+.autocomplete-items {
+    z-index: 31;
+    left: 0;
+    right: 0;
+    padding: 0px;
+    margin: 0px;
+    font-size: 3.5rem;
+    white-space: normal;
+    color: var(--textBlack);
+    background-color: var(--listItemOdd);
+    border: 2px solid var(--textBlack);
+}
+
+.autocomplete-itemsEven {
+    background-color: var(--listItemEven);
+}
+
+.autocomplete-items:hover {
+    background-color: var(--listItemSelected);
+}
+
+.autocomplete-items div {
+    /* cursor: pointer; */
+    /* background-color: #fff; */
+    /* border-bottom: 1px solid #d4d4d4; */
+}
+
+.autocomplete-active {
+    /* background-color: DodgerBlue !important; */
+    /* color: #ffffff; */
+}
+
+.items {
+    display: inline-block;
+    flex-direction: space-between;
+    gap: 0px;
+    flex-shrink: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: auto;
+    width: 90%;
+    height: 90%;
+    margin-top: 0px;
+    margin-bottom: 11%;
+    transition: background-color 0.8s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+    clear: both;
+}
+
+.item {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    /* width: fit-content; */
+    /* width: fit-content; */
+    height: 6rem;
+    max-height: 50%;
+    max-width: fit-content;
+    background-color: #61584b81;
+    border: 4px outset var(--border01);
+    margin: 0px auto 0px auto;
+    margin-bottom: 2%;
+    /* padding-bottom: 20px; */
+    transition: background-color 0.5s ease;
+    border-radius: 5%;
+    /* transition: background-size 0.2s linear; */
+    /* background-size: 6rem;
+    background-repeat: no-repeat;
+    background-blend-mode: color-burn;
+    background-clip: border-box;
+    background-position: 25%; */
+    /* background-position-y: -1rem; */
+}
+
+.item img {
+    /* display: none; */
+    user-select: none;
+    pointer-events: none;
+    top: 0px;
+    padding: 0px;
+    margin: auto auto auto 1%;
+    /* max-width: 90px; */
+    max-height: 6rem;
+    clear: both;
+}
+
+.item:active {
+    border: 4px inset rgba(209, 155, 17, 0.676);
+    background-color: rgb(240, 152, 0, 0.6);
+    transition: none;
+    user-select: none;
+    transition: background-size 0.1s linear;
+}
+
+.item itemName {
+    /* position: absolute; */
+    top: 10%;
+    right: 5%;
+    padding: 1%;
+    margin: 0px;
+    font-size: 1.7rem;
+    font-size: max(5px, 4vw);
+    /* padding-right: 1rem; */
+    color: var(--itemName);
+    text-shadow: 1px 1px 1px #000000;
+    user-select: none;
+    pointer-events: none;
+}
+
+.item itemPrice {
+    position: relative;
+    top: 10%;
+    /* left: 1px; */
+    /* padding: 0px; */
+    margin-left: 5%;
+    font-size: max(4.4vw, 4vw);
+    padding-left: 1rem;
+    color: var(--itemPrice);
+    text-shadow: 2px 2px 2px #000000;
+    user-select: none;
+    pointer-events: none;
+}
+
+.itemCount {
+    transition: 1s;
+    position: absolute;
+    margin: 0px;
+    padding: 0px;
+    top: -25px;
+    bottom: 5%;
+    left: 30%;
+    font-size: 8rem;
+    color: var(--itemCount);
+    font-style: oblique;
+    text-shadow: 5px 7px 7px #000000, 3px 3px 0px black, 1px 2px 0px black;
+    pointer-events: none;
+    user-select: none;
+}
+
+.itemNotActive {
+    display: none;
+}
+
+/* @media screen and (max-height: 700px),
+(max-width: 500px) {
+    .item {
+        border: 2px outset rgb(240, 152, 0);
+    }
+
+    .item p {
+        font-size: 1.2rem;
+    }
+
+    .item img {        
+        max-height: 4rem;
+    }
+
+    .searchBox {
+        height: fit-content;
+        width: 100%;
+        font-size: 1.5rem;
+        padding: 0.2rem;
+    }
+} */
+
+/* ------------------scrollbar--------------------- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-track {
+    background-color: rgba(64, 64, 64, 0.875);
+    border-radius: 50%;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 132, 0, 0.591);
+    border-radius: 2px;
+    background-clip: padding-box;
+}
+
+/* ------------------scrollbar--------------------- */
+
+.break {
+    /* flex-basis: 100%; */
+    height: 0;
+}
+
+.buttons {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    margin: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    bottom: 0px;
+    left: -50%;
+    right: -50%;
+    text-align: center;
+    /* border: 5px solid orange; */
+}
+
+.buttons button {
+    margin: auto;
+    min-width: 0px;
+    min-height: 0px;
+    width: 100%;
+    height: fit-content;
+    color: black;
+    font-size: 2rem;
+    padding: 0rem 1rem 0rem 1rem;
+    text-shadow: 5px 1px 10px #a49c9c;
+    border: 3px outset rgba(230, 145, 9, 0.495);
+}
+
+.buttons button:active {
+    border: 3px inset grey;
+}
+
+.cancel {
+    background-color: var(--buttonNo);
+}
+
+.placeOrder {
+    background-color: var(--buttonYes);
+}
+
+.pointerNone {
+    pointer-events: none;
+}
+
+.pointerAll {
+    pointer-events: all;
+}
+
+.messageBox {
+    display: none;
+    z-index: 80;
+    position: absolute;
+    height: fit-content;
+    width: 80%;
+    font-size: 100%;
+    background-color: rgba(0, 0, 0, 0.96);
+    border: 2px groove orange;
+    margin: auto;
+    top: 10%;
+    right: 10%;
+    left: 10%;
+    text-align: center;
+}
+
+.messageBox p1 {
+    color: whitesmoke;
+    font-size: 1rem;
+}
+
+.messageBox p2 {
+    color: whitesmoke;
+    font-size: 1.2rem;
+}
+
+.messageBox p3 {
+    font-size: xx-large;
+    color: orange;
+}
+
+.messageBox p4 {
+    font-size: 3rem;
+    color: orangered;
+}
+
+.messageBox p5 {
+    font-size: xx-large;
+    max-width: 1rem;
+    color: rgb(255, 0, 255);
+}
+
+.messageBoxOn {
+    display: block;
+}
+
+.confirmButtons {
+    z-index: 40;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 4rem;
+    color: black;
+    border: 3px outset orange;
+    font-size: 250%;
+}
+
+.confirmButtons:active {
+    border: 3px inset orange;
+}
+
+.confirmButtonsYes {
+    padding-right: 2rem;
+    margin-top: 1rem;
+    background-color: greenyellow;
+}
+
+.confirmButtonsNo {
+    padding-right: 2rem;
+    margin-top: 0.45em;
+    margin-bottom: 1em;
+    background-color: red;
+}
+
+.errorMessage {
+    z-index: -10;
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.716);
+    border: 2px solid rgb(12, 81, 146);
+    color: rgb(27, 188, 185);
+    font-size: x-large;
+    width: fit-content;
+    right: 55%;
+}
+
+.errorMessageOn {
+    z-index: 80;
+    display: block;
+    pointer-events: none;
+}
+
+.finaleMessageBox {
+    /* display: none; */
+    z-index: 80;
+    position: absolute;
+    height: fit-content;
+    width: 70%;
+    background-color: rgba(46, 44, 39, 0.855);
+    border: 2px groove orange;
+    border-radius: 2rem;
+    margin: auto;
+    top: 25%;
+    right: 15%;
+    left: 15%;
+    text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    animation: confirmAnim1 1s ease 2s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+.finaleMessageBoxText {
+    color: rgb(201, 138, 3);
+    font-size: 2.6rem;
+    text-shadow: 2px 2px 5px rgb(0, 0, 0);
+}
+
+@keyframes confirmAnim1 {
+    0% {
+        opacity: 100;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 70;
+        transform: scale(0.5);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+}

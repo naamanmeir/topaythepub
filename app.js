@@ -2,6 +2,7 @@ require("dotenv").config();
 var favicon = require('serve-favicon');
 const express = require('express');
 const sessions = require('express-session');
+const sqlStore = require('express-mysql-session')(sessions);
 const path = require('node:path');
 const fs = require('fs');
 const readline = require('readline');
@@ -9,19 +10,41 @@ const { stringify } = require("csv-stringify");
 var formidable = require('formidable');
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
-// var morgan = require('morgan');
-// const helmet = require('helmet');
+const helmet = require('helmet');
 let ejs = require('ejs');
 const querystring = require('querystring');
+
+var validator = require('validator');
 
 var SSE = require('express-sse');
 var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
 
+//--------------RATE LIMIT------------------------//
+const rateLimit = require('express-rate-limit');
+const rateLimitMain = rateLimit({
+	windowMs: 1 * 25 * 1000,
+	max: 500,
+	standardHeaders: true,
+	legacyHeaders: false,  
+  handler: function(req,res){
+    console.log("--------RATE LIMIT---------")
+    return res.end();
+  }
+});
+
 const db = require('./db.js');
 const functions = require('./functions.js');
-const generateAccessToken = require("./module/tokenGen");
-const validateToken = require("./module/tokenVal");
-const sessionClassMW = require("./module/sessionClass.js");
+const generateAccessToken = require("./module/session/tokenGen");
+const validateToken = require("./module/session/tokenVal");
+const sessionClassMW = require("./module/session/sessionClass.js");
+const validatorClient = require("./module/input/inputValidatorClient.js");
+// const rateLimitMiddle = require("./module/input/inputThresh.js");
+const {errorLogger,clientLogger,actionsLogger,ordersLogger} = require('./module/logger');
+
+let messagesJson = require('./messages.json');
+let messageUi = messagesJson.ui[0];
+let messageClient = messagesJson.client[0];
+let messageError = messagesJson.error[0];
 
 const routerAdmin = require('./routes/router_admin');
 const routerManage = require('./routes/router_manage');
@@ -32,34 +55,12 @@ const routerApp = require('./routes/router_app');
 
 const appPort = process.env.APP_PORT;
 const appName = process.env.APP_NAME;
+const appMode = process.env.APP_MODE;
+const production = process.env.APP_MODE === "production";
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const COOKIE_EXPIRATION = Number(process.env.COOKIE_EXPIRATION);
 const SESSION_NAME = process.env.SESSION_NAME;
-
-// morgan.token('splitter', (req) => {
-//   return "\x1b[36m--------------------------------------------\x1b[0m\n";
-// }); // MORGAN LOGGING COLOR CODES
-// morgan.token('statusColor', (req, res, args) => {  
-//   var status = (typeof res.headersSent !== 'boolean' ? Boolean(res.header) : res.headersSent)
-//       ? res.statusCode
-//       : undefined  
-//   var color = status >= 500 ? 31 // red
-//       : status >= 400 ? 33 // yellow
-//           : status >= 300 ? 36 // cyan
-//               : status >= 200 ? 32 // green
-//                   : 0; // no color
-//   return '\x1b[' + color + 'm' + status + '\x1b[0m';
-// });
-// morgan.token('time', function(req, res, param) {
-//   return getSimpleTime();  
-// });
-// morgan.token('sessionid', function(req, res, param) {
-//   return req.sessionID;
-// });
-// morgan.token('user', function(req, res, param) {
-//   return req.session.user;
-// });
 
 const app = express();
 const port = appPort;
@@ -70,7 +71,17 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
-// app.use(express.static(__dirname));
+//--------------SESSION CONFIG------------------------//
+
+const sqlSessionStoreOptions = {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DB,
+};
+
+const sessionStore = new sqlStore(sqlSessionStoreOptions);
 
 app.use(sessions({
   name: SESSION_NAME,
@@ -79,21 +90,39 @@ app.use(sessions({
   secret: ACCESS_TOKEN_SECRET,
   resave: false,
   saveUninitialized: false,
+  store: sessionStore,
+  expires: COOKIE_EXPIRATION,
   cookie: {
+    name: SESSION_NAME,
     secure: false,
     httpOnly: true,
-    maxAge: COOKIE_EXPIRATION
+    maxAge: COOKIE_EXPIRATION    
   }
 }));
 
+if(!production){
+  sessionStore.onReady().then(() => {
+	console.log('MySQLStore ready');
+  }).catch(error => {
+	console.error(error);
+});};
+
 var session;
 
-let clients = [];
+//--------------HELMET CONFIG------------------------//
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-hashes'"],
+        "script-src-attr": ["'self'", "'unsafe-inline'"],
+      },
+    },
+  })
+);
 
-// app.use(helmet());
-
-// app.use(morgan(`\x1b[0m:time \x1b[0m \x1b[33m:remote-addr\x1b[0m \x1b[32m:url
-//   \x1b[36m:sessionid\x1b[0m \x1b[0m :response-time ms `));
+app.use(rateLimitMain);
 
 var now = new Date();
 console.log("System Startup Time : " + Date());
@@ -117,95 +146,138 @@ function getSimpleTime() {
 
 // ---------------------- DB INIT ----------------------------------- //
 function dbInit() {
-  db.createSessionTable();
   db.createUserTable();
+  db.createSessionTable();
+  db.dbCreateTableClients();
+  db.dbCreateTableOrders();
+  db.dbCreateTableProducts();
+
   const connectionTestTimeout = setTimeout(callDbStatus, 1000);
   function callDbStatus() {
-    db.connectionStatus();
+    // db.connectionStatus();
   };
 };
 dbInit();
 
-// ----------------- MAIN APP LOGIN ROUTE ---------------------------- //
-// app.use(sessionClassMW({ class: '100'}));
-
-// app.use((req, res, next) => {
-//   console.log('-------------Time:', Date.now())
-//   next()
-// })
-
-// require('./routes/routes_basic')(app);
-// require('./routes/router_manage')(app);
-
 //------------------------------USER SESSION-------------------------------------//
-app.get('/', (req, res) => {
-  session = req.session;
+app.get('/', async (req, res) => {
+  // console.log("-----------------------------------");
+  // console.log(req);
+  // console.log("-----------------------------------");
+
+  if (!req || req == null) { res.sendStatus(401).end(); };
+  const clientIp = req.headers['x-forwarded-for'];
+  clientLogger.clientAttempted(`
+  LOGIN PAGE VISITED FROM
+  IP: ${clientIp}
+  `);
+
+  if (req.session != null) {session = req.session};  
+
   if (session.userid) {
     res.redirect('./app');
+    return;
   } else {
-    res.render('login.ejs', {
-      // root: __dirname,
-      message: "wellcome message"
+    res.render('login.ejs', {      
+      message: messageUi.loginMessage
     });
+    return;
   }
 });
 
 app.post("/login", async (req, res) => {
-  console.log("LOGIN ATTAMPTED")
+  const clientIp = req.headers['x-forwarded-for'];  
   if (!req.body.username || !req.body.password) {
-    res.redirect('./');
-    console.log("ATTAMPTED LOGIN WITH NO DETAILS")
+    res.redirect('./');    
+    clientLogger.clientAttempted(`
+    LOGIN ATTAMPTED WITH NO DETAILS
+    IP: ${clientIp}
+    `);
     return;
   }
+  if (!validator.isAlphanumeric(req.body.username)) { console.log("USERNAME NOT VALID"); loginAction(req, res, 0, null, null); return; }
+  if (!validator.isAlphanumeric(req.body.password)) { console.log("PASSWORD NOT VALID"); loginAction(req, res, 1, null, null); return; }
 
   const user = req.body.username;
-  const password = req.body.password;
+  const password = req.body.password;  
 
   let dbResponse = await db.userLogin(user, password);
 
-  if (dbResponse[0] == 0) {
-    console.log("LOGIN ATTAMPTED WITH WRONG USERNAME")
-    const query = querystring.stringify({ "message": "username invalid" });
-    res.redirect('./?' + query);
-  } // WRONG USER
-  if (dbResponse[0] == 1) {
-    console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD")
-    const query = querystring.stringify({ "message": "password invalid" });
-    res.redirect('./?' + query);
-  } // WRONG PASS
-  if (dbResponse[0] == 2) {
-    const token = generateAccessToken({ user: user });
-    session = req.session;
-    session.userid = req.body.username;
-    const userClass = await db.getUserClassByName(session.userid);
-    session.userclass = Number(userClass);
-    const sessionStore = await db.storeSession(session.userid, userClass, token);
-    session.sessionid = Number(sessionStore);
-    console.log(`LOGIN: USER: ${user} ,CLASS: ${userClass} ,SESSION ID: ${session.sessionid}`);
-    res.redirect('./');
-  }// LOGIN OK
+  loginAction(req, res, dbResponse,user,password);
+  return;
 });
 
-app.get("/logout", async (req, res) => {
+async function loginAction(req, res, reply, user, password) {
+  const clientIp = req.headers['x-forwarded-for'];
+  if (reply[0] == 0) {
+    // console.log("LOGIN ATTAMPTED WITH WRONG USERNAME");
+    clientLogger.clientAttempted(`
+    LOGIN ATTAMPTED WITH WRONG USERNAME
+    IP: ${clientIp}
+    `);
+    const query = querystring.stringify({ "message": "username invalid" });
+    res.redirect('./?' + query);
+    return;
+  } // WRONG USER
+  if (reply[0] == 1) {
+    // console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD");
+    clientLogger.clientAttempted(`
+    LOGIN ATTAMPTED WITH WRONG PASSWORD
+    IP: ${clientIp}
+    `);
+    const query = querystring.stringify({ "message": "password invalid" });
+    res.redirect('./?' + query);
+    return;
+  } // WRONG PASS
+  if (reply[0] == 2) {    
+    const token = generateAccessToken({ user: user });
+    session = req.session;
+    let sessionName = req.cookies.sessionName;
+    session.userid = req.body.username;    
+    const userClass = await db.getUserClassByName(session.userid);
+    session.userclass = Number(userClass);    
+    const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
+    session.sessionid = Number(sessionStore);
+    clientLogger.clientLogin(`
+    CLIENT: ${user}
+    CLASS: ${userClass}
+    SESSION ID: ${session.sessionid}
+    CLIENT IP: ${clientIp}
+    `);
+    res.redirect('./');
+    return;
+  }// LOGIN OK
+  return;
+}
+
+app.get("/logout", async (req, res) => {  
   if (req.session == null) { res.sendStatus(403); return; }
+  const clientIp = req.headers['x-forwarded-for'];
   if (req.session.sessionid != null) {
     const sessionRemove = await db.removeSession(req.session.sessionid);
   };
   console.log(`USER ${req.session.userid} HAS LOGGED OUT`);
+  clientLogger.clientLogout(`
+  CLIENT: ${req.session.userid}  
+  SESSION ID: ${req.session.sessionid}
+  CLIENT IP: ${clientIp}
+  `);
   req.session.destroy();
   res.redirect('./');
+  return;
 });
 
 // ------------------------ ROUTERS ----------------------- //
-app.use('/secretadminpanel', routerAdmin);
-app.use('/manage', routerManage);
-app.use('/accountant', routerAccountant);
-app.use('/app', routerApp);
-app.use('/client', routerClient);
-app.use('/events', routerClientEvents);
+app.use('/secretadminpanel', sessionClassMW(0), routerAdmin);
+app.use('/manage', sessionClassMW(50), routerManage);
+app.use('/accountant', sessionClassMW(75), routerAccountant);
+app.use('/app', sessionClassMW(100), routerApp);
+app.use('/client', sessionClassMW(100), validatorClient(), routerClient);
+app.use('/events', sessionClassMW(100), routerClientEvents);
 
 //-------------------------SERVER-----------------------------------//
-app.listen(port, () => console.info(`App ${appName} is listening on port ${port}`));
+app.listen(port, () => console.info(`App ${appName} is listening on port ${port} at ${appMode} mode`));
+
 
 //-------------------------SOME UTILITIES-----------------------------------//
 

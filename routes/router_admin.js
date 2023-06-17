@@ -2,10 +2,10 @@ const express = require('express');
 const routerAdmin = express.Router();
 const functions = require('../functions');
 const db = require('../db');
-const sessionClassMW = require("../module/sessionClass");
+const sessionClassMW = require("../module/session/sessionClass");
 const bcrypt = require("bcrypt");
 
-routerAdmin.get('/', sessionClassMW(0), (req, res) => {
+routerAdmin.get('/', (req, res) => {
     console.log("LOGIN TO ADMIN PANEL ON: " + Date());
     let session = req.session;
     let message = "message from ejs";
@@ -15,7 +15,7 @@ routerAdmin.get('/', sessionClassMW(0), (req, res) => {
     })
 });
 
-routerAdmin.post("/createUser", sessionClassMW(0), async (req, res) => {
+routerAdmin.post("/createUser", async (req, res) => {
     console.log(req.body);
     if (!req.body.username || !req.body.password || !req.body.class) { res.end; return }
 

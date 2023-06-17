@@ -2,37 +2,101 @@ const express = require('express');
 const routerApp = express.Router();
 const functions = require('../functions');
 const db = require('../db');
-const sessionClassMW = require("../module/sessionClass");
+const {actionsLogger, ordersLogger} = require('../module/logger');
+const { json } = require('stream/consumers');
+
+let messagesJson = require('../messages.json');
+let messageUi = messagesJson.ui[0];
+let messageClient = messagesJson.client[0];
+let messageError = messagesJson.error[0];
 
 var now = new Date();
 
 //--------------------------------UI-------------------------------//
 
-routerApp.get('/', sessionClassMW(100), async function (req, res) {
-    let session = req.session;
-    let products = [];
-    products = await db.dbGetProducts();
-    console.log("LOGIN TO APP ON: " + Date());
-    res.render('index', {
-        products: products
-    })
+routerApp.get('/', async function (req, res) {
+    // let session = req.session;
+    // console.log("LOGIN TO APP ON: " + Date());
+    res.render('index');
 });
 
-routerApp.get('/about', function (req, res) {
-    console.log("SEND ABOUT");
-    res.render('about');
-    // res.send("SEND TEST");
+routerApp.get('/messages', async function (req, res) {
+    // console.log("SEND MESSAGES OBJECT");
+    messageUi = (messageUi);
+    res.send(messagesJson);
+});
+
+routerApp.get('/header', function (req, res) {
+    // console.log("SEND HEADER");
+    // res.render('header');
+    let renderHeader = require("../module/html/main/header");
+    let html = renderHeader.buildHtml(messageUi);
+    res.send(html);
+});
+
+routerApp.get('/topMenu', function (req, res) {
+    // console.log("SEND SIDEMENU");    
+    // res.render('topMenu');
+    let renderTopMenu = require("../module/html/main/topMenu");
+    let html = renderTopMenu.buildHtml(messageUi);
+    res.send(html);
 });
 
 routerApp.get('/sideMenu', function (req, res) {
-    console.log("SEND SIDE MENU");
-    res.render('sideMenu');
-    // res.send("SEND TEST");
+    // console.log("SEND TOPMENU");
+    // res.render('sideMenu');
+    let renderSideMenu = require("../module/html/main/sideMenu");
+    let html = renderSideMenu.buildHtml(messageUi);
+    res.send(html);
 });
 
-//--------------------------------PRODUCTS-------------------------------//
+routerApp.get('/floatMenu', function (req, res) {
+    // console.log("SEND FLOATMENU");
+    // res.render('floatMenu');
+    let renderFloatMenu = require("../module/html/main/floatMenu");
+    let html = renderFloatMenu.buildHtml(messageUi);
+    res.send(html);
+});
+
+routerApp.get('/content', function (req, res) {
+    // console.log("SEND CONTENT DIV");
+    res.render('content');
+});
+
+routerApp.get('/contentScript', function (req, res) {
+    // console.log("SEND CONTENT SCRIPT");
+    res.render('contentScript');
+});
+
+routerApp.get('/about', function (req, res) {
+    // console.log("SEND ABOUT");
+    // res.render('about');
+    let renderAbout = require("../module/html/main/about");
+    let html = renderAbout.buildHtml(messageUi);
+    res.send(html);
+});
+
+routerApp.get('/footer', function (req, res) {
+    // console.log("SEND FOOTER");
+    // res.render('footer');
+    let renderFooter = require("../module/html/main/footer");
+    let html = renderFooter.buildHtml(messageUi);
+    res.send(html);
+});
+
+//--------------------------------ELEMENTS-------------------------------//
 
 routerApp.get('/getProducts/', async (req, res) => {
+    let itemArrayToHtml = require("../module/html/content/productItem");
+    let listFromDb = await db.dbGetProducts();
+    let html = itemArrayToHtml.buildHtml(messageUi,listFromDb);
+    res.send(html);
+    // console.log("SENT PRODUCTS")
+    delete require.cache[require.resolve("../module/html/content/productItem")];
+    return;
+});
+
+routerApp.get('/getProductsJson/', async (req, res) => {
     let products = [];
     let listFromDb;
     listFromDb = await db.dbGetProducts();
@@ -43,52 +107,6 @@ routerApp.get('/getProducts/', async (req, res) => {
     res.send(products);
 });
 
-routerApp.get('/placeOrder/:data', async function (req, res) {
-    console.log("ORDER: ");
-    console.log(now);
-    // console.log(req.params.data);
-    const orderData = (req.params.data).split(',');
-    // console.log(orderData);
-    let clientId = orderData[orderData.length - 1];
-    let totalPrice = orderData[orderData.length - 2];
-    // console.log(clientId);
-    // console.log(totalPrice);
-    let orderInfo;
-    for (let i = 0; i < orderData.length - 2; i = i + 2) {
-        if (orderInfo == null || orderInfo == "") {
-            orderInfo = (orderData[i] + "-" + orderData[i + 1] + ".");
-        } else {
-            orderInfo += (orderData[i] + "-" + orderData[i + 1] + ".");
-        }
-    }
-    console.log("order info: " + orderInfo);
-    var orderDate = now;
-    var orderTime = now;
-    // console.log("date: "+orderDate+" time: "+orderTime+" id: "+id+" ,item1: "+item1+" ,item2:"+item2+" ,item3: "+item3+" ,item4: "+item4);
-    let orderResult;
-    orderResult = await db.dbInsertOrderToOrders(orderTime, clientId, orderInfo, totalPrice).then((orderResult) => { return (orderResult) });
-    res.send(orderResult);
-});
-
 //--------------------------------USERS-------------------------------//
-
-routerApp.post('/searchName/:data', async (req, res) => {
-    var query = (req.params.data).replace(/\"/g, '');
-    if (query == "-") {
-        res.send(JSON.stringify("clear"));
-        return;
-    };
-    let names = [];
-    names = (await db.dbGetNameBySearch(query));
-    res.send(names);
-});
-
-routerApp.post('/getUserInfo/:data', async (req, res) => {
-    let clientId = JSON.parse(req.params.data);
-    let clientInfo = await db.dbGetClientInfoById(clientId);
-    // console.log(JSON.stringify(clientInfo));
-    res.send(clientInfo)
-
-});
 
 module.exports = routerApp;

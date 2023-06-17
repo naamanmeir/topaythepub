@@ -1,0 +1,102 @@
+{
+    "ui": [
+        {
+            "loginMessage": "hello_this_is_a_message_for_visitors_מה_נשמע",
+            "appName": "לרשום בפאב",
+            "appVersion": "0.3.1",
+            "headerText": "לרשום בפאב",
+            "headerAnimElement1": "💚",
+            "headerAnimElement2": "💙",
+            "regexBlock": "[~!@#\\$%^&\\*\\(\\)-\\\\=_\\+\\[\\]\\{\\}\\?>/\\.<\\,;\\|]",
+            "regexEmoji": "/[\\p{Extended_Pictographic}\\u{1F3FB}-\\u{1F3FF}\\u{1F9B0}-\\u{1F9B3}]/u",
+            "userPageLable": "דף משתמש",
+            "header": "לרשום בפאב",
+            "buttonOrder": "בצע רישום",
+            "buttonCancel": "בטל",
+            "menuFloating": "כפתור",
+            "menuSide": "תפריט",
+            "userPage": "דף משתמש",
+            "userPageHeader": "דף משתמש",
+            "userPageName": "שם:",
+            "userPageNick": "כינוי:",
+            "userPageAccount": "מספר משלם:",
+            "userPageId": "מספר זיהוי:",
+            "userPageNickButtonYes": "החלפת כינוי",
+            "userPageNickButtonNo": "ביטול החלפת כינוי",
+            "userPageTableId": "מס. רישום",
+            "userPageTableDate": "זמן רישום",
+            "userPageTableDetails": "פרטים",
+            "userPageTableSum": "סכום",
+            "userPageButtonCloseWindow": "סגור חלון",
+            "userPageButtonDeleteOrder": "למחוק רישום אחרון",
+            "userPageButtonDeleteOrderYes": "בצע מחיקה",
+            "userPageButtonDeleteOrderNo": "בטל מחיקה",
+            "orderConfirmButtonYes": "בצע רישום",
+            "orderConfirmButtonNo": "בטל רישום",
+            "orderConfirmTitle": "אישור רישום",
+            "orderConfirmHello": "היי",
+            "orderConfirmPleaseAprove": "נא לאשר רישום של:",
+            "orderConfirmCurrency": "₪",
+            "orderConfirmSum": "בסך הכל :",
+            "orderConfirmPrice": "שעולה :",
+            "orderConfirmTotalSum": "סך כל הרישום :",
+            "orderConfirmToName": "לחשבון :",
+            "orderConfirmToAccount": "מספר :",
+            "deleteorderConfirmDate": "האם למחוק רישום שנרשם ב :",
+            "deleteorderConfirmInfo": "ומכיל :",
+            "deleteorderConfirmSum": "בסכום :",
+            "deleteorderConfirmAccount": "מחשבון :",
+            "deleteorderConfirmClient": "על שם :",
+            "deleteorderConfirmButtonNo": " 😬 בטל מחיקת הזמנה הפאב צריך את הכסף",
+            "deleteorderConfirmButtonYes": " 😢 אשר מחיקת הזמנה עצוב",
+            "aboutLine1": "נוצר עבור פאב אבירים",
+            "aboutLine2": "ע'י ניבה גבינהצהובה",
+            "aboutLine3": "ותום תרם את הטאבלט",
+            "aboutLine4": "המידע המועט שנשמר פה",
+            "aboutLine5": "די מוגן באינטרנט",
+            "aboutLine6": "ובסוף הופך להיות דף אקסל",
+            "aboutLine7": "בהנהלת חשבונות",
+            "aboutLine8": "",
+            "aboutLink1": "https://github.com/naamanmeir/topaythepub",
+            "aboutLink1Text": "github",
+            "sideMenuOpenAbout": "אודות",
+            "sideMenuFullScreen": "מסך מלא",
+            "sideMenuRefreshCss": "רענן עיצוב",
+            "SideMenuRefreshPage": "טען מחדש",
+            "SideMenuLogOutClient": "נתק מסוף",
+            "SideMenuCloseSideMenu": "⟹",
+            "floatMenuButton": "כפתור",
+            "footerText": " זה של הפאב ונוצר על ידי ניבה גבינהצהובה"
+        }
+    ],
+    "sideMenu": [
+        {
+            "sideMenuOpenAbout": "אודות",
+            "sideMenuFullScreen": "מסך מלא",
+            "sideMenuRefreshCss": "רענן עיצוב",
+            "SideMenuRefreshPage": "טען מחדש",
+            "SideMenuLogOutClient": "נתק מסוף",
+            "SideMenuCloseSideMenu": "⟹"
+        }
+    ],
+    "client": [
+        {
+            "inputPlaceholder": "נא להכניס שם 👉👉",
+            "logged": "👋👍",
+            "notExist": "משתמש👨‍💻לא🧑‍🔧קיים",
+            "enterName": "👇🏼בחרו👇🏼את👇🏼שמכם👇🏼מהרשימה👇🏼",
+            "notUsed": "👇👇",
+            "orderMessage": "רישום נרשם",
+            "orderAbortButton": "בוטל⌛️יצירת🔌רישום🗑ומהתחלה",
+            "noOrderToAbortButton": "🤦‍♂️ 🤷‍♀️ 🤷 🤷‍♂️",
+            "clientAutoLogout": "💤 התנתק עקב חוסר שימוש 💤"
+        }
+    ],
+    "error": [
+        {
+            "orderQuantity": "שגיאה בחישוב כמות הזמנה",
+            "orderNoLoggedUSer": "לפני ביצוע רישום יש לרשום שם",
+            "orderNoOrderData": "נא להכניס פרטים לרישום "
+        }
+    ]
+}

@@ -1,7 +1,7 @@
 const express = require('express');
 const routerAccountant = express.Router();
 const functions = require('../functions');
-const sessionClassMW = require("../module/sessionClass");
+const sessionClassMW = require("../module/session/sessionClass");
 const fs = require('fs');
 const db = require('./../db.js');
 const { stringify } = require("csv-stringify");

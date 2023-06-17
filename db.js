@@ -2,26 +2,19 @@ const mariadb = require('mariadb');
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 
-const DB_HOST = process.env.DB_HOST
-const DB_USER = process.env.DB_USER
-const DB_PASSWORD = process.env.DB_PASSWORD
-const DB_DATABASE = process.env.DB_DATABASE
-const DB_PORT = process.env.DB_PORT
-
 const pool = mariadb.createPool({
-  host: process.env.MYSQL,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DB,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DB,
   connectionLimit: 5
 });
 
-const tableClients = process.env.MYSQL_TABLE_CLIENTS;
-const tableOrders = process.env.MYSQL_TABLE_ORDERS;
-const tableProducts = process.env.MYSQL_TABLE_PRODUCTS;
-const tableUsers = process.env.MYSQL_TABLE_USERS;
-const DB_TABLE_USERS = process.env.DB_TABLE_USERS
-const DB_TABLE_SESSIONS = process.env.DB_TABLE_SESSIONS
+const tableClients = process.env.DB_TABLE_CLIENTS;
+const tableOrders = process.env.DB_TABLE_ORDERS;
+const tableProducts = process.env.DB_TABLE_PRODUCTS;
+const tableUsers = process.env.DB_TABLE_USERS;
+const tableSessions = process.env.DB_TABLE_SESSIONS;
 
 //-----------------------------INIT----------------------------------//
 exports.dbConnectionTest = async function () {
@@ -38,7 +31,7 @@ exports.dbConnectionTest = async function () {
 
 exports.createUserTable = async function () {
   let createUserTable;
-  createUserTable = pool.query("CREATE TABLE IF NOT EXISTS `" + DB_TABLE_USERS +
+  createUserTable = pool.query("CREATE TABLE IF NOT EXISTS `" + tableUsers +
     "`(`userId` INT NOT NULL AUTO_INCREMENT," +
     "`class` INT NOT NULL DEFAULT '100'," +
     "`user` VARCHAR(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'user'," +
@@ -54,12 +47,12 @@ exports.createUserTable = async function () {
 
 exports.createSessionTable = async function () {
   let createSessionTable;
-  createSessionTable = pool.query("CREATE TABLE IF NOT EXISTS `" + DB_TABLE_SESSIONS +
+  createSessionTable = pool.query("CREATE TABLE IF NOT EXISTS `" + tableSessions +
     "`(`sessionId` INT NOT NULL AUTO_INCREMENT," +
     "`time` DATE ," +
     "`userClass` INT NOT NULL DEFAULT '100'," +
     "`userName` VARCHAR(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'userDefault'," +
-    "`jwt` TEXT(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin ," +
+    "`session` TEXT(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin ," +
     "PRIMARY KEY (`sessionId`));"
   )
     .catch((err) => { console.log(err) })
@@ -82,7 +75,9 @@ exports.dbCreateTableClients = async function () {
         "`nick` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL," +
         "PRIMARY KEY (`id`));"
       )
-        .then((results) => { console.log(results); return results })
+        .then((results) => { 
+          // console.log(results);
+          return results })
         .catch((err) => { console.log(err) })
     });
   return createTableClients;
@@ -96,13 +91,16 @@ exports.dbCreateTableOrders = async function () {
         "`(`orderid` INT NOT NULL AUTO_INCREMENT," +
         "`sign` INT NOT NULL DEFAULT '0'," +
         "`time` DATETIME NOT NULL DEFAULT (now())," +
-        "`info` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin" +
+        "`info` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin," +
         "`sum` INT NOT NULL DEFAULT '0'," +
         "`clientid` INT NOT NULL DEFAULT '1'," +
         "`client` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL," +
         "PRIMARY KEY (`orderid`));"
       )
-        .then((results) => { console.log(results); return results })
+        .then((results) => {
+          //  console.log(results);
+            return results;
+          })
         .catch((err) => { console.log(err) })
     });
   return createTableOrders;
@@ -121,28 +119,13 @@ exports.dbCreateTableProducts = async function () {
         "`itemimgpath` VARCHAR(1024) NOT NULL DEFAULT 'img/items/2.png'," +
         "PRIMARY KEY (`itemid`));"
       )
-        .then((results) => { console.log(results); return results })
+        .then((results) => { 
+          // console.log(results); 
+          return results })
         .catch((err) => { console.log(err) })
     });
   return createTableProducts;
 };
-
-// exports.dbCreateTableUsers = async function () {
-//   let createTableUsers;
-//   createTableUsers = await pool.getConnection()
-//     .then(conn => {
-//       conn.query("CREATE TABLE IF NOT EXISTS `" + tableUsers +
-//         "`(`userid` INT NOT NULL AUTO_INCREMENT," +
-//         "`class` INT NOT NULL DEFAULT '0'," +
-//         "`password` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'pass'," +
-//         "`name` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'user'," +
-//         "PRIMARY KEY (`userid`));"
-//       )
-//         .then((results) => { console.log(results); return results })
-//         .catch((err) => { console.log(err) })
-//     });
-//   return createTableUsers;
-// };
 
 exports.connectionStatus = async function () {
   console.log("Total connections: ", pool.totalConnections());
@@ -157,7 +140,7 @@ exports.createUser = async function (user, password, userclass) {
     return [0, user, `A USER NAME ${user} ALLREADY EXIST IN TABLE , ABORTING`];
   } else {
     console.log("USER AVAILABLE");
-    sql = (`INSERT INTO ${DB_TABLE_USERS} (user,password,class) VALUES ('${user}','${password}',${userclass});`)
+    sql = (`INSERT INTO ${tableUsers} (user,password,class) VALUES ('${user}','${password}',${userclass});`)
     // messageReturn = await dbQuery(sql);
     let messageReturn = await pool.query(sql);
     return [1, user, `USER ${user} ADDED TO USER TABLE , CONTINUE`];
@@ -180,13 +163,13 @@ exports.userLogin = async function (user, password) {
 };
 
 async function checkUserExist(user) {
-  const sql = (`SELECT * FROM ${DB_TABLE_USERS} WHERE user = '${user}';`)
+  const sql = (`SELECT * FROM ${tableUsers} WHERE user = '${user}';`)
   let userExistance = await pool.query(sql);
   return userExistance;
 };
 
 exports.getUserClassByName = async function getUserClassByName(user) {
-  const sql = (`SELECT class FROM ${DB_TABLE_USERS} WHERE user = '${user}';`)
+  const sql = (`SELECT class FROM ${tableUsers} WHERE user = '${user}';`)
   let userClass = await pool.query(sql);
   userClass = userClass[0].class;
   return userClass;
@@ -194,16 +177,25 @@ exports.getUserClassByName = async function getUserClassByName(user) {
 
 //----------------------------------------SESSION MANAGE-----------------------//
 
-exports.storeSession = async function storeSession(username, userclass, jwt) {
-  const sql = (`INSERT INTO ${DB_TABLE_SESSIONS} (userClass,userName,jwt)` +
-    ` VALUES ('${userclass}','${username}','${jwt}');`);
+exports.storeSession = async function storeSession(username, userclass, session) {
+  const sql = (`INSERT INTO ${tableSessions} (time,userClass,userName,session)` +
+    ` VALUES (NOW(),'${userclass}','${username}','${session}');`);
   let storeSession = await pool.query(sql);
   const sessionId = parseInt(storeSession.insertId);
   return sessionId;
 };
 
+exports.findSession = async function findSession(session){
+  const sql = (`SELECT * FROM ${tableSessions} WHERE session = '${session}'`);
+  let results = await pool.query(sql);  
+  let foundResults = results.length;
+  let valid = (foundResults === 1); 
+  let sessionUserId = results.userId; 
+  return valid;
+};
+
 exports.removeSession = async function removeSession(sessionId) {
-  const sql = (`DELETE FROM ${DB_TABLE_SESSIONS} WHERE sessionId = '${sessionId}';`);
+  const sql = (`DELETE FROM ${tableSessions} WHERE sessionId = '${sessionId}';`);
   let removeSession = await pool.query(sql);
   return removeSession;
 };
@@ -274,20 +266,44 @@ exports.dbEditClient = async function (clientId, field, value) {
   return (messageReturn);
 };
 
-//--------------------DELETE LAST ORDER BY CLIEND ID----------------//
-exports.dbDeleteLastOrderById = async function (clientId) {
-  lastOrderDetails = await pool.query("SELECT orderid,sum FROM " + tableOrders +
+//--------------------VALIDATE LAST ORDER EXIST BY CLIEND ID----------------//
+exports.dbConfirmDeleteLastOrderById = async function (clientId) {
+  // if order exist in user columns
+  let lastOrderDetails = await pool.query("SELECT orderid,sum,info,"+
+  "DATE_FORMAT(`time`, '%Y-%m-%d %H:%i') AS `time`,client FROM " + tableOrders +
     " WHERE clientid = " + clientId + " ORDER BY orderid DESC LIMIT 1;")
     .catch((err) => {
       console.log(err)
     }).then((res) => {
       return (res);
     });
-  if (lastOrderDetails[0] == null) { console.log("no order"); return ("no such order") };
+  if (lastOrderDetails[0] == null) { console.log("no order"); return ("no such order"); };
+
+  // if subtrcting order sum is more then user credit sum
+  let clientDetail = await pool.query("SELECT sum FROM " + tableClients +
+  " WHERE id = " + clientId + ";");
+  if (lastOrderDetails[0].sum > clientDetail[0].sum) { console.log("ERROR SUM IS NO LOGICAL"); return ("ERROR WITH THE NUMBERS") };
+
+  // return order DATA to be inserted into html from MODULE
+  lastOrderDetails = lastOrderDetails[0];
+  return lastOrderDetails;
+};
+
+//--------------------DELETE LAST ORDER BY CLIEND ID----------------//
+exports.dbDeleteLastOrderById = async function (clientId) {
+  let lastOrderDetails = await pool.query("SELECT orderid,sum FROM " + tableOrders +
+    " WHERE clientid = " + clientId + " ORDER BY orderid DESC LIMIT 1;")
+    .catch((err) => {
+      console.log(err)
+    }).then((res) => {
+      return (res);
+    });
+  if (lastOrderDetails[0] == null) { console.log("no order"); return ("no such order"); };
 
   clientDetail = await pool.query("SELECT sum FROM " + tableClients +
     " WHERE id = " + clientId + ";");
   if (lastOrderDetails[0].sum > clientDetail[0].sum) { console.log("ERROR SUM IS NO LOGICAL"); return ("ERROR WITH THE NUMBERS") };
+
   deletedOrderFromClients = await pool.query("UPDATE " + tableClients +
     " SET sum = (sum - " + lastOrderDetails[0].sum + ") WHERE id = " + clientId + ";")
     .catch((err) => {
@@ -362,9 +378,9 @@ exports.dbInsertOrderToOrders = async function (orderTime, clientId, orderInfo, 
   clientName = await this.dbGetClientNameById(clientId);
   clientName[0].name = clientName[0].name.replace(/\'/g, "''");
   orderInfo = orderInfo.replace(/\'/g, "''");
-  insertReturn = await pool.query("INSERT INTO " + tableOrders +
-    " (info,sum,clientid,client)" +
-    " VALUES ('" + orderInfo + "'," + totalPrice + "," + clientId + ",'" + clientName[0].name + "');")
+  insertReturn = await pool.query(`INSERT INTO ${tableOrders} 
+     (time,info,sum,clientid,client)
+      VALUES (now(), '${orderInfo}' , ${totalPrice} , ${clientId} , '${clientName[0].name}');`)
     .then((rows) => {
       // console.log(rows);
       return (rows)
@@ -564,6 +580,7 @@ exports.dbDeleteOldBackups = async function (time) {
     tableDropResponse = await pool.query("DROP TABLE " + tableName + ";");
     console.log(tableDropResponse);
   }
+  return;
 };
 
 //-----------------------RESET CLIENTS ORDERS AFTER REPORT-----------------------//
@@ -573,6 +590,7 @@ exports.dbResetClientOrders = async function () {
   resetClientOrders = await pool.query("UPDATE " + tableClients + " SET sum=0;");
   resetOrders = await pool.query("UPDATE " + tableOrders + " SET sign=1 WHERE sign = 0;");
   console.log(resetClientOrders);
+  return;
 };
 
 //--------------------INSERT NEW PRODUCTS TO DB----------------//
@@ -663,6 +681,14 @@ exports.dbGetItemsBought = async function () {
   itemsBought.push(item2Bought);
   // console.log(itemsBought);
   return itemsBought;
+};
+
+//----------------------GET PRODUCTS INFO FOR ORDER---------------------//
+
+exports.dbGetProductDetailsById = async function (itemId) {
+  itemDetails = await pool.query(`SELECT itemnumber,itemname,price,itemimgpath FROM ${tableProducts}
+ WHERE itemid = ${itemId};`);
+  return itemDetails;
 };
 
   // this.dbGetItemsBought();

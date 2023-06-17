@@ -4,60 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" id="viewport"
-        content="width=window-width, height=window-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        content="width=window-width, height=window-height, initial-scale=1.0, user-scalable=no" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/style.css?version=#">
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
     <title>לרשום בפאב</title>
 </head>
 
 <body oncontextmenu="return false;">
 
-    <div id="sideNav" class="sidenav"></div>
+    <div class="divFullPage" id="divFullPage">
 
-    <span class="elementOpen" onclick="openNav()">
-        <p style="color: aliceblue;margin:auto;margin-right: 0.5rem;">תפריט</p><img src="img/ui/menu_top03.png">
-    </span>
+        <div class="header" id="divHeader"></div>
 
-    <%- include('./partials/header'); %>
+        <div class="topmenu" id="divTopMenu"></div>
 
-        <div class="content" id="content">
+        <div class="sidemenu" id="divSideMenu"></div>
 
-            <div class="searchBoxDiv" id="searchBoxDiv">
-                <div class="userStateIndicator" id="userStateIndicator">
-                    <p></p>
-                </div>
-                <input type="search" name="searchBoxName" class="searchBox" id="searchBox" spellcheck="false"
-                    autocomplete="off" placeholder=" נא להכניס שם✍👉👉">
-                <div class="autoCompleteNone" id="autoComplete"></div>
-            </div>
+        <div class="floatmenu" id="divFloatMenu"></div>
 
-            <div class="messageBox column" id="messageBox"></div>
+        <div class="openSideMenu" id="openSideMenu"><img src="img/ui/menu_top03.png"></div>
 
-            <div class="items" id="itemsDiv"></div>
+        <div class="content" id="divContent"></div>
 
-            <div class="buttons" id="buttons">
-                <div class="errorMessage" id="errorMessage"></div>
-                <button id="cancel" onclick="orderButtons(2)"> בטל</button>
-                <button id="placeOrder" onclick="orderButtons(1)">בצע רישום</button>
-            </div>
+        <div class="divAboutClose" id="divAbout"></div>
 
-        </div>
+        <div class="footerDiv" id="divFooter"></div>
 
-        <div class="backgroundCanvas">
-            <canvas class="canvas" id="canvas"></canvas>
-        </div>
+        <script src="js/script_main.js"></script>
 
-        <!-- <%- include('./partials/footer'); %> -->
-
-        <!-- <div class="backgroundTest"></div> -->
-
-        <!-- <div class="hidden" id="backgroundPanel0"></div> -->
-
-        <script src="js/script.js"></script>
-        <script src="js/bgFuncs.js"></script>
+    </div>
 
 </body>
 

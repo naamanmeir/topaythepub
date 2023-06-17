@@ -1,0 +1,55 @@
+.sideMenu {
+    height: fit-content;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    width: 0;
+    position: fixed;
+    z-index: 60;
+    bottom: 0px;
+    right: 0;
+    background-color: rgba(11, 49, 58, 1);
+    border: 0px solid #97480f;
+    border-width: 0px;
+    overflow-x: hidden;
+    transition: all 1.5s;
+    white-space: nowrap;
+    margin: 0px;
+}
+
+.sideMenu p {
+    padding: 8px 32px 18px 8px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #cfcfcf;
+    display: block;
+    transition: 0.3s;
+    word-wrap: unset;
+}
+
+.sideMenu img {
+    padding-right: 25%;
+    width: 60%;
+    height: 100%;
+    filter: invert(0.6);
+    transform: scaleX(-1);
+    bottom: 0px;
+    padding-bottom: 0px;
+}
+
+.sideMenu p:hover {
+    background-color: #a49c9c;
+    color: #ffffff;
+}
+
+.sideMenu .closeSideMenu {
+    position: relative;
+    /* top: 2%; */
+    bottom: 0px;
+    right: 5px;
+    height: 30px;
+    width: 100%;
+    /* font-size: 2px; */
+    margin-left: 25px;
+    padding: 0px;
+    color: rgb(255, 242, 0);
+}
