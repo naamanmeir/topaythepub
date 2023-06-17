@@ -1,7 +1,7 @@
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
 const messageTimeoutTime = 2500;
-const autoLogoutTime = 930000;
+const autoLogoutTime = 30000;
 const windowFadeTime = 400;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
