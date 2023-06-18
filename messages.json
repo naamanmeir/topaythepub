@@ -3,7 +3,7 @@
         {
             "loginMessage": "hello_this_is_a_message_for_visitors_מה_נשמע",
             "appName": "לרשום בפאב",
-            "appVersion": "0.3.1",
+            "appVersion": "0.4.1.oved.lo.lagaat",
             "headerText": "לרשום בפאב",
             "headerAnimElement1": "💚",
             "headerAnimElement2": "💙",
@@ -65,7 +65,7 @@
             "SideMenuRefreshPage": "טען מחדש",
             "SideMenuLogOutClient": "נתק מסוף",
             "SideMenuCloseSideMenu": "⟹",
-            "floatMenuButton": "כפתור",
+            "floatMenuButton": "לוח מודעות",
             "footerText": " זה של הפאב ונוצר על ידי ניבה גבינהצהובה"
         }
     ],
