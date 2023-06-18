@@ -60,7 +60,9 @@ const actionsLogger = createLogger({
     ),
     transports: [
         new transports.Console({level:'login'}),
-        new transports.File({ filename: 'login.log',level:'login' })
+        new transports.File({ filename: 'login.log',level:'login' }),
+        new transports.Console({level:'userAction'}),
+        new transports.File({ filename: 'actions.log',level:'userAction' })
     ]
 });
 const ordersLogger = createLogger({

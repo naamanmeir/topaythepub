@@ -123,54 +123,44 @@
     justify-content: center;
     margin: auto;
     width: 90%;
-    height: 90%;
+    height: 100%;
     margin-top: 0px;
     margin-bottom: 11%;
     transition: background-color 0.8s ease;
     overflow-y: auto;
     overflow-x: hidden;
     clear: both;
+    /* border: 2px solid orange; */
 }
 
 .item {
     position: relative;
     display: flex;
     flex-direction: row;
-    /* width: fit-content; */
-    /* width: fit-content; */
     height: 6rem;
     max-height: 50%;
     max-width: fit-content;
-    background-color: #61584b81;
-    border: 4px outset var(--border01);
+    background-color: var(--bg03);
+    border: 2px outset var(--border01);
     margin: 0px auto 0px auto;
-    margin-bottom: 2%;
-    /* padding-bottom: 20px; */
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
     transition: background-color 0.5s ease;
     border-radius: 5%;
-    /* transition: background-size 0.2s linear; */
-    /* background-size: 6rem;
-    background-repeat: no-repeat;
-    background-blend-mode: color-burn;
-    background-clip: border-box;
-    background-position: 25%; */
-    /* background-position-y: -1rem; */
 }
 
 .item img {
-    /* display: none; */
     user-select: none;
     pointer-events: none;
     top: 0px;
     padding: 0px;
     margin: auto auto auto 1%;
-    /* max-width: 90px; */
     max-height: 6rem;
     clear: both;
 }
 
 .item:active {
-    border: 4px inset rgba(209, 155, 17, 0.676);
+    border: 2px inset rgba(209, 155, 17, 0.676);
     background-color: rgb(240, 152, 0, 0.6);
     transition: none;
     user-select: none;
@@ -178,14 +168,12 @@
 }
 
 .item itemName {
-    /* position: absolute; */
     top: 10%;
     right: 5%;
     padding: 1%;
     margin: 0px;
     font-size: 1.7rem;
     font-size: max(5px, 4vw);
-    /* padding-right: 1rem; */
     color: var(--itemName);
     text-shadow: 1px 1px 1px #000000;
     user-select: none;
@@ -195,8 +183,6 @@
 .item itemPrice {
     position: relative;
     top: 10%;
-    /* left: 1px; */
-    /* padding: 0px; */
     margin-left: 5%;
     font-size: max(4.4vw, 4vw);
     padding-left: 1rem;

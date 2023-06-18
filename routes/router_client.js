@@ -171,10 +171,7 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
 routerClient.post('/placeOrder/', async function (req, res) {
     if (!req.body.order && !req.body.userId) { res.end(); return; };
     var orderTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
-    // var orderTime = new Date().("HE", { timeZone: "Asia/Jerusalem" });
     orderTime = orderTime.slice(0, 19).replace('T', ' ');
-    // console.log(orderTime);
-    // orderTime = orderTime.toString().replace(',', '');
     let orderData = Object.entries(req.body.order);
     let userId = req.body.userId;
     let orderInfo = '';
@@ -184,14 +181,8 @@ routerClient.post('/placeOrder/', async function (req, res) {
         orderInfo += (itemData[0].itemname + " - " + orderData[i][1] + ", ");
         orderPriceSum += (itemData[0].price * orderData[i][1]);
     };
-    // console.log("NEW ORDER: ");
-    // console.log("order info: " + orderInfo);
-    // console.log("total sum: " + orderPriceSum);
-    // console.log("user id: " + userId);
-    // console.log("at time: " + orderTime);
     let orderResult;
-    orderResult = JSON.stringify(await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) }));
-    // console.log(orderResult);
+    orderResult = JSON.stringify(await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) }));    
     ordersLogger.order(`
         time: ${orderTime} 
         user: ${userId} 
@@ -246,13 +237,21 @@ routerClient.post('/deleteLastOrder/', async (req, res) => {
 });
 
 routerClient.get('/windowIsOpen/', async(req,res) => {
-    console.log("WINDOW IS OPEN");
-    // reqThreshState = 1;
+    var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+    actionsLogger.userAction(`
+    time: ${funcTime} 
+    "WINDOW IS OPEN"
+    `);
+    // reqThreshState = 0;
     res.end();
 });
 
-routerClient.get('/windowIsClose/', async(req,res) => {    
-    console.log("WINDOW IS CLOSE");
+routerClient.get('/windowIsClose/', async(req,res) => {
+    var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+    actionsLogger.userAction(`
+    time: ${funcTime} 
+    "WINDOW IS CLOSE"
+    `);
     // reqThreshState = 0;
     res.end();
 });

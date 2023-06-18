@@ -1,13 +1,14 @@
 .footer {
     /* max-width: 800px; */
     z-index: -1;
+    position: absolute;
     color: black;
     flex: 1;
     text-align: center;
     font-size: x-small;
     width: 100%;
     border-radius: 2em;
-    bottom: 1em;
+    bottom: 0px;
     margin: auto;
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgb(2, 140, 246, 0.526), rgba(2, 140, 246, 0.526), rgba(0, 0, 0, 0));
 }
@@ -15,6 +16,9 @@
 .footer P {
     height: fit-content;
     padding: 0px;
+    padding-left: 7%;
     margin: 0px;
+    left: 0px;
+    text-align: end;
     line-height: 100%;
 }
