@@ -1,0 +1,1 @@
+console.log("MESSAGE BOARD SCRIPT INIT")

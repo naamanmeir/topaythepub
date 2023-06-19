@@ -1,12 +1,11 @@
-exports.buildHtml = function (message) {    
+exports.buildHtml = function (messageUi) {    
     let html = ``;    
     html +=
         `
+        <script id="messageBoardScript" src="js/script_mboard.js"></script>
         <div class="userInfoCloseButton" id="userPageCloseButton">X</div>
         <div class="windowTop">
-        <p>${messageUi.userPageName}${userInfo.name}</p>
-        <p>${messageUi.userPageAccount}${userInfo.account}</p>
-        <p>${messageUi.userPageId}${userInfo.id}</p>
+        message board
         </div>        
     `;
     return html;
