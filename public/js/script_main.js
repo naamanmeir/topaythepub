@@ -163,7 +163,7 @@ function closeAbout(){
 })};
 
 function callMessageBoard(){
-    getRequest("./app/openBoard", displayMessageBoard);
+    getRequest("./mboard/openBoard", displayMessageBoard);
     return;
 };
 
@@ -171,7 +171,7 @@ function displayMessageBoard(content){
     console.log(content);
     let messageBoardWindow = document.createElement("div");
     messageBoardWindow.innerHTML = content;
-    messageBoardWindow.className = "window";
+    messageBoardWindow.className = "messageBoardWindow";
     divFullPage.appendChild(messageBoardWindow);
     return;
 };
@@ -287,7 +287,7 @@ function clientLogout(){
     getRequest('./logout',null,null);
     setTimeout(refreshPage,3500)
     return;
-}
+};
 
 function randomNumberGen() {
     var val = Math.floor(1000 + Math.random() * 9000);

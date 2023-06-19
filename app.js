@@ -52,6 +52,7 @@ const routerAccountant = require('./routes/router_accountant');
 const routerClient = require('./routes/router_client');
 const routerClientEvents = require('./routes/router_client_events');
 const routerApp = require('./routes/router_app');
+const routerMessageBoard = require('./routes/router_messageBoard');
 
 const appPort = process.env.APP_PORT;
 const appName = process.env.APP_NAME;
@@ -250,7 +251,7 @@ async function loginAction(req, res, reply, user, password) {
   return;
 }
 
-app.get("/logout", async (req, res) => {  
+app.get("/logout", async (req, res) => {
   if (req.session == null) { res.sendStatus(403); return; }
   const clientIp = req.headers['x-forwarded-for'];
   if (req.session.sessionid != null) {
@@ -274,6 +275,8 @@ app.use('/accountant', sessionClassMW(75), routerAccountant);
 app.use('/app', sessionClassMW(100), routerApp);
 app.use('/client', sessionClassMW(100), validatorClient(), routerClient);
 app.use('/events', sessionClassMW(100), routerClientEvents);
+app.use('/mboard', sessionClassMW(100), validatorClient(), routerMessageBoard);
+
 
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App ${appName} is listening on port ${port} at ${appMode} mode`));

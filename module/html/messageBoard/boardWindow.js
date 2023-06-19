@@ -2,17 +2,12 @@ exports.buildHtml = function (message) {
     let html = ``;    
     html +=
         `
-        <div>
-        <p>${message.appName} - ${message.appVersion}</p>
-        <p>${message.aboutLine1}</p>
-        <p>${message.aboutLine2}</p>
-        <p>${message.aboutLine3}</p>
-        <p>${message.aboutLine4}</p>
-        <p>${message.aboutLine5}</p>
-        <p>${message.aboutLine6}</p>
-        <p>${message.aboutLine7}</p>
-        </a>
-    </div>        
+        <div class="userInfoCloseButton" id="userPageCloseButton">X</div>
+        <div class="windowTop">
+        <p>${messageUi.userPageName}${userInfo.name}</p>
+        <p>${messageUi.userPageAccount}${userInfo.account}</p>
+        <p>${messageUi.userPageId}${userInfo.id}</p>
+        </div>        
     `;
     return html;
     };    

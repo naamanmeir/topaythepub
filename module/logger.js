@@ -10,7 +10,8 @@ const logLevels = {
         clientAttempted: 5,
         clientRegistered: 6,
         clientUnregistered: 7,
-        clientLogout: 8
+        clientLogout: 8,
+        clientMessageBoard: 9
     },
     colors: {
         error: 'red',
@@ -21,6 +22,7 @@ const logLevels = {
         clientAttempted: 'red',
         clientRegistered: 'green',
         clientLogout: 'orange',
+        clientMessageBoard: 'green'
     }
 };
 
@@ -76,10 +78,22 @@ const ordersLogger = createLogger({
         new transports.File({ filename: 'orders.log' , level:'order'})
     ]
 });
+const messageBoardLogger = createLogger({
+    levels: logLevels.levels,
+    format: format.combine(
+        format.timestamp(),
+        simple(),
+    ),
+    transports: [
+        new transports.Console({level:'clientMessageBoard'}),
+        new transports.File({ filename: 'messageBoard.log' , level:'clientMessageBoard'})
+    ]
+});
  
 module.exports = {
     errorLogger: errorLogger,
     clientLogger: clientLogger,
     actionsLogger: actionsLogger,
-    ordersLogger: ordersLogger
+    ordersLogger: ordersLogger,
+    messageBoardLogger: messageBoardLogger
 };

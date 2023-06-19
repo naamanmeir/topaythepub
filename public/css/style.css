@@ -268,3 +268,17 @@ p {
 .divAboutClose {
     display: hidden;
 }
+
+.messageBoardWindow {
+    z-index: 80;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    margin: auto;
+    background-color: var(--bg01);
+    border: 2px solid var(--border01);
+    padding: 1rem;
+    color: var(--text03);
+}
