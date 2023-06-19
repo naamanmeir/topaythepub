@@ -152,6 +152,7 @@ function dbInit() {
   db.dbCreateTableClients();
   db.dbCreateTableOrders();
   db.dbCreateTableProducts();
+  db.dbCreateTablePosts();
 
   const connectionTestTimeout = setTimeout(callDbStatus, 1000);
   function callDbStatus() {

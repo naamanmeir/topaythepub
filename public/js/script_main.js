@@ -20,6 +20,7 @@ const divTopMenu = document.getElementById("divTopMenu");
 const divSideMenu = document.getElementById("divSideMenu");
 const divFloatMenu = document.getElementById("divFloatMenu");
 const divContent = document.getElementById("divContent");
+const divMessageBoard = document.getElementById("divMessageBoard");
 const divAbout = document.getElementById("divAbout");
 const divFooter = document.getElementById("divFooter");
 
@@ -169,20 +170,8 @@ function callMessageBoard(){
 
 function displayMessageBoard(content){
     console.log(content);
-    let messageBoardWindow = document.createElement("div");
-    messageBoardWindow.innerHTML = content;
-    messageBoardWindow.className = "messageBoardWindow";
-    divFullPage.appendChild(messageBoardWindow);
-    appendScriptMessageBoard(messageBoardWindow);
-    return;
-};
-
-function appendScriptMessageBoard(messageBoardWindow) {
-    let scriptSrc = document.getElementById("messageBoardScript");
-    var messageBoardScript = document.createElement("script");
-    messageBoardScript.src = (messageBoardScript.src) + '?id=' + randomNumberGen();
-    scriptSrc.remove();
-    messageBoardWindow.append(messageBoardScript);
+    divMessageBoard.innerHTML = content;
+    divMessageBoard.className = "messageBoardWindow";
     return;
 };
 

@@ -15,6 +15,8 @@ const tableOrders = process.env.DB_TABLE_ORDERS;
 const tableProducts = process.env.DB_TABLE_PRODUCTS;
 const tableUsers = process.env.DB_TABLE_USERS;
 const tableSessions = process.env.DB_TABLE_SESSIONS;
+const tablePosts = process.env.DB_TABLE_POSTS;
+
 
 //-----------------------------INIT----------------------------------//
 exports.dbConnectionTest = async function () {
@@ -121,6 +123,25 @@ exports.dbCreateTableProducts = async function () {
       )
         .then((results) => { 
           // console.log(results); 
+          return results })
+        .catch((err) => { console.log(err) })
+    });
+  return createTableProducts;
+};
+
+exports.dbCreateTablePosts = async function () {
+  let createTableProducts;
+  createTableProducts = await pool.getConnection()
+    .then(conn => {
+      conn.query("CREATE TABLE IF NOT EXISTS `"+ tablePosts +"`("+ 
+        "`postid` INT NOT NULL AUTO_INCREMENT,"+
+        "`date` DATE,"+
+        "`user` INT,"+
+        "`post` TEXT(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,"+
+        "PRIMARY KEY (`postid`)"+
+        ");"
+      )
+        .then((results) => {           
           return results })
         .catch((err) => { console.log(err) })
     });
@@ -689,6 +710,11 @@ exports.dbGetProductDetailsById = async function (itemId) {
   itemDetails = await pool.query(`SELECT itemnumber,itemname,price,itemimgpath FROM ${tableProducts}
  WHERE itemid = ${itemId};`);
   return itemDetails;
-};
+}; 
 
-  // this.dbGetItemsBought();
+exports.dbInserPost = async function (post,user){
+  if (user == null){user=0}
+  let sql = (`INSERT INTO ${tablePosts} (data,user,post) VALUES (DATA(),'${user}',${post});`)  
+  let messageReturn = await pool.query(sql);
+  return messageReturn;
+}

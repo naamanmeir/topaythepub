@@ -21,9 +21,9 @@ routerMessageBoard.get('/openBoard', function (req, res) {
 
 //------------------------CLIENT MESSAGEBOARD ACTIONS COMMANDS-------------------//
 
-routerMessageBoard.post('/searchName/', async (req, res) => {
+routerMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body || req.body == null) { res.end(); return; };
-    var query = (req.body.name);
+    var user = (req.body.name);
     let names = [];
     names = await db.dbGetNameBySearch(query);
     if (names.length == 0) {

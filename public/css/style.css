@@ -236,6 +236,17 @@ p {
     font-size: x-large;
 }
 
+.closeButton {
+    text-align: left;
+    float: left;
+    width: 2rem;
+    margin: auto;
+    padding-top: 0px;
+    padding-left: 2%;
+    color: red;
+    font-size: 180%;
+}
+
 .divFullPage {
     /* background-color: green; */
     height: 100%;
@@ -273,8 +284,8 @@ p {
     z-index: 80;
     position: absolute;
     top: 5%;
-    left: 5%;
-    width: 90%;
+    left: 10%;
+    width: 80%;
     height: 90%;
     margin: auto;
     background-color: var(--bg01);
