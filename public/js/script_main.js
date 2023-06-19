@@ -162,6 +162,20 @@ function closeAbout(){
         closeAbout();
 })};
 
+function callMessageBoard(){
+    getRequest("./app/openBoard", displayMessageBoard);
+    return;
+};
+
+function displayMessageBoard(content){
+    console.log(content);
+    let messageBoardWindow = document.createElement("div");
+    messageBoardWindow.innerHTML = content;
+    messageBoardWindow.className = "window";
+    divFullPage.appendChild(messageBoardWindow);
+    return;
+};
+
 //------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
 async function getRequest(url, callback, data) {
     var xhttp = new XMLHttpRequest();

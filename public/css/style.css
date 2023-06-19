@@ -165,8 +165,9 @@ p {
 .floatMenuDiv p {
     z-index: 40;
     color: var(--text03);
-    font-size: 50%;
+    font-size: 100%;
     margin: auto;
+    padding: 2rem;
 }
 
 .floatMenuDiv a {

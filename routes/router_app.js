@@ -76,6 +76,14 @@ routerApp.get('/about', function (req, res) {
     res.send(html);
 });
 
+routerApp.get('/openBoard', function (req, res) {
+    // console.log("SEND BOARDTEST");
+    // res.render('about');
+    let renderMessageBoard = require("../module/html/messageBoard/boardWindow");
+    let html = renderMessageBoard.buildHtml(messageUi);
+    res.send(html);
+});
+
 routerApp.get('/footer', function (req, res) {
     // console.log("SEND FOOTER");
     // res.render('footer');

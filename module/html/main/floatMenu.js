@@ -3,7 +3,7 @@ exports.buildHtml = function (message) {
     html +=
         `
         <div class="floatMenuDiv">
-            <a href="javascript:void(0)" class="openAbout" onclick="openAbout()">${message.floatMenuButton}</a>
+            <p id="openMessageBoard" class="openMessageBoard" onclick="callMessageBoard()">${message.floatMenuButton}</p>
         </div>      
     `;
     return html;
