@@ -13,9 +13,11 @@ let reqThreshTimer;
 
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
 
-routerMessageBoard.get('/openBoard', function (req, res) {
+routerMessageBoard.get('/openBoard', async function (req, res) {
+    let posts = await db.dbGetAllPosts();
+    console.log(await posts);
     let renderMessageBoard = require("../module/html/messageBoard/boardWindow");
-    let html = renderMessageBoard.buildHtml(messageUi);
+    let html = renderMessageBoard.buildHtml(messageUi,posts);
     res.send(html);
 });
 
@@ -25,8 +27,18 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body || req.body == null) { res.end(); return; };
     var post = (req.body.post);
     console.log(post);
+    let dbResponse = db.dbInserPost(post);
+    console.log(dbResponse);
+    let posts = await db.dbGetAllPosts();
+    let renderMessageBoard = require("../module/html/messageBoard/boardWindow");
+    let html = renderMessageBoard.buildHtml(messageUi,posts);
+    res.send(html);
+    return;
+});
 
-    res.send(JSON.stringify("INSERTED POST"));
+routerMessageBoard.get('/getAllPosts/', async (req, res) => {
+    console.log("get all posts");
+    res.send("get all posts");
     return;
 });
 

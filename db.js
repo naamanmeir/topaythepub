@@ -714,7 +714,15 @@ exports.dbGetProductDetailsById = async function (itemId) {
 
 exports.dbInserPost = async function (post,user){
   if (user == null){user=0}
-  let sql = (`INSERT INTO ${tablePosts} (data,user,post) VALUES (DATA(),'${user}',${post});`)  
+  let sql = (`INSERT INTO ${tablePosts} (user,post) VALUES ('${user}','${post}');`)  
   let messageReturn = await pool.query(sql);
   return messageReturn;
-}
+};
+
+exports.dbGetAllPosts = async function (){
+  let sql = (`SELECT * FROM ${tablePosts} ORDER BY postid DESC;`);
+  let messageReturn = await pool.query(sql);
+  // console.log(await messageReturn[0].post);
+  // console.log(await messageReturn);
+  return messageReturn;
+};
