@@ -163,17 +163,7 @@ function closeAbout(){
         closeAbout();
 })};
 
-function callMessageBoard(){
-    getRequest("./mboard/openBoard", displayMessageBoard);
-    return;
-};
 
-function displayMessageBoard(content){
-    console.log(content);
-    divMessageBoard.innerHTML = content;
-    divMessageBoard.className = "messageBoardWindow";
-    return;
-};
 
 //------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
 async function getRequest(url, callback, data) {

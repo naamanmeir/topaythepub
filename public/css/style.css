@@ -150,6 +150,11 @@ p {
     position: absolute;
 }
 
+.window {
+    display: block;
+    opacity: 1;
+}
+
 .floatMenuDiv {
     position: absolute;
     height: fit-content;
@@ -278,6 +283,10 @@ p {
 
 .divAboutClose {
     display: hidden;
+}
+
+.windowConstant {
+    opacity: 1;
 }
 
 .messageBoardWindow {

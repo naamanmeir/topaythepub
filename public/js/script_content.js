@@ -480,6 +480,25 @@ function closeWindows(){
     return;
 };
 
+function hideWindows(){
+    userPageButton.setAttribute('userPageButtonEnableListener', 0);
+    enableUserPageButton();
+    userPageButton.style.pointerEvents = "auto";
+    const windows = document.querySelectorAll('.windowConstant');
+    var seconds = windowFadeTime/1000;
+    windows.forEach(window => {
+        window.style.transition = "opacity "+seconds+"s ease";
+        window.style.opacity = 0;
+    });
+    setTimeout(()=>{
+        windows.forEach(window => {
+            window.className = "hidden";
+        });
+        getRequest('./client/windowIsClose/',null,null);
+    },windowFadeTime);    
+    return;
+};
+
 function openWindows(){
     
 };
