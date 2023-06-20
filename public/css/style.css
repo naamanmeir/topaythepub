@@ -293,12 +293,23 @@ p {
     z-index: 80;
     position: absolute;
     top: 5%;
-    left: 10%;
-    width: 80%;
+    left: 5%;
+    width: 90%;
     height: 90%;
     margin: auto;
     background-color: var(--bg01);
     border: 2px solid var(--border01);
     padding: 1rem;
     color: var(--text03);
+}
+
+.postInput {
+    resize: none;
+    width: 90%;
+    height: 8rem;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    padding: 10px;
+    background-color: #699db7;
+    font-size: 2rem;
 }

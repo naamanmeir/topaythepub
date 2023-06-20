@@ -23,14 +23,10 @@ routerMessageBoard.get('/openBoard', function (req, res) {
 
 routerMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body || req.body == null) { res.end(); return; };
-    var user = (req.body.name);
-    let names = [];
-    names = await db.dbGetNameBySearch(query);
-    if (names.length == 0) {
-        res.send(JSON.stringify({ 'errorClient': messageClient.notExist }));
-        return;
-    };    
-    res.send(JSON.stringify(names));
+    var post = (req.body.post);
+    console.log(post);
+
+    res.send(JSON.stringify("INSERTED POST"));
     return;
 });
 

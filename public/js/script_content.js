@@ -31,7 +31,11 @@ let autoLogoutTimer;
 
 searchBox1.placeholder = (messageClient.inputPlaceholder);
 
-window.onkeydown = function () { searchBox1.focus(); };
+function keyboardFocusMain(){
+    window.onkeydown = function () { searchBox1.focus(); };
+    return;
+};
+keyboardFocusMain();
 
 searchBox1.addEventListener('focus', function () {
     // console.log("focus");
@@ -467,6 +471,7 @@ function closeWindows(){
     userPageButton.style.pointerEvents = "auto";
     const windows = document.querySelectorAll('.window');
     var seconds = windowFadeTime/1000;
+    keyboardFocusMain();
     windows.forEach(window => {
         window.style.transition = "opacity "+seconds+"s ease";
         window.style.opacity = 0;
@@ -486,6 +491,7 @@ function hideWindows(){
     userPageButton.style.pointerEvents = "auto";
     const windows = document.querySelectorAll('.windowConstant');
     var seconds = windowFadeTime/1000;
+    keyboardFocusMain();
     windows.forEach(window => {
         window.style.transition = "opacity "+seconds+"s ease";
         window.style.opacity = 0;
@@ -517,6 +523,8 @@ function autoLogout(){
     searchBox1.value='';
     searchBox1.blur();
     userIndicMessage(messageClient.notUsed);
+    keyboardFocusMain();
+    return;
 };
 
 function resetAutoLogout(){
