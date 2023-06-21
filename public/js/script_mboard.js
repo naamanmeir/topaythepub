@@ -27,7 +27,9 @@ function displayMessageBoard(content){
         divMessageBoard.innerHTML = null;
         closeMessageBoard();
     });
-    mBoardUtilities();    
+    mBoardUtilities();
+    let postsDiv = document.getElementById("messageBoardDivPosts");
+    postsDiv.scrollTop = postsDiv.scrollHeight;
 };
 
 function closeMessageBoard(){
@@ -82,6 +84,7 @@ function displayPostsInDiv(content){
     if(document.getElementById("messageBoardDivPosts") != null){
         let postsDiv = document.getElementById("messageBoardDivPosts");
         postsDiv.innerHTML = content;
+        postsDiv.scrollTop = postsDiv.scrollHeight;
         return;
     }else{
         console.log("POSTS DIV DOWS NOT EXIST");

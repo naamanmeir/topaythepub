@@ -722,7 +722,7 @@ exports.dbInserPost = async function (post,user){
 };
 
 exports.dbGetAllPosts = async function (){
-  let sql = (`SELECT * FROM ${tablePosts} ORDER BY postid DESC;`);
+  let sql = (`SELECT * FROM ${tablePosts} ORDER BY postid ASC;`);
   let messageReturn = await pool.query(sql);  
   return messageReturn;
 };
