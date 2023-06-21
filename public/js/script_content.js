@@ -32,7 +32,9 @@ let autoLogoutTimer;
 searchBox1.placeholder = (messageClient.inputPlaceholder);
 
 function keyboardFocusMain(){
-    window.onkeydown = function () { searchBox1.focus(); };
+    if(document.getElementById("postInput") == null){
+        window.onkeydown = function () { searchBox1.focus(); };
+    }
     return;
 };
 keyboardFocusMain();

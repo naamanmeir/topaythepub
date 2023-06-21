@@ -25,8 +25,10 @@ routerMessageBoard.get('/openBoard', async function (req, res) {
 //------------------------CLIENT MESSAGEBOARD ACTIONS COMMANDS-------------------//
 
 routerMessageBoard.post('/insertPost/', async (req, res) => {
-    if (!req.body || req.body == null) { res.end(); return; };
-    var post = (req.body.post);    
+    if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
+    var post = (req.body.post);
+    // console.log("insert post");
+    // console.log(post);    
     let dbResponse = await db.dbInserPost(post);    
     let posts = await db.dbGetAllPosts();
     let renderMessageBoard = require("../module/html/messageBoard/boardWindow");

@@ -44,6 +44,7 @@ function mBoardUtilities(){
 
 function keyboardFocusMboard(){
     console.log("MBOARD FOCUS");
+    if(document.getElementById("postInput") != null){
     window.onkeydown = function () { postInput.focus(); };
     postInput.addEventListener("keypress", function(event) {        
         if (event.key === "Enter") {
@@ -52,11 +53,14 @@ function keyboardFocusMboard(){
             document.getElementById("mboardSend").click();
         }
     });
+}
     return;
 };
 
 function postSend(){
-    let post = postInput.value;    
+    if (postInput.value == ""){return;};
+    let post = postInput.value;
+    postInput.value = "";
     let postJSON = JSON.stringify({"post": post});
     postRequest('./mboard/insertPost', window.parent.displayMessageBoard, postJSON);
     return;    

@@ -318,6 +318,16 @@ p {
     color: var(--text03);
 }
 
+.mboardButton {
+    position: relative;
+    width: 80%;
+    font-size: 2rem;
+    left: 5%;
+    margin: auto;
+    float: center;
+    background-color: var(--buttonYes);
+}
+
 .messageBoardBottom {
     position: absolute;
     margin: auto;
