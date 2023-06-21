@@ -45,8 +45,7 @@ function sendRefreshPostsEventToAllClients(){
 routerMessageBoard.get('/refreshPosts/', async (req, res) => {
     let posts = await db.dbGetAllPosts();
     let renderMessageBoard = require("../module/html/messageBoard/postsDiv");
-    let html = renderMessageBoard.buildHtml(messageUi,posts);
-    console.log(html)
+    let html = renderMessageBoard.buildHtml(messageUi,posts);    
     res.json(html);
     res.end();
     return;
