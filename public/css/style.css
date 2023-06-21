@@ -163,8 +163,14 @@ p {
     bottom: 50%;
     left: 0;
     border-radius: 50%;
-    border: 1px inset var(--border02);
+    border: 1px outset var(--border02);
     transition: 0.5s;
+    background-color: #1b61b1;
+}
+
+.floatMenuDiv:active {
+    border: 1px inset var(--border02);
+
 }
 
 .floatMenuDiv p {
@@ -172,7 +178,8 @@ p {
     color: var(--text03);
     font-size: 100%;
     margin: auto;
-    padding: 2rem;
+    padding: 1rem;
+    color: yellow;
 }
 
 .floatMenuDiv a {
@@ -242,23 +249,24 @@ p {
 }
 
 .closeButton {
-    width: 2rem;
+    width: fit-content;
     margin: auto;
-    padding-top: 0px;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    padding: 0.4rem;
     color: red;
     font-size: 180%;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid rgb(245, 91, 14);
 }
 
 .left {
-    text-align: left;
     float: left;
-    padding-left: 0.5%;
 }
 
 .right {
-    text-align: right;
     float: right;
-    padding-right: 0.5%;
 }
 
 .center {
@@ -315,6 +323,7 @@ p {
     background-color: var(--bg01);
     border: 1px solid var(--border02);
     padding: 1rem;
+    padding-top: 0.2rem;
     color: var(--text03);
 }
 
@@ -326,6 +335,7 @@ p {
     flex-direction: row;
     justify-content: center;
     font-size: 2.5rem;
+    border: 2px groove rgb(3, 117, 143);
 }
 
 .postInputDiv {
@@ -368,12 +378,13 @@ p {
     width: 90%;
     height: 4rem;
     box-sizing: border-box;
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
     border-radius: 15%;
     padding: 10px;
     background-color: #1e44578c;
     font-size: 2rem;
     color: var(--itemPrice);
+    overflow: hidden;
 }
 
 .posts {
@@ -407,36 +418,34 @@ p {
 
 .postDisplay {
     color: #deb911;
-    border: 1px dotted green;
-    border-radius: 10%;
+    border: 1px dotted rgb(6, 143, 129);
+    border-radius: 5%;
     display: flex;
     flex-direction: column;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.5rem;
     padding: 1rem;
     padding-top: 1rem;
     padding-bottom: 0.2rem;
     width: fit-content;
-    max-width: 90%;
-    padding-right: 0.5%;
+    max-width: 95%;
+    padding-right: 1%;
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
+    white-space: normal;
 }
 
 .postDisplay p {
+    width: 100%;
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
 }
 
 .oddPost {
-    right: 1rem;
-    margin-right: 8rem;
-    background-color: #122934;
+    background-color: #122c34b3;
 }
 
 .evenPost {
-    right: 4rem;
-    margin-right: 1rem;
-    background-color: #103b4f;
+    background-color: #103b4fc1;
 }
