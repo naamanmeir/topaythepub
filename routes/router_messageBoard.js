@@ -4,6 +4,7 @@ const functions = require('../functions');
 const db = require('../db');
 const {messageBoardLogger, actionsLogger, errorLogger} = require('../module/logger');
 let messagesJson = require('../messages.json');
+const clientEvents = require('./router_client_events');
 let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
 let messageError = messagesJson.error[0];
@@ -14,31 +15,40 @@ let reqThreshTimer;
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
 
 routerMessageBoard.get('/openBoard', async function (req, res) {
-    let posts = await db.dbGetAllPosts();
-    console.log(await posts);
-    let renderMessageBoard = require("../module/html/messageBoard/boardWindow");
-    let html = renderMessageBoard.buildHtml(messageUi,posts);
-    res.send(html);
-});
-
-//------------------------CLIENT MESSAGEBOARD ACTIONS COMMANDS-------------------//
-
-routerMessageBoard.post('/insertPost/', async (req, res) => {
-    if (!req.body || req.body == null) { res.end(); return; };
-    var post = (req.body.post);
-    console.log(post);
-    let dbResponse = db.dbInserPost(post);
-    console.log(dbResponse);
-    let posts = await db.dbGetAllPosts();
+    let posts = await db.dbGetAllPosts();    
     let renderMessageBoard = require("../module/html/messageBoard/boardWindow");
     let html = renderMessageBoard.buildHtml(messageUi,posts);
     res.send(html);
     return;
 });
 
-routerMessageBoard.get('/getAllPosts/', async (req, res) => {
-    console.log("get all posts");
-    res.send("get all posts");
+//------------------------CLIENT MESSAGEBOARD ACTIONS COMMANDS-------------------//
+
+routerMessageBoard.post('/insertPost/', async (req, res) => {
+    if (!req.body || req.body == null) { res.end(); return; };
+    var post = (req.body.post);    
+    let dbResponse = await db.dbInserPost(post);    
+    let posts = await db.dbGetAllPosts();
+    let renderMessageBoard = require("../module/html/messageBoard/boardWindow");
+    let html = renderMessageBoard.buildHtml(messageUi,posts);
+    res.json(html);
+    res.end();
+    sendRefreshPostsEventToAllClients();
+    return;
+});
+
+function sendRefreshPostsEventToAllClients(){
+    clientEvents.sendEvents("messageBoardReloadPosts");
+    return;
+};
+
+routerMessageBoard.get('/refreshPosts/', async (req, res) => {
+    let posts = await db.dbGetAllPosts();
+    let renderMessageBoard = require("../module/html/messageBoard/postsDiv");
+    let html = renderMessageBoard.buildHtml(messageUi,posts);
+    console.log(html)
+    res.json(html);
+    res.end();
     return;
 });
 
@@ -46,21 +56,19 @@ routerMessageBoard.get('/getAllPosts/', async (req, res) => {
 
 routerMessageBoard.get('/windowIsOpen/', async(req,res) => {
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
-    actionsLogger.userAction(`
+    messageBoardLogger.clientMessageBoard(`
     time: ${funcTime} 
     "WINDOW IS OPEN"
-    `);
-    // reqThreshState = 0;
+    `);    
     res.end();
 });
 
 routerMessageBoard.get('/windowIsClose/', async(req,res) => {
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
-    actionsLogger.userAction(`
+    messageBoardLogger.clientMessageBoard(`
     time: ${funcTime} 
     "WINDOW IS CLOSE"
-    `);
-    // reqThreshState = 0;
+    `);    
     res.end();
 });
 

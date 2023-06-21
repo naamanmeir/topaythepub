@@ -333,6 +333,10 @@ function eventHandler(event) {
         console.log("MATCH RELOAD ITEMS");
         populateProducts();
     }
+    if (JSON.parse(data) == "messageBoardReloadPosts") {
+        console.log("MATCH MESSAGE BOARD RELOAD POSTS");
+        messageBoardRefreshPosts();
+    }
     if (JSON.parse(data) == "0") {
         data = data.replace(/^"(.*)"$/, '$1');
         // console.log(data);

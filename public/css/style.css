@@ -242,14 +242,29 @@ p {
 }
 
 .closeButton {
-    text-align: left;
-    float: left;
     width: 2rem;
     margin: auto;
     padding-top: 0px;
-    padding-left: 2%;
     color: red;
     font-size: 180%;
+}
+
+.left {
+    text-align: left;
+    float: left;
+    padding-left: 0.5%;
+}
+
+.right {
+    text-align: right;
+    float: right;
+    padding-right: 0.5%;
+}
+
+.center {
+    text-align: center;
+    float: center;
+    margin: auto;
 }
 
 .divFullPage {
@@ -287,6 +302,10 @@ p {
 
 .windowConstant {
     opacity: 1;
+}
+
+.posts {
+    border: 5px solid green;
 }
 
 .messageBoardWindow {

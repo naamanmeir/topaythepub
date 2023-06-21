@@ -17,10 +17,15 @@ function displayMessageBoard(content){
     divMessageBoard.style.opacity = 1;
     divMessageBoard.classList.add("windowConstant");
     divMessageBoard.classList.add("messageBoardWindow");
-    let closeButton = document.getElementById("messageBoardCloseButton");
-    closeButton.addEventListener('click',() =>{
+    let closeButtonLeft = document.getElementById("messageBoardCloseButtonLeft");
+    closeButtonLeft.addEventListener('click',() =>{
         divMessageBoard.innerHTML = null;
-        closeMessageBoard();       
+        closeMessageBoard();
+    });
+    let closeButtonRight = document.getElementById("messageBoardCloseButtonRight");
+    closeButtonRight.addEventListener('click',() =>{
+        divMessageBoard.innerHTML = null;
+        closeMessageBoard();
     });
     mBoardUtilities();    
 };
@@ -32,11 +37,13 @@ function closeMessageBoard(){
 };
 
 function mBoardUtilities(){
+    console.log("MBOARD UTILITIES");
     postInput = document.getElementById("postInput");
     keyboardFocusMboard();
 }
 
 function keyboardFocusMboard(){
+    console.log("MBOARD FOCUS");
     window.onkeydown = function () { postInput.focus(); };
     return;
 };
@@ -45,7 +52,29 @@ function postSend(){
     let post = postInput.value;
     console.log(post);
     let postJSON = JSON.stringify({"post": post});
+    postRequest('./mboard/insertPost', window.parent.displayMessageBoard, postJSON);
+    return;    
+};
 
-    postRequest('./mboard/insertPost', window.parent.displayMessageBoard, postJSON);        
-    
+function messageBoardRefreshPosts(){
+    if(document.getElementById("messageBoardDivPosts") != null){
+        getRequest("./mboard/refreshPosts", displayPostsInDiv);
+        return;
+    }else{
+        console.log("POSTS DIV DOWS NOT EXIST");
+        return;
+    }
+};
+
+function displayPostsInDiv(content){
+    content = JSON.parse(content);
+    console.log(content);    
+    if(document.getElementById("messageBoardDivPosts") != null){
+        let postsDiv = document.getElementById("messageBoardDivPosts");
+        postsDiv.innerHTML = content;
+        return;
+    }else{
+        console.log("POSTS DIV DOWS NOT EXIST");
+        return;
+    }
 };

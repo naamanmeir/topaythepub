@@ -2,35 +2,38 @@ exports.buildHtml = function (messageUi,posts) {
     let html = ``;    
     html +=
         `        
-        <div class="closeButton" id="messageBoardCloseButton">X</div>
-        <div class="windowTop">
+        <div class="closeButton left" id="messageBoardCloseButtonLeft">X</div>
+        `;
+    html +=
+        `        
+        <div class="closeButton right" id="messageBoardCloseButtonRight">X</div>
+        `;
+    html +=`        
+        <div class="windowTop center">
         message board
         </div>
         `;
     html +=
         `
         <div>
-            <textarea id="postInput" class="postInput" name="postInput"></textarea>
-            <input type="button" onclick="postSend()" value="שלח" />
+            <textarea id="postInput" class="postInput" name="postInput"></textarea>            
+        </div>
+        <div>
+            <input class="mboardButton" id="mboardSend" type="button" onclick="postSend()" value="שלח" />
         </div>
         `;
-    
-    for (i = 0; i < posts.length; i++) {
-        console.log(posts[i].post)
-        html +=
-        `
-        <div id="post${i}">
-        ${posts[i].post}
-        </div>
-        `
-    }   
+    html += `<div class="posts" id="messageBoardDivPosts">`;
+    for (i = 0; i < posts.length; i++) {        
+        if(i%2==0){
+            html += `<div class="postDisplay even" id="post${i}">${posts[i].post}</div>`
+        }else{
+            html += `<div class="postDisplay odd" id="post${i}">${posts[i].post}</div>`
+        };
+    };
+    html += `</div>`;
 
     html +=
         `
-        <div id="windowButtons">
-            <div class="windowButton yes row" id="closeWindowButton">${messageUi.userPageButtonCloseWindow}</div>
-            <div class="windowButton no row" id="deleteOrderButton">${messageUi.userPageButtonDeleteOrder}</div>
-        </div>        
-        `;    
+        <div class="messageBoardBottom" id="messageBoardBottom">למטה של הזה</div>`;    
     return html;
     };    
