@@ -53,6 +53,7 @@ const routerClient = require('./routes/router_client');
 const routerClientEvents = require('./routes/router_client_events');
 const routerApp = require('./routes/router_app');
 const routerMessageBoard = require('./routes/router_messageBoard');
+const routerRemoteMessageBoard = require('./routes/router_messageRemote');
 
 const appPort = process.env.APP_PORT;
 const appName = process.env.APP_NAME;
@@ -246,6 +247,7 @@ async function loginAction(req, res, reply, user, password) {
     SESSION ID: ${session.sessionid}
     CLIENT IP: ${clientIp}
     `);
+    if(userClass==120){res.redirect('./remoteMboard/');return;}
     res.redirect('./');
     return;
   }// LOGIN OK
@@ -275,8 +277,9 @@ app.use('/manage', sessionClassMW(50), routerManage);
 app.use('/accountant', sessionClassMW(75), routerAccountant);
 app.use('/app', sessionClassMW(100), routerApp);
 app.use('/client', sessionClassMW(100), validatorClient(), routerClient);
-app.use('/events', sessionClassMW(100), routerClientEvents);
+app.use('/events', sessionClassMW(120), routerClientEvents);
 app.use('/mboard', sessionClassMW(100), validatorClient(), routerMessageBoard);
+app.use('/remoteMboard', sessionClassMW(120), validatorClient(), routerRemoteMessageBoard);
 
 
 //-------------------------SERVER-----------------------------------//

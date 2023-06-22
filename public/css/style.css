@@ -28,6 +28,25 @@
 
 }
 
+/* ------------------scrollbar--------------------- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-track {
+    background-color: rgba(64, 64, 64, 0.875);
+    border-radius: 50%;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 132, 0, 0.591);
+    border-radius: 2px;
+    background-clip: padding-box;
+}
+
+/* ------------------scrollbar--------------------- */
+
 
 html,
 body {

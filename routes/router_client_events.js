@@ -7,9 +7,9 @@ const {clientLogger, errorLogger} = require('../module/logger');
 
 let clients = [];
 
-routerClientEvents.get('/status', sessionClassMW(100), (req, res) => res.json({ clients: clients.length }));
+routerClientEvents.get('/status', sessionClassMW(120), (req, res) => res.json({ clients: clients.length }));
 
-routerClientEvents.get('/', sessionClassMW(100), function (req, res) {    
+routerClientEvents.get('/', sessionClassMW(120), function (req, res) {    
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
