@@ -1,6 +1,7 @@
 console.log("MESSAGE BOARD SCRIPT INIT");
 
 let postInput;
+let postsDiv;
 
 function callMessageBoard(){
     getRequest("./mboard/openBoard", displayMessageBoard);
@@ -23,7 +24,8 @@ function displayMessageBoard(content){
         closeMessageBoard();
     });
     mBoardUtilities();
-    let postsDiv = document.getElementById("messageBoardDivPosts");
+    postsDiv = document.getElementById("messageBoardDivPosts");
+    postsDiv.addEventListener("scroll",resetAutoLogoutMboard);
     postsDiv.scrollTop = postsDiv.scrollHeight;
 };
 
@@ -32,9 +34,9 @@ function closeMessageBoard(){
     return;
 };
 
-function mBoardUtilities(){
-    console.log("MBOARD UTILITIES");
+function mBoardUtilities(){    
     postInput = document.getElementById("postInput");
+    postInput.addEventListener("input",resetAutoLogoutMboard)
     keyboardFocusMboard();
 }
 
@@ -51,6 +53,10 @@ function keyboardFocusMboard(){
     });
 }
     return;
+};
+
+function resetAutoLogoutMboard(){    
+    resetAutoLogout();
 };
 
 function postSend(){

@@ -1,7 +1,6 @@
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
 const messageTimeoutTime = 2500;
-const autoLogoutTime = 30000;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 
@@ -497,6 +496,7 @@ function autoLogout(){
         userLogout();
     };
     closeWindows();
+    hideWindows();
     clearCounts();
     orderClear();
     searchBox1.value='';
