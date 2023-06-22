@@ -10,11 +10,11 @@ exports.buildHtml = function (messageUi,userInfo, userData) {
             <p>${messageUi.userPageId}${userInfo.id}</p>
             </div>
             <div class="userInfoChangeNickDiv">
-            <p class="userInfoText">${messageUi.userPageNick}<textarea class="userInfoChangeNickText">${userInfo.nick}</textarea></p>
+            <p class="userInfoText">${messageUi.userPageNick}<textarea id="userInfoChangeNickText" class="userInfoChangeNickText">${userInfo.nick}</textarea></p>
             <button class="userInfoChangeNickButton" id="userInfoChangeNickButton">${messageUi.userPageNickButtonYes}</button>
             </div>           
             <br>`
-        html += `<div class="userInfoTableDiv">
+        html += `<div id="userInfoTableDiv" class="userInfoTableDiv">
             <table class="userInfoTable"><tbody>`
         html += `<tr class="tableHead"><th>${messageUi.userPageTableSum}</th>
             <th>${messageUi.userPageTableDetails}</th><th>${messageUi.userPageTableDate}</th>

@@ -243,7 +243,7 @@ function userLogout(){
     };    
 };
 function userLoggedOut(data){
-    console.log(data);
+    // console.log(data);
 };
 
 function userIndicLogged() {
@@ -279,14 +279,14 @@ function orderManage(data) {
     if (data === "placeOrder") {
         if (orderData.length == 0) { console.log("no order yet"); return; }
         orderData = JSON.stringify({ "order": orderData, "userId": parseInt(currentUserLogged.id) });
-        console.log("request order confirm:");
-        console.log(orderData);
+        // console.log("request order confirm:");
+        // console.log(orderData);
         requestOrderPage(orderData)
         return;
     }
 };
 function requestOrderPage(order) {
-    console.log("request order page for order: " + order);
+    // console.log("request order page for order: " + order);
     postRequest('./client/requestOrderPage/', window.parent.openOrderConfirm, order);
     return;
 };
@@ -328,7 +328,7 @@ function validateOrder(orderDataReturn) {
     return (orderDataReturn === orderData);
 };
 function placeOrder(orderDataReturn) {
-    console.log("place order : " + orderDataReturn);
+    // console.log("place order : " + orderDataReturn);
     postRequest('./client/placeOrder/', window.parent.orderComplete, orderDataReturn);
     orderClear();
     clearCounts();
@@ -338,7 +338,7 @@ function placeOrder(orderDataReturn) {
 function orderClear() {
     orderData = null;
     orderData = {};
-    console.log("clear orderData");
+    // console.log("clear orderData");
 };
 function clearCounts() {
     let counts = document.getElementsByClassName("itemCount");
@@ -349,8 +349,8 @@ function clearCounts() {
     return;
 };
 function orderComplete(content) {
-    console.log("order complete");
-    console.log(content);
+    // console.log("order complete");
+    // console.log(content);
     openMessageWindow(content);
     userLogout();
     return;
@@ -403,6 +403,8 @@ function openUserPage(content) {
     userWindow.innerHTML = (content);
     document.body.appendChild(userWindow);
     divContent.classList.add("hidden");
+    let userInfoChangeNickText = document.getElementById("userInfoChangeNickText");
+    let userInfoChangeNickButton = document.getElementById("userInfoChangeNickButton");
     let closeButton = document.getElementById("userPageCloseButton");
     let windowButtons = document.getElementById("windowButtons");
     windowButtons.className = ("windowbuttons");
@@ -420,6 +422,16 @@ function openUserPage(content) {
     deleteOrderButton.addEventListener('click', function () {
         closeWindows();
         return deleteLastOrderConfirm(currentUserLogged.id);
+    });
+    userInfoTableDiv.addEventListener("scroll",resetAutoLogout);    
+    userInfoChangeNickText.addEventListener('input',resetAutoLogout);
+    userInfoChangeNickButton.addEventListener('click', function () {
+        if(userInfoChangeNickText.value == "" || userInfoChangeNickText.value == null || userInfoChangeNickText == null){return;}
+        let newNick = userInfoChangeNickText.value;
+        newNick = inputSanitize(newNick);
+        let data = JSON.stringify({ "newNick": newNick,"id":currentUserLogged.id})        
+        let requestResult = postRequest('./client/changeNick/', null, data);    
+        return;
     });
 };
 
@@ -456,7 +468,7 @@ function deleteLastOrder(id) {
     return;
 };
 function openDeleteOrderResults(content){
-    console.log(content);
+    // console.log(content);
     openMessageWindow(content,'red big');
     return requestUserPage(currentUserLogged.id);
 };
