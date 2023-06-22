@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport"
+        content="width=window-width, height=window-height, initial-scale=1.0, user-scalable=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="stylesheet" href="../css/style.css?version=#">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+    <title>להשאיר הודעה בפאב</title>
+</head>
+
+<div class="header no-border anim1">
+    <div class="header no-border anim1">
+        <p id="headerAnimElement1" class="animElement animColor1">💚</p>
+        <p id="headerText" class="shadow1">להשאיר הודעה בפאב</p>
+        <p id="headerAnimElement2" class="animElement animColor2">💙</p>
+    </div>
+</div>
+
+<body oncontextmenu="return false;">
+
+    <div class="posts" id="divPosts"></div>
+
+    <div class="send" id="divSend"></div>
+
+    <div class="postInputDiv">
+        <textarea id="postInput" class="postInput" name="postInput" placeholder="לכתוב פה הודעה"></textarea>
+        <div class="mboardButton" id="mboardSend" onclick="postSend()">שלח הודעה</div>
+    </div>
+
+    <script src="../js/script_remoteBoard.js"></script>
+
+    </div>
+
+</body>
+
+</html>
