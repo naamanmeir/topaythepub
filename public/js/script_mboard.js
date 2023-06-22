@@ -11,12 +11,7 @@ function displayMessageBoard(content){
     console.log("LOADED MESSAGEBOARD WINDOW");
     divMessageBoard.innerHTML = null;
     divMessageBoard.innerHTML = content;
-    divMessageBoard.classList.remove("hidden");
-    var seconds = windowFadeTime/1000;
-    divMessageBoard.style.transition = "opacity "+seconds+"s ease";
-    divMessageBoard.style.opacity = 1;
-    divMessageBoard.classList.add("windowConstant");
-    divMessageBoard.classList.add("messageBoardWindow");
+    openWindows(divMessageBoard);
     let closeButtonLeft = document.getElementById("messageBoardCloseButtonLeft");
     closeButtonLeft.addEventListener('click',() =>{
         divMessageBoard.innerHTML = null;
@@ -33,7 +28,6 @@ function displayMessageBoard(content){
 };
 
 function closeMessageBoard(){
-    // divMessageBoard.innerHTML = null;
     hideWindows();
     return;
 };

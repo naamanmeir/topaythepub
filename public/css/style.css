@@ -254,8 +254,8 @@ p {
     margin-left: 0.2rem;
     margin-right: 0.2rem;
     padding: 0.4rem;
-    color: red;
-    font-size: 180%;
+    color: rgba(255, 166, 0, 0.93);
+    font-size: 150%;
     justify-content: center;
     text-align: center;
     border: 1px solid rgb(245, 91, 14);
@@ -316,8 +316,8 @@ p {
     z-index: 80;
     position: absolute;
     top: 5%;
-    left: 5%;
-    width: 90%;
+    left: 2.5vw;
+    width: 90vw;
     height: 90%;
     margin: auto;
     background-color: var(--bg01);
@@ -334,8 +334,8 @@ p {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    font-size: 2.5rem;
-    border: 2px groove rgb(3, 117, 143);
+    font-size: 2.4rem;
+    border: 1px groove rgb(3, 117, 143);
 }
 
 .postInputDiv {

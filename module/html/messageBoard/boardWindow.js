@@ -7,7 +7,7 @@ exports.buildHtml = function (messageUi,posts) {
 
     html +=
         `        
-        <div class="closeButton right" id="messageBoardCloseButtonRight">X</div>
+        <div class="closeButton right" id="messageBoardCloseButtonRight">${messageUi.mBoardCloseText}</div>
         `;
 
     html +=`        

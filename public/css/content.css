@@ -15,6 +15,11 @@
     /* border: 5px solid orange; */
 }
 
+.hidden {
+    display: none;
+    transition: all 1s;
+}
+
 .searchBoxDiv {
     margin: auto;
     width: 80%;

@@ -70,7 +70,8 @@
             "mBoardHeader": "לוח מודעות",
             "mBoardPlaceHolder": "לכתוב פה הודעה",
             "mBoardButtonSend": "שלח הודעה",
-            "mBoardFooter": "אפשר לכתוב פה דברים"
+            "mBoardFooter": "אפשר לכתוב פה דברים",
+            "mBoardCloseText": "סגור"
         }
     ],
     "sideMenu": [

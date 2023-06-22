@@ -6,6 +6,7 @@ const timerRefreshCssTime = 9995000;
 const logOutTime = 40000;
 const closeSideMenuTimeoutTime = 10000;
 const sideMenuSlideTime = "0.6s";
+const windowFadeTime = 800;
 
 //-----------------RUNTIME PARAMS-----------------//
 const timerClearLoggedUSerTIme = 999999;
@@ -247,6 +248,67 @@ async function postRequest_bk(url, callback, data) {
     };
 
 };
+
+//------------------------ UI ELEMENTS----------------//
+
+
+function closeWindows(){
+    userPageButton.setAttribute('userPageButtonEnableListener', 0);
+    enableUserPageButton();
+    userPageButton.style.pointerEvents = "auto";
+    const windows = document.querySelectorAll('.window');
+    var seconds = windowFadeTime/1000;
+    divContent.classList.remove("hidden");
+    keyboardFocusMain();
+    windows.forEach(window => {
+        window.style.transition = "opacity "+seconds+"s ease";
+        window.style.opacity = 0;
+    });
+    setTimeout(()=>{
+        windows.forEach(window => {
+            window.remove();
+        });
+        getRequest('./client/windowIsClose/',null,null);
+    },windowFadeTime);    
+    return;
+};
+
+function hideWindows(){
+    userPageButton.setAttribute('userPageButtonEnableListener', 0);
+    enableUserPageButton();
+    userPageButton.style.pointerEvents = "auto";
+    const windows = document.querySelectorAll('.windowConstant');
+    var seconds = windowFadeTime/1000;
+    divContent.classList.remove("hidden");
+    keyboardFocusMain();
+    windows.forEach(window => {
+        window.style.transition = "opacity "+seconds+"s ease";
+        window.style.opacity = 0;
+    });
+    setTimeout(()=>{
+        windows.forEach(window => {
+            window.className = "hidden";
+        });
+        getRequest('./client/windowIsClose/',null,null);
+    },windowFadeTime);    
+    return;
+};
+
+function openWindows(openWindow){
+    openWindow.classList.remove("hidden");
+    openWindow.style.transition = "opacity 0s ease";
+    openWindow.style.opacity = 0;
+    var seconds = windowFadeTime/1000;
+    openWindow.style.transition = "opacity "+seconds+"s ease";
+    openWindow.style.opacity = 1;
+    openWindow.classList.add("windowConstant");
+    openWindow.classList.add("messageBoardWindow");
+    divContent.style.transition = "opacity "+seconds+"s ease";
+    divContent.classList.add("hidden");
+    return;
+};
+
+
 //------------------------FAKE FUNCTION TO NULL RESPONSES----------------
 async function responseToNull(res) {
     console.log("response went to null");
@@ -289,6 +351,9 @@ function inputSanitize(input) {
     return input;
 };
 
+//------------------------ SERVER SIDE EVENTS ----------------//
+
+
 function connectEventSource() {
     if (!!window.EventSource) {
         var source = new EventSource('./events')
@@ -320,7 +385,6 @@ function connectEventSource() {
         console.log("Your browser doesn't support SSE")
     }
 };
-
 
 function eventHandler(event) {
     let data = event.data;
