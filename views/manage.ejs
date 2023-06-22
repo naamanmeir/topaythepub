@@ -190,70 +190,72 @@
 
             </div>
 
-            <!-- data -->
+        </div>
 
-            <div class="content column data page" id="data">
+        <!-- data -->
 
-                <p2>נתונים</p2>
+        <div class="content column data page" id="data">
 
-                <div class="row linebreak"></div>
+            <p2>נתונים</p2>
 
-                <button onClick="openInfotables()">הצגת </button>
+            <div class="row linebreak"></div>
 
-                <div class="content row">
+            <button onClick="openInfotables()">הצגת </button>
 
-                    <div class="function" id="getAccounData">
-                        <button onclick="getAllData(4)">נתונים לדו"ח</button>
-                    </div>
+            <div class="content row">
 
-                    <div class="function" id="getOrdersData">
-                        <button onclick="getAllData(1)">נתוני עסקאות</button>
-                    </div>
-
-                    <div class="function" id="getCLientData">
-                        <button onclick="getAllData(2)">נתוני משתמשים</button>
-                    </div>
-
-                    <div class="function" id="getCLientData">
-                        <button onclick="getAllData(3)">נתוני משתמשים כולל כלבים</button>
-                    </div>
-
+                <div class="function" id="getAccounData">
+                    <button onclick="getAllData(4)">נתונים לדו"ח</button>
                 </div>
 
-                <div class="row"></div>
-
-                <div class="row linebreak"></div>
-
-                <div class="archive">
-                    <p>ארכיון</p>
-                    <select class="select" name="reportArchive" id="reportArchive">
-                    </select>
-                    <button class="green" onclick="requestReportArchive()">הצג נתוני ארכיון</button>
+                <div class="function" id="getOrdersData">
+                    <button onclick="getAllData(1)">נתוני עסקאות</button>
                 </div>
 
-                <div class="function" id="backupTable">
-                    <button class="orange" onclick="backupTable()">יצירת גיבוי חדש</button>
+                <div class="function" id="getCLientData">
+                    <button onclick="getAllData(2)">נתוני משתמשים</button>
                 </div>
 
-                <div class="row"></div>
-
-                <div class="function" id="resetDbData">
-                    <button class="red" onclick="resetAfterReport()">איפוס נתונים לאחר קריאה</button>
+                <div class="function" id="getCLientData">
+                    <button onclick="getAllData(3)">נתוני משתמשים כולל כלבים</button>
                 </div>
-
-                <div class="row linebreak"></div>
 
             </div>
 
-            <!-- manage -->
+            <div class="row"></div>
 
-            <div class="content column manage page" id="manage">
+            <div class="row linebreak"></div>
 
-                <p2>ניהול</p2>
+            <div class="archive">
+                <p>ארכיון</p>
+                <select class="select" name="reportArchive" id="reportArchive">
+                </select>
+                <button class="green" onclick="requestReportArchive()">הצג נתוני ארכיון</button>
+            </div>
 
-                <div class="row linebreak"></div>
+            <div class="function" id="backupTable">
+                <button class="orange" onclick="backupTable()">יצירת גיבוי חדש</button>
+            </div>
 
-                <!-- <div class="function" id="createTablefunction">
+            <div class="row"></div>
+
+            <div class="function" id="resetDbData">
+                <button class="red" onclick="resetAfterReport()">איפוס נתונים לאחר קריאה</button>
+            </div>
+
+            <div class="row linebreak"></div>
+
+        </div>
+
+        <!-- manage -->
+
+        <div class="content column manage page" id="manage">
+
+            <p2>ניהול</p2>
+
+            <div class="row linebreak"></div>
+
+            <!-- <div class="function" id="createTablefunction">
             <button onclick="createTable()">צור טבלה נדרשת</button>
         </div>
 
@@ -261,26 +263,28 @@
             <button onclick="importNameListFile()">הכנס רשימת שמות</button>
         </div>     -->
 
-                <div class="row">
-                    <button onclick="refreshAllClients()">טען מחדש את כל המסופים</button>
-                </div>
-
-                <div class="row">
-                    <p id="connectedTerminals"></p>
-                </div>
-
-                <div class="row linebreak"></div>
-
-                <br>
-                <div class="clear">
-                    <button onclick="clearConsole()">clear console</button>
-                </div>
-                <div class="console" id="console">
-                </div>
-
-                <div class="row linebreak"></div>
-
+            <div class="row">
+                <p>מסופים מחוברים :</p>
+                <p id="connectedTerminals"></p>
+                <button onclick="connectedTerminalsStatus()">לחץ לרענון</button>
             </div>
+
+            <div class="row">
+                <button onclick="refreshAllClients()">טען מחדש את כל המסופים</button>
+            </div>
+
+            <div class="row linebreak"></div>
+
+            <br>
+            <div class="clear">
+                <button onclick="clearConsole()">clear console</button>
+            </div>
+            <div class="console" id="console">
+            </div>
+
+            <div class="row linebreak"></div>
+
+        </div>
 
         </div>
 

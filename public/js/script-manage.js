@@ -878,7 +878,10 @@ function loadUtiliti() {
     }, 100);
     setTimeout(function () {
         getProducts();
-    }, 400);
+    }, 400);    
+    setTimeout(function () {
+        connectedTerminalsStatus();
+    }, 800);
 
 };
 
@@ -896,7 +899,14 @@ function refreshAllClients() {
 };
 
 function connectedTerminalsStatus() {
-    let connectedTerminals = document.getElementById("connectedTerminals");
-    connectedTerminals.innerText = ("1234");
+    let connectedTerminals = document.getElementById("connectedTerminals");        
+    xhttp.open("GET", "./events/status", true);
+    xhttp.send();    
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {            
+            connectedTerminals.innerText = (JSON.parse(this.response).clients);
+            return;
+        }
+    };
 }
 

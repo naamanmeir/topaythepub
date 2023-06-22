@@ -1,8 +1,9 @@
 {
     "ui": [
         {
+            "loginMessage": "hello_this_is_a_message_for_visitors_מה_נשמע",
             "appName": "לרשום בפאב",
-            "appVersion": "0.3.1",
+            "appVersion": "0.4.1.oved.lo.lagaat",
             "headerText": "לרשום בפאב",
             "headerAnimElement1": "💚",
             "headerAnimElement2": "💙",
@@ -51,9 +52,11 @@
             "aboutLine1": "נוצר עבור פאב אבירים",
             "aboutLine2": "ע'י ניבה גבינהצהובה",
             "aboutLine3": "ותום תרם את הטאבלט",
-            "aboutLine4": "המידע המועט שנשמר פה די מוגן באינטרנט",
-            "aboutLine5": "ובסוף הופך להיות דף אקסל בהנהלת חשבונות",
-            "aboutLine6": "",
+            "aboutLine4": "המידע המועט שנשמר פה",
+            "aboutLine5": "די מוגן באינטרנט",
+            "aboutLine6": "ובסוף הופך להיות דף אקסל",
+            "aboutLine7": "בהנהלת חשבונות",
+            "aboutLine8": "",
             "aboutLink1": "https://github.com/naamanmeir/topaythepub",
             "aboutLink1Text": "github",
             "sideMenuOpenAbout": "אודות",
@@ -62,8 +65,13 @@
             "SideMenuRefreshPage": "טען מחדש",
             "SideMenuLogOutClient": "נתק מסוף",
             "SideMenuCloseSideMenu": "⟹",
-            "floatMenuButton": "כפתור",
-            "footerText": " זה של הפאב ונוצר על ידי ניבה גבינהצהובה"
+            "floatMenuButton": "לוח מודעות",
+            "footerText": " זה של הפאב ונוצר על ידי ניבה גבינהצהובה",
+            "mBoardHeader": "לוח מודעות",
+            "mBoardPlaceHolder": "לכתוב פה הודעה",
+            "mBoardButtonSend": "שלח הודעה",
+            "mBoardFooter": "אפשר לכתוב פה דברים",
+            "mBoardCloseText": "סגור"
         }
     ],
     "sideMenu": [

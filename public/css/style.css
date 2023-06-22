@@ -1,6 +1,7 @@
 :root {
     --bg01: black;
     --bg02: rgba(104, 99, 99, 0.283);
+    --bg03: rgba(30, 60, 58, 0.413);
 
     --text01: rgb(225, 168, 10);
     --text02: rgb(255, 255, 0);
@@ -9,6 +10,7 @@
 
     --border01: rgb(194, 172, 4);
     --border02: rgb(162, 146, 123);
+    --border03: rgb(29, 182, 50);
 
     --buttonYes: rgb(3, 183, 3);
     --buttonNo: rgb(255, 3, 3);
@@ -148,6 +150,11 @@ p {
     position: absolute;
 }
 
+.window {
+    display: block;
+    opacity: 1;
+}
+
 .floatMenuDiv {
     position: absolute;
     height: fit-content;
@@ -156,15 +163,23 @@ p {
     bottom: 50%;
     left: 0;
     border-radius: 50%;
-    border: 1px inset var(--border02);
+    border: 1px outset var(--border02);
     transition: 0.5s;
+    background-color: #1b61b1;
+}
+
+.floatMenuDiv:active {
+    border: 1px inset var(--border02);
+
 }
 
 .floatMenuDiv p {
     z-index: 40;
     color: var(--text03);
-    font-size: 50%;
+    font-size: 100%;
     margin: auto;
+    padding: 1rem;
+    color: yellow;
 }
 
 .floatMenuDiv a {
@@ -233,6 +248,33 @@ p {
     font-size: x-large;
 }
 
+.closeButton {
+    width: fit-content;
+    margin: auto;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    padding: 0.4rem;
+    color: rgba(255, 166, 0, 0.93);
+    font-size: 150%;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid rgb(245, 91, 14);
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.center {
+    text-align: center;
+    float: center;
+    margin: auto;
+}
+
 .divFullPage {
     /* background-color: green; */
     height: 100%;
@@ -244,17 +286,166 @@ p {
     display: block;
     z-index: 100;
     position: absolute;
+    overflow-wrap: break-word;
     top: 25%;
-    left: 15%;
+    left: 0%;
+    right: 0%;
+    width: fit-content;
     margin: auto;
     background-color: var(--bg01);
     border: 2px solid var(--border01);
     border-radius: 15%;
     padding: 5%;
     color: var(--text03);
-    font-size: 2rem;
+    font-size: 1.6rem;
+}
+
+.divAbout p {
+    right: 50%;
 }
 
 .divAboutClose {
     display: hidden;
+}
+
+.windowConstant {
+    opacity: 1;
+}
+
+.messageBoardWindow {
+    z-index: 80;
+    position: absolute;
+    top: 5%;
+    left: 2.5vw;
+    width: 90vw;
+    height: 90%;
+    margin: auto;
+    background-color: var(--bg01);
+    border: 1px solid var(--border02);
+    padding: 1rem;
+    padding-top: 0.2rem;
+    color: var(--text03);
+}
+
+.mBoardHeader {
+    top: 0.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--listItemSelected);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: 2.4rem;
+    border: 1px groove rgb(3, 117, 143);
+}
+
+.postInputDiv {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.mboardButton {
+    /* position: relative; */
+    width: fit-content;
+    font-size: 2rem;
+    color: black;
+    left: 5%;
+    margin: auto;
+    padding: 0.5rem;
+    float: center;
+    text-align: center;
+    background-color: var(--buttonYes);
+    border: 2px outset grey;
+}
+
+.mboardButton:active {
+    border: 3px inset grey;
+}
+
+.messageBoardBottom {
+    position: absolute;
+    display: none;
+    margin: auto;
+    text-align: center;
+    bottom: 0.2rem;
+    color: var(--itemPrice);
+}
+
+.postInput {
+    resize: none;
+    width: 90%;
+    height: 4rem;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 15%;
+    padding: 10px;
+    background-color: #1e44578c;
+    font-size: 2rem;
+    color: var(--itemPrice);
+    overflow: hidden;
+}
+
+.posts {
+    height: 70%;
+    width: 95%;
+    display: inline-block;
+    flex-direction: column-reverse;
+    gap: 2rem;
+    flex-shrink: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: 11%;
+    right: 0.2rem;
+    transition: background-color 0.8s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+    clear: both;
+    /* border: 1px solid yellow; */
+    padding: 1rem;
+    font-size: 2rem;
+    word-wrap: break-word;
+    overflow-anchor: none;
+}
+
+#anchor {
+    overflow-anchor: auto;
+    height: 1px;
+}
+
+.postDisplay {
+    color: #deb911;
+    border: 1px dotted rgb(6, 143, 129);
+    border-radius: 5%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+    padding: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 0.2rem;
+    width: fit-content;
+    max-width: 95%;
+    padding-right: 1%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    white-space: normal;
+}
+
+.postDisplay p {
+    width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.oddPost {
+    background-color: #122c34b3;
+}
+
+.evenPost {
+    background-color: #103b4fc1;
 }

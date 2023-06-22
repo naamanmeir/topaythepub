@@ -6,6 +6,8 @@ const timerRefreshCssTime = 9995000;
 const logOutTime = 40000;
 const closeSideMenuTimeoutTime = 10000;
 const sideMenuSlideTime = "0.6s";
+const windowFadeTime = 800;
+const autoLogoutTime = 45000;
 
 //-----------------RUNTIME PARAMS-----------------//
 const timerClearLoggedUSerTIme = 999999;
@@ -20,6 +22,7 @@ const divTopMenu = document.getElementById("divTopMenu");
 const divSideMenu = document.getElementById("divSideMenu");
 const divFloatMenu = document.getElementById("divFloatMenu");
 const divContent = document.getElementById("divContent");
+const divMessageBoard = document.getElementById("divMessageBoard");
 const divAbout = document.getElementById("divAbout");
 const divFooter = document.getElementById("divFooter");
 
@@ -162,6 +165,8 @@ function closeAbout(){
         closeAbout();
 })};
 
+
+
 //------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
 async function getRequest(url, callback, data) {
     var xhttp = new XMLHttpRequest();
@@ -244,6 +249,67 @@ async function postRequest_bk(url, callback, data) {
     };
 
 };
+
+//------------------------ UI ELEMENTS----------------//
+
+
+function closeWindows(){
+    userPageButton.setAttribute('userPageButtonEnableListener', 0);
+    enableUserPageButton();
+    userPageButton.style.pointerEvents = "auto";
+    const windows = document.querySelectorAll('.window');
+    var seconds = windowFadeTime/1000;
+    divContent.classList.remove("hidden");
+    keyboardFocusMain();
+    windows.forEach(window => {
+        window.style.transition = "opacity "+seconds+"s ease";
+        window.style.opacity = 0;
+    });
+    setTimeout(()=>{
+        windows.forEach(window => {
+            window.remove();
+        });
+        getRequest('./client/windowIsClose/',null,null);
+    },windowFadeTime);    
+    return;
+};
+
+function hideWindows(){
+    userPageButton.setAttribute('userPageButtonEnableListener', 0);
+    enableUserPageButton();
+    userPageButton.style.pointerEvents = "auto";
+    const windows = document.querySelectorAll('.windowConstant');
+    var seconds = windowFadeTime/1000;
+    divContent.classList.remove("hidden");
+    keyboardFocusMain();
+    windows.forEach(window => {
+        window.style.transition = "opacity "+seconds+"s ease";
+        window.style.opacity = 0;
+    });
+    setTimeout(()=>{
+        windows.forEach(window => {
+            window.className = "hidden";
+        });
+        getRequest('./client/windowIsClose/',null,null);
+    },windowFadeTime);    
+    return;
+};
+
+function openWindows(openWindow){
+    openWindow.classList.remove("hidden");
+    openWindow.style.transition = "opacity 0s ease";
+    openWindow.style.opacity = 0;
+    var seconds = windowFadeTime/1000;
+    openWindow.style.transition = "opacity "+seconds+"s ease";
+    openWindow.style.opacity = 1;
+    openWindow.classList.add("windowConstant");
+    openWindow.classList.add("messageBoardWindow");
+    divContent.style.transition = "opacity "+seconds+"s ease";
+    divContent.classList.add("hidden");
+    return;
+};
+
+
 //------------------------FAKE FUNCTION TO NULL RESPONSES----------------
 async function responseToNull(res) {
     console.log("response went to null");
@@ -273,7 +339,7 @@ function clientLogout(){
     getRequest('./logout',null,null);
     setTimeout(refreshPage,3500)
     return;
-}
+};
 
 function randomNumberGen() {
     var val = Math.floor(1000 + Math.random() * 9000);
@@ -285,6 +351,9 @@ function inputSanitize(input) {
     input = input.substring(0, 42);    
     return input;
 };
+
+//------------------------ SERVER SIDE EVENTS ----------------//
+
 
 function connectEventSource() {
     if (!!window.EventSource) {
@@ -304,6 +373,7 @@ function connectEventSource() {
                 console.log("closing connection and recall function");
             source.close()
             // setTimeout(connectEventSource(),3000);
+            setTimeout(refreshPage,10000);
             // connectEventSource();
             if (e.target.readyState == EventSource.CLOSED) {
                 // connectEventSource();
@@ -317,7 +387,6 @@ function connectEventSource() {
     }
 };
 
-
 function eventHandler(event) {
     let data = event.data;
     // console.log("event: " + data);
@@ -328,6 +397,10 @@ function eventHandler(event) {
     if (JSON.parse(data) == "reloadItems") {
         console.log("MATCH RELOAD ITEMS");
         populateProducts();
+    }
+    if (JSON.parse(data) == "messageBoardReloadPosts") {
+        console.log("MATCH MESSAGE BOARD RELOAD POSTS");
+        messageBoardRefreshPosts();
     }
     if (JSON.parse(data) == "0") {
         data = data.replace(/^"(.*)"$/, '$1');

@@ -1,8 +1,6 @@
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
 const messageTimeoutTime = 2500;
-const autoLogoutTime = 30000;
-const windowFadeTime = 400;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 
@@ -31,7 +29,13 @@ let autoLogoutTimer;
 
 searchBox1.placeholder = (messageClient.inputPlaceholder);
 
-window.onkeydown = function () { searchBox1.focus(); };
+function keyboardFocusMain(){
+    if(document.getElementById("postInput") == null){
+        window.onkeydown = function () { searchBox1.focus(); };
+    }
+    return;
+};
+keyboardFocusMain();
 
 searchBox1.addEventListener('focus', function () {
     // console.log("focus");
@@ -398,6 +402,7 @@ function openUserPage(content) {
     userWindow.setAttribute("id", "userPageWindow");
     userWindow.innerHTML = (content);
     document.body.appendChild(userWindow);
+    divContent.classList.add("hidden");
     let closeButton = document.getElementById("userPageCloseButton");
     let windowButtons = document.getElementById("windowButtons");
     windowButtons.className = ("windowbuttons");
@@ -412,10 +417,6 @@ function openUserPage(content) {
     closeWindowButton.addEventListener('click', function () {        
         closeWindows();
     });
-    // let out = document.getElementById("divFullPage");
-    // out.addEventListener('click', function divFullPageClickCloseWindow() {
-    //     closeWindows();
-    // });
     deleteOrderButton.addEventListener('click', function () {
         closeWindows();
         return deleteLastOrderConfirm(currentUserLogged.id);
@@ -459,52 +460,6 @@ function openDeleteOrderResults(content){
     openMessageWindow(content,'red big');
     return requestUserPage(currentUserLogged.id);
 };
-
-//---------------------- UI INTERACTIONS ----------------------//
-function closeWindows(){
-    userPageButton.setAttribute('userPageButtonEnableListener', 0);
-    enableUserPageButton();
-    userPageButton.style.pointerEvents = "auto";
-    const windows = document.querySelectorAll('.window');
-    var seconds = windowFadeTime/1000;
-    windows.forEach(window => {
-        window.style.transition = "opacity "+seconds+"s ease";
-        window.style.opacity = 0;
-    });
-    setTimeout(()=>{
-        windows.forEach(window => {
-            window.remove();
-        });
-        getRequest('./client/windowIsClose/',null,null);
-    },windowFadeTime);    
-    return;
-};
-
-function openWindows(){
-    
-};
-
-function autoLogout(){
-    // console.log("autoLogout");    
-    if(currentUserLogged!=null){
-        openMessageWindow(messageClient.clientAutoLogout);
-        let id = JSON.stringify({"id": currentUserLogged.id});
-        postRequest('./client/userAutoLogout/', window.parent.userLoggedOut, id);        
-        userLogout();
-    };
-    closeWindows();
-    clearCounts();
-    orderClear();
-    searchBox1.value='';
-    searchBox1.blur();
-    userIndicMessage(messageClient.notUsed);
-};
-
-function resetAutoLogout(){
-    clearTimeout(autoLogoutTimer);
-    autoLogoutTimer = setTimeout(autoLogout,autoLogoutTime);
-};
-
 function buttonOrderClick() {
     if (!currentUserLogged || currentUserLogged == null || currentUserLogged.userId == '') {
         // console.log("no user logged");
@@ -529,6 +484,34 @@ function buttonCancelClick() {
     clearCounts();
     // openMessageWindow(messageClient.orderAbortButton);
 };
+
+//---------------------- LOGIN INTERACTIONS ----------------------//
+
+function autoLogout(){
+    // console.log("autoLogout");    
+    if(currentUserLogged!=null){
+        openMessageWindow(messageClient.clientAutoLogout);
+        let id = JSON.stringify({"id": currentUserLogged.id});
+        postRequest('./client/userAutoLogout/', window.parent.userLoggedOut, id);        
+        userLogout();
+    };
+    closeWindows();
+    hideWindows();
+    clearCounts();
+    orderClear();
+    searchBox1.value='';
+    searchBox1.blur();
+    userIndicMessage(messageClient.notUsed);
+    keyboardFocusMain();
+    return;
+};
+function resetAutoLogout(){
+    clearTimeout(autoLogoutTimer);
+    autoLogoutTimer = setTimeout(autoLogout,autoLogoutTime);
+};
+
+//---------------------- UI INTERACTIONS ----------------------//
+
 function errorMessageShow() {
     console.log("errorMEssage");
 };
