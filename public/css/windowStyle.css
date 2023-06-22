@@ -125,7 +125,7 @@
 }
 
 .userInfoChangeNickText {
-    width: 90%;
+    width: 80%;
     height: 2rem;
     color: grey;
     font-size: 1rem;
@@ -137,11 +137,12 @@
 }
 
 .userInfoChangeNickButton {
-    width: fit-content;
+    width: 20%;
     height: 2rem;
-    text-align: left;
     color: black;
+    text-align: center;
     margin: auto;
+    float: left;
     background-color: rgb(140, 228, 255);
     border: 3px outset grey;
 }
