@@ -19,6 +19,11 @@ routerMessageBoard.get('/openBoard', async function (req, res) {
     let renderMessageBoard = require("../module/html/messageBoard/boardWindow");
     let html = renderMessageBoard.buildHtml(messageUi,posts);
     res.send(html);
+    var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "OPEN BOARD WINDOW"
+    `); 
     return;
 });
 
@@ -29,7 +34,12 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     var post = (req.body.post);
     // console.log("insert post");
     // console.log(post);    
-    let dbResponse = await db.dbInserPost(post);    
+    let dbResponse = await db.dbInserPost(post);
+    var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED POST"
+    `); 
     let posts = await db.dbGetAllPosts();
     let renderMessageBoard = require("../module/html/messageBoard/boardWindow");
     let html = renderMessageBoard.buildHtml(messageUi,posts);
@@ -46,6 +56,11 @@ function sendRefreshPostsEventToAllClients(){
 
 routerMessageBoard.get('/refreshPosts/', async (req, res) => {
     let posts = await db.dbGetAllPosts();
+    var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "SENT ALL POSTS TO CLIENT"
+    `); 
     let renderMessageBoard = require("../module/html/messageBoard/postsDiv");
     let html = renderMessageBoard.buildHtml(messageUi,posts);    
     res.json(html);

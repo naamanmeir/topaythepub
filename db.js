@@ -450,6 +450,17 @@ exports.dbGetClientDetailsById = function (clientId) {
     " WHERE id=" + clientId + ";");
 };
 
+//-----------------------CHANGE USER NICKNAME BY ID----------------------//
+exports.dbChangeNickById = function (newNick,clientId) {
+  let sql = ("UPDATE "+tableClients+" SET nick = ? WHERE id = "+clientId+";");
+  let values = [
+    [newNick]
+  ];
+  return pool.query(sql,values,(error,result) => {
+    if(error)throw error;
+  });
+};
+
 //-----------------------GET ALL CLIENT DETAILS BY ID----------------------//
 exports.dbGetClientInfoById = function (id) {
   return pool.query("SELECT sum,info," +
@@ -490,7 +501,7 @@ exports.dbGetNameBySearchName = function (clientName) {
 };
 
 //-----------------------GET ID NICK AND NAME FROM DB BY NICK SEARCH----------------------//
-exports.dbGetNameBySearch = function (query) {
+exports.dbGetNameBySearch = function (query) {  
   let queryList = query.split(" ");
   if (queryList[1] == null) { queryList[1] = queryList[0] };
   if (queryList[2] == null) { queryList[2] = queryList[0] };
@@ -501,6 +512,10 @@ exports.dbGetNameBySearch = function (query) {
     " AND nick LIKE '%" + queryList[1] + "%'" +
     " AND nick LIKE '%" + queryList[2] + "%'" +
     " AND nick LIKE '%" + queryList[3] + "%'" +
+    " OR name LIKE '%" + queryList[0] + "%'" +
+    " OR name LIKE '%" + queryList[1] + "%'" +
+    " OR name LIKE '%" + queryList[2] + "%'" +
+    " OR name LIKE '%" + queryList[3] + "%'" +
     " ORDER BY last_action DESC;");
 };
 
@@ -716,8 +731,11 @@ exports.dbGetProductDetailsById = async function (itemId) {
 
 exports.dbInserPost = async function (post,user){
   if (user == null){user=0}
-  let sql = (`INSERT INTO ${tablePosts} (user,post) VALUES ('${user}','${post}');`)  
-  let messageReturn = await pool.query(sql);
+  let sql = ('INSERT INTO '+tablePosts+' (user, post) VALUES (?);');
+  let values = [
+    [user,post]
+  ];
+  let messageReturn = await pool.query(sql,values);
   return messageReturn;
 };
 

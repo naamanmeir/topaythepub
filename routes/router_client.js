@@ -3,6 +3,7 @@ const routerClient = express.Router();
 const functions = require('../functions');
 const db = require('../db');
 const {actionsLogger, ordersLogger, errorLogger} = require('../module/logger');
+const validatorClient = require("../module/input/inputValidatorClient.js");
 let messagesJson = require('../messages.json');
 let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
@@ -117,6 +118,25 @@ routerClient.post('/userAutoLogout/', async (req, res) => {
         'message': autoLoggedOutUserDetails.logged
     });
     res.send(autoLoggedOutUserDetails);
+    return;
+});
+
+routerClient.post('/changeNick/', validatorClient(), async (req, res) => {
+    if (!req.body.id || req.body.id == null || req.body.newNick == null || req.body.newNick == "") { res.end(); return; }
+    console.log("CHANGE USER NICKNAME BY ID: " + req.body.id);
+    let newNick = req.body.newNick;
+    let id = req.body.id;
+    let existingUserDetails = await db.dbGetClientDetailsById(id);   
+    actionsLogger.userAction(`
+    message: CHANGE NICKNAME OF USER : 
+    id: ${req.body.id} ,
+    name:${existingUserDetails[0].name},
+    nick:${existingUserDetails[0].nick},
+    account:${existingUserDetails[0].account}
+    TO NEW NICKNAME: ${newNick}
+    `);
+    let newUserNickNameResults = await db.dbChangeNickById(newNick,id);    
+    res.json({'errorClient':existingUserDetails[0].nick+" IS NOW "+newNick});
     return;
 });
 //------------------------CLIENT USER ACTIONS-------------------//
@@ -235,6 +255,8 @@ routerClient.post('/deleteLastOrder/', async (req, res) => {
     res.send(deleteLastOrderResponse);
     return;
 });
+
+//------------------------CLIENT UI ACTIONS-------------------//
 
 routerClient.get('/windowIsOpen/', async(req,res) => {
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });

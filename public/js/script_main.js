@@ -170,7 +170,7 @@ function closeAbout(){
 //------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
 async function getRequest(url, callback, data) {
     var xhttp = new XMLHttpRequest();
-    console.log("SENDING GET REQUEST TO: " + url);
+    // console.log("SENDING GET REQUEST TO: " + url);
     if (data != null) { xhttp.open("GET", url + data, true); }
     if (data == null) { xhttp.open("GET", url, true); }
     xhttp.send();
@@ -190,10 +190,10 @@ async function getRequest(url, callback, data) {
 async function postRequest(url, callback, data) {
     if (data == null) { return; }
     var xhttp = new XMLHttpRequest();
-    console.log("SENDING POST REQUEST TO: " + url);
+    // console.log("SENDING POST REQUEST TO: " + url);
     xhttp.open("POST", url, true);
     xhttp.setRequestHeader("Content-Type", "application/json");
-    console.log("SENDING DATA AS JSON: " + data);
+    // console.log("SENDING DATA AS JSON: " + data);
     xhttp.send(data);
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {            
@@ -218,22 +218,22 @@ async function postRequest(url, callback, data) {
 };
 
 function isJson(input) {
-    console.log("testing for JSON input:");
+    // console.log("testing for JSON input:");
     // console.log(input);
     try {        
         JSON.parse(input);
     } catch (e) {
-        console.log("false");
-        console.log(e);
+        // console.log("false");
+        // console.log(e);
         return false;
     }
-    console.log("true");
+    // console.log("true");
     return true;
 };
 
 async function postRequest_bk(url, callback, data) {
     var xhttp = new XMLHttpRequest();
-    console.log("SENDING POST REQUEST TO: " + url);
+    // console.log("SENDING POST REQUEST TO: " + url);
     if (data != null || data == " ") { xhttp.open("POST", url + data, true); }
     if (data == null) { xhttp.open("POST", url, true); }
     xhttp.send();
@@ -312,8 +312,8 @@ function openWindows(openWindow){
 
 //------------------------FAKE FUNCTION TO NULL RESPONSES----------------
 async function responseToNull(res) {
-    console.log("response went to null");
-    console.log(res);
+    // console.log("response went to null");
+    // console.log(res);
     res = null;
     delete res;
 };
@@ -391,15 +391,15 @@ function eventHandler(event) {
     let data = event.data;
     // console.log("event: " + data);
     if (JSON.parse(data) == "refresh") {
-        console.log("MATCH REFRESH TERMINAL");
+        // console.log("MATCH REFRESH TERMINAL");
         refreshPage();
     }
     if (JSON.parse(data) == "reloadItems") {
-        console.log("MATCH RELOAD ITEMS");
+        // console.log("MATCH RELOAD ITEMS");
         populateProducts();
     }
     if (JSON.parse(data) == "messageBoardReloadPosts") {
-        console.log("MATCH MESSAGE BOARD RELOAD POSTS");
+        // console.log("MATCH MESSAGE BOARD RELOAD POSTS");
         messageBoardRefreshPosts();
     }
     if (JSON.parse(data) == "0") {

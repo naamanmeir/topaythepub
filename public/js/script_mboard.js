@@ -1,4 +1,4 @@
-console.log("MESSAGE BOARD SCRIPT INIT");
+// console.log("MESSAGE BOARD SCRIPT INIT");
 
 let postInput;
 let postsDiv;
@@ -9,7 +9,7 @@ function callMessageBoard(){
 };
 
 function displayMessageBoard(content){
-    console.log("LOADED MESSAGEBOARD WINDOW");
+    // console.log("LOADED MESSAGEBOARD WINDOW");
     divMessageBoard.innerHTML = null;
     divMessageBoard.innerHTML = content;
     openWindows(divMessageBoard);
@@ -41,12 +41,12 @@ function mBoardUtilities(){
 }
 
 function keyboardFocusMboard(){
-    console.log("MBOARD FOCUS");
+    // console.log("MBOARD FOCUS");
     if(document.getElementById("postInput") != null){
     window.onkeydown = function () { postInput.focus(); };
     postInput.addEventListener("keypress", function(event) {        
         if (event.key === "Enter") {
-            console.log("TESTING ENTER");
+            // console.log("TESTING ENTER");
             event.preventDefault();
             document.getElementById("mboardSend").click();
         }
@@ -73,7 +73,7 @@ function messageBoardRefreshPosts(){
         getRequest("./mboard/refreshPosts", displayPostsInDiv);
         return;
     }else{
-        console.log("POSTS DIV DOES NOT EXIST");
+        // console.log("POSTS DIV DOES NOT EXIST");
         return;
     }
 };
@@ -87,7 +87,7 @@ function displayPostsInDiv(content){
         postsDiv.scrollTop = postsDiv.scrollHeight;
         return;
     }else{
-        console.log("POSTS DIV DOWS NOT EXIST");
+        // console.log("POSTS DIV DOWS NOT EXIST");
         return;
     }
 };
