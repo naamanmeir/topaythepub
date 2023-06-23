@@ -31,6 +31,7 @@
 
     <div class="postInputDiv">
         <textarea id="postInput" class="postInput" name="postInput" placeholder="<%= msgInputPlaceholder %>"></textarea>
+        <img class="postImgPreview" id="postImgPreview" src="#">
         <div class="mboardButton" id="mboardSend" onclick="postSend()">
             <%= msgButtonSend %>
         </div>
@@ -40,11 +41,14 @@
         <!-- <div class="mboardButtonSendImage" id="mboardSendImage" onclick="postSendImage()"> -->
         <!-- </div> -->
         <div class="uploadImg">
-            <form action="/insertImage/" method="POST" enctype="multipart/form-data">
-                <input type="file" name="imgUpload" text="<%=msgButtonBrowsePicture %>">
-                <input id="mboardSendImage" type="submit" value="<%=msgButtonSendPicture %>">
-            </form>
-            <div id="test" onclick="postSendImage()">tttttttt</div>
+            <!-- <form action="insertImage" method="POST" enctype="multipart/form-data"> -->
+            <input id="imageSelector" type="file" name="imgUpload" text="" style="display: none;">
+            <input type="button" value="<%=msgButtonBrowsePicture %>"
+                onclick="document.getElementById('imageSelector').click();" />
+
+            <!-- <input id="mboardSendImage" type="submit" value="<%=msgButtonSendPicture %>"> -->
+            <!-- </form> -->
+            <!-- <div id="test" onclick="postSendImage()">tttttttt</div> -->
         </div>
     </div>
 

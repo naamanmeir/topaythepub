@@ -3,13 +3,16 @@
 window.addEventListener('load', loadUtiliti, true);
 function loadUtiliti() {
     // console.log("LOADED");
+    imageSelector = document.getElementById("imageSelector");
     messageBoardRefreshPosts();
     mBoardUtilities();
     connectEventSource();
+    imagePreview();
 };
 
 let postInput; 
 let postsDiv;
+let imageSelector;
 
 function callMessageBoard(){
     getRequest("./mboard/openBoard", displayMessageBoard);
@@ -45,20 +48,56 @@ function resetAutoLogoutMboard(){
     resetAutoLogout();
 };
 
-function postSend(){
+function postSend(){    
     if (postInput.value == ""){return;};
+    let formData = new FormData();
     let post = postInput.value;
+    if(imageSelector.files[0]!=null){        
+        console.log("is with img");
+        formData.append("post",post);
+        formData.append("img",imageSelector.files[0]);        
+        for (var pair of formData.entries()) {
+            console.log(pair[0]+ ', ' + pair[1]); 
+        }
+        postRequest('./insertPost', messageBoardRefreshPosts, formData);
+        return;
+    }
+    let postJSON = JSON.stringify({
+        'post': post,
+        'img': formData
+    });
+    console.log(postJSON);
+
     postInput.value = "";
-    let postJSON = JSON.stringify({"post": post});
+    imageSelector.value = "";
+    imagePreview();
     postRequest('./insertPost', messageBoardRefreshPosts, postJSON);
-    // console.log("INSERT FROM REMOTE")
+    // console.log("INSERT FROM REMOTE")    
     return;    
 };
 
 function postSendImage(){
     console.log("send image");
-    let t = JSON.stringify({'test':'test image send'});
-    postRequest('./insertImage', messageBoardRefreshPosts, t);
+    // let imageSelector = document.getElementById("imageSelector");
+    const formData = new FormData();
+    formData.append("imgUpload",imageSelector.files[0]);
+    let imgData = JSON.stringify({'body':formData});
+    postRequest('./insertImage', messageBoardRefreshPosts, imgData);
+};
+
+function imagePreview(){
+    // let imageSelector = document.getElementById("imageSelector");
+    var postImg = document.getElementById('postImgPreview');
+    postImg.style.display = "none";
+    imageSelector.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            postImg.onload = () => {
+                URL.revokeObjectURL(postImg.src);                
+            }      
+            postImg.src = URL.createObjectURL(this.files[0]);
+            postImg.style.display = "block";
+        }
+    });
 };
 
 function messageBoardRefreshPosts(){

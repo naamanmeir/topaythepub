@@ -2,6 +2,7 @@ const express = require('express');
 const routerRemoteMessageBoard = express.Router();
 const functions = require('../functions');
 const db = require('../db');
+const fs = require('fs');
 const formidable = require('formidable');
 const clientEvents = require('./router_client_events');
 const {messageBoardLogger, actionsLogger, errorLogger} = require('../module/logger');
@@ -26,7 +27,8 @@ routerRemoteMessageBoard.get('/', async function (req, res) {
 
 routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
-    var post = (req.body.post);  
+    var post = (req.body.post);
+    console.log(req.body);
     let dbResponse = await db.dbInserPost(post);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
@@ -42,7 +44,7 @@ routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     return;
 });
 
-routerRemoteMessageBoard.post('/uploadPostImage', async (req, res) => {
+routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
     console.log("TEST POST IMG UPLOAD ----------------")
     const options = {
         uploadDir: __dirname + '/../public/img/posts',
@@ -62,13 +64,14 @@ routerRemoteMessageBoard.post('/uploadPostImage', async (req, res) => {
     });
     functions.itemImgArray();
     // res.redirect(req.get('referer'));
-    res.send(options);
+    res.end();
+    // res.send(options);
 });
 
-routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
-    console.log("POST IMG UPLOAD ----------------")
-    res.send("OK");
-});
+// routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
+//     console.log("POST IMG UPLOAD ----------------")
+//     res.send("OK");
+// });
 
 routerRemoteMessageBoard.get('/insertImage', async (req, res) => {
     console.log("GET IMG UPLOAD ----------------")
