@@ -28,9 +28,7 @@ routerMessageBoard.get('/openBoard', async function (req, res) {
 
 routerMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
-    var post = (req.body.post);
-    // console.log("insert post");
-    // console.log(post);    
+    var post = (req.body.post); 
     let dbResponse = await db.dbInserPost(post);
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
     messageBoardLogger.clientMessageBoard(`
@@ -59,8 +57,7 @@ routerMessageBoard.get('/reloadPosts/', async (req, res) => {
     "SENT ALL POSTS TO CLIENT"
     `); 
     let renderMessageBoard = require("../module/html/messageBoard/postsDiv");
-    let html = renderMessageBoard.buildHtml(messageUi,posts);
-    console.log("SENDING");
+    let html = renderMessageBoard.buildHtml(messageUi,posts);    
     res.json(html);
     res.end();
     return;
