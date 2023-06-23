@@ -54,12 +54,15 @@ function postSend(){
     let post = postInput.value;
     if(imageSelector.files[0]!=null){        
         console.log("is with img");
-        formData.append("post",post);
-        formData.append("img",imageSelector.files[0]);        
+        formData.append('img',imageSelector.files[0]);
+        formData.append('post',post);        
         for (var pair of formData.entries()) {
             console.log(pair[0]+ ', ' + pair[1]); 
         }
         postRequest('./insertPost', messageBoardRefreshPosts, formData);
+        postInput.value = "";
+        imageSelector.value = "";
+        imagePreview();
         return;
     }
     let postJSON = JSON.stringify({
