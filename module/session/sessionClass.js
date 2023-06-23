@@ -1,6 +1,7 @@
 module.exports = function (limit) {
-    return async function (req, res, next) {
+    return async function (req, res, next) {        
         if(!req||req==null||!req.session||req.session==null){res.redirect('/apps/topaythepub');return;}
+        // console.log(req.session);
         if (req.session.userclass > limit) {
             res.redirect('./');
             return;

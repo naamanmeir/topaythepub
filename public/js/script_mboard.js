@@ -1,5 +1,3 @@
-// console.log("MESSAGE BOARD SCRIPT INIT");
-
 let postInput;
 let postsDiv;
 
@@ -8,8 +6,7 @@ function callMessageBoard(){
     return;
 };
 
-function displayMessageBoard(content){
-    // console.log("LOADED MESSAGEBOARD WINDOW");
+function displayMessageBoard(content){    
     divMessageBoard.innerHTML = null;
     divMessageBoard.innerHTML = content;
     openWindows(divMessageBoard);
@@ -40,13 +37,11 @@ function mBoardUtilities(){
     keyboardFocusMboard();
 }
 
-function keyboardFocusMboard(){
-    // console.log("MBOARD FOCUS");
+function keyboardFocusMboard(){    
     if(document.getElementById("postInput") != null){
     window.onkeydown = function () { postInput.focus(); };
     postInput.addEventListener("keypress", function(event) {        
-        if (event.key === "Enter") {
-            // console.log("TESTING ENTER");
+        if (event.key === "Enter") {            
             event.preventDefault();
             document.getElementById("mboardSend").click();
         }
@@ -70,10 +65,9 @@ function postSend(){
 
 function messageBoardRefreshPosts(){
     if(document.getElementById("messageBoardDivPosts") != null){
-        getRequest("./mboard/refreshPosts", displayPostsInDiv);
+        getRequest("./mboard/reloadPosts", displayPostsInDiv);        
         return;
-    }else{
-        // console.log("POSTS DIV DOES NOT EXIST");
+    }else{        
         return;
     }
 };
@@ -86,8 +80,7 @@ function displayPostsInDiv(content){
         postsDiv.innerHTML = content;
         postsDiv.scrollTop = postsDiv.scrollHeight;
         return;
-    }else{
-        // console.log("POSTS DIV DOWS NOT EXIST");
+    }else{        
         return;
     }
 };

@@ -8,9 +8,6 @@ const clientEvents = require('./router_client_events');
 let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
 let messageError = messagesJson.error[0];
-let reqThreshTime = 4000;
-let reqThreshState = 0;
-let reqThreshTimer;
 
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
 
@@ -31,9 +28,7 @@ routerMessageBoard.get('/openBoard', async function (req, res) {
 
 routerMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
-    var post = (req.body.post);
-    // console.log("insert post");
-    // console.log(post);    
+    var post = (req.body.post); 
     let dbResponse = await db.dbInserPost(post);
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
     messageBoardLogger.clientMessageBoard(`
@@ -50,13 +45,13 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
 });
 
 function sendRefreshPostsEventToAllClients(){
-    clientEvents.sendEvents("messageBoardReloadPosts");
+    clientEvents.sendEvents("reloadPosts");
     return;
 };
 
-routerMessageBoard.get('/refreshPosts/', async (req, res) => {
+routerMessageBoard.get('/reloadPosts/', async (req, res) => {
     let posts = await db.dbGetAllPosts();
-    var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+    var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
     time: ${funcTime} 
     "SENT ALL POSTS TO CLIENT"
@@ -71,7 +66,7 @@ routerMessageBoard.get('/refreshPosts/', async (req, res) => {
 //------------------------CLIENT MESSAGEBOARD UI ACTIONS-------------------//
 
 routerMessageBoard.get('/windowIsOpen/', async(req,res) => {
-    var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+    var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
     time: ${funcTime} 
     "WINDOW IS OPEN"
@@ -80,7 +75,7 @@ routerMessageBoard.get('/windowIsOpen/', async(req,res) => {
 });
 
 routerMessageBoard.get('/windowIsClose/', async(req,res) => {
-    var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+    var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
     time: ${funcTime} 
     "WINDOW IS CLOSE"
@@ -88,14 +83,8 @@ routerMessageBoard.get('/windowIsClose/', async(req,res) => {
     res.end();
 });
 
-function reqThreshFunc(){
-    if(reqThreshState==1){return true};
-    if(reqThreshState==0){reqThreshState=1};
-    clearTimeout(reqThreshTimer);
-    reqThreshTimer = setTimeout(()=>{
-        reqThreshState = 0;
-    },reqThreshTime)
-    return false;
+function getTime(){
+    return new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
 };
 
 module.exports = routerMessageBoard;
