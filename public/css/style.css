@@ -180,7 +180,7 @@ p {
     width: fit-content;
     z-index: 40;
     bottom: 50%;
-    left: 0;
+    left: 1%;
     border-radius: 50%;
     border: 1px outset var(--border02);
     transition: 0.5s;
@@ -195,9 +195,9 @@ p {
 .floatMenuDiv p {
     z-index: 40;
     color: var(--text03);
-    font-size: 100%;
+    font-size: 1.6rem;
     margin: auto;
-    padding: 1rem;
+    padding: 0.6rem;
     color: yellow;
 }
 
@@ -361,8 +361,9 @@ p {
     display: flex;
     flex-direction: row;
     margin: auto;
-    bottom: 1rem;
-    margin-bottom: 1rem;
+    bottom: 0.5rem;
+    width: 80%;
+    position: relative;
 }
 
 .postInputTypes {
@@ -370,8 +371,9 @@ p {
     flex-direction: row;
     width: 100%;
     margin: auto;
-    bottom: 1rem;
-    margin-bottom: 1rem;
+    bottom: 0.5rem;
+    width: 80%;
+    position: relative;
 }
 
 .mboardButton {
@@ -409,6 +411,13 @@ p {
 
 .mboardButtonSendImage:active {
     border: 1px inset grey;
+}
+
+.uploadImg {
+    display: flex;
+    float: left;
+    background-color: blue;
+    border: 1px outset grey;
 }
 
 .messageBoardBottom {

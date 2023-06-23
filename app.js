@@ -134,10 +134,10 @@ console.log("System Startup Time : " + Date());
 
 app.use(express.static(__dirname + 'public'));
 app.use('/css', express.static(__dirname + '/public/css'));
-app.use('/js', express.static(__dirname + '/public/js'));
-app.use('/img', express.static(__dirname + '/public/img'));
-app.use('/report', express.static(__dirname + '/public/report'));
-app.use('/items', express.static(__dirname + '/public/img/items'));
+app.use('/js', sessionClassMW(120), express.static(__dirname + '/public/js'));
+app.use('/img', sessionClassMW(120), express.static(__dirname + '/public/img'));
+app.use('/report', sessionClassMW(120), express.static(__dirname + '/public/report'));
+app.use('/items', sessionClassMW(120), express.static(__dirname + '/public/img/items'));
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
 
 app.set('views', './views');

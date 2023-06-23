@@ -57,6 +57,8 @@ function postSend(){
 
 function postSendImage(){
     console.log("send image");
+    let t = JSON.stringify({'test':'test image send'});
+    postRequest('./insertImage', messageBoardRefreshPosts, t);
 };
 
 function messageBoardRefreshPosts(){

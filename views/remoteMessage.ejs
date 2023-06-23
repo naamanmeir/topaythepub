@@ -37,8 +37,14 @@
     </div>
 
     <div class="postInputTypes">
-        <div class="mboardButtonSendImage" id="mboardSendImage" onclick="postSendImage()">
-            <%= msgButtonPicture %>
+        <!-- <div class="mboardButtonSendImage" id="mboardSendImage" onclick="postSendImage()"> -->
+        <!-- </div> -->
+        <div class="uploadImg">
+            <form action="/insertImage/" method="POST" enctype="multipart/form-data">
+                <input type="file" name="imgUpload" text="<%=msgButtonBrowsePicture %>">
+                <input id="mboardSendImage" type="submit" value="<%=msgButtonSendPicture %>">
+            </form>
+            <div id="test" onclick="postSendImage()">tttttttt</div>
         </div>
     </div>
 

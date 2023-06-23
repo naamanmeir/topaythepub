@@ -75,7 +75,8 @@
             "remoteMessageBoardHeader": "להשאיר הודעה בפאב",
             "remoteMessageBoardPlaceholder": "לכתוב פה הודעה",
             "remoteMessageBoardButtonSendMessage": "שלח",
-            "remoteMessageBoardButtonSendPicture": "תמונה"
+            "remoteMessageBoardButtonBrowsePicture": "בחר תמונה",
+            "remoteMessageBoardButtonSendPicture": "שלח תמונה"
         }
     ],
     "sideMenu": [

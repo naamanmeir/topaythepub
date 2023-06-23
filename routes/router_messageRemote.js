@@ -2,6 +2,7 @@ const express = require('express');
 const routerRemoteMessageBoard = express.Router();
 const functions = require('../functions');
 const db = require('../db');
+const formidable = require('formidable');
 const clientEvents = require('./router_client_events');
 const {messageBoardLogger, actionsLogger, errorLogger} = require('../module/logger');
 let messagesJson = require('../messages.json');
@@ -16,7 +17,8 @@ routerRemoteMessageBoard.get('/', async function (req, res) {
         msgHeader:messageUi.remoteMessageBoardHeader,
         msgButtonSend:messageUi.remoteMessageBoardButtonSendMessage,        
         msgInputPlaceholder:messageUi.remoteMessageBoardPlaceholder,
-        msgButtonPicture:messageUi.remoteMessageBoardButtonSendPicture
+        msgButtonBrowsePicture:messageUi.remoteMessageBoardButtonBrowsePicture,
+        msgButtonSendPicture:messageUi.remoteMessageBoardButtonSendPicture
     });
 });
 
@@ -40,6 +42,39 @@ routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     return;
 });
 
+routerRemoteMessageBoard.post('/uploadPostImage', async (req, res) => {
+    console.log("TEST POST IMG UPLOAD ----------------")
+    const options = {
+        uploadDir: __dirname + '/../public/img/posts',
+        filter: function ({ name, originalFilename, mimetype }) {
+            return mimetype && mimetype.includes("image");
+        }
+    };
+    const form = formidable(options);
+    let newName;
+    let originalName;
+    form.parse(req, function (err, fields, files) {
+        newName = files.imgUpload.filepath;
+        originalName = (__dirname + '../public/img/posts/') + (files.imgUpload.originalFilename);
+        fs.rename(newName, originalName, () => {
+
+        });
+    });
+    functions.itemImgArray();
+    // res.redirect(req.get('referer'));
+    res.send(options);
+});
+
+routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
+    console.log("POST IMG UPLOAD ----------------")
+    res.send("OK");
+});
+
+routerRemoteMessageBoard.get('/insertImage', async (req, res) => {
+    console.log("GET IMG UPLOAD ----------------")
+    res.send("OK");
+});
+
 function sendRefreshPostsEventToAllClients(){
     clientEvents.sendEvents("reloadPosts");
     return;
@@ -61,14 +96,10 @@ routerRemoteMessageBoard.get('/reloadPosts/', async (req, res) => {
 
 //------------------------CLIENT REDIRECT EVENTS TO EVENTS ROUTER-------------------//
 
-
 routerRemoteMessageBoard.get('/events/', (req, res) => {    
     res.redirect('../events/')
 });
 
-routerRemoteMessageBoard.get('/reloadPosts/', (req, res) => {    
-    res.redirect('../reloadPosts/')
-});
 //------------------------CLIENT MESSAGEBOARD UI ACTIONS-------------------//
 
 routerRemoteMessageBoard.get('/windowIsOpen/', async(req,res) => {
