@@ -70,7 +70,8 @@ function postSend(){
 
 function messageBoardRefreshPosts(){
     if(document.getElementById("messageBoardDivPosts") != null){
-        getRequest("./mboard/refreshPosts", displayPostsInDiv);
+        getRequest("./mboard/reloadPosts", displayPostsInDiv);
+        console.log("ask for reload posts")
         return;
     }else{
         // console.log("POSTS DIV DOES NOT EXIST");

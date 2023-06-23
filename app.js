@@ -111,6 +111,9 @@ if(!production){
 
 var session;
 
+let clientsSSE = [];
+
+
 //--------------HELMET CONFIG------------------------//
 app.use(
   helmet({
@@ -285,8 +288,12 @@ app.use('/remoteMboard', sessionClassMW(120), validatorClient(), routerRemoteMes
 //-------------------------SERVER-----------------------------------//
 app.listen(port, () => console.info(`App ${appName} is listening on port ${port} at ${appMode} mode`));
 
-
 //-------------------------SOME UTILITIES-----------------------------------//
+
+function getTime(){
+  return new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+};
+
 
 //-----A simple dataSource that changes over time-----------------//
 let dataSource = 0;

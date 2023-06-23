@@ -398,7 +398,7 @@ function eventHandler(event) {
         // console.log("MATCH RELOAD ITEMS");
         populateProducts();
     }
-    if (JSON.parse(data) == "messageBoardReloadPosts") {
+    if (JSON.parse(data) == "reloadPosts") {
         // console.log("MATCH MESSAGE BOARD RELOAD POSTS");
         messageBoardRefreshPosts();
     }

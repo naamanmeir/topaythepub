@@ -4,7 +4,8 @@ window.addEventListener('load', loadUtiliti, true);
 function loadUtiliti() {
     // console.log("LOADED");
     messageBoardRefreshPosts();
-    mBoardUtilities();    
+    mBoardUtilities();
+    connectEventSource();
 };
 
 let postInput; 
@@ -55,8 +56,8 @@ function postSend(){
 };
 
 function messageBoardRefreshPosts(){
-    // console.log("REFRESH FROM REMOTE");
-    getRequest("./refreshPosts", displayPostsInDiv);
+    // console.log("RELOAD POSTS");
+    getRequest("./reloadPosts", displayPostsInDiv);
     return;
 };
 
@@ -66,11 +67,6 @@ function displayPostsInDiv(content){
     postsDiv.innerHTML = content;
     postsDiv.scrollTop = postsDiv.scrollHeight;
     return;    
-};
-
-function populateUtilities(){
-    // getRequest("./app/messages", buildMessage);
-    return;
 };
 
 //------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
@@ -246,7 +242,7 @@ function inputSanitize(input) {
 function connectEventSource() {
     if (!!window.EventSource) {
         var source = new EventSource('./events')
-
+        // console.log(source)
         source.addEventListener('message', function (event) {
             // console.log(event.data);
             eventHandler(event);
@@ -282,24 +278,21 @@ function eventHandler(event) {
         // console.log("MATCH REFRESH TERMINAL");
         refreshPage();
     }
-    if (JSON.parse(data) == "reloadItems") {
-        // console.log("MATCH RELOAD ITEMS");
-        populateProducts();
-    }
-    if (JSON.parse(data) == "messageBoardReloadPosts") {
+
+    if (JSON.parse(data) == "reloadPosts") {
         // console.log("MATCH MESSAGE BOARD RELOAD POSTS");
         messageBoardRefreshPosts();
     }
-    if (JSON.parse(data) == "0") {
-        data = data.replace(/^"(.*)"$/, '$1');
-        // console.log(data);
-        let conIndic = document.getElementById("conIndic");
-        conIndic.style.opacity = data;
-    }
-    if (JSON.parse(data) == "1") {
-        data = data.replace(/^"(.*)"$/, '$1');
-        // console.log(data);
-        let conIndic = document.getElementById("conIndic");
-        conIndic.style.opacity = data;
-    }
+    // if (JSON.parse(data) == "0") {
+    //     data = data.replace(/^"(.*)"$/, '$1');
+    //     // console.log(data);
+    //     let conIndic = document.getElementById("conIndic");
+    //     conIndic.style.opacity = data;
+    // }
+    // if (JSON.parse(data) == "1") {
+    //     data = data.replace(/^"(.*)"$/, '$1');
+    //     // console.log(data);
+    //     let conIndic = document.getElementById("conIndic");
+    //     conIndic.style.opacity = data;
+    // }
 };
