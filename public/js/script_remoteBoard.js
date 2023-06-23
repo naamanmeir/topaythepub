@@ -55,6 +55,10 @@ function postSend(){
     return;    
 };
 
+function postSendImage(){
+    console.log("send image");
+};
+
 function messageBoardRefreshPosts(){
     // console.log("RELOAD POSTS");
     getRequest("./reloadPosts", displayPostsInDiv);

@@ -71,7 +71,11 @@
             "mBoardPlaceHolder": "לכתוב פה הודעה",
             "mBoardButtonSend": "שלח הודעה",
             "mBoardFooter": "אפשר לכתוב פה דברים",
-            "mBoardCloseText": "סגור"
+            "mBoardCloseText": "סגור",
+            "remoteMessageBoardHeader": "להשאיר הודעה בפאב",
+            "remoteMessageBoardPlaceholder": "לכתוב פה הודעה",
+            "remoteMessageBoardButtonSendMessage": "שלח",
+            "remoteMessageBoardButtonSendPicture": "תמונה"
         }
     ],
     "sideMenu": [

@@ -167,10 +167,6 @@ dbInit();
 
 //------------------------------USER SESSION-------------------------------------//
 app.get('/', async (req, res) => {
-  // console.log("-----------------------------------");
-  // console.log(req);
-  // console.log("-----------------------------------");
-
   if (!req || req == null) { res.sendStatus(401).end(); };
   const clientIp = req.headers['x-forwarded-for'];
   clientLogger.clientAttempted(`

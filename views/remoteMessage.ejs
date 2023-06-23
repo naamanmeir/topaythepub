@@ -10,14 +10,16 @@
     <link rel="stylesheet" href="../css/style.css?version=#">
     <link rel="stylesheet" href="../css/header.css">
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-    <title>להשאיר הודעה בפאב</title>
+    <title>
+        <%= msgHeader %>
+    </title>
 </head>
 
 <div class="header no-border anim1">
     <div class="header no-border anim1">
-        <p id="headerAnimElement1" class="animElement animColor1">💚</p>
-        <p id="headerText" class="shadow1">להשאיר הודעה בפאב</p>
-        <p id="headerAnimElement2" class="animElement animColor2">💙</p>
+        <p id="headerText" class="shadow1">
+            <%= msgHeader %>
+        </p>
     </div>
 </div>
 
@@ -28,8 +30,16 @@
     <div class="send" id="divSend"></div>
 
     <div class="postInputDiv">
-        <textarea id="postInput" class="postInput" name="postInput" placeholder="לכתוב פה הודעה"></textarea>
-        <div class="mboardButton" id="mboardSend" onclick="postSend()">שלח הודעה</div>
+        <textarea id="postInput" class="postInput" name="postInput" placeholder="<%= msgInputPlaceholder %>"></textarea>
+        <div class="mboardButton" id="mboardSend" onclick="postSend()">
+            <%= msgButtonSend %>
+        </div>
+    </div>
+
+    <div class="postInputTypes">
+        <div class="mboardButtonSendImage" id="mboardSendImage" onclick="postSendImage()">
+            <%= msgButtonPicture %>
+        </div>
     </div>
 
     <script src="../js/script_remoteBoard.js"></script>

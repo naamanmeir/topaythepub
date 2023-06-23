@@ -2,9 +2,9 @@ const express = require('express');
 const routerRemoteMessageBoard = express.Router();
 const functions = require('../functions');
 const db = require('../db');
+const clientEvents = require('./router_client_events');
 const {messageBoardLogger, actionsLogger, errorLogger} = require('../module/logger');
 let messagesJson = require('../messages.json');
-const clientEvents = require('./router_client_events');
 let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
 let messageError = messagesJson.error[0];
@@ -12,7 +12,12 @@ let messageError = messagesJson.error[0];
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
 
 routerRemoteMessageBoard.get('/', async function (req, res) {
-    res.render('remoteMessage');
+    res.render('remoteMessage',{
+        msgHeader:messageUi.remoteMessageBoardHeader,
+        msgButtonSend:messageUi.remoteMessageBoardButtonSendMessage,        
+        msgInputPlaceholder:messageUi.remoteMessageBoardPlaceholder,
+        msgButtonPicture:messageUi.remoteMessageBoardButtonSendPicture
+    });
 });
 
 //------------------------CLIENT MESSAGEBOARD ACTIONS COMMANDS-------------------//
