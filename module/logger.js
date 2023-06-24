@@ -85,7 +85,7 @@ const messageBoardLogger = createLogger({
         simple(),
     ),
     transports: [
-        // new transports.Console({level:'clientMessageBoard'}),
+        new transports.Console({level:'clientMessageBoard'}),
         new transports.File({ filename: 'messageBoard.log' , level:'clientMessageBoard'})
     ]
 });
