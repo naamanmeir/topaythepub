@@ -125,6 +125,7 @@ function displayPostsInDiv(content){
     postsDiv = document.getElementById("divPosts");
     postsDiv.innerHTML = content;
     postsDiv.scrollTop = postsDiv.scrollHeight;
+    setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;}, 3000);
     return;    
 };
 

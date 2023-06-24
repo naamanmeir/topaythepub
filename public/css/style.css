@@ -335,10 +335,11 @@ p {
 .messageBoardWindow {
     z-index: 80;
     position: absolute;
+    display: block;
     top: 5%;
     left: 2.5vw;
     width: 90vw;
-    height: 90%;
+    height: 85%;
     margin: auto;
     background-color: var(--bg01);
     border: 1px solid var(--border02);
@@ -498,7 +499,8 @@ p {
 }
 
 .postDisplayImg img {
-    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .postDisplay p {

@@ -35,8 +35,19 @@ exports.buildHtml = function (messageUi,posts) {
         `
         <div class="postInputDiv">
             <textarea id="postInput" class="postInput" name="postInput" placeholder="${messageUi.mBoardPlaceHolder}"></textarea>
-            <div class="mboardButton" id="mboardSend" onclick="postSend()">${messageUi.mBoardButtonSend}</div>
+            <img class="postImgPreview" id="postImgPreview" src="#">            
         </div>
+
+        <div class="postInputTypes">
+            <div class="uploadImg">
+                <input id="imageSelector" type="file" name="imgUpload" text="" style="display: none;">
+                <input type="button" class="mboardButton" value="${messageUi.remoteMessageBoardButtonAddPicture}"
+                    onclick="document.getElementById('imageSelector').click();" id="imageAddButton" style="display: block;" />
+                <input type="button" class="mboardButton" value="${messageUi.remoteMessageBoardButtonRemovePicture}" onclick="imageCancel()" id="imageRemoveButton" style="display: none;" />
+            </div>            
+            <div class="mboardButton" id="mboardSend" onclick="postSend()">${messageUi.mBoardButtonSend}</div>            
+        </div>
+
         `;
 
     html +=

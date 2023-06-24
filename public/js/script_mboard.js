@@ -1,5 +1,6 @@
 let postInput;
 let postsDiv;
+let imageSelector;
 
 function callMessageBoard(){
     getRequest("./mboard/openBoard", displayMessageBoard);
@@ -24,6 +25,7 @@ function displayMessageBoard(content){
     postsDiv = document.getElementById("messageBoardDivPosts");
     postsDiv.addEventListener("scroll",resetAutoLogoutMboard);
     postsDiv.scrollTop = postsDiv.scrollHeight;
+    setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;}, 1000);
 };
 
 function closeMessageBoard(){
@@ -33,7 +35,9 @@ function closeMessageBoard(){
 
 function mBoardUtilities(){    
     postInput = document.getElementById("postInput");
-    postInput.addEventListener("input",resetAutoLogoutMboard)
+    postInput.addEventListener("input",resetAutoLogoutMboard);
+    imageSelector = document.getElementById("imageSelector");
+    imagePreview();
     keyboardFocusMboard();
 }
 
@@ -54,13 +58,70 @@ function resetAutoLogoutMboard(){
     resetAutoLogout();
 };
 
-function postSend(){
+function postSend(){    
     if (postInput.value == ""){return;};
+    let img;
     let post = postInput.value;
+    if(imageSelector.files[0]!=null){        
+        img = imageSelector.files[0].name;
+        postSendImage();
+        return;
+    }
+    let postJSON = JSON.stringify({
+        'post': post,
+        'img': img
+    });    
     postInput.value = "";
-    let postJSON = JSON.stringify({"post": post});
-    postRequest('./mboard/insertPost', window.parent.displayMessageBoard, postJSON);
+    imageSelector.value = "";
+    imageCancel();
+    imagePreview();
+    postRequest('./mboard/insertPost', window.parent.displayMessageBoard, postJSON);    
     return;    
+};
+
+function postSendImage(){
+    if (postInput.value == ""){return;};    
+    let post = postInput.value;
+    const formData = new FormData();    
+    formData.append("img",imageSelector.files[0]);
+    formData.append("post",post);
+    const imgSendResponse = fetch( './mboard/insertImage', {
+        method: 'POST',
+        body: formData
+  });
+  postInput.value = "";
+  imageSelector.value = "";
+  imageCancel();
+  imagePreview();
+  return;
+};
+
+function imagePreview(){    
+    var postImg = document.getElementById('postImgPreview');
+    var imageAddButton = document.getElementById('imageAddButton');
+    var imageRemoveButton = document.getElementById('imageRemoveButton');
+    postImg.style.display = "none";
+    imageSelector.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            imageAddButton.style.display = "block";
+            imageRemoveButton.style.display = "none";
+            postImg.onload = () => {
+                URL.revokeObjectURL(postImg.src);
+                imageAddButton.style.display = "none";
+                imageRemoveButton.style.display = "block";
+            }
+            postImg.src = URL.createObjectURL(this.files[0]);
+            postImg.style.display = "block";            
+        }
+    });
+};
+
+function imageCancel(){    
+    var postImg = document.getElementById('postImgPreview');
+    postImg.style.display = "none";
+    imageSelector.value = "";
+    imageAddButton.style.display = "block";
+    imageRemoveButton.style.display = "none";
 };
 
 function messageBoardRefreshPosts(){
