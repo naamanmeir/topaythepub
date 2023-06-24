@@ -103,12 +103,7 @@ async function insertPostWithImage(req,res,post,user,image){
     res.end();
     sendRefreshPostsEventToAllClients();
     return; 
-}
-
-// routerRemoteMessageBoard.get('/insertImage', async (req, res) => {
-//     console.log("GET IMG UPLOAD ----------------")
-//     res.send("OK");
-// });
+};
 
 function sendRefreshPostsEventToAllClients(){
     clientEvents.sendEvents("reloadPosts");
