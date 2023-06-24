@@ -138,6 +138,7 @@ exports.dbCreateTablePosts = async function () {
         "`date` DATE,"+
         "`user` INT,"+
         "`post` TEXT(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,"+
+        "`img` VARCHAR(1024),"+
         "PRIMARY KEY (`postid`)"+
         ");"
       )
@@ -729,11 +730,12 @@ exports.dbGetProductDetailsById = async function (itemId) {
 
 //----------------------MESSAGE BOARD POSTS---------------------//
 
-exports.dbInserPost = async function (post,user){
-  if (user == null){user=0}
-  let sql = ('INSERT INTO '+tablePosts+' (user, post) VALUES (?);');
+exports.dbInsertPost = async function (post,user,img){
+  if (user == null){user=0}  
+  if (img == null){img=0}
+  let sql = ('INSERT INTO '+tablePosts+' (user, post,img) VALUES (?);');
   let values = [
-    [user,post]
+    [user,post,img]
   ];
   let messageReturn = await pool.query(sql,values);
   return messageReturn;

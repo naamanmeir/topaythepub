@@ -3,13 +3,16 @@
 window.addEventListener('load', loadUtiliti, true);
 function loadUtiliti() {
     // console.log("LOADED");
+    imageSelector = document.getElementById("imageSelector");
     messageBoardRefreshPosts();
     mBoardUtilities();
     connectEventSource();
+    imagePreview();
 };
 
 let postInput; 
 let postsDiv;
+let imageSelector;
 
 function callMessageBoard(){
     getRequest("./mboard/openBoard", displayMessageBoard);
@@ -45,14 +48,70 @@ function resetAutoLogoutMboard(){
     resetAutoLogout();
 };
 
-function postSend(){
+function postSend(){    
     if (postInput.value == ""){return;};
+    let img;
     let post = postInput.value;
+    if(imageSelector.files[0]!=null){        
+        img = imageSelector.files[0].name;
+        postSendImage();
+        return;
+    }
+    let postJSON = JSON.stringify({
+        'post': post,
+        'img': img
+    });    
     postInput.value = "";
-    let postJSON = JSON.stringify({"post": post});
-    postRequest('./insertPost', messageBoardRefreshPosts, postJSON);
-    // console.log("INSERT FROM REMOTE")
+    imageSelector.value = "";
+    imageCancel();
+    imagePreview();
+    postRequest('./insertPost', messageBoardRefreshPosts, postJSON);    
     return;    
+};
+
+function postSendImage(){
+    if (postInput.value == ""){return;};    
+    let post = postInput.value;
+    const formData = new FormData();    
+    formData.append("img",imageSelector.files[0]);
+    formData.append("post",post);
+    const imgSendResponse = fetch( './insertImage', {
+        method: 'POST',
+        body: formData
+  });
+  postInput.value = "";
+  imageSelector.value = "";
+  imageCancel();
+  imagePreview();
+  return;
+};
+
+function imagePreview(){    
+    var postImg = document.getElementById('postImgPreview');
+    var imageAddButton = document.getElementById('imageAddButton');
+    var imageRemoveButton = document.getElementById('imageRemoveButton');
+    postImg.style.display = "none";
+    imageSelector.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            imageAddButton.style.display = "block";
+            imageRemoveButton.style.display = "none";
+            postImg.onload = () => {
+                URL.revokeObjectURL(postImg.src);
+                imageAddButton.style.display = "none";
+                imageRemoveButton.style.display = "block";
+            }
+            postImg.src = URL.createObjectURL(this.files[0]);
+            postImg.style.display = "block";            
+        }
+    });
+};
+
+function imageCancel(){    
+    var postImg = document.getElementById('postImgPreview');
+    postImg.style.display = "none";
+    imageSelector.value = "";
+    imageAddButton.style.display = "block";
+    imageRemoveButton.style.display = "none";
 };
 
 function messageBoardRefreshPosts(){

@@ -29,7 +29,7 @@ routerMessageBoard.get('/openBoard', async function (req, res) {
 routerMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
     var post = (req.body.post); 
-    let dbResponse = await db.dbInserPost(post);
+    let dbResponse = await db.dbInsertPost(post);
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
     messageBoardLogger.clientMessageBoard(`
     time: ${funcTime} 

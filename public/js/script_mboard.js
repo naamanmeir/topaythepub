@@ -79,6 +79,7 @@ function displayPostsInDiv(content){
         let postsDiv = document.getElementById("messageBoardDivPosts");
         postsDiv.innerHTML = content;
         postsDiv.scrollTop = postsDiv.scrollHeight;
+        setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;}, 3000);
         return;
     }else{        
         return;

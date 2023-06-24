@@ -69,9 +69,9 @@ const port = appPort;
 
 app.set('trust proxy', 1);
 
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false, limit:'50mb' }));
 
 //--------------SESSION CONFIG------------------------//
 
@@ -122,6 +122,7 @@ app.use(
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
         "script-src": ["'self'", "'unsafe-inline'", "'unsafe-hashes'"],
         "script-src-attr": ["'self'", "'unsafe-inline'"],
+        "img-src": ["'self'", "blob: https: data:"],
       },
     },
   })
@@ -134,10 +135,10 @@ console.log("System Startup Time : " + Date());
 
 app.use(express.static(__dirname + 'public'));
 app.use('/css', express.static(__dirname + '/public/css'));
-app.use('/js', express.static(__dirname + '/public/js'));
-app.use('/img', express.static(__dirname + '/public/img'));
-app.use('/report', express.static(__dirname + '/public/report'));
-app.use('/items', express.static(__dirname + '/public/img/items'));
+app.use('/js', sessionClassMW(120), express.static(__dirname + '/public/js'));
+app.use('/img', sessionClassMW(120), express.static(__dirname + '/public/img'));
+app.use('/report', sessionClassMW(120), express.static(__dirname + '/public/report'));
+app.use('/items', sessionClassMW(120), express.static(__dirname + '/public/img/items'));
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
 
 app.set('views', './views');
@@ -167,10 +168,6 @@ dbInit();
 
 //------------------------------USER SESSION-------------------------------------//
 app.get('/', async (req, res) => {
-  // console.log("-----------------------------------");
-  // console.log(req);
-  // console.log("-----------------------------------");
-
   if (!req || req == null) { res.sendStatus(401).end(); };
   const clientIp = req.headers['x-forwarded-for'];
   clientLogger.clientAttempted(`
