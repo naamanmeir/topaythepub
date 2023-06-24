@@ -3,6 +3,7 @@ const routerRemoteMessageBoard = express.Router();
 const functions = require('../functions');
 const db = require('../db');
 const fs = require('fs');
+const path = require('path');
 const formidable = require('formidable');
 const clientEvents = require('./router_client_events');
 const {messageBoardLogger, actionsLogger, errorLogger} = require('../module/logger');
@@ -28,6 +29,10 @@ routerRemoteMessageBoard.get('/', async function (req, res) {
 routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
     var post = (req.body.post);
+    if(req.body.img || req.body.img != ""){
+        let img = req.body.img;
+        console.log("ADDING IMG TO POST: "+img);
+    };
     console.log(req.body);
     let dbResponse = await db.dbInserPost(post);
     var funcTime = getTime();
@@ -44,10 +49,26 @@ routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     return;
 });
 
+function renameFileIfExist(file){
+    console.log("CHECKING EXISTS : "+file);
+    if(fs.existsSync(file)){
+        console.log("file exists so its being renamed");
+        let fileNameDir = path.parse(file).dir;
+        let fileNameBase = path.parse(file).name;
+        let fileNameExt = path.parse(file).ext;
+        let currentTIme = Date.now();
+        let nameAfterRename = fileNameDir + "/" + fileNameBase + currentTIme + "." + fileNameExt;
+        console.log(nameAfterRename);
+        return nameAfterRename;
+        }else{
+        console.log("file not exists")
+        return file;
+        }
+    };
+
 routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
-    console.log("TEST POST IMG UPLOAD ----------------")
     const options = {
-        uploadDir: __dirname + '/../public/img/posts',
+        uploadDir: __dirname + '/../public/img/posts/',
         filter: function ({ name, originalFilename, mimetype }) {
             return mimetype && mimetype.includes("image");
         }
@@ -56,16 +77,14 @@ routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
     let newName;
     let originalName;
     form.parse(req, function (err, fields, files) {
-        newName = files.imgUpload.filepath;
-        originalName = (__dirname + '../public/img/posts/') + (files.imgUpload.originalFilename);
-        fs.rename(newName, originalName, () => {
-
+        newName = files.img.filepath;
+        originalName = (__dirname + '/../public/img/posts/') + (files.img.originalFilename);
+        originalName = renameFileIfExist(originalName);
+        fs.rename(newName, originalName, function(err) {
+            if (err) console.log(err);
         });
     });
-    functions.itemImgArray();
-    // res.redirect(req.get('referer'));
     res.end();
-    // res.send(options);
 });
 
 // routerRemoteMessageBoard.post('/insertImage', async (req, res) => {

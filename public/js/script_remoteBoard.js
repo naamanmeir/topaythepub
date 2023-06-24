@@ -50,27 +50,19 @@ function resetAutoLogoutMboard(){
 
 function postSend(){    
     if (postInput.value == ""){return;};
-    let formData = new FormData();
+    let img;
     let post = postInput.value;
     if(imageSelector.files[0]!=null){        
         console.log("is with img");
-        formData.append('img',imageSelector.files[0]);
-        formData.append('post',post);        
-        for (var pair of formData.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
-        }
-        postRequest('./insertPost', messageBoardRefreshPosts, formData);
-        postInput.value = "";
-        imageSelector.value = "";
-        imagePreview();
-        return;
+        console.log(imageSelector.files[0].name);
+        img = imageSelector.files[0].name;
+        postSendImage();
     }
     let postJSON = JSON.stringify({
         'post': post,
-        'img': formData
+        'img': img
     });
     console.log(postJSON);
-
     postInput.value = "";
     imageSelector.value = "";
     imagePreview();
@@ -81,11 +73,16 @@ function postSend(){
 
 function postSendImage(){
     console.log("send image");
-    // let imageSelector = document.getElementById("imageSelector");
     const formData = new FormData();
-    formData.append("imgUpload",imageSelector.files[0]);
-    let imgData = JSON.stringify({'body':formData});
-    postRequest('./insertImage', messageBoardRefreshPosts, imgData);
+    console.log(imageSelector.files[0]);
+    formData.append("img",imageSelector.files[0]);
+    // let imgData = JSON.stringify({'body':formData});
+    const imgSendResponse = fetch( './insertImage', {
+        method: 'POST',
+        body: formData
+  });
+  console.log(imgSendResponse)
+    // postRequest('./insertImage', messageBoardRefreshPosts, imgData);
 };
 
 function imagePreview(){
