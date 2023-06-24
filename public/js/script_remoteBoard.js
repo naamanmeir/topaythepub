@@ -53,40 +53,38 @@ function postSend(){
     let img;
     let post = postInput.value;
     if(imageSelector.files[0]!=null){        
-        console.log("is with img");
-        console.log(imageSelector.files[0].name);
         img = imageSelector.files[0].name;
         postSendImage();
+        return;
     }
     let postJSON = JSON.stringify({
         'post': post,
         'img': img
-    });
-    console.log(postJSON);
+    });    
     postInput.value = "";
     imageSelector.value = "";
     imagePreview();
-    postRequest('./insertPost', messageBoardRefreshPosts, postJSON);
-    // console.log("INSERT FROM REMOTE")    
+    postRequest('./insertPost', messageBoardRefreshPosts, postJSON);    
     return;    
 };
 
 function postSendImage(){
-    console.log("send image");
-    const formData = new FormData();
-    console.log(imageSelector.files[0]);
+    if (postInput.value == ""){return;};    
+    let post = postInput.value;
+    const formData = new FormData();    
     formData.append("img",imageSelector.files[0]);
-    // let imgData = JSON.stringify({'body':formData});
+    formData.append("post",post);
     const imgSendResponse = fetch( './insertImage', {
         method: 'POST',
         body: formData
   });
-  console.log(imgSendResponse)
-    // postRequest('./insertImage', messageBoardRefreshPosts, imgData);
+  postInput.value = "";
+  imageSelector.value = "";
+  imagePreview();
+  return;
 };
 
-function imagePreview(){
-    // let imageSelector = document.getElementById("imageSelector");
+function imagePreview(){    
     var postImg = document.getElementById('postImgPreview');
     postImg.style.display = "none";
     imageSelector.addEventListener('change', function() {

@@ -17,7 +17,11 @@ exports.buildHtml = function (messageUi,posts) {
         `;
 
     html += `<div class="posts" id="messageBoardDivPosts">`;
-        for (i = 0; i < posts.length; i++) {        
+        for (i = 0; i < posts.length; i++) {            
+            if(posts[i].img != 0){
+                let img = JSON.parse(posts[i].img);
+                html += `<div class="postDisplay postDisplayImg" id="postImg${i}"><img src="./img/posts/${img}"></div>`
+            };
             if(i%2==0){
                 html += `<div class="postDisplay evenPost" id="post${i}"><p>${posts[i].post}</p></div>`
             }else{

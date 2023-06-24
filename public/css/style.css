@@ -363,7 +363,7 @@ p {
     margin: auto;
     bottom: 0.5rem;
     width: 80%;
-    position: relative;
+    position: absolute;
 }
 
 .postInputTypes {
@@ -494,6 +494,13 @@ p {
     word-wrap: break-word;
     hyphens: auto;
     white-space: normal;
+}
+
+.postDisplayImg {
+    max-width: 10rem;
+    max-height: 10rem;
+    margin-bottom: 2rem;
+    border: 1px solid green;
 }
 
 .postDisplay p {

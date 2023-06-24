@@ -29,12 +29,10 @@ routerRemoteMessageBoard.get('/', async function (req, res) {
 routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
     var post = (req.body.post);
-    if(req.body.img || req.body.img != ""){
-        let img = req.body.img;
-        console.log("ADDING IMG TO POST: "+img);
-    };
-    console.log(req.body);
-    let dbResponse = await db.dbInserPost(post);
+    var img;
+    // var user = JSON.stringify("");
+    // post = JSON.stringify(post);
+    let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
     time: ${funcTime} 
@@ -52,16 +50,14 @@ routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
 function renameFileIfExist(file){
     console.log("CHECKING EXISTS : "+file);
     if(fs.existsSync(file)){
-        console.log("file exists so its being renamed");
         let fileNameDir = path.parse(file).dir;
         let fileNameBase = path.parse(file).name;
         let fileNameExt = path.parse(file).ext;
-        let currentTIme = Date.now();
-        let nameAfterRename = fileNameDir + "/" + fileNameBase + currentTIme + "." + fileNameExt;
+        let currentTime = Date.now();
+        let nameAfterRename = fileNameDir + "/" + fileNameBase + currentTime + fileNameExt;
         console.log(nameAfterRename);
         return nameAfterRename;
-        }else{
-        console.log("file not exists")
+        }else{        
         return file;
         }
     };
@@ -76,6 +72,8 @@ routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
     const form = formidable(options);
     let newName;
     let originalName;
+    let post;
+    let finalImageName;
     form.parse(req, function (err, fields, files) {
         newName = files.img.filepath;
         originalName = (__dirname + '/../public/img/posts/') + (files.img.originalFilename);
@@ -83,9 +81,33 @@ routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
         fs.rename(newName, originalName, function(err) {
             if (err) console.log(err);
         });
+        post = fields.post;
+        finalImageName = (path.parse(originalName).name)+path.parse(originalName).ext;        
+        console.log(finalImageName)
+        
+        finalImageName = JSON.stringify(finalImageName);
+        
+        console.log(finalImageName);
+        insertPostWithImage(req,res,post,null,finalImageName)
     });
-    res.end();
+   
 });
+
+async function insertPostWithImage(req,res,post,user,image){
+    let dbResponse = await db.dbInsertPost(post,user,image);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED POST"
+    `); 
+    let posts = await db.dbGetAllPosts();
+    let renderMessageBoard = require("../module/html/messageBoard/boardWindow");
+    let html = renderMessageBoard.buildHtml(messageUi,posts);
+    res.json(html);
+    res.end();
+    sendRefreshPostsEventToAllClients();
+    return; 
+}
 
 // routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
 //     console.log("POST IMG UPLOAD ----------------")
