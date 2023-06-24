@@ -63,6 +63,7 @@ function postSend(){
     });    
     postInput.value = "";
     imageSelector.value = "";
+    imageCancel();
     imagePreview();
     postRequest('./insertPost', messageBoardRefreshPosts, postJSON);    
     return;    
@@ -80,22 +81,37 @@ function postSendImage(){
   });
   postInput.value = "";
   imageSelector.value = "";
+  imageCancel();
   imagePreview();
   return;
 };
 
 function imagePreview(){    
     var postImg = document.getElementById('postImgPreview');
+    var imageAddButton = document.getElementById('imageAddButton');
+    var imageRemoveButton = document.getElementById('imageRemoveButton');
     postImg.style.display = "none";
     imageSelector.addEventListener('change', function() {
         if (this.files && this.files[0]) {
+            imageAddButton.style.display = "block";
+            imageRemoveButton.style.display = "none";
             postImg.onload = () => {
-                URL.revokeObjectURL(postImg.src);                
-            }      
+                URL.revokeObjectURL(postImg.src);
+                imageAddButton.style.display = "none";
+                imageRemoveButton.style.display = "block";
+            }
             postImg.src = URL.createObjectURL(this.files[0]);
-            postImg.style.display = "block";
+            postImg.style.display = "block";            
         }
     });
+};
+
+function imageCancel(){    
+    var postImg = document.getElementById('postImgPreview');
+    postImg.style.display = "none";
+    imageSelector.value = "";
+    imageAddButton.style.display = "block";
+    imageRemoveButton.style.display = "none";
 };
 
 function messageBoardRefreshPosts(){

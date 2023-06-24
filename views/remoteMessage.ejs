@@ -3,8 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" id="viewport"
-        content="width=window-width, height=window-height, initial-scale=1.0, user-scalable=no" />
+    <meta name="viewport" id="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="stylesheet" href="../css/style.css?version=#">
@@ -24,38 +23,28 @@
 </div>
 
 <body oncontextmenu="return false;">
-
     <div class="posts" id="divPosts"></div>
-
     <div class="send" id="divSend"></div>
-
     <div class="postInputDiv">
         <textarea id="postInput" class="postInput" name="postInput" placeholder="<%= msgInputPlaceholder %>"></textarea>
         <img class="postImgPreview" id="postImgPreview" src="#">
+    </div>
+
+    <div class="postInputTypes">
+        <div class="uploadImg">
+            <input id="imageSelector" type="file" name="imgUpload" text="" style="display: none;">
+            <input type="button" class="mboardButton" value="<%=msgButtonAddPicture %>"
+                onclick="document.getElementById('imageSelector').click();" id="imageAddButton"
+                style="display: block;" />
+            <input type="button" class="mboardButton" value="<%=msgButtonRemovePicture %>" onclick="imageCancel()"
+                id="imageRemoveButton" style="display: none;" />
+        </div>
         <div class="mboardButton" id="mboardSend" onclick="postSend()">
             <%= msgButtonSend %>
         </div>
     </div>
-
-    <div class="postInputTypes">
-        <!-- <div class="mboardButtonSendImage" id="mboardSendImage" onclick="postSendImage()"> -->
-        <!-- </div> -->
-        <div class="uploadImg">
-            <!-- <form action="insertImage" method="POST" enctype="multipart/form-data"> -->
-            <input id="imageSelector" type="file" name="imgUpload" text="" style="display: none;">
-            <input type="button" value="<%=msgButtonBrowsePicture %>"
-                onclick="document.getElementById('imageSelector').click();" />
-
-            <!-- <input id="mboardSendImage" type="submit" value="<%=msgButtonSendPicture %>"> -->
-            <!-- </form> -->
-            <!-- <div id="test" onclick="postSendImage()">tttttttt</div> -->
-        </div>
-    </div>
-
     <script src="../js/script_remoteBoard.js"></script>
-
     </div>
-
 </body>
 
 </html>
