@@ -1,6 +1,8 @@
 let postInput;
 let postsDiv;
 let imageSelector;
+let progBarDiv;
+let progBar;
 
 function callMessageBoard(){
     getRequest("./mboard/openBoard", displayMessageBoard);
@@ -38,6 +40,7 @@ function mBoardUtilities(){
     postInput.addEventListener("input",resetAutoLogoutMboard);
     imageSelector = document.getElementById("imageSelector");
     imagePreview();
+    createProgressBar();
     keyboardFocusMboard();
 }
 
@@ -85,15 +88,34 @@ function postSendImage(){
     const formData = new FormData();    
     formData.append("img",imageSelector.files[0]);
     formData.append("post",post);
-    const imgSendResponse = fetch( './mboard/insertImage', {
-        method: 'POST',
-        body: formData
-  });
-  postInput.value = "";
-  imageSelector.value = "";
-  imageCancel();
-  imagePreview();
-  return;
+    var req = new XMLHttpRequest();       
+    req.upload.addEventListener("progress", updateProgress);
+    req.open("POST", "./mboard/insertImage");
+    req.send(formData);
+    postInput.value = "";
+    imageSelector.value = "";
+    imageCancel();
+    imagePreview();
+    return;
+};
+
+function resetProgressBar(){
+    progBar.style.width = "0px";
+};
+
+function updateProgress(e){
+    progBar.style.width = (((e.loaded/e.total)*100))+ "%";
+    if((e.loaded/e.total)==1){
+        console.log("FNISHSISH")
+        setTimeout(resetProgressBar,2000);
+    };
+};
+
+function createProgressBar(){    
+    progBarDiv = document.getElementById("progBarDiv");
+    progBar = document.getElementById("progBar");
+    progBarDiv.className = "progressBarDiv";
+    progBar.className = "progressBar";
 };
 
 function imagePreview(){    

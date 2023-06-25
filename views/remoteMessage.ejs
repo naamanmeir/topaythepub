@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="stylesheet" href="../css/style.css?version=#">
     <link rel="stylesheet" href="../css/header.css">
-    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
     <title>
         <%= msgHeader %>
     </title>
@@ -25,9 +25,13 @@
 <body oncontextmenu="return false;">
     <div class="posts" id="divPosts"></div>
     <!-- <div class="send" id="divSend"></div> -->
-    <div class="postInputDiv">
+    <div class="postInputDiv" id="postInputDiv">
         <textarea id="postInput" class="postInput" name="postInput" placeholder="<%= msgInputPlaceholder %>"></textarea>
         <img class="postImgPreview" id="postImgPreview" src="#">
+    </div>
+
+    <div id="progBarDiv" class="progBarDiv">
+        <div id="progBar" class="progBar"></div>
     </div>
 
     <div class="postInputTypes">
