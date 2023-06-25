@@ -37,6 +37,10 @@ exports.buildHtml = function (messageUi,posts) {
             <textarea id="postInput" class="postInput" name="postInput" placeholder="${messageUi.mBoardPlaceHolder}"></textarea>
             <img class="postImgPreview" id="postImgPreview" src="#">            
         </div>
+        
+        <div id="progBarDiv" class="progBarDiv">
+            <div id="progBar" class="progBar"></div>
+        </div>
 
         <div class="postInputTypes">
             <div class="uploadImg">

@@ -365,10 +365,10 @@ p {
     display: flex;
     flex-direction: row;
     margin: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
     margin-right: 5%;
-    bottom: 0.2rem;
     width: 95%;
-    /* position: absolute; */
 }
 
 .postInputTypes {
@@ -376,9 +376,10 @@ p {
     flex-direction: row;
     width: 80%;
     margin: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
     bottom: 0.5rem;
     width: 80%;
-    /* position: relative; */
 }
 
 .mboardButton {
@@ -390,7 +391,6 @@ p {
     left: 0px;
     margin: auto;
     margin-left: 0px;
-    /* padding: 0.5rem; */
     float: center;
     text-align: center;
     justify-content: center;
@@ -518,6 +518,23 @@ p {
 
 .evenPost {
     background-color: #103b4fc1;
+}
+
+.progressBarDiv {
+    width: 80%;
+    margin: auto;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    height: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    /* position: absolute; */
+}
+
+.progressBar {
+    background-color: green;
+    height: 10px;
+    width: 0px;
 }
 
 .header {

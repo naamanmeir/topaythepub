@@ -1,18 +1,18 @@
-// console.log("MESSAGE BOARD SCRIPT INIT");
-
 window.addEventListener('load', loadUtiliti, true);
-function loadUtiliti() {
-    // console.log("LOADED");
+function loadUtiliti() {    
     imageSelector = document.getElementById("imageSelector");
     messageBoardRefreshPosts();
     mBoardUtilities();
     connectEventSource();
     imagePreview();
+    createProgressBar();
 };
 
 let postInput; 
 let postsDiv;
 let imageSelector;
+let progBarDiv;
+let progBar;
 
 function callMessageBoard(){
     getRequest("./mboard/openBoard", displayMessageBoard);
@@ -25,8 +25,7 @@ function closeMessageBoard(){
 };
 
 function mBoardUtilities(){    
-    postInput = document.getElementById("postInput");
-    // postInput.addEventListener("input",resetAutoLogoutMboard)
+    postInput = document.getElementById("postInput");    
 }
 
 function keyboardFocusMboard(){
@@ -75,15 +74,34 @@ function postSendImage(){
     const formData = new FormData();    
     formData.append("img",imageSelector.files[0]);
     formData.append("post",post);
-    const imgSendResponse = fetch( './insertImage', {
-        method: 'POST',
-        body: formData
-  });
-  postInput.value = "";
-  imageSelector.value = "";
-  imageCancel();
-  imagePreview();
-  return;
+    var req = new XMLHttpRequest();       
+    req.upload.addEventListener("progress", updateProgress);
+    req.open("POST", "./insertImage");
+    req.send(formData);
+    postInput.value = "";
+    imageSelector.value = "";
+    imageCancel();
+    imagePreview();
+    return;
+};
+
+function resetProgressBar(){
+    progBar.style.width = "0px";
+};
+
+function updateProgress(e){
+    progBar.style.width = (((e.loaded/e.total)*100))+ "%";
+    if((e.loaded/e.total)==1){
+        console.log("FNISHSISH")
+        setTimeout(resetProgressBar,2000);
+    };
+};
+
+function createProgressBar(){    
+    progBarDiv = document.getElementById("progBarDiv");
+    progBar = document.getElementById("progBar");
+    progBarDiv.className = "progressBarDiv";
+    progBar.className = "progressBar";    
 };
 
 function imagePreview(){    
@@ -152,19 +170,14 @@ async function getRequest(url, callback, data) {
 //------------------------SEND POST REQUEST TO: url WITH -> callback function AND APPENDED data----------------
 async function postRequest(url, callback, data) {
     if (data == null) { return; }
-    var xhttp = new XMLHttpRequest();
-    // console.log("SENDING POST REQUEST TO: " + url);
-    xhttp.open("POST", url, true);
-    xhttp.setRequestHeader("Content-Type", "application/json");
-    // console.log("SENDING DATA AS JSON: " + data);
+    var xhttp = new XMLHttpRequest();    
+    xhttp.open("POST", url, true);    
+    xhttp.setRequestHeader("Content-Type", "application/json");    
     xhttp.send(data);
     xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {            
-            // console.log("RESPONSE: ");
-            // console.log(this.response);
+        if (this.readyState == 4 && this.status == 200) {                        
             if(isJson(this.response)){
-                let parsedReponse = JSON.parse(this.response);
-                // console.log(parsedReponse);            
+                let parsedReponse = JSON.parse(this.response);                
                 if (parsedReponse.errorClient){
                     window.parent.openMessageWindow(parsedReponse.errorClient)
                 };
@@ -177,7 +190,30 @@ async function postRequest(url, callback, data) {
             return this.response;
         };
     };
+};
 
+async function postRequestNoJson(url, callback, data) {
+    if (data == null) { return; }
+    var xhttp = new XMLHttpRequest();    
+    xhttp.open("POST", url, true);    
+    xhttp.setRequestHeader("Content-Type", "application/json");    
+    xhttp.send(data);
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {                        
+            if(isJson(this.response)){
+                let parsedReponse = JSON.parse(this.response);                
+                if (parsedReponse.errorClient){
+                    window.parent.openMessageWindow(parsedReponse.errorClient)
+                };
+                if (callback != null) { callback(parsedReponse); }
+                return parsedReponse;
+            }else{
+                return;
+            }
+            if (callback != null) { callback(this.response); }
+            return this.response;
+        };
+    };
 };
 
 function isJson(input) {
