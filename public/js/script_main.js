@@ -1,5 +1,6 @@
 //-----------------DEVELOPE PARAMS-----------------//
 const timerRefreshMainDivsTime = 9995000;
+const mainDivsAutoRefreshIntervalTime = 600000;
 const timerRefreshContentTime = 9995000;
 const timerRefreshElementsTime = 9995000;
 const timerRefreshCssTime = 9995000;
@@ -35,6 +36,7 @@ let appendedScriptObjectContent;
 window.addEventListener('load', loadUtiliti, true);
 function loadUtiliti() {
     populateUtilities();
+    mainDivsAutoRefreshInterval();
     // populateMainDivs();
     // populateElements();
 };
@@ -50,8 +52,16 @@ function populateMainDivs() {
     getRequest("./app/sideMenu", displaySideMenu);
     getRequest("./app/floatMenu", displayFloatMenu);
     getRequest("./app/content", displayContent);
-    getRequest("./app/footer", displayFooter);
+    getRequest("./app/footer", displayFooter);    
     return;
+};
+
+function mainDivsAutoRefreshInterval(){
+    setInterval(mainDivsRefreshAction,mainDivsAutoRefreshIntervalTime);
+};
+
+function mainDivsRefreshAction(){
+    getRequest("./app/header", displayHeader);
 };
 
 function populateContent() {
@@ -74,12 +84,7 @@ function buildMessage(content) {
 
 function displayHeader(content) {
     divHeader.innerHTML = (content);
-    // let headerText = document.getElementById("headerText");
-    // let headerAnimElement1 = document.getElementById("headerAnimElement1");
-    // let headerAnimElement2 = document.getElementById("headerAnimElement2");
-    // headerText.innerText = messageUi.headerText;
-    // headerAnimElement1.innerText = messageUi.headerAnimElement1;
-    // headerAnimElement2.innerText = messageUi.headerAnimElement2;
+
 };
 function displayTopMenu(content) {
     divTopMenu.innerHTML = (content);    

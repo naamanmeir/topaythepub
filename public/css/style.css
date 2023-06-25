@@ -335,11 +335,13 @@ p {
 .messageBoardWindow {
     z-index: 80;
     position: absolute;
-    display: block;
+    display: inline-block;
     top: 5%;
-    left: 2.5vw;
-    width: 90vw;
-    height: 85%;
+    left: 5%;
+    right: 5%;
+    width: 85%;
+    max-width: 650px;
+    height: 92%;
     margin: auto;
     background-color: var(--bg01);
     border: 1px solid var(--border02);
