@@ -87,7 +87,21 @@
             "remoteMessageBoardButtonErrorMessage": "לא",
             "remoteMessageBoardButtonAddPicture": "צרף תמונה",
             "remoteMessageBoardButtonRemovePicture": "בטל תמונה",
-            "chatbotName1": "דייויד"
+            "chatbotName1": "דייויד",
+            "chatbotName1Variations": [
+                "דייויד",
+                "דיויד",
+                "דויד",
+                "דיוד",
+                "דיוייד",
+                "גייויד",
+                "גיויד",
+                "דייד",
+                "דיטיד",
+                "זיויד"
+            ],
+            "chatbotRememberCode": "תזכור",
+            "chatbotForgetCode": "תשכח"
         }
     ],
     "sideMenu": [

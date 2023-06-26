@@ -1,19 +1,28 @@
 require("dotenv").config();
+const db = require('../../db');
 const { Configuration, OpenAIApi } = require("openai");
   const openAiConfig = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   });
 const openai = new OpenAIApi(openAiConfig);
 
-const davidHistory = [];
+let facts;
+
+let lastMessage;
+
+async function getFacts(){
+  facts = (await db.dbGetFacts());
+};
+getFacts();
 
 exports.talkToDavid = async function(user_input){
     const messages = [];
-    for (const [input_text, completion_text] of davidHistory) {
-        messages.push({ role: "user", content: input_text });
-        messages.push({ role: "assistant", content: completion_text });
-    }
-    messages.push({ role: "user", content: user_input });
+    let davidReplay;
+    for(let i = 0;i<facts.length;i++){
+      messages.push({role: "system", content: facts[i].fact})
+    };
+    if(lastMessage!=null){messages.push(lastMessage);};
+    messages.push({ role: "user", content: user_input });    
 
     try {
     
@@ -23,19 +32,22 @@ exports.talkToDavid = async function(user_input){
       });
 
     const completion_text = completion.data.choices[0].message.content;
-    // console.log(completion_text);
 
-    davidHistory.push([user_input, completion_text]);
+    lastMessage = ({ role: "user", content: user_input},
+    {role: "assistant", content: completion_text });    
 
-    return completion_text;
+    davidReply = completion_text;
 
     }catch (error) {
         if (error.response) {
           console.log(error.response.status);
           console.log(error.response.data);
+          return error.response.status;
         } else {
           console.log(error.message);
+          return error.message;
         }
-      };      
-    return;
+      };
+
+    return davidReply;
 };

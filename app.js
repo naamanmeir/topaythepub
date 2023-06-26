@@ -14,13 +14,6 @@ const helmet = require('helmet');
 let ejs = require('ejs');
 const querystring = require('querystring');
 
-// const { Configuration, OpenAIApi } = require("openai");
-
-//   const openAiConfig = new Configuration({
-//     apiKey: process.env.OPENAI_API_KEY,
-//   });
-// const openai = new OpenAIApi(openAiConfig);
-
 var validator = require('validator');
 
 var SSE = require('express-sse');
@@ -160,13 +153,14 @@ function getSimpleTime() {
 };
 
 // ---------------------- DB INIT ----------------------------------- //
-function dbInit() {
-  db.createUserTable();
-  db.createSessionTable();
-  db.dbCreateTableClients();
-  db.dbCreateTableOrders();
-  db.dbCreateTableProducts();
-  db.dbCreateTablePosts();
+async function dbInit() {  
+  await db.createUserTable();
+  await db.createSessionTable();
+  await db.dbCreateTableClients();
+  await db.dbCreateTableOrders();
+  await db.dbCreateTableProducts();
+  await db.dbCreateTablePosts();
+  await db.dbCreateTableFacts();
 
   const connectionTestTimeout = setTimeout(callDbStatus, 1000);
   function callDbStatus() {
