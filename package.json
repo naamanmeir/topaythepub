@@ -18,7 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",
-    "bcrypt": "^5.1.0",
+    "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "csv": "^6.2.1",
     "dotenv": "^16.0.3",
@@ -38,6 +38,7 @@
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "node": "^19.6.0",
+    "openai": "^3.3.0",
     "path": "^0.12.7",
     "querystring": "^0.2.1",
     "serve-favicon": "^2.5.0",
@@ -56,6 +57,6 @@
   },
   "homepage": "https://github.com/naamanmeir/topaythepub#readme",
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^1.14.9"
   }
 }
