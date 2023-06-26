@@ -1,6 +1,9 @@
+const PostLengthMax = 400;
+
 window.addEventListener('load', loadUtiliti, true);
-function loadUtiliti() {    
+function loadUtiliti() {
     imageSelector = document.getElementById("imageSelector");
+
     messageBoardRefreshPosts();
     mBoardUtilities();
     connectEventSource();
@@ -24,17 +27,29 @@ function closeMessageBoard(){
     return;
 };
 
-function mBoardUtilities(){    
-    postInput = document.getElementById("postInput");    
-}
+function mBoardUtilities(){  
+    postInput = document.getElementById("postInput");
+    postInput.maxLength = PostLengthMax;
+    postInput.addEventListener("keydown",postLenghthCheck);
+    postInput.addEventListener("change",postLenghthCheck);
+    postInput.addEventListener("paste",postLenghthCheck);
+};
 
-function keyboardFocusMboard(){
-    // console.log("MBOARD FOCUS");
+function postLenghthCheck(){    
+    if(postInput.value.length >= (PostLengthMax)){
+        document.getElementById("mboardSend").style.display="none";
+        document.getElementById("mboardSendError").style.display="block";
+    }else{
+        document.getElementById("mboardSend").style.display="block";
+        document.getElementById("mboardSendError").style.display="none";
+    }
+};
+
+function keyboardFocusMboard(){    
     if(document.getElementById("postInput") != null){
     window.onkeydown = function () { postInput.focus(); };
     postInput.addEventListener("keypress", function(event) {        
         if (event.key === "Enter") {
-            // console.log("TESTING ENTER");
             event.preventDefault();
             document.getElementById("mboardSend").click();
         }
@@ -47,8 +62,10 @@ function resetAutoLogoutMboard(){
     resetAutoLogout();
 };
 
-function postSend(){    
+function postSend(){
     if (postInput.value == ""){return;};
+    if (postInput.value.length < 1){return;};
+    if (postInput.value.length > 800){return;};    
     let img;
     let post = postInput.value;
     if(imageSelector.files[0]!=null){        
@@ -91,8 +108,7 @@ function resetProgressBar(){
 
 function updateProgress(e){
     progBar.style.width = (((e.loaded/e.total)*100))+ "%";
-    if((e.loaded/e.total)==1){
-        console.log("FNISHSISH")
+    if((e.loaded/e.total)==1){        
         setTimeout(resetProgressBar,2000);
     };
 };
@@ -132,32 +148,28 @@ function imageCancel(){
     imageRemoveButton.style.display = "none";
 };
 
-function messageBoardRefreshPosts(){
-    // console.log("RELOAD POSTS");
+function messageBoardRefreshPosts(){    
     getRequest("./reloadPosts", displayPostsInDiv);
     return;
 };
 
 function displayPostsInDiv(content){
     content = JSON.parse(content);    
-    postsDiv = document.getElementById("divPosts");
+    postsDiv = document.getElementById("divPosts");    
     postsDiv.innerHTML = content;
     postsDiv.scrollTop = postsDiv.scrollHeight;
-    setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;}, 3000);
+    setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: auto";}, 500);
     return;    
 };
 
 //------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
 async function getRequest(url, callback, data) {
-    var xhttp = new XMLHttpRequest();
-    // console.log("SENDING GET REQUEST TO: " + url);
+    var xhttp = new XMLHttpRequest();    
     if (data != null) { xhttp.open("GET", url + data, true); }
     if (data == null) { xhttp.open("GET", url, true); }
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            // console.log("RESPONSE: " + this.response);
-            // console.log(this.response);
             if (this.response.errorClient){
                 window.parent.openMessageWindow(this.response.errorClient)
             };
@@ -217,16 +229,11 @@ async function postRequestNoJson(url, callback, data) {
 };
 
 function isJson(input) {
-    // console.log("testing for JSON input:");
-    // console.log(input);
     try {        
         JSON.parse(input);
     } catch (e) {
-        // console.log("false");
-        // console.log(e);
         return false;
-    }
-    // console.log("true");
+    }    
     return true;
 };
 
@@ -292,8 +299,6 @@ function openWindows(openWindow){
 
 //------------------------FAKE FUNCTION TO NULL RESPONSES----------------
 async function responseToNull(res) {
-    // console.log("response went to null");
-    // console.log(res);
     res = null;
     delete res;
 };
@@ -304,8 +309,7 @@ function refreshCss() {
         if (links[i].getAttribute('rel') == 'stylesheet') {
             let href = links[i].getAttribute('href').split('?')[0];
             let newHref = href + '?version='
-                + new Date().getMilliseconds();
-            // console.log(newHref)
+                + new Date().getMilliseconds();            
             links[i].setAttribute('href', newHref);
         }
     }
@@ -337,10 +341,8 @@ function inputSanitize(input) {
 
 function connectEventSource() {
     if (!!window.EventSource) {
-        var source = new EventSource('./events')
-        // console.log(source)
-        source.addEventListener('message', function (event) {
-            // console.log(event.data);
+        var source = new EventSource('./events')        
+        source.addEventListener('message', function (event) {            
             eventHandler(event);
         }, false)
 
@@ -376,7 +378,6 @@ function eventHandler(event) {
     }
 
     if (JSON.parse(data) == "reloadPosts") {
-        // console.log("MATCH MESSAGE BOARD RELOAD POSTS");
         messageBoardRefreshPosts();
     }
     // if (JSON.parse(data) == "0") {

@@ -398,6 +398,23 @@ p {
     border: 1px outset grey;
 }
 
+.mboardButtonError {
+    display: none;
+    position: relative;
+    width: fit-content;
+    height: 2rem;
+    font-size: 1.5rem;
+    color: black;
+    left: 0px;
+    margin: auto;
+    margin-left: 0px;
+    float: center;
+    text-align: center;
+    justify-content: center;
+    background-color: var(--buttonNo);
+    border: 1px outset grey;
+}
+
 #imageAddButton {
     background-color: rgb(6, 101, 130);
     right: 0px;
@@ -419,7 +436,7 @@ p {
 .postImgPreview {
 
     max-width: 5rem;
-    max-height: 5rem;
+    max-height: 3rem;
 }
 
 .uploadImg {
@@ -440,7 +457,7 @@ p {
 .postInput {
     resize: none;
     width: 90%;
-    height: 4rem;
+    height: 3rem;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 3%;
@@ -452,13 +469,13 @@ p {
 }
 
 .posts {
-    height: 70%;
+    height: 75%;
     width: 95%;
     flex-wrap: nowrap;
     justify-content: center;
     margin: auto;
     margin-top: 0px;
-    margin-bottom: 11%;
+    margin-bottom: 1%;
     right: 0.2rem;
     transition: background-color 0.8s ease;
     overflow-y: auto;
@@ -467,6 +484,7 @@ p {
     padding: 1rem;
     font-size: 2rem;
     word-wrap: break-word;
+    scroll-behavior: smooth;
 }
 
 #anchor {
