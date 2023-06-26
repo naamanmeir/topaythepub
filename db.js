@@ -732,7 +732,7 @@ exports.dbGetProductDetailsById = async function (itemId) {
 
 exports.dbInsertPost = async function (post,user,img){
   if (user == null){user=0}  
-  if (img == null){img=0}
+  if (img == null){img=0}  
   let sql = ('INSERT INTO '+tablePosts+' (user, post,img) VALUES (?);');
   let values = [
     [user,post,img]

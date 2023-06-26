@@ -482,7 +482,7 @@ p {
     overflow-x: hidden;
     clear: both;
     padding: 1rem;
-    font-size: 2rem;
+    font-size: 1.5rem;
     word-wrap: break-word;
     scroll-behavior: smooth;
 }
@@ -536,6 +536,14 @@ p {
 
 .evenPost {
     background-color: #103b4fc1;
+}
+
+.chatbotPost {
+    color: #279411;
+    border: 1px dotted rgb(6, 143, 129);
+    border-radius: 5%;
+    left: 0px;
+    margin-right: 2rem;
 }
 
 .progressBarDiv {

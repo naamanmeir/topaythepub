@@ -12,6 +12,10 @@ let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
 let messageError = messagesJson.error[0];
 
+let chatbot = require("../module/chatbot/chatbot");
+
+let chatbotCall = messageUi.chatbotName1+",";
+
 const MaxPostLength = 400;
 
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
@@ -35,6 +39,7 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
     var post = (req.body.post);
     if(post.length > MaxPostLength){ res.end(); return; };
+    if(post.slice(0,7)==chatbotCall){sendPostToChatbot(post);}
     var img;
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
@@ -57,8 +62,7 @@ function renameFileIfExist(file){
         let fileNameBase = path.parse(file).name;
         let fileNameExt = path.parse(file).ext;
         let currentTime = Date.now();
-        let nameAfterRename = fileNameDir + "/" + fileNameBase + currentTime + fileNameExt;
-        console.log(nameAfterRename);
+        let nameAfterRename = fileNameDir + "/" + fileNameBase + currentTime + fileNameExt;        
         return nameAfterRename;
         }else{        
         return file;
@@ -94,6 +98,7 @@ routerMessageBoard.post('/insertImage', async (req, res) => {
 
 async function insertPostWithImage(req,res,post,user,image){
     post = post.substring(0,MaxPostLength);
+    if(post.slice(0,7)==chatbotCall){sendPostToChatbot(post);}
     let dbResponse = await db.dbInsertPost(post,user,image);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
@@ -109,6 +114,18 @@ async function insertPostWithImage(req,res,post,user,image){
     return; 
 };
 
+async function sendPostToChatbot(post){     
+    let chatbotPost = await chatbot.talkToDavid(post);
+    let img;    
+    let dbResponse = await db.dbInsertPost(chatbotPost,75,img);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED POST FROM ${messageUi.chatbotName1}"
+    `);
+    sendRefreshPostsEventToAllClients();
+    return;
+};
 
 function sendRefreshPostsEventToAllClients(){
     clientEvents.sendEvents("reloadPosts");

@@ -86,7 +86,8 @@
             "remoteMessageBoardButtonSendMessage": "שלח",
             "remoteMessageBoardButtonErrorMessage": "לא",
             "remoteMessageBoardButtonAddPicture": "צרף תמונה",
-            "remoteMessageBoardButtonRemovePicture": "בטל תמונה"
+            "remoteMessageBoardButtonRemovePicture": "בטל תמונה",
+            "chatbotName1": "דייויד"
         }
     ],
     "sideMenu": [
