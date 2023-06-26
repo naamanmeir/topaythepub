@@ -1,3 +1,5 @@
+const PostLengthMax = 400;
+
 let postInput;
 let postsDiv;
 let imageSelector;
@@ -27,7 +29,10 @@ function displayMessageBoard(content){
     postsDiv = document.getElementById("messageBoardDivPosts");
     postsDiv.addEventListener("scroll",resetAutoLogoutMboard);
     postsDiv.scrollTop = postsDiv.scrollHeight;
-    setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;}, 1000);
+    setTimeout(() => {
+        postsDiv.scrollTop = postsDiv.scrollHeight;
+        postsDiv.style = "scroll-behavior: auto";
+    }, 500);
 };
 
 function closeMessageBoard(){
@@ -42,7 +47,21 @@ function mBoardUtilities(){
     imagePreview();
     createProgressBar();
     keyboardFocusMboard();
-}
+    postInput.maxLength = PostLengthMax;
+    postInput.addEventListener("keydown",postLenghthCheck);
+    postInput.addEventListener("change",postLenghthCheck);
+    postInput.addEventListener("paste",postLenghthCheck);
+};
+
+function postLenghthCheck(){    
+    if(postInput.value.length >= (PostLengthMax)){
+        document.getElementById("mboardSend").style.display="none";
+        document.getElementById("mboardSendError").style.display="block";
+    }else{
+        document.getElementById("mboardSend").style.display="block";
+        document.getElementById("mboardSendError").style.display="none";
+    }
+};
 
 function keyboardFocusMboard(){    
     if(document.getElementById("postInput") != null){
@@ -78,7 +97,7 @@ function postSend(){
     imageSelector.value = "";
     imageCancel();
     imagePreview();
-    postRequest('./mboard/insertPost', window.parent.displayMessageBoard, postJSON);    
+    postRequest('./mboard/insertPost', window.parent.messageBoardRefreshPosts, postJSON);    
     return;    
 };
 
@@ -162,7 +181,7 @@ function displayPostsInDiv(content){
         let postsDiv = document.getElementById("messageBoardDivPosts");
         postsDiv.innerHTML = content;
         postsDiv.scrollTop = postsDiv.scrollHeight;
-        setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;}, 3000);
+        setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: auto";}, 500);
         return;
     }else{        
         return;

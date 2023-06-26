@@ -12,15 +12,19 @@ let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
 let messageError = messagesJson.error[0];
 
+const MaxPostLength = 400;
+
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
 
 routerRemoteMessageBoard.get('/', async function (req, res) {
     res.render('remoteMessage',{
         msgHeader:messageUi.remoteMessageBoardHeader,
-        msgButtonSend:messageUi.remoteMessageBoardButtonSendMessage,        
+        msgButtonSend:messageUi.remoteMessageBoardButtonSendMessage,
+        msgButtonSendError:messageUi.remoteMessageBoardButtonErrorMessage,
         msgInputPlaceholder:messageUi.remoteMessageBoardPlaceholder,
         msgButtonAddPicture:messageUi.remoteMessageBoardButtonAddPicture,
-        msgButtonRemovePicture:messageUi.remoteMessageBoardButtonRemovePicture
+        msgButtonRemovePicture:messageUi.remoteMessageBoardButtonRemovePicture,
+        msgButtonSendError:messageUi.remoteMessageBoardButtonErrorMessage
     });
 });
 
@@ -29,9 +33,8 @@ routerRemoteMessageBoard.get('/', async function (req, res) {
 routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
     var post = (req.body.post);
-    var img;
-    // var user = JSON.stringify("");
-    // post = JSON.stringify(post);
+    if(post.length > MaxPostLength){ res.end(); return; };
+    var img;    
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
@@ -90,6 +93,7 @@ routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
 });
 
 async function insertPostWithImage(req,res,post,user,image){
+    post = post.substring(0,MaxPostLength);
     let dbResponse = await db.dbInsertPost(post,user,image);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`

@@ -49,7 +49,8 @@ exports.buildHtml = function (messageUi,posts) {
                     onclick="document.getElementById('imageSelector').click();" id="imageAddButton" style="display: block;" />
                 <input type="button" class="mboardButton" value="${messageUi.remoteMessageBoardButtonRemovePicture}" onclick="imageCancel()" id="imageRemoveButton" style="display: none;" />
             </div>            
-            <div class="mboardButton" id="mboardSend" onclick="postSend()">${messageUi.mBoardButtonSend}</div>            
+            <div class="mboardButton" id="mboardSend" onclick="postSend()">${messageUi.mBoardButtonSend}</div>
+            <div class="mboardButtonError" id="mboardSendError">${messageUi.mBoardButtonSendError}</div>
         </div>
 
         `;

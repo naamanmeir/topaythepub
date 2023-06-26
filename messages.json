@@ -78,11 +78,13 @@
             "mBoardHeader": "לוח מודעות",
             "mBoardPlaceHolder": "לכתוב פה הודעה",
             "mBoardButtonSend": "שלח הודעה",
+            "mBoardButtonSendError": "לא",
             "mBoardFooter": "אפשר לכתוב פה דברים",
             "mBoardCloseText": "סגור",
             "remoteMessageBoardHeader": "להשאיר הודעה בפאב",
             "remoteMessageBoardPlaceholder": "אפשר לכתוב פה...",
             "remoteMessageBoardButtonSendMessage": "שלח",
+            "remoteMessageBoardButtonErrorMessage": "לא",
             "remoteMessageBoardButtonAddPicture": "צרף תמונה",
             "remoteMessageBoardButtonRemovePicture": "בטל תמונה"
         }

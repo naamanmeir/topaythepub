@@ -12,6 +12,8 @@ let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
 let messageError = messagesJson.error[0];
 
+const MaxPostLength = 400;
+
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
 
 routerMessageBoard.get('/openBoard', async function (req, res) {
@@ -32,9 +34,8 @@ routerMessageBoard.get('/openBoard', async function (req, res) {
 routerMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
     var post = (req.body.post);
+    if(post.length > MaxPostLength){ res.end(); return; };
     var img;
-    // var user = JSON.stringify("");
-    // post = JSON.stringify(post);
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
@@ -51,7 +52,6 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
 });
 
 function renameFileIfExist(file){
-    // console.log("CHECKING EXISTS : "+file);
     if(fs.existsSync(file)){
         let fileNameDir = path.parse(file).dir;
         let fileNameBase = path.parse(file).name;
@@ -75,7 +75,7 @@ routerMessageBoard.post('/insertImage', async (req, res) => {
     const form = formidable(options);
     let newName;
     let originalName;
-    let post;
+    let post;    
     let finalImageName;
     form.parse(req, function (err, fields, files) {
         newName = files.img.filepath;
@@ -93,6 +93,7 @@ routerMessageBoard.post('/insertImage', async (req, res) => {
 });
 
 async function insertPostWithImage(req,res,post,user,image){
+    post = post.substring(0,MaxPostLength);
     let dbResponse = await db.dbInsertPost(post,user,image);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
