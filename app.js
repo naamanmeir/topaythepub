@@ -14,6 +14,13 @@ const helmet = require('helmet');
 let ejs = require('ejs');
 const querystring = require('querystring');
 
+// const { Configuration, OpenAIApi } = require("openai");
+
+//   const openAiConfig = new Configuration({
+//     apiKey: process.env.OPENAI_API_KEY,
+//   });
+// const openai = new OpenAIApi(openAiConfig);
+
 var validator = require('validator');
 
 var SSE = require('express-sse');
@@ -63,6 +70,8 @@ const production = process.env.APP_MODE === "production";
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const COOKIE_EXPIRATION = Number(process.env.COOKIE_EXPIRATION);
 const SESSION_NAME = process.env.SESSION_NAME;
+
+const OPENAI_KEY = process.env.OPENAI_API_KEY;
 
 const app = express();
 const port = appPort;

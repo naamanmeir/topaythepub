@@ -14,6 +14,10 @@ let messageError = messagesJson.error[0];
 
 const MaxPostLength = 400;
 
+let chatbot = require("../module/chatbot/chatbot");
+
+let chatbotCall = messageUi.chatbotName1+",";
+
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
 
 routerRemoteMessageBoard.get('/', async function (req, res) {
@@ -34,6 +38,7 @@ routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
     var post = (req.body.post);
     if(post.length > MaxPostLength){ res.end(); return; };
+    if(post.slice(0,7)==chatbotCall){sendPostToChatbot(post);}
     var img;    
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
@@ -94,6 +99,7 @@ routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
 
 async function insertPostWithImage(req,res,post,user,image){
     post = post.substring(0,MaxPostLength);
+    if(post.slice(0,7)==chatbotCall){chatbot.talkToDavid(post);}
     let dbResponse = await db.dbInsertPost(post,user,image);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
@@ -109,6 +115,19 @@ async function insertPostWithImage(req,res,post,user,image){
     return; 
 };
 
+async function sendPostToChatbot(post){     
+    let chatbotPost = await chatbot.talkToDavid(post);
+    let img;    
+    let dbResponse = await db.dbInsertPost(chatbotPost,75,img);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED POST FROM ${messageUi.chatbotName1}"
+    `);
+    sendRefreshPostsEventToAllClients();
+    return;
+};
+
 function sendRefreshPostsEventToAllClients(){
     clientEvents.sendEvents("reloadPosts");
     return;
@@ -121,7 +140,7 @@ routerRemoteMessageBoard.get('/reloadPosts/', async (req, res) => {
     time: ${funcTime} 
     "SENT ALL POSTS TO CLIENT"
     `); 
-    let renderMessageBoard = require("../module/html/messageBoard/postsDivRemote");
+    let renderMessageBoard = require("../module/html/messageBoard/postsDiv");
     let html = renderMessageBoard.buildHtml(messageUi,posts);    
     res.json(html);
     res.end();
