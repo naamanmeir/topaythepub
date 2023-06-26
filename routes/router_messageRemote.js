@@ -140,7 +140,7 @@ routerRemoteMessageBoard.get('/reloadPosts/', async (req, res) => {
     time: ${funcTime} 
     "SENT ALL POSTS TO CLIENT"
     `); 
-    let renderMessageBoard = require("../module/html/messageBoard/postsDiv");
+    let renderMessageBoard = require("../module/html/messageBoard/postsDivRemote");
     let html = renderMessageBoard.buildHtml(messageUi,posts);    
     res.json(html);
     res.end();
