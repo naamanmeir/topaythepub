@@ -18,7 +18,7 @@ let progBarDiv;
 let progBar;
 
 function callMessageBoard(){
-    getRequest("./mboard/openBoard", displayMessageBoard);
+    getRequest("./openBoard", displayMessageBoard);
     return;
 };
 
@@ -27,12 +27,82 @@ function closeMessageBoard(){
     return;
 };
 
-function mBoardUtilities(){  
+function mBoardUtilities(){
+    postsDiv = document.getElementById("divPosts");
+    postsDiv.addEventListener('touchstart', (e) => {postContextMenu(e)});
+    postsDiv.addEventListener('mousedown', (e) => {postContextMenu(e)});    
     postInput = document.getElementById("postInput");
     postInput.maxLength = PostLengthMax;
     postInput.addEventListener("keydown",postLenghthCheck);
     postInput.addEventListener("change",postLenghthCheck);
     postInput.addEventListener("paste",postLenghthCheck);
+};
+
+function postContextMenu(e){
+    let target;
+    let postid;
+    let postdiv;
+    let menu;
+
+    if(document.getElementById("contextMenu") && e.target.parentNode.id != "contextMenu"){
+        document.getElementById("contextMenu").remove();
+    };       
+    
+    postsDiv.addEventListener('touchend',()=>{        
+        clearTimeout(pressTimer);
+        return;
+    });
+
+    postsDiv.addEventListener('mouseup',()=>{        
+        clearTimeout(pressTimer);
+        return;
+    });
+
+    let pressTimer = setTimeout(function(){
+        if(e.target.parentNode.id.startsWith("post")){
+            target = e.target.parentNode.id;
+            
+            if(e.target.parentNode.id.substring(4).startsWith("Img")){                
+                postid = e.target.parentNode.id.substring(7);
+            }else{                
+                postid = e.target.parentNode.id.substring(4);
+                postdiv = e.target.parentNode.id;
+            }
+            target = document.getElementById(target);
+            if(!document.getElementById("contextMenu")){
+                menu = document.createElement("div");
+                menu.setAttribute('id','contextMenu');
+                menu.setAttribute('class','contextMenu');
+                menu.innerHTML = 
+                `                
+                <div class="cmenuItems" id="cmenuCopy"></div>
+                <div class="cmenuItems" id="cmenuErase"></div>
+                
+                `
+                target.appendChild(menu);
+                let cmenuErase = document.getElementById("cmenuErase");
+                let cmenuCopy = document.getElementById("cmenuCopy");
+                cmenuErase.style.backgroundImage="url(../img/ui/cmenu_erase.png)";
+                cmenuCopy.style.backgroundImage="url(../img/ui/cmenu_copy.png)";
+
+
+                cmenuErase.addEventListener('touchstart',()=>{
+                    postDelete(postid)
+                });
+                cmenuCopy.addEventListener('touchstart',()=>{
+                    postCopy(postdiv)
+                });
+                cmenuErase.addEventListener('mousedown',()=>{
+                    postDelete(postid)
+                });
+                cmenuCopy.addEventListener('mousedown',()=>{
+                    postCopy(postdiv)
+                });
+            }else{            
+                document.getElementById("contextMenu").remove();
+            }            
+        };
+    },1000);
 };
 
 function postLenghthCheck(){    
@@ -60,6 +130,66 @@ function keyboardFocusMboard(){
 
 function resetAutoLogoutMboard(){    
     resetAutoLogout();
+};
+
+function postDelete(postid){   
+    
+    let panel = document.getElementById("contextMenu");
+    let preColor = panel.style.backgroundColor;
+    panel.style.transition =  "all 3s";
+    panel.style.backgroundColor = "red";
+
+    postsDiv.addEventListener('mouseup',()=>{        
+        clearTimeout(pressTimer);
+        panel.style.backgroundColor = preColor;
+        return;
+    });
+
+    postsDiv.addEventListener('touchend',()=>{        
+        clearTimeout(pressTimer);
+        panel.style.backgroundColor = preColor;
+        return;
+    });
+    
+    let pressTimer = setTimeout(function(){
+        postid = JSON.stringify({'postid':postid});
+        postRequest('./deletePost', window.parent.messageBoardRefreshPosts, postid);
+        return;
+    },1000);
+};
+
+function postCopy(postdiv){    
+    let panel = document.getElementById("contextMenu");
+    let preColor = panel.style.backgroundColor;
+    panel.style.transition =  "all 0.4s";
+    panel.style.backgroundColor = "green";
+
+    postsDiv.addEventListener('mouseup',()=>{        
+        clearTimeout(pressTimer);
+        panel.style.backgroundColor = preColor;
+        return;
+    });
+
+    postsDiv.addEventListener('touchend',()=>{        
+        clearTimeout(pressTimer);
+        panel.style.backgroundColor = preColor;
+        return;
+    });
+    
+    let pressTimer = setTimeout(function(){        
+        let contentDiv = document.getElementById(postdiv);
+        let content = contentDiv.getElementsByTagName("p")[0].innerHTML;
+        let tempInput = document.createElement("input");
+        tempInput.id = 'tempInput';
+        tempInput.style.height = 0;
+        document.body.appendChild(tempInput);
+        tempInput.value = content;
+        tempInput.select();        
+        navigator.clipboard.writeText(tempInput.value);
+        document.body.removeChild(tempInput);
+        document.getElementById("contextMenu").remove();
+        return;
+    },400);
 };
 
 function postSend(){
@@ -154,8 +284,7 @@ function messageBoardRefreshPosts(){
 };
 
 function displayPostsInDiv(content){
-    content = JSON.parse(content);    
-    postsDiv = document.getElementById("divPosts");    
+    content = JSON.parse(content);
     postsDiv.innerHTML = content;
     postsDiv.scrollTop = postsDiv.scrollHeight;
     setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: auto";}, 500);

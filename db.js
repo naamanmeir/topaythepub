@@ -766,6 +766,12 @@ exports.dbGetAllPosts = async function (){
   return messageReturn;
 };
 
+exports.dbDeletePostById = async function (postid){  
+  let sql = ('DELETE FROM '+tablePosts+' WHERE postid = '+postid+';');  
+  let messageReturn = await pool.query(sql);
+  return messageReturn;
+};
+
 //-------------------------CHATBOT FACTS----------------------//
 exports.dbInsertFact = async function (fact,level){  
   if (level == null){level=0};  
