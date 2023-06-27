@@ -27,12 +27,61 @@ function closeMessageBoard(){
     return;
 };
 
-function mBoardUtilities(){  
+function mBoardUtilities(){
+    postsDiv = document.getElementById("divPosts");
+    postsDiv.addEventListener('touchstart', (e) => {postContextMenu(e)});
+    // postsDiv.addEventListener('mousedown', (e) => {postContextMenu(e)});
+    // postContextMenu();
     postInput = document.getElementById("postInput");
     postInput.maxLength = PostLengthMax;
     postInput.addEventListener("keydown",postLenghthCheck);
     postInput.addEventListener("change",postLenghthCheck);
     postInput.addEventListener("paste",postLenghthCheck);
+};
+
+function postContextMenu(e){
+    let target;
+    let postid;
+    let menu;
+
+    if(document.getElementById("contextMenu")){
+        document.getElementById("contextMenu").remove();
+    };       
+    
+    postsDiv.addEventListener('touchend',()=>{        
+        clearTimeout(pressTimer);
+        return;
+    });
+
+    let pressTimer = setTimeout(function(){
+        if(e.target.parentNode.id.startsWith("post")){
+            target = e.target.parentNode.id;
+            if(e.target.parentNode.id.substring(4).startsWith("Img")){
+                console.log("image: "+e.target.parentNode.id.substring(7));
+                postid = e.target.parentNode.id.substring(7);
+            }else{
+                console.log("text: "+e.target.parentNode.id.substring(4));
+                postid = e.target.parentNode.id.substring(4);
+            }
+            target = document.getElementById(target);
+            if(!document.getElementById("contextMenu")){
+                menu = document.createElement("div");
+                menu.setAttribute('id','contextMenu');
+                menu.setAttribute('class','contextMenu');            
+                menu.innerHTML = 
+                `
+                <img src="../img/ui/cmenu_copy.png" id="cmenu_copy">
+                <img src="../img/ui/cmenu_erase.png" id="cmenu_erase">                
+                `
+                target.appendChild(menu);
+                let cmenu_erase = document.getElementById("cmenu_erase");
+                cmenu_erase.addEventListener('touchstart',postDelete(postid));
+                cmenu_copy.addEventListener('touchstart',postCopy(postid));
+            }else{            
+                document.getElementById("contextMenu").remove();
+            }            
+        };
+    },1000);
 };
 
 function postLenghthCheck(){    
@@ -61,6 +110,16 @@ function keyboardFocusMboard(){
 function resetAutoLogoutMboard(){    
     resetAutoLogout();
 };
+
+function postDelete(postid){    
+    postid = JSON.stringify({'postid':postid});
+    postRequest('./deletePost', window.parent.messageBoardRefreshPosts, postid);
+    return;
+};
+
+function postCopy(postid){
+    console.log("COPY POST");
+}
 
 function postSend(){
     if (postInput.value == ""){return;};
@@ -154,8 +213,7 @@ function messageBoardRefreshPosts(){
 };
 
 function displayPostsInDiv(content){
-    content = JSON.parse(content);    
-    postsDiv = document.getElementById("divPosts");    
+    content = JSON.parse(content);
     postsDiv.innerHTML = content;
     postsDiv.scrollTop = postsDiv.scrollHeight;
     setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: auto";}, 500);

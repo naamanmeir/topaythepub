@@ -8,7 +8,8 @@ const logOutTime = 40000;
 const closeSideMenuTimeoutTime = 10000;
 const sideMenuSlideTime = "0.6s";
 const windowFadeTime = 800;
-const autoLogoutTime = 45000;
+
+const autoLogoutTime = 945000;
 
 //-----------------RUNTIME PARAMS-----------------//
 const timerClearLoggedUSerTIme = 999999;

@@ -57,6 +57,26 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     return;
 });
 
+routerMessageBoard.post('/deletePost/', async (req, res) => {    
+    if (!req.body.postid || req.body.postid == null) { res.end(); return; };    
+    let postid = JSON.parse(req.body.postid);
+    if (!Number.isInteger(postid)) {res.end();return;};
+    if (req.body.postContent) {console.log("call method deleteByContent");return;};    
+    let dbResponse = await db.dbDeletePostById(postid);    
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "DELETED POST"
+    `); 
+    let posts = await db.dbGetAllPosts();
+    let renderMessageBoard = require("../module/html/messageBoard/postsDiv");
+    let html = renderMessageBoard.buildHtml(messageUi,posts);
+    res.json(html);
+    res.end();
+    sendRefreshPostsEventToAllClients();
+    return;    
+});
+
 function renameFileIfExist(file){
     if(fs.existsSync(file)){
         let fileNameDir = path.parse(file).dir;
