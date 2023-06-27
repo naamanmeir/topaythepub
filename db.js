@@ -7,7 +7,7 @@ const pool = mariadb.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DB,
-  connectionLimit: 5
+  connectionLimit: 25
 });
 
 const tableClients = process.env.DB_TABLE_CLIENTS;
@@ -16,7 +16,7 @@ const tableProducts = process.env.DB_TABLE_PRODUCTS;
 const tableUsers = process.env.DB_TABLE_USERS;
 const tableSessions = process.env.DB_TABLE_SESSIONS;
 const tablePosts = process.env.DB_TABLE_POSTS;
-
+const tableFacts = process.env.DB_TABLE_FACTS;
 
 //-----------------------------INIT----------------------------------//
 exports.dbConnectionTest = async function () {
@@ -130,8 +130,8 @@ exports.dbCreateTableProducts = async function () {
 };
 
 exports.dbCreateTablePosts = async function () {
-  let createTableProducts;
-  createTableProducts = await pool.getConnection()
+  let createTablePosts;
+  createTablePosts = await pool.getConnection()
     .then(conn => {
       conn.query("CREATE TABLE IF NOT EXISTS `"+ tablePosts +"`("+ 
         "`postid` INT NOT NULL AUTO_INCREMENT,"+
@@ -146,7 +146,26 @@ exports.dbCreateTablePosts = async function () {
           return results })
         .catch((err) => { console.log(err) })
     });
-  return createTableProducts;
+  return createTablePosts;
+};
+
+exports.dbCreateTableFacts = async function () {
+  let createTableFacts;
+  createTableFacts = await pool.getConnection()
+    .then(conn => {
+      conn.query("CREATE TABLE IF NOT EXISTS `"+ tableFacts +"`("+ 
+        "`factid` INT NOT NULL AUTO_INCREMENT,"+
+        "`date` DATE,"+
+        "`level` INT,"+
+        "`fact` TEXT(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,"+        
+        "PRIMARY KEY (`factid`)"+
+        ");"
+      )
+        .then((results) => {           
+          return results })
+        .catch((err) => { console.log(err) })
+    });
+  return createTableFacts;
 };
 
 exports.connectionStatus = async function () {
@@ -744,5 +763,29 @@ exports.dbInsertPost = async function (post,user,img){
 exports.dbGetAllPosts = async function (){
   let sql = (`SELECT * FROM ${tablePosts} ORDER BY postid ASC;`);
   let messageReturn = await pool.query(sql);  
+  return messageReturn;
+};
+
+//-------------------------CHATBOT FACTS----------------------//
+exports.dbInsertFact = async function (fact,level){  
+  if (level == null){level=0};  
+  let sql = ('INSERT INTO '+tableFacts+' (fact, level) VALUES (?);');
+  let values = [
+    [fact,level]
+  ];
+  let messageReturn = await pool.query(sql,values);
+  return messageReturn;
+};
+
+exports.dbRemoveFact = async function (fact,level){  
+  if (level == null){level=0};  
+  let sql = ("DELETE FROM "+tableFacts+" WHERE fact LIKE '%"+fact+"%' AND factid > 0;");  
+  let messageReturn = await pool.query(sql);
+  return messageReturn;
+};
+
+exports.dbGetFacts = async function(){
+  let sql = ('SELECT fact FROM '+tableFacts+';');  
+  let messageReturn = await pool.query(sql);
   return messageReturn;
 };

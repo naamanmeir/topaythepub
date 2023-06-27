@@ -16,7 +16,7 @@ const MaxPostLength = 400;
 
 let chatbot = require("../module/chatbot/chatbot");
 
-let chatbotCall = messageUi.chatbotName1+",";
+let chatbotCall = messageUi.chatbotName1;
 
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
 
@@ -38,7 +38,7 @@ routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
     var post = (req.body.post);
     if(post.length > MaxPostLength){ res.end(); return; };
-    if(post.slice(0,7)==chatbotCall){sendPostToChatbot(post);}
+    if(findReferences(post,messageUi.chatbotName1Variations)){sendPostToChatbot(post);};
     var img;    
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
@@ -56,7 +56,6 @@ routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
 });
 
 function renameFileIfExist(file){
-    // console.log("CHECKING EXISTS : "+file);
     if(fs.existsSync(file)){
         let fileNameDir = path.parse(file).dir;
         let fileNameBase = path.parse(file).name;
@@ -99,7 +98,7 @@ routerRemoteMessageBoard.post('/insertImage', async (req, res) => {
 
 async function insertPostWithImage(req,res,post,user,image){
     post = post.substring(0,MaxPostLength);
-    if(post.slice(0,7)==chatbotCall){chatbot.talkToDavid(post);}
+    if(findReferences(post,messageUi.chatbotName1Variations)){sendPostToChatbot(post);};
     let dbResponse = await db.dbInsertPost(post,user,image);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
@@ -115,7 +114,44 @@ async function insertPostWithImage(req,res,post,user,image){
     return; 
 };
 
-async function sendPostToChatbot(post){     
+function findReferences(source,target){
+    if(Array.isArray(target)){
+        for(let i = 0;i < target.length;i++){
+            if(source.search(target[i])>=0){                
+                return true;};
+        };
+    };
+    if(source.search(target)>=0){        
+        return true;
+    };
+    return false;
+};
+
+function findReferencesWithIndex(source,target){      
+    if(Array.isArray(target)){
+        for(let i = 0;i < target.length;i++){
+            let find =  source.search(target[i]);
+            if(find >= 0){
+                return find;
+          };
+        };
+    };
+    let find = source.search(target);
+    if(find >= 0){
+        return find;
+    };
+    return -1;
+};
+
+async function sendPostToChatbot(post){    
+    let findChatbotCodeRemember = findReferencesWithIndex(post,messageUi.chatbotRememberCode);
+    let findChatbotCodeForget = findReferencesWithIndex(post,messageUi.chatbotForgetCode);
+    if(findChatbotCodeRemember >= 0){
+        sendFactToChatbot(post.substring(findChatbotCodeRemember+messageUi.chatbotRememberCode.length));
+    };
+    if(findChatbotCodeForget >= 0){
+        sendRemoveFactToChatbot(post.substring(findChatbotCodeForget+messageUi.chatbotForgetCode.length));
+    };
     let chatbotPost = await chatbot.talkToDavid(post);
     let img;    
     let dbResponse = await db.dbInsertPost(chatbotPost,75,img);
@@ -126,6 +162,16 @@ async function sendPostToChatbot(post){
     `);
     sendRefreshPostsEventToAllClients();
     return;
+};
+
+async function sendFactToChatbot(fact){    
+    let dbResponse = db.dbInsertFact(fact);
+    return dbResponse;
+};
+
+async function sendRemoveFactToChatbot(fact){    
+    let dbResponse = db.dbRemoveFact(fact);
+    return dbResponse;
 };
 
 function sendRefreshPostsEventToAllClients(){
