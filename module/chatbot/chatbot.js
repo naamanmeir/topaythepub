@@ -27,20 +27,14 @@ exports.talkToDavid = async function(user_input){
   let tokenCount = 0;
   let davidReplay;
   for(let i = 0;i<facts.length;i++){
-    // console.log(facts[i].fact.length);
     tokenCount += facts[i].fact.length;
     messages.push({role: "system", content: facts[i].fact})
   };
   if(lastMessage!=null){messages.push(lastMessage);};
   messages.push({ role: "user", content: user_input });    
 
-  // console.log(messages);
-  // console.log(tokenCount);
-
   if(tokenCount > CharLimitOnMessages){
     let dbResponse = await db.dbRemoveOldestFact();
-    console.log(dbResponse);
-    console.log("REMOVE LATEST FACT")
   };
 
   try {

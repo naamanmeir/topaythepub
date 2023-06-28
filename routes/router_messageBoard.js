@@ -167,15 +167,19 @@ function findReferencesWithIndex(source,target){
 async function sendPostToChatbot(post){
     let findChatbotCodeRemember = findReferencesWithIndex(post,messageUi.chatbotRememberCode);
     let findChatbotCodeForget = findReferencesWithIndex(post,messageUi.chatbotForgetCode);
+    let findChatbotCodeForgetEverything = findReferencesWithIndex(post,messageUi.chatbotForgetEverythingCode);
+
     if(findChatbotCodeRemember >= 0){
         sendFactToChatbot(post.substring(findChatbotCodeRemember+messageUi.chatbotRememberCode.length));
     };
     if(findChatbotCodeForget >= 0){
         sendRemoveFactToChatbot(post.substring(findChatbotCodeForget+messageUi.chatbotForgetCode.length));
     };
+    if(findChatbotCodeForgetEverything >= 0){
+        sendRemoveAllFactsToChatbot();
+    };
     if(chatbot.chatbotIsBusy == 1){
-        var funcTime = getTime();
-        console.log("CHATBOT IS BUSY")
+        var funcTime = getTime();        
         messageBoardLogger.clientMessageBoard(`
         time: ${funcTime} 
         "ATTEMPTED CHATBOT REPLY BUT CHATBOT WAS BUSY : ${messageUi.chatbotName1}"
@@ -183,16 +187,16 @@ async function sendPostToChatbot(post){
         return;
     };
     sendChatBotIsNotTypingToAllClients();
-    sendChatBotIsTypingToAllClients();    
+    sendChatBotIsTypingToAllClients();
     chatbot.chatbotIsBusy = 1;
-    let chatbotPost = await chatbot.talkToDavid(post);    
+    let chatbotPost = await chatbot.talkToDavid(post);
     let img;    
     let dbResponse = await db.dbInsertPost(chatbotPost,75,img);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
     time: ${funcTime} 
-    "INSERTED POST FROM CHATBOT : ${messageUi.chatbotName1}"
-    `);    
+    "INSERTED POST FROM ${messageUi.chatbotName1}"
+    `);
     sendChatBotIsNotTypingToAllClients();
     sendRefreshPostsEventToAllClients();
     chatbot.chatbotIsBusy = 0;
@@ -206,6 +210,11 @@ async function sendFactToChatbot(fact){
 
 async function sendRemoveFactToChatbot(fact){    
     let dbResponse = db.dbRemoveFact(fact);
+    return dbResponse;
+};
+
+async function sendRemoveAllFactsToChatbot(){    
+    let dbResponse = db.dbRemoveAllFacts();
     return dbResponse;
 };
 
