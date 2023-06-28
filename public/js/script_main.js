@@ -407,6 +407,16 @@ function eventHandler(event) {
     if (JSON.parse(data) == "reloadPosts") {
         // console.log("MATCH MESSAGE BOARD RELOAD POSTS");
         messageBoardRefreshPosts();
+        otherSideIsTyping(0);
+    }
+    if (JSON.parse(data) == "chatbotIsTyping") {
+        // console.log("MATCH MESSAGE BOARD CHATBOT IS TYPING");
+        otherSideIsTyping(1);
+    }
+    if (JSON.parse(data) == "chatbotIsNotTyping") {
+        // console.log("MATCH MESSAGE BOARD CHATBOT IS NOT TYPING");
+        otherSideIsNotTyping();
+        otherSideIsTyping(0);
     }
     if (JSON.parse(data) == "0") {
         data = data.replace(/^"(.*)"$/, '$1');

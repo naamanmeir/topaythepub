@@ -6,6 +6,8 @@ let imageSelector;
 let progBarDiv;
 let progBar;
 
+let chatbotIsTyping;
+
 function callMessageBoard(){
     getRequest("./mboard/openBoard", displayMessageBoard);
     return;
@@ -132,7 +134,7 @@ function postLenghthCheck(){
     }
 };
 
-function keyboardFocusMboard(){    
+function keyboardFocusMboard(){
     if(document.getElementById("postInput") != null){
     window.onkeydown = function () { postInput.focus(); };
     postInput.addEventListener("keypress", function(event) {        
@@ -141,8 +143,8 @@ function keyboardFocusMboard(){
             document.getElementById("mboardSend").click();
         }
     });
-}
-    return;
+    }
+        return;
 };
 
 function resetAutoLogoutMboard(){    
@@ -226,7 +228,8 @@ function postSend(){
     imageSelector.value = "";
     imageCancel();
     imagePreview();
-    postRequest('./mboard/insertPost', window.parent.messageBoardRefreshPosts, postJSON);    
+    postRequest('./mboard/insertPost', window.parent.messageBoardRefreshPosts, postJSON);
+    scrollPosts();
     return;    
 };
 
@@ -306,9 +309,12 @@ function displayPostsInDiv(content){
     content = JSON.parse(content);
     if(document.getElementById("messageBoardDivPosts") != null){
         postsDiv = document.getElementById("messageBoardDivPosts");
-        postsDiv.innerHTML = content;        
+        postsDiv.innerHTML = content;
+        if((postsDiv.scrollHeight - postsDiv.scrollTop)<1200){
+            scrollPosts();
+        };        
         return;
-    }else{        
+    }else{
         return;
     }
 };
@@ -316,4 +322,42 @@ function displayPostsInDiv(content){
 function scrollPosts(){
     postsDiv.scrollTop = postsDiv.scrollHeight;
     setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: auto";}, 500);
+};
+
+function otherSideIsTyping(act){
+    
+    let placeholder = "";
+    let placeholderDefault = messageUi.remoteMessageBoardPlaceholder;    
+    let inputElement = document.getElementById("postInput");
+
+    if(act==1){
+        
+        chatbotIsTyping = 1;
+        let i = 0;
+        const txt = messageUi.otherSideIsTypingMessage;
+        let speed = 120;    
+
+        function type(){        
+            if(chatbotIsTyping==0){return;};
+            placeholder = txt.substring(0,i+1);
+            inputElement.setAttribute("placeholder",placeholder);
+            i++;
+            if(i>=txt.length){
+                placeholder = "";
+                speed = 300;
+                i=11;
+            };
+            setTimeout(type,speed);            
+            };
+        type();
+    };
+    if(act==0){
+        inputElement.setAttribute("placeholder",placeholderDefault);    
+        return;
+    };
+    return;
+};
+
+function otherSideIsNotTyping(){
+    chatbotIsTyping = 0;    
 };

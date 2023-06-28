@@ -17,6 +17,8 @@ let imageSelector;
 let progBarDiv;
 let progBar;
 
+let chatbotIsTyping;
+
 function callMessageBoard(){
     getRequest("./openBoard", displayMessageBoard);
     return;
@@ -36,6 +38,7 @@ function mBoardUtilities(){
     postInput.addEventListener("keydown",postLenghthCheck);
     postInput.addEventListener("change",postLenghthCheck);
     postInput.addEventListener("paste",postLenghthCheck);
+    scrollPosts();
 };
 
 function postContextMenu(e){
@@ -285,11 +288,58 @@ function messageBoardRefreshPosts(){
 
 function displayPostsInDiv(content){
     content = JSON.parse(content);
-    postsDiv.innerHTML = content;
-    postsDiv.scrollTop = postsDiv.scrollHeight;
-    setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: auto";}, 500);
+    postsDiv.innerHTML = content;    
+    if((postsDiv.scrollHeight - postsDiv.scrollTop)<1200){
+        scrollPosts();            
+    };
     return;    
 };
+
+function scrollPosts(){
+    postsDiv.scrollTop = postsDiv.scrollHeight;
+    setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: auto";}, 500);
+};
+
+function otherSideIsTyping(act){
+    
+    let placeholder = "";
+    let placeholderDefault = msgInputPlaceholder;    
+    let inputElement = document.getElementById("postInput");
+
+    if(chatbotIsTyping == 1){return;};
+
+    if(act==1){
+        
+        chatbotIsTyping = 1;
+        let i = 0;
+        const txt = otherSideIsTypingMessage;
+        let speed = 120;    
+
+        function type(){        
+            if(chatbotIsTyping==0){return;};
+            placeholder = txt.substring(0,i+1);
+            inputElement.setAttribute("placeholder",placeholder);
+            i++;
+            if(i>=txt.length){
+                placeholder = "";
+                speed = 300;
+                i=11;
+            };
+            setTimeout(type,speed);            
+            };
+        type();
+    };
+    if(act==0){        
+        inputElement.setAttribute("placeholder",placeholderDefault);
+        return;
+    };
+    return;
+};
+
+function otherSideIsNotTyping(){
+    chatbotIsTyping = 0;    
+};
+
 
 //------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
 async function getRequest(url, callback, data) {
@@ -508,6 +558,15 @@ function eventHandler(event) {
 
     if (JSON.parse(data) == "reloadPosts") {
         messageBoardRefreshPosts();
+    }
+        if (JSON.parse(data) == "chatbotIsTyping") {
+        // console.log("MATCH MESSAGE BOARD CHATBOT IS TYPING");
+        otherSideIsTyping(1);
+    }
+    if (JSON.parse(data) == "chatbotIsNotTyping") {
+        // console.log("MATCH MESSAGE BOARD CHATBOT IS NOT TYPING");
+        otherSideIsNotTyping();
+        otherSideIsTyping(0);
     }
     // if (JSON.parse(data) == "0") {
     //     data = data.replace(/^"(.*)"$/, '$1');

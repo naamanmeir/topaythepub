@@ -115,7 +115,6 @@ var session;
 
 let clientsSSE = [];
 
-
 //--------------HELMET CONFIG------------------------//
 app.use(
   helmet({
