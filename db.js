@@ -799,8 +799,7 @@ exports.dbRemoveOldestFact = async function (fact,level){
 };
 
 
-exports.dbRemoveAllFacts = async function (fact,level){  
-  if (level == null){level=0};
+exports.dbRemoveAllFacts = async function (){    
   let sql = ("DELETE FROM "+tableFacts+" WHERE factid > 1;");  
   let messageReturn = await pool.query(sql);
   return messageReturn;
