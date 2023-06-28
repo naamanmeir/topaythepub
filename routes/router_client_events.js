@@ -57,6 +57,6 @@ routerClientEvents.get('/refreshClients', function (req, res) {
 routerClientEvents.sendEvents = function (event) {
     // console.log("SENDING SERVER SIDE EVENT: " + JSON.stringify(event));
     clients.forEach(client => client.res.write(`data: ${JSON.stringify(event)}\n\n`))
-}
+};
 
 module.exports = routerClientEvents;

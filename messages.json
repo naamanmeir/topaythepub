@@ -77,7 +77,7 @@
             "footerText": " זה של הפאב ונוצר על ידי ניבה גבינהצהובה",
             "mBoardHeader": "לוח מודעות",
             "mBoardPlaceHolder": "לכתוב פה הודעה",
-            "mBoardButtonSend": "שלח הודעה",
+            "mBoardButtonSend": "שלח",
             "mBoardButtonSendError": "לא",
             "mBoardFooter": "אפשר לכתוב פה דברים",
             "mBoardCloseText": "סגור",
@@ -100,10 +100,12 @@
                 "דיטיד",
                 "זיויד",
                 "דייב",
-                "דייוו"
+                "דייוו",
+                "דייוי"
             ],
             "chatbotRememberCode": "תזכור",
-            "chatbotForgetCode": "תשכח"
+            "chatbotForgetCode": "תשכח",
+            "otherSideIsTypingMessage": "דייויד כותב...✍...🤔...📡"
         }
     ],
     "sideMenu": [

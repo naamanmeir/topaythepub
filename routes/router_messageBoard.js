@@ -164,7 +164,7 @@ function findReferencesWithIndex(source,target){
     return -1;
 };
 
-async function sendPostToChatbot(post){    
+async function sendPostToChatbot(post){
     let findChatbotCodeRemember = findReferencesWithIndex(post,messageUi.chatbotRememberCode);
     let findChatbotCodeForget = findReferencesWithIndex(post,messageUi.chatbotForgetCode);
     if(findChatbotCodeRemember >= 0){
@@ -173,15 +173,29 @@ async function sendPostToChatbot(post){
     if(findChatbotCodeForget >= 0){
         sendRemoveFactToChatbot(post.substring(findChatbotCodeForget+messageUi.chatbotForgetCode.length));
     };
-    let chatbotPost = await chatbot.talkToDavid(post);
+    if(chatbot.chatbotIsBusy == 1){
+        var funcTime = getTime();
+        console.log("CHATBOT IS BUSY")
+        messageBoardLogger.clientMessageBoard(`
+        time: ${funcTime} 
+        "ATTEMPTED CHATBOT REPLY BUT CHATBOT WAS BUSY : ${messageUi.chatbotName1}"
+        `);
+        return;
+    };
+    sendChatBotIsNotTypingToAllClients();
+    sendChatBotIsTypingToAllClients();    
+    chatbot.chatbotIsBusy = 1;
+    let chatbotPost = await chatbot.talkToDavid(post);    
     let img;    
     let dbResponse = await db.dbInsertPost(chatbotPost,75,img);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
     time: ${funcTime} 
-    "INSERTED POST FROM ${messageUi.chatbotName1}"
-    `);
+    "INSERTED POST FROM CHATBOT : ${messageUi.chatbotName1}"
+    `);    
+    sendChatBotIsNotTypingToAllClients();
     sendRefreshPostsEventToAllClients();
+    chatbot.chatbotIsBusy = 0;
     return;
 };
 
@@ -197,6 +211,18 @@ async function sendRemoveFactToChatbot(fact){
 
 function sendRefreshPostsEventToAllClients(){
     clientEvents.sendEvents("reloadPosts");
+    return;
+};
+
+function sendChatBotIsTypingToAllClients(){
+    // console.log("SENDING EVENT CHATBOTISTYPING");
+    clientEvents.sendEvents("chatbotIsTyping");
+    return;
+};
+
+function sendChatBotIsNotTypingToAllClients(){
+    // console.log("SENDING EVENT CHATBOTISNOTTYPING");
+    clientEvents.sendEvents("chatbotIsNotTyping");
     return;
 };
 

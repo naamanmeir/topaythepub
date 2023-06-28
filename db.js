@@ -785,7 +785,23 @@ exports.dbInsertFact = async function (fact,level){
 
 exports.dbRemoveFact = async function (fact,level){  
   if (level == null){level=0};  
-  let sql = ("DELETE FROM "+tableFacts+" WHERE fact LIKE '%"+fact+"%' AND factid > 0;");  
+  let sql = ("DELETE FROM "+tableFacts+" WHERE fact LIKE '%"+fact+"%' AND factid > 1;");  
+  let messageReturn = await pool.query(sql);
+  return messageReturn;
+};
+
+
+exports.dbRemoveOldestFact = async function (fact,level){  
+  if (level == null){level=0};  
+  let sql = ("DELETE FROM "+tableFacts+" WHERE factid > 1 ORDER BY factid ASC LIMIT 1;");  
+  let messageReturn = await pool.query(sql);
+  return messageReturn;
+};
+
+
+exports.dbRemoveAllFacts = async function (fact,level){  
+  if (level == null){level=0};
+  let sql = ("DELETE FROM "+tableFacts+" WHERE factid > 1;");  
   let messageReturn = await pool.query(sql);
   return messageReturn;
 };
