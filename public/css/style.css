@@ -520,7 +520,7 @@ p {
 }
 
 .postDisplay {
-    color: #deb911;
+    color: #ebcb3d;
     border: 1px dotted rgb(6, 143, 129);
     border-radius: 2%;
     display: flex;
@@ -541,10 +541,10 @@ p {
     width: fit-content;
     height: fit-content;
     position: absolute;
-    padding: 1rem;
-    left: 1rem;
+    padding: 0.5rem;
+    left: 1.5rem;
     color: white;
-    background-color: rgba(18, 93, 123, 0.382);
+    background-color: rgba(23, 107, 140, 0.526);
 }
 
 .postDisplayImg {
@@ -577,11 +577,14 @@ p {
 }
 
 .chatbotPost {
-    color: #279411;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: #8ace88;
     border: 1px dotted rgb(6, 143, 129);
     border-radius: 5%;
     left: 0px;
     margin-right: 2rem;
+    background-color: #051930c1;
+
 }
 
 .progressBarDiv {

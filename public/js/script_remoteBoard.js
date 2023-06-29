@@ -9,6 +9,7 @@ function loadUtiliti() {
     connectEventSource();
     imagePreview();
     createProgressBar();
+    scrollPosts();
 };
 
 let postInput; 
@@ -108,7 +109,7 @@ function postContextMenu(e){
     },1000);
 };
 
-function postLenghthCheck(){    
+function postLenghthCheck(){
     if(postInput.value.length >= (PostLengthMax)){
         document.getElementById("mboardSend").style.display="none";
         document.getElementById("mboardSendError").style.display="block";
@@ -118,24 +119,24 @@ function postLenghthCheck(){
     }
 };
 
-function keyboardFocusMboard(){    
+function keyboardFocusMboard(){
     if(document.getElementById("postInput") != null){
-    window.onkeydown = function () { postInput.focus(); };
-    postInput.addEventListener("keypress", function(event) {        
-        if (event.key === "Enter") {
-            event.preventDefault();
-            document.getElementById("mboardSend").click();
-        }
-    });
-}
+        window.onkeydown = function () { postInput.focus(); };
+        postInput.addEventListener("keypress", function(event) {        
+            if (event.key === "Enter") {
+                event.preventDefault();
+                document.getElementById("mboardSend").click();
+            }
+        });
+    }
     return;
 };
 
-function resetAutoLogoutMboard(){    
+function resetAutoLogoutMboard(){
     resetAutoLogout();
 };
 
-function postDelete(postid){   
+function postDelete(postid){
     
     let panel = document.getElementById("contextMenu");
     let preColor = panel.style.backgroundColor;
@@ -161,7 +162,7 @@ function postDelete(postid){
     },1000);
 };
 
-function postCopy(postdiv){    
+function postCopy(postdiv){
     let panel = document.getElementById("contextMenu");
     let preColor = panel.style.backgroundColor;
     panel.style.transition =  "all 0.4s";
@@ -253,7 +254,7 @@ function createProgressBar(){
     progBar.className = "progressBar";    
 };
 
-function imagePreview(){    
+function imagePreview(){
     var postImg = document.getElementById('postImgPreview');
     var imageAddButton = document.getElementById('imageAddButton');
     var imageRemoveButton = document.getElementById('imageRemoveButton');
@@ -273,7 +274,7 @@ function imagePreview(){
     });
 };
 
-function imageCancel(){    
+function imageCancel(){
     var postImg = document.getElementById('postImgPreview');
     postImg.style.display = "none";
     imageSelector.value = "";
@@ -281,7 +282,7 @@ function imageCancel(){
     imageRemoveButton.style.display = "none";
 };
 
-function messageBoardRefreshPosts(){    
+function messageBoardRefreshPosts(){
     getRequest("./reloadPosts", displayPostsInDiv);
     return;
 };
@@ -313,21 +314,23 @@ function otherSideIsTyping(act){
         chatbotIsTyping = 1;
         let i = 0;
         const txt = otherSideIsTypingMessage;
-        let speed = 120;    
+        let speed = Math.random() * (500 - 90) + 90;    
 
         function type(){        
             if(chatbotIsTyping==0){return;};
             placeholder = txt.substring(0,i+1);
             inputElement.setAttribute("placeholder",placeholder);
             i++;
+            speed = Math.random() * (500 - 90) + 90;
             if(i>=txt.length){
                 placeholder = "";
-                speed = 300;
                 i=11;
             };
             setTimeout(type,speed);            
             };
-        type();
+            setTimeout(() => {
+                type()
+            },1500);
     };
     if(act==0){        
         inputElement.setAttribute("placeholder",placeholderDefault);
