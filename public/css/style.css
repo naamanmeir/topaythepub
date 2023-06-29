@@ -541,10 +541,10 @@ p {
     width: fit-content;
     height: fit-content;
     position: absolute;
-    padding: 1rem;
-    left: 1rem;
+    padding: 0.5rem;
+    left: 1.5rem;
     color: white;
-    background-color: rgba(18, 93, 123, 0.382);
+    background-color: rgba(23, 107, 140, 0.526);
 }
 
 .postDisplayImg {
