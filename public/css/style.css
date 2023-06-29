@@ -520,7 +520,7 @@ p {
 }
 
 .postDisplay {
-    color: #deb911;
+    color: #ebcb3d;
     border: 1px dotted rgb(6, 143, 129);
     border-radius: 2%;
     display: flex;
@@ -577,11 +577,14 @@ p {
 }
 
 .chatbotPost {
-    color: #279411;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: #8ace88;
     border: 1px dotted rgb(6, 143, 129);
     border-radius: 5%;
     left: 0px;
     margin-right: 2rem;
+    background-color: #051930c1;
+
 }
 
 .progressBarDiv {
