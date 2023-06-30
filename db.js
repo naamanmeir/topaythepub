@@ -520,7 +520,22 @@ exports.dbGetNameBySearchName = function (clientName) {
     " WHERE name LIKE '%" + clientName + "%' ORDER BY last_action DESC;");
 };
 
-//-----------------------GET ID NICK AND NAME FROM DB BY NICK SEARCH----------------------//
+//-----------------------GET ID NICK AND NAME FROM DB BY NICK ----------------------//
+exports.dbGetNameByNick = function (query) {  
+  let queryList = query.split(" ");
+  if (queryList[1] == null) { queryList[1] = queryList[0] };
+  if (queryList[2] == null) { queryList[2] = queryList[0] };
+  if (queryList[3] == null) { queryList[3] = queryList[0] };
+  if (queryList[4] == null) { queryList[4] = queryList[0] };
+  return pool.query("SELECT id,nick,name FROM " + tableClients +
+    " WHERE nick LIKE '%" + queryList[0] + "%'" +
+    " AND nick LIKE '%" + queryList[1] + "%'" +
+    " AND nick LIKE '%" + queryList[2] + "%'" +
+    " AND nick LIKE '%" + queryList[3] + "%'" +
+    " ORDER BY last_action DESC;");
+};
+
+//-----------------------GET ID NICK AND NAME FROM DB BY NICK AND NAME----------------------//
 exports.dbGetNameBySearch = function (query) {  
   let queryList = query.split(" ");
   if (queryList[1] == null) { queryList[1] = queryList[0] };

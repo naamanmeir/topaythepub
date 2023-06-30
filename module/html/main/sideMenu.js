@@ -2,9 +2,6 @@ exports.buildHtml = function (message) {
     let html = ``;    
     html +=
         `
-        <head>
-          <link rel="stylesheet" href="./css/sidemenu.css">
-        </head>
         <div class="sideMenuDiv">
             <p id="openAbout" onclick="populateAbout()">${message.sideMenuOpenAbout}</p>
             <p id="fullScreenButton">${message.sideMenuFullScreen}</p>

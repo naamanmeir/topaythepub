@@ -8,9 +8,7 @@ let messagesJson = require('../messages.json');
 let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
 let messageError = messagesJson.error[0];
-let reqThreshTime = 4000;
-let reqThreshState = 0;
-let reqThreshTimer;
+
 
 //------------------------CLIENT UI COMMANDS-------------------//
 
@@ -20,7 +18,7 @@ routerClient.post('/searchName/', async (req, res) => {
     if (!req.body || req.body == null) { res.end(); return; };
     var query = (req.body.name);
     let names = [];
-    names = await db.dbGetNameBySearch(query);
+    names = await db.dbGetNameByNick(query);
     if (names.length == 0) {
         res.send(JSON.stringify({ 'errorClient': messageClient.notExist }));
         return;
@@ -31,7 +29,6 @@ routerClient.post('/searchName/', async (req, res) => {
 
 routerClient.post('/userLogin/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
-    // console.log("USER LOGIN ACCEPTED: " + req.body.id);
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);    
     actionsLogger.login(`
@@ -65,15 +62,8 @@ routerClient.post('/userLogout/', async (req,res)=>{
 });
 
 routerClient.post('/getUserPage/', async (req, res) => {
-    // console.log("start"); // DISABLED FOR TESTING causes probs with JSON res
-    // if(reqThreshFunc()){
-    //     console.log("thresh");
-    //     return;
-    // };
-    // console.log(reqThreshFunc());
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let reqId = req.body.id;
-    console.log("GET USER DATA FOR:  " + reqId);
     let userPageModule = require("../module/html/content/userPage");
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
@@ -92,24 +82,29 @@ routerClient.post('/getUserPage/', async (req, res) => {
     loggedUserDetails = JSON.parse(loggedUserDetails);
     let userDataFromDb = await db.dbGetClientInfoById(reqId);
     let html = JSON.stringify(userPageModule.buildHtml(messageUi,loggedUserDetails, userDataFromDb));
-    // console.log(html);
     res.send(html);
-    console.log("SENT USER INFO AS HTML");
     delete require.cache[require.resolve("../module/html/content/userPage")];
     return;
 });
 
 routerClient.post('/userAutoLogout/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
-    console.log("AUTOLOGOUT BY ID: " + req.body.id);
     let autoLoggedOutUserDetails = [];
     autoLoggedOutUserDetails = await db.dbGetClientDetailsById(req.body.id);
-    console.log(`
-    AUTOLOGGEDOUT FROM USER : 
-    ${autoLoggedOutUserDetails[0].name},
-    ${autoLoggedOutUserDetails[0].nick},
-    ${autoLoggedOutUserDetails[0].account})
+    // console.log(`
+    // AUTOLOGGEDOUT FROM USER : 
+    // ${autoLoggedOutUserDetails[0].name},
+    // ${autoLoggedOutUserDetails[0].nick},
+    // ${autoLoggedOutUserDetails[0].account})
+    // `);
+
+    actionsLogger.userAction(`
+    message: AUTOLOGGEDOUT FROM USER : 
+    name:${autoLoggedOutUserDetails[0].name}
+    nick:${autoLoggedOutUserDetails[0].nick}
+    account:${autoLoggedOutUserDetails[0].account}
     `);
+
     autoLoggedOutUserDetails = JSON.stringify({
         'id': req.body.id,
         'name': autoLoggedOutUserDetails[0].name,
@@ -123,7 +118,6 @@ routerClient.post('/userAutoLogout/', async (req, res) => {
 
 routerClient.post('/changeNick/', validatorClient(), async (req, res) => {
     if (!req.body.id || req.body.id == null || req.body.newNick == null || req.body.newNick == "") { res.end(); return; }
-    console.log("CHANGE USER NICKNAME BY ID: " + req.body.id);
     let newNick = req.body.newNick;
     let id = req.body.id;
     let existingUserDetails = await db.dbGetClientDetailsById(id);   
@@ -142,8 +136,6 @@ routerClient.post('/changeNick/', validatorClient(), async (req, res) => {
 //------------------------CLIENT USER ACTIONS-------------------//
 
 routerClient.post('/requestOrderPage/', async (req, res) => {
-    // if(reqThreshFunc()){console.log("-------------");res.end();return;};
-    // console.log(reqThreshFunc());
     if (!req.body.order && !req.body.userId) { res.end(); return; };
     let orderDataRaw = req.body;
     let orderData = Object.entries(req.body.order);
@@ -182,8 +174,6 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
     let htmlOrderData = { "html": html, "orderData": orderDataRaw, "totalSum": orderPriceSum };
     orderBuiltData = JSON.stringify(htmlOrderData);
     res.send(htmlOrderData);
-    // console.log(htmlOrderData);
-    // console.log("SENT ORDER CONFIRMATION PAGE AS HTML");
     delete require.cache[require.resolve("../module/html/content/orderConfirm")];
     return;
 });
@@ -213,8 +203,7 @@ routerClient.post('/placeOrder/', async function (req, res) {
     return;
 });
 
-routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {
-    // if(reqThreshFunc()){res.end();return;};
+routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {    
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let userId = JSON.parse(req.body.id);
     let orderInfo;
@@ -234,20 +223,18 @@ routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {
         'account': loggedUserDetails[0].account
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
-    // console.log("request delete confirmation for order: ");
-    // console.log(orderInfo);
-    // console.log("for user id: ");
-    // console.log(userId);
+    ordersLogger.orderDelete(`
+    user: ${userId} 
+    contains: ${orderInfo}
+    `);
     let deleteOrderConfirmPage = require("../module/html/content/orderDeleteConfirm");
-    let html = JSON.stringify(deleteOrderConfirmPage.buildHtml(messageClient,messageUi,loggedUserDetails, orderInfo));
-    // console.log(html);
+    let html = JSON.stringify(deleteOrderConfirmPage.buildHtml(messageClient,messageUi,loggedUserDetails, orderInfo));    
     res.send(html);
     delete require.cache[require.resolve("../module/html/content/orderDeleteConfirm")];
     return;
 });
 
-routerClient.post('/deleteLastOrder/', async (req, res) => {
-    // if(reqThreshFunc){res.end();return;};
+routerClient.post('/deleteLastOrder/', async (req, res) => {    
     if (!req.body.id || req.body.id == null) { res.end(); return; };
     let clientId = JSON.parse(req.body.id);
     let deleteLastOrderResponse;
@@ -263,8 +250,7 @@ routerClient.get('/windowIsOpen/', async(req,res) => {
     actionsLogger.userAction(`
     time: ${funcTime} 
     "WINDOW IS OPEN"
-    `);
-    // reqThreshState = 0;
+    `);    
     res.end();
 });
 
@@ -273,19 +259,8 @@ routerClient.get('/windowIsClose/', async(req,res) => {
     actionsLogger.userAction(`
     time: ${funcTime} 
     "WINDOW IS CLOSE"
-    `);
-    // reqThreshState = 0;
+    `);    
     res.end();
 });
-
-function reqThreshFunc(){
-    if(reqThreshState==1){return true};
-    if(reqThreshState==0){reqThreshState=1};
-    clearTimeout(reqThreshTimer);
-    reqThreshTimer = setTimeout(()=>{
-        reqThreshState = 0;
-    },reqThreshTime)
-    return false;
-};
 
 module.exports = routerClient;

@@ -109,7 +109,7 @@ function openMessageWindow(message,className){
     p.className = (className);
     p.innerHTML = (message);
     messageWindow.appendChild(p);
-    divContent.appendChild(messageWindow);
+    divFullPage.appendChild(messageWindow);
     let messageTimeout = setTimeout(closeMessageWindow,messageTimeoutTime);
     return;
 };

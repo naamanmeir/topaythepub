@@ -117,11 +117,15 @@ function postContextMenu(e){
                 cmenuCopy.addEventListener('mousedown',()=>{
                     postCopy(postdiv)
                 });
+                
+                document.getElementById("contextMenu").scrollIntoView(
+                    { behavior: "smooth", block: "start", inline: "center" }
+                );
             }else{            
                 document.getElementById("contextMenu").remove();
             }            
         };
-    },1000);
+    },600);
 };
 
 function postLenghthCheck(){    
@@ -310,9 +314,7 @@ function displayPostsInDiv(content){
     if(document.getElementById("messageBoardDivPosts") != null){
         postsDiv = document.getElementById("messageBoardDivPosts");
         postsDiv.innerHTML = content;
-        if((postsDiv.scrollHeight - postsDiv.scrollTop)<1200){
-            scrollPosts();
-        };        
+        scrollPosts();
         return;
     }else{
         return;
@@ -320,6 +322,7 @@ function displayPostsInDiv(content){
 };
 
 function scrollPosts(){
+    postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: smooth";
     postsDiv.scrollTop = postsDiv.scrollHeight;
     setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: auto";}, 500);
 };
@@ -327,7 +330,7 @@ function scrollPosts(){
 function otherSideIsTyping(act){
     
     let placeholder = "";
-    let placeholderDefault = msgInputPlaceholder;    
+    let placeholderDefault = messageUi.mBoardPlaceHolder;    
     let inputElement = document.getElementById("postInput");
 
     if(chatbotIsTyping == 1){return;};
@@ -336,7 +339,7 @@ function otherSideIsTyping(act){
         
         chatbotIsTyping = 1;
         let i = 0;
-        const txt = otherSideIsTypingMessage;
+        const txt = messageUi.otherSideIsTypingMessage;
         let speed = Math.random() * (500 - 90) + 90;    
 
         function type(){        

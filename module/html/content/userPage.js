@@ -1,8 +1,6 @@
 exports.buildHtml = function (messageUi,userInfo, userData) {
         let html = ``;
-        html += `<head>
-            <link rel="stylesheet" href="./css/windowStyle.css">
-            </head>            
+        html += `
             <div class="userInfoCloseButton" id="userPageCloseButton">X</div>
             <div class="windowTop">
             <p>${messageUi.userPageName}${userInfo.name}</p>

@@ -2,9 +2,7 @@ exports.buildHtml = function (messageUi,userInfo, orderData, orderPriceSum) {
 
     // console.log("REQUEST ORDER CONFIRM MODULE START");
     let html = ``;
-    html += `<head>
-            <link rel="stylesheet" href="./css/windowStyle.css">
-            </head>
+    html += `
             <div id="OrderConfirmWindow">
             <div class="windowTop"><p>${messageUi.orderConfirmTitle}</p></div>
             <div class="userInfoCloseButton" id="orderConfirmCloseButton">X</div>            

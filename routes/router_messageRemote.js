@@ -126,10 +126,10 @@ async function insertPostWithImage(req,res,post,user,image){
     time: ${funcTime} 
     "INSERTED POST"
     `); 
-    let posts = await db.dbGetAllPosts();
-    let renderMessageBoard = require("../module/html/messageBoard/boardWindowRemote");
-    let html = renderMessageBoard.buildHtml(messageUi,posts);
-    res.json(html);
+    // let posts = await db.dbGetAllPosts();
+    // let renderMessageBoard = require("../module/html/messageBoard/boardWindowRemote");
+    // let html = renderMessageBoard.buildHtml(messageUi,posts);
+    // res.json(html);
     res.end();
     sendRefreshPostsEventToAllClients();
     return; 
