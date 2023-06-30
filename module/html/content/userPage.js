@@ -1,8 +1,6 @@
 exports.buildHtml = function (messageUi,userInfo, userData) {
         let html = ``;
-        html += `<head>
-            <link rel="stylesheet" href="./css/windowStyle.css">
-            </head>            
+        html += `
             <div class="userInfoCloseButton" id="userPageCloseButton">X</div>
             <div class="windowTop">
             <p>${messageUi.userPageName}${userInfo.name}</p>
@@ -15,7 +13,7 @@ exports.buildHtml = function (messageUi,userInfo, userData) {
             </div>           
             <br>`
         html += `<div id="userInfoTableDiv" class="userInfoTableDiv">
-            <table class="userInfoTable"><tbody>`
+            <table id="userInfoTable" class="userInfoTable"><tbody>`
         html += `<tr class="tableHead"><th>${messageUi.userPageTableSum}</th>
             <th>${messageUi.userPageTableDetails}</th><th>${messageUi.userPageTableDate}</th>
             <th>${messageUi.userPageTableId}</th></tr>`

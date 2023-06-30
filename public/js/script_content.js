@@ -109,7 +109,7 @@ function openMessageWindow(message,className){
     p.className = (className);
     p.innerHTML = (message);
     messageWindow.appendChild(p);
-    divContent.appendChild(messageWindow);
+    divFullPage.appendChild(messageWindow);
     let messageTimeout = setTimeout(closeMessageWindow,messageTimeoutTime);
     return;
 };
@@ -408,6 +408,7 @@ function openUserPage(content) {
     let closeButton = document.getElementById("userPageCloseButton");
     let windowButtons = document.getElementById("windowButtons");
     windowButtons.className = ("windowbuttons");
+    let userInfoTable = document.getElementById("userInfoTable");
     let closeWindowButton = document.getElementById("closeWindowButton");
     closeWindowButton.className = ("windowButton yes");
     let deleteOrderButton = document.getElementById("deleteOrderButton");
@@ -423,6 +424,7 @@ function openUserPage(content) {
         closeWindows();
         return deleteLastOrderConfirm(currentUserLogged.id);
     });
+    userInfoTable.addEventListener("scroll",resetAutoLogout);    
     userInfoTableDiv.addEventListener("scroll",resetAutoLogout);    
     userInfoChangeNickText.addEventListener('input',resetAutoLogout);
     userInfoChangeNickButton.addEventListener('click', function () {

@@ -73,10 +73,10 @@
             "SideMenuRefreshPage": "טען מחדש",
             "SideMenuLogOutClient": "נתק מסוף",
             "SideMenuCloseSideMenu": "⟹",
-            "floatMenuButton": "לוח מודעות",
+            "floatMenuButton": "פורום",
             "footerText": " זה של הפאב ונוצר על ידי ניבה גבינהצהובה",
             "mBoardHeader": "לוח מודעות",
-            "mBoardPlaceHolder": "לכתוב פה הודעה",
+            "mBoardPlaceHolder": "אפשר לכתוב פה...",
             "mBoardButtonSend": "שלח",
             "mBoardButtonSendError": "לא",
             "mBoardFooter": "אפשר לכתוב פה דברים",
@@ -129,7 +129,9 @@
             "orderMessage": "רישום נרשם",
             "orderAbortButton": "בוטל⌛️יצירת🔌רישום🗑ומהתחלה",
             "noOrderToAbortButton": "🤦‍♂️ 🤷‍♀️ 🤷 🤷‍♂️",
-            "clientAutoLogout": "💤 התנתק עקב חוסר שימוש 💤"
+            "clientAutoLogout": "💤 התנתק עקב חוסר שימוש 💤",
+            "clientChangeNickExist": "הכינוי קיים תמצאו אחד אחר",
+            "clientChangeNickOk": "הכינוי הוחלף קוראים לכם עכשיו : "
         }
     ],
     "error": [

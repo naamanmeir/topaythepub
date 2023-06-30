@@ -2,9 +2,6 @@ exports.buildHtml = function (message) {
     let html = ``;    
     html +=
         `
-        <head>
-            <link rel="stylesheet" href="./css/header.css">
-        </head>
         <div class="header no-border anim1">
             <p id="headerAnimElement1" class="animElement animColor1">${getRandomElemetn(message)}</p>
             <p id="headerText" class="shadow1">${message.headerText}</p>

@@ -33,7 +33,7 @@ function closeMessageBoard(){
 function mBoardUtilities(){
     postsDiv = document.getElementById("divPosts");
     postsDiv.addEventListener('touchstart', (e) => {postContextMenu(e)});
-    postsDiv.addEventListener('mousedown', (e) => {postContextMenu(e)});    
+    postsDiv.addEventListener('mousedown', (e) => {postContextMenu(e)});
     postInput = document.getElementById("postInput");
     postInput.maxLength = PostLengthMax;
     postInput.addEventListener("keydown",postLenghthCheck);
@@ -48,21 +48,24 @@ function postContextMenu(e){
     let postdiv;
     let menu;
 
+
+
     if(document.getElementById("contextMenu") && e.target.parentNode.id != "contextMenu"){
         document.getElementById("contextMenu").remove();
     };       
     
-    postsDiv.addEventListener('touchend',()=>{        
+    postsDiv.addEventListener('touchend',()=>{
         clearTimeout(pressTimer);
         return;
     });
 
-    postsDiv.addEventListener('mouseup',()=>{        
+    postsDiv.addEventListener('mouseup',()=>{
         clearTimeout(pressTimer);
         return;
     });
 
     let pressTimer = setTimeout(function(){
+
         if(e.target.parentNode.id.startsWith("post")){
             target = e.target.parentNode.id;
             
@@ -89,7 +92,6 @@ function postContextMenu(e){
                 cmenuErase.style.backgroundImage="url(../img/ui/cmenu_erase.png)";
                 cmenuCopy.style.backgroundImage="url(../img/ui/cmenu_copy.png)";
 
-
                 cmenuErase.addEventListener('touchstart',()=>{
                     postDelete(postid)
                 });
@@ -102,11 +104,16 @@ function postContextMenu(e){
                 cmenuCopy.addEventListener('mousedown',()=>{
                     postCopy(postdiv)
                 });
+
+                document.getElementById("contextMenu").scrollIntoView(
+                    { behavior: "smooth", block: "start", inline: "center" }
+                );
+
             }else{            
                 document.getElementById("contextMenu").remove();
             }            
         };
-    },1000);
+    },600);
 };
 
 function postLenghthCheck(){
@@ -247,7 +254,7 @@ function updateProgress(e){
     };
 };
 
-function createProgressBar(){    
+function createProgressBar(){
     progBarDiv = document.getElementById("progBarDiv");
     progBar = document.getElementById("progBar");
     progBarDiv.className = "progressBarDiv";
@@ -289,16 +296,17 @@ function messageBoardRefreshPosts(){
 
 function displayPostsInDiv(content){
     content = JSON.parse(content);
-    postsDiv.innerHTML = content;    
-    if((postsDiv.scrollHeight - postsDiv.scrollTop)<1200){
-        scrollPosts();            
-    };
-    return;    
+    postsDiv.innerHTML = content;
+    scrollPosts();
+    return;
 };
 
 function scrollPosts(){
+    postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: smooth";
     postsDiv.scrollTop = postsDiv.scrollHeight;
-    setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: auto";}, 500);
+    setTimeout(() => {postsDiv.style = "scroll-behavior: auto";postsDiv.scrollTop = postsDiv.scrollHeight;}, 500);
+    postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: smooth";
+
 };
 
 function otherSideIsTyping(act){
@@ -342,7 +350,6 @@ function otherSideIsTyping(act){
 function otherSideIsNotTyping(){
     chatbotIsTyping = 0;    
 };
-
 
 //------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
 async function getRequest(url, callback, data) {
@@ -478,8 +485,8 @@ function openWindows(openWindow){
     return;
 };
 
-
 //------------------------FAKE FUNCTION TO NULL RESPONSES----------------
+
 async function responseToNull(res) {
     res = null;
     delete res;
@@ -519,7 +526,6 @@ function inputSanitize(input) {
 };
 
 //------------------------ SERVER SIDE EVENTS ----------------//
-
 
 function connectEventSource() {
     if (!!window.EventSource) {

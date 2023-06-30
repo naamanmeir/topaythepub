@@ -1,10 +1,6 @@
 exports.buildHtml = function (messageClient,messageUi,userInfo,orderInfo) {
 
-    let html = `
-        <head>
-        <link rel="stylesheet" href="./css/windowStyle.css">
-        </head> 
-        `;
+    let html = ``;
         html +=
             `
             <div id="deleteOrderConfirmWindow">

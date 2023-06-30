@@ -11,7 +11,8 @@ const logLevels = {
         clientRegistered: 6,
         clientUnregistered: 7,
         clientLogout: 8,
-        clientMessageBoard: 9
+        clientMessageBoard: 9,
+        orderDelete: 10
     },
     colors: {
         error: 'red',
@@ -22,7 +23,8 @@ const logLevels = {
         clientAttempted: 'red',
         clientRegistered: 'green',
         clientLogout: 'orange',
-        clientMessageBoard: 'green'
+        clientMessageBoard: 'green',
+        orderDelete: 'red'
     }
 };
 
@@ -63,7 +65,7 @@ const actionsLogger = createLogger({
     transports: [
         new transports.Console({level:'login'}),
         new transports.File({ filename: 'login.log',level:'login' }),
-        // new transports.Console({level:'userAction'}),
+        new transports.Console({level:'userAction'}),
         new transports.File({ filename: 'actions.log',level:'userAction' })
     ]
 });
@@ -75,7 +77,9 @@ const ordersLogger = createLogger({
     ),
     transports: [
         new transports.Console({level:'order'}),
-        new transports.File({ filename: 'orders.log' , level:'order'})
+        new transports.File({ filename: 'orders.log' , level:'order'}),
+        new transports.Console({level:'orderDelete'}),
+        new transports.File({ filename: 'orders.log' , level:'orderDelete'})
     ]
 });
 const messageBoardLogger = createLogger({
