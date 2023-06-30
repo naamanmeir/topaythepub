@@ -91,13 +91,6 @@ routerClient.post('/userAutoLogout/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let autoLoggedOutUserDetails = [];
     autoLoggedOutUserDetails = await db.dbGetClientDetailsById(req.body.id);
-    // console.log(`
-    // AUTOLOGGEDOUT FROM USER : 
-    // ${autoLoggedOutUserDetails[0].name},
-    // ${autoLoggedOutUserDetails[0].nick},
-    // ${autoLoggedOutUserDetails[0].account})
-    // `);
-
     actionsLogger.userAction(`
     message: AUTOLOGGEDOUT FROM USER : 
     name:${autoLoggedOutUserDetails[0].name}
@@ -120,7 +113,18 @@ routerClient.post('/changeNick/', validatorClient(), async (req, res) => {
     if (!req.body.id || req.body.id == null || req.body.newNick == null || req.body.newNick == "") { res.end(); return; }
     let newNick = req.body.newNick;
     let id = req.body.id;
-    let existingUserDetails = await db.dbGetClientDetailsById(id);   
+    let existingUserDetails = await db.dbGetClientDetailsById(id);
+    
+    let isNickExist = await db.dbGetNameByNickExact(newNick);
+
+    if(isNickExist.length != 0){
+        res.json({'errorClient':messageClient.clientChangeNickExist});
+        return;
+    };
+
+    let newUserNickNameResults = await db.dbChangeNickById(newNick,id);
+    console.log(messageClient.clientChangeNickOk +''+ newNick)
+    res.json({'errorClient':messageClient.clientChangeNickOk + newNick});
     actionsLogger.userAction(`
     message: CHANGE NICKNAME OF USER : 
     id: ${req.body.id} ,
@@ -129,8 +133,6 @@ routerClient.post('/changeNick/', validatorClient(), async (req, res) => {
     account:${existingUserDetails[0].account}
     TO NEW NICKNAME: ${newNick}
     `);
-    let newUserNickNameResults = await db.dbChangeNickById(newNick,id);    
-    res.json({'errorClient':existingUserDetails[0].nick+" IS NOW "+newNick});
     return;
 });
 //------------------------CLIENT USER ACTIONS-------------------//

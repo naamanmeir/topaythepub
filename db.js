@@ -535,6 +535,13 @@ exports.dbGetNameByNick = function (query) {
     " ORDER BY last_action DESC;");
 };
 
+//-----------------------GET ID NICK AND NAME FROM DB BY EXACT NICK ----------------------//
+exports.dbGetNameByNickExact = function (query) {
+  return pool.query("SELECT id,nick,name FROM " + tableClients +
+    " WHERE nick LIKE '" + query + "'" +    
+    " ORDER BY last_action DESC;");
+};
+
 //-----------------------GET ID NICK AND NAME FROM DB BY NICK AND NAME----------------------//
 exports.dbGetNameBySearch = function (query) {  
   let queryList = query.split(" ");

@@ -129,7 +129,9 @@
             "orderMessage": "רישום נרשם",
             "orderAbortButton": "בוטל⌛️יצירת🔌רישום🗑ומהתחלה",
             "noOrderToAbortButton": "🤦‍♂️ 🤷‍♀️ 🤷 🤷‍♂️",
-            "clientAutoLogout": "💤 התנתק עקב חוסר שימוש 💤"
+            "clientAutoLogout": "💤 התנתק עקב חוסר שימוש 💤",
+            "clientChangeNickExist": "הכינוי קיים תמצאו אחד אחר",
+            "clientChangeNickOk": "הכינוי הוחלף קוראים לכם עכשיו : "
         }
     ],
     "error": [
