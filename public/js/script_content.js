@@ -1,6 +1,6 @@
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
-const messageTimeoutTime = 2500;
+const messageTimeoutTime = 3000;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 
@@ -113,11 +113,11 @@ function openMessageWindow(message,className){
     let messageTimeout = setTimeout(closeMessageWindow,messageTimeoutTime);
     return;
 };
-function closeMessageWindow(){
-    while (messageWindow.hasChildNodes()) {
-        messageWindow.removeChild(messageWindow.firstChild);
-    };    
-    messageWindow.remove();
+function closeMessageWindow(){    
+    messageWindow.style.transition = "opacity 2s ease";
+    messageWindow.style.opacity = "0";
+    setTimeout(function() {
+        messageWindow.remove()},3000);
     return;
 };
 
@@ -349,8 +349,8 @@ function clearCounts() {
     return;
 };
 function orderComplete(content) {
-    // console.log("order complete");
-    // console.log(content);
+    console.log("order complete");
+    console.log(content);
     openMessageWindow(content);
     userLogout();
     return;

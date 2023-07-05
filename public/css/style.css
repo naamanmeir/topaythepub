@@ -1,14 +1,14 @@
 :root {
     --bg01: black;
     --bg02: rgba(104, 99, 99, 0.283);
-    --bg03: rgba(30, 60, 58, 0.413);
+    --bg03: rgba(1, 30, 40, 0.093);
 
     --text01: rgb(225, 168, 10);
     --text02: rgb(255, 255, 0);
     --text03: rgb(148, 158, 158);
     --textBlack: black;
 
-    --border01: rgb(194, 172, 4);
+    --border01: rgba(194, 172, 4, 0.353);
     --border02: rgb(162, 146, 123);
     --border03: rgb(29, 182, 50);
 
@@ -22,10 +22,18 @@
     --listItemEven: #d4d4d4;
     --listItemSelected: #699db7;
 
-    --itemPrice: #e68d07;
+    --itemPrice: #19e607;
     --itemCount: rgb(2, 255, 2);
-    --itemName: #deb911;
+    --itemName: #ffd000;
 
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:blur,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgba(18, 13, 13, 0) inset !important;
 }
 
 /* ------------------scrollbar--------------------- */
@@ -66,7 +74,7 @@ body {
     -o-user-select: none;
     user-select: none;
     scroll-behavior: smooth;
-    white-space: nowrap;
+    /* white-space: nowrap; */
 }
 
 body {
@@ -179,13 +187,14 @@ p {
     position: absolute;
     height: fit-content;
     width: fit-content;
+    max-width: 7rem;
     z-index: 40;
     bottom: 50%;
     left: 1%;
     border-radius: 50%;
     border: 1px outset var(--border02);
     transition: 0.5s;
-    background-color: #1b61b1;
+    background-color: #00629788;
 }
 
 .floatMenuDiv:active {
@@ -196,7 +205,7 @@ p {
 .floatMenuDiv p {
     z-index: 40;
     color: var(--text03);
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     margin: auto;
     padding: 0.6rem;
     color: yellow;
@@ -226,12 +235,12 @@ p {
 .messageWindow {
     z-index: 200;
     position: absolute;
-    max-height: 20%;
+    /* max-height: 20%; */
     height: fit-content;
     max-width: 95%;
     width: 95%;
     top: 30%;
-    padding: 5px 5px 5px 5px;
+    padding: 2%;
     background-color: var(--bg01);
     border: 2px groove var(--border01);
     border-radius: 3rem;
@@ -240,8 +249,8 @@ p {
 
 .messageWindow p {
     color: var(--text01);
-    text-align: center;
-    font-size: larger;
+    text-align: right;
+    font-size: 2rem;
 }
 
 .messageWindow .bottom {
@@ -306,7 +315,6 @@ p {
     display: block;
     z-index: 100;
     position: absolute;
-    overflow-wrap: break-word;
     top: 25%;
     left: 0%;
     right: 0%;
@@ -903,6 +911,7 @@ p {
 
 .footer {
     /* max-width: 800px; */
+    display: none;
     z-index: -1;
     position: absolute;
     color: black;
@@ -1046,7 +1055,7 @@ p {
 
 .topMenuDiv {
     direction: ltr;
-    max-width: 800px;
+    max-width: 80%;
     margin: auto;
     color: aliceblue;
     text-align: center;
@@ -1062,8 +1071,7 @@ p {
 
 #userIndic {
     position: absolute;
-    right: 15%;
-    margin-right: 0px;
+    margin-right: 2rem;
     margin-bottom: 1rem;
     padding: 2px;
 }
@@ -1072,7 +1080,7 @@ p {
     border: 3px outset rgb(17, 69, 118);
     border-radius: 50%;
     padding: 0.5rem;
-    margin-right: 0;
+    /* margin-right: 2; */
     position: absolute;
     right: 10px;
 }

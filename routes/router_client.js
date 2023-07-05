@@ -193,15 +193,34 @@ routerClient.post('/placeOrder/', async function (req, res) {
         orderInfo += (itemData[0].itemname + " - " + orderData[i][1] + ", ");
         orderPriceSum += (itemData[0].price * orderData[i][1]);
     };
+    let loggedUserDetails = [];
+    loggedUserDetails = await db.dbGetClientDetailsById(userId);
     let orderResult;
-    orderResult = JSON.stringify(await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) }));    
+    orderResult = await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) });    
+    let orderClient;
+    orderClient = await db.dbInsertOrderToClient(orderTime, userId, orderPriceSum).then((orderResult) => { return (orderResult) });
     ordersLogger.order(`
         time: ${orderTime} 
         user: ${userId} 
         sum: ${orderPriceSum} 
         contains: ${orderInfo}
         `);
-    res.send(orderResult);
+    let orderResponse = `
+    ${messageClient.orderResponse1}
+    <br>
+    ${orderInfo}
+    <br>
+    ${messageClient.orderResponse2}
+    ${orderPriceSum}
+    ${messageClient.orderResponse3}
+    <br>
+    ${messageClient.orderResponse4}
+    ${loggedUserDetails[0].name}
+    <br>
+    ${messageClient.orderResponse5}
+    `;
+    orderResponse = JSON.stringify(orderResponse);
+    res.send(orderResponse);
     return;
 });
 
@@ -249,19 +268,19 @@ routerClient.post('/deleteLastOrder/', async (req, res) => {
 
 routerClient.get('/windowIsOpen/', async(req,res) => {
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
-    actionsLogger.userAction(`
-    time: ${funcTime} 
-    "WINDOW IS OPEN"
-    `);    
+    // actionsLogger.userAction(`
+    // time: ${funcTime} 
+    // "WINDOW IS OPEN"
+    // `);    
     res.end();
 });
 
 routerClient.get('/windowIsClose/', async(req,res) => {
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
-    actionsLogger.userAction(`
-    time: ${funcTime} 
-    "WINDOW IS CLOSE"
-    `);    
+    // actionsLogger.userAction(`
+    // time: ${funcTime} 
+    // "WINDOW IS CLOSE"
+    // `);    
     res.end();
 });
 

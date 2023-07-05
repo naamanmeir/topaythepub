@@ -409,7 +409,7 @@ exports.dbDeleteClient = async function (clientId) {
 };
 
 //--------------------INSERT ORDER TO ORDERS TABLE----------------//
-exports.dbInsertOrderToOrders = async function (orderTime, clientId, orderInfo, totalPrice) {
+exports.dbInsertOrderToOrdersOld = async function (orderTime, clientId, orderInfo, totalPrice) {
   let prices;
   // prices = await this.dbGetPricesAll().then((response) => {return (response)});
   // var sum = item1*prices[0]+item2*prices[1]+item3*prices[2]+item4*prices[3];  
@@ -436,8 +436,64 @@ exports.dbInsertOrderToOrders = async function (orderTime, clientId, orderInfo, 
   return returnString;
 };
 
+//--------------------INSERT ORDER TO ORDERS TABLE----------------//
+exports.dbInsertOrderToOrders = async function (orderTime, clientId, orderInfo, totalPrice) {
+  let prices; 
+  let clientName;
+  let insertReturn;
+  let insertClientData;
+  clientName = await this.dbGetClientNameById(clientId);
+  clientName[0].name = clientName[0].name.replace(/\'/g, "''");
+  orderInfo = orderInfo.replace(/\'/g, "''");
+
+  let sql = ('INSERT INTO '+tableOrders+' (time,info,sum,clientid,client) VALUES (now(),?);');
+  let values = [
+    [orderInfo,totalPrice,clientId,clientName[0].name]
+  ];
+  let sqlReturn = await pool.query(sql,values);
+  let dbReturn = sqlReturn;
+  console.log("INSERT TO ORDERS TABLE:");
+  console.log(dbReturn);
+  console.log("-----------------------");
+  return dbReturn;
+};
+
 //--------------------INSERT ORDER TO CLIENT TABLE----------------//
 exports.dbInsertOrderToClient = async function (orderTime, clientId, totalPrice) {
+  let orderResult;
+  let sql = (`UPDATE ${tableClients} SET last_action = (NOW()),
+  sum = sum+${totalPrice}
+  WHERE id = ${clientId};`);
+  let values = [
+    []
+  ];
+  let sqlReturn = await pool.query(sql,values);
+  let dbReturn = sqlReturn;
+  console.log("INSERT TO CLIENT TABLE:");
+  console.log(dbReturn);
+  console.log("-----------------------");
+  return dbReturn;
+
+
+
+  // orderResult = await pool.query(`UPDATE ${tableClients} SET last_action = (NOW()),
+  //  sum = sum+${totalPrice}
+  //  WHERE id = ${clientId};`)
+  //   .then((rows) => {
+  //     // console.log(rows);
+  //     return (rows)
+  //   })
+  //   .catch(err => {
+  //     console.log("CONNECTION Error: " + err)
+  //   })
+  // orderResult = orderResult.affectedRows.toString();
+  // // console.log("------------------------------------------");
+  // // console.log(orderResult);
+  // // console.log("------------------------------------------");
+  // return orderResult;
+};
+
+exports.dbInsertOrderToClientOld = async function (orderTime, clientId, totalPrice) {
   let orderResult;
   orderResult = await pool.query(`UPDATE ${tableClients} SET last_action = (NOW()),
    sum = sum+${totalPrice}
@@ -450,6 +506,9 @@ exports.dbInsertOrderToClient = async function (orderTime, clientId, totalPrice)
       console.log("CONNECTION Error: " + err)
     })
   orderResult = orderResult.affectedRows.toString();
+  console.log("------------------------------------------");
+  console.log(orderResult);
+  console.log("------------------------------------------");
   return orderResult;
 };
 
