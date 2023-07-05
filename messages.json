@@ -50,6 +50,7 @@
             "orderConfirmTotalSum": "סך כל הרישום :",
             "orderConfirmToName": "לחשבון :",
             "orderConfirmToAccount": "מספר :",
+            "deleteorderConfirmAborted": "ההזמנה כבר שולמה",
             "deleteorderConfirmDate": "האם למחוק רישום שנרשם ב :",
             "deleteorderConfirmInfo": "ומכיל :",
             "deleteorderConfirmSum": "בסכום :",
