@@ -588,9 +588,13 @@ exports.dbGetNameByNick = function (query) {
   if (queryList[4] == null) { queryList[4] = queryList[0] };
   return pool.query("SELECT id,nick,name FROM " + tableClients +
     " WHERE nick LIKE '%" + queryList[0] + "%'" +
-    " AND nick LIKE '%" + queryList[1] + "%'" +
-    " AND nick LIKE '%" + queryList[2] + "%'" +
-    " AND nick LIKE '%" + queryList[3] + "%'" +
+    " OR nick LIKE '%" + queryList[1] + "%'" +
+    " OR nick LIKE '%" + queryList[2] + "%'" +
+    " OR nick LIKE '%" + queryList[3] + "%'" +
+    " OR name LIKE '%" + queryList[0] + "%'" +
+    " OR name LIKE '%" + queryList[1] + "%'" +
+    " OR name LIKE '%" + queryList[2] + "%'" +
+    " OR name LIKE '%" + queryList[3] + "%'" +
     " ORDER BY last_action DESC;");
 };
 
