@@ -1,7 +1,4 @@
-exports.buildHtml = function (messageClient,messageUi,userInfo,orderInfo) {
-
-    console.log(orderInfo.sign);
-    
+exports.buildHtml = function (messageClient,messageUi,userInfo,orderInfo) {    
     let html = ``;
         html +=
             `
@@ -12,18 +9,19 @@ exports.buildHtml = function (messageClient,messageUi,userInfo,orderInfo) {
             <p>${messageUi.deleteorderConfirmSum} ${messageUi.orderConfirmCurrency}${orderInfo.sum}<p>
             <p>${messageUi.deleteorderConfirmAccount} ${userInfo.account}<p>
             <p>${messageUi.deleteorderConfirmClient} ${userInfo.name}<p>
-            </div>`
-
-
+            </div>
+            `
         if(orderInfo.sign==1){
-            html += `
+            html += 
+            `
             <div id="windowButtons">
             <button id="deleteOrderConfirmButtonNo">${messageUi.deleteorderConfirmAborted}</button>
             <button id="deleteOrderConfirmButtonYes">X</button>
             </div>
             `
         }else if(orderInfo.sign==0){
-            html += `
+            html += 
+            `
             <div id="windowButtons">
             <button id="deleteOrderConfirmButtonNo">${messageUi.deleteorderConfirmButtonNo}</button>
             <button id="deleteOrderConfirmButtonYes">${messageUi.deleteorderConfirmButtonYes}</button>
