@@ -35,7 +35,7 @@
     color: rgb(245, 191, 90);
     text-shadow: 1px 0px 0px var(--bg01);
     border-radius: 25px;
-    border: 3px double orange;
+    border: 2px double orange;
     background-color: var(--bg01);
     height: 100%;
     width: 100%;
@@ -53,6 +53,7 @@
 ::placeholder {
     color: var(--text01);
     opacity: 1;
+    padding-right: 25%;
 }
 
 *:focus {
@@ -127,7 +128,7 @@
     flex-wrap: wrap;
     justify-content: center;
     margin: auto;
-    width: 90%;
+    width: 80%;
     height: 100%;
     margin-top: 0px;
     margin-bottom: 11%;
@@ -140,45 +141,52 @@
 
 .item {
     position: relative;
-    display: flex;
-    flex-direction: row;
     height: 6rem;
-    max-height: 50%;
-    max-width: fit-content;
+    width: fit-content;
     background-color: var(--bg03);
-    border: 2px outset var(--border01);
-    margin: 0px auto 0px auto;
-    margin-top: 0.5%;
-    margin-bottom: 0.5%;
+    border: 1px outset var(--border01);
+    margin-top: 2%;
+    margin-bottom: 1%;
+    padding: 1%;
     transition: background-color 0.5s ease;
     border-radius: 5%;
+}
+
+.item p {
+    padding: 0px;
+    margin: 0px;
 }
 
 .item img {
     user-select: none;
     pointer-events: none;
+    position: absolute;
     top: 0px;
     padding: 0px;
-    margin: auto auto auto 1%;
-    max-height: 6rem;
-    clear: both;
+    margin: 0px;
+    max-height: 7rem;
+    max-width: 7rem;
+    left: 0.2rem;
+    width: 6rem;
+    height: 6rem;
+    object-fit: contain;
 }
 
 .item:active {
-    border: 2px inset rgba(209, 155, 17, 0.676);
-    background-color: rgb(240, 152, 0, 0.6);
+    border: 1px inset rgba(209, 155, 17, 0.676);
+    background-color: rgba(240, 120, 0, 0.383);
     transition: none;
     user-select: none;
     transition: background-size 0.1s linear;
 }
 
 .item itemName {
-    top: 10%;
+    top: 0px;
     right: 5%;
     padding: 1%;
     margin: 0px;
-    font-size: 1.7rem;
-    font-size: max(5px, 4vw);
+    font-size: 2.2rem;
+    padding-left: 1rem;
     color: var(--itemName);
     text-shadow: 1px 1px 1px #000000;
     user-select: none;
@@ -186,11 +194,14 @@
 }
 
 .item itemPrice {
-    position: relative;
-    top: 10%;
-    margin-left: 5%;
-    font-size: max(4.4vw, 4vw);
+    /* position: relative; */
+    /* right: 2rem; */
+    /* top: 10%; */
+    /* margin-left: 5%; */
     padding-left: 1rem;
+    padding-right: 2rem;
+    padding-bottom: 0px;
+    font-size: 2.8rem;
     color: var(--itemPrice);
     text-shadow: 2px 2px 2px #000000;
     user-select: none;
@@ -204,7 +215,7 @@
     padding: 0px;
     top: -25px;
     bottom: 5%;
-    left: 30%;
+    left: 0%;
     font-size: 8rem;
     color: var(--itemCount);
     font-style: oblique;
@@ -317,7 +328,7 @@
     position: absolute;
     height: fit-content;
     width: 80%;
-    font-size: 100%;
+    font-size: 400%;
     background-color: rgba(0, 0, 0, 0.96);
     border: 2px groove orange;
     margin: auto;

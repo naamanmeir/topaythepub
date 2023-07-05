@@ -7,8 +7,8 @@ exports.buildHtml = function (messageUi,array) {
         class="item" id="item${item.itemid}"
         onmousedown="addItem(${item.itemid})">
         <itemName>${item.itemname}</itemName>
-        <img src="${item.itemimgpath}">
         <itemPrice>${messageUi.orderConfirmCurrency}${item.price}</itemPrice>
+        <img src="${item.itemimgpath}">        
         <div class="itemCount" id="itemCount${item.itemid}"></div>
         </div>
         
