@@ -320,6 +320,7 @@ exports.dbConfirmDeleteLastOrderById = async function (clientId) {
     });
   if (lastOrderDetails[0] == null) { console.log("no order"); return ("no such order"); };
 
+  console.log(lastOrderDetails)
   // if subtrcting order sum is more then user credit sum
   let clientDetail = await pool.query("SELECT sum FROM " + tableClients +
   " WHERE id = " + clientId + ";");
