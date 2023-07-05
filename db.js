@@ -310,7 +310,7 @@ exports.dbEditClient = async function (clientId, field, value) {
 //--------------------VALIDATE LAST ORDER EXIST BY CLIEND ID----------------//
 exports.dbConfirmDeleteLastOrderById = async function (clientId) {
   // if order exist in user columns
-  let lastOrderDetails = await pool.query("SELECT orderid,sum,info,"+
+  let lastOrderDetails = await pool.query("SELECT sign,orderid,sum,info,"+
   "DATE_FORMAT(`time`, '%Y-%m-%d %H:%i') AS `time`,client FROM " + tableOrders +
     " WHERE clientid = " + clientId + " ORDER BY orderid DESC LIMIT 1;")
     .catch((err) => {
@@ -320,11 +320,13 @@ exports.dbConfirmDeleteLastOrderById = async function (clientId) {
     });
   if (lastOrderDetails[0] == null) { console.log("no order"); return ("no such order"); };
 
-  console.log(lastOrderDetails)
   // if subtrcting order sum is more then user credit sum
   let clientDetail = await pool.query("SELECT sum FROM " + tableClients +
   " WHERE id = " + clientId + ";");
-  if (lastOrderDetails[0].sum > clientDetail[0].sum) { console.log("ERROR SUM IS NO LOGICAL"); return ("ERROR WITH THE NUMBERS") };
+  if (lastOrderDetails[0].sum > clientDetail[0].sum) { 
+    console.log("ERROR SUM IS NO LOGICAL"); 
+    // return ("ERROR WITH THE NUMBERS");
+  };
 
   // return order DATA to be inserted into html from MODULE
   lastOrderDetails = lastOrderDetails[0];

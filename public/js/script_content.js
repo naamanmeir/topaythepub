@@ -101,7 +101,7 @@ loadUtiliti();
 
 //-------------------------MESSAGE FLOATING WINDOW-------------------------//
 function openMessageWindow(message,className){
-    console.log("message:"+message);
+    // console.log("message:"+message);
     if(messageWindow != undefined) {messageWindow.remove();};
     messageWindow = document.createElement('div');    
     messageWindow.className = ("messageWindow");
@@ -184,46 +184,36 @@ function clearAutoComplete(autoCompleteDiv) {
 function userIndicState(state, id) {
     switch (state) {
         case 0:
-            // console.log("USER STATE INDIC: " + state);
-            // console.log("USER STATE INDIC: EMPTY");
             userIndicMessage(messageClient.notUsed);
             userLogout();
             break;
         case 1:
-            // console.log("USER STATE INDIC: " + state);
-            // console.log("USER STATE INDIC: NOT IN LIST");
             userLogout();
             break;
         case 2:
-            // console.log("USER STATE INDIC: " + state);
-            // console.log("USER STATE INDIC: SELECT FROM LIST");
             if (searchBox1.value != '') { userIndicMessage(messageClient.enterName); };
             userLogout();
             break;
         case 3:
-            // console.log("USER STATE INDIC: " + state);
-            // console.log("USER STATE INDIC: ACCEPTED");
             userLogin(id);
             break;
         default:
-            // console.log("USER STATE INDIC OUT OF SCOPE")
             break;
     };
 };
 function userLogin(id) {
     currentUserLogged = null;
-    console.log("LOGIN USER: " + id);
     id = JSON.stringify({ "id": id });
     postRequest('./client/userLogin/', window.parent.userLogged, id);
 };
 function userLogged(data) {
     if (data == null || data == '') { console.log("ERROR WITH DB"); return; }
     currentUserLogged = data;
-    console.log(`CURRENT USER LOGGED: 
-    ${currentUserLogged.nick} , 
-    ${currentUserLogged.name} , 
-    ${currentUserLogged.account} ,
-    ${currentUserLogged.id}`);
+    // console.log(`CURRENT USER LOGGED: 
+    // ${currentUserLogged.nick} , 
+    // ${currentUserLogged.name} , 
+    // ${currentUserLogged.account} ,
+    // ${currentUserLogged.id}`);
     displayUserPageButton();
     userIndicLogged();    
     resetAutoLogout()
@@ -349,8 +339,6 @@ function clearCounts() {
     return;
 };
 function orderComplete(content) {
-    console.log("order complete");
-    console.log(content);
     openMessageWindow(content);
     userLogout();
     return;
@@ -376,7 +364,6 @@ function callRequestUserPage(){
     userPageButton.setAttribute('userPageButtonEnableListener', 1);
     userPageButton.style.pointerEvents = "none";
     userPageButton.removeEventListener('click', callRequestUserPage);
-    console.log("clicki the user button");
     requestUserPage(currentUserLogged.id);
     return;
 };
@@ -389,7 +376,6 @@ function hideUserPageButton() {
 };
 function requestUserPage(id) {
     userPageButton.style.pointerEvents = "none";
-    console.log("request user page for user: " + id);
     id = JSON.stringify({ "id": id });
     postRequest('./client/getUserPage/', window.parent.openUserPage, id);
     return;

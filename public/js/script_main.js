@@ -395,38 +395,30 @@ function connectEventSource() {
 
 function eventHandler(event) {
     let data = event.data;
-    // console.log("event: " + data);
     if (JSON.parse(data) == "refresh") {
-        // console.log("MATCH REFRESH TERMINAL");
         refreshPage();
     }
     if (JSON.parse(data) == "reloadItems") {
-        // console.log("MATCH RELOAD ITEMS");
         populateProducts();
     }
     if (JSON.parse(data) == "reloadPosts") {
-        // console.log("MATCH MESSAGE BOARD RELOAD POSTS");
         messageBoardRefreshPosts();
         otherSideIsTyping(0);
     }
     if (JSON.parse(data) == "chatbotIsTyping") {
-        // console.log("MATCH MESSAGE BOARD CHATBOT IS TYPING");
         otherSideIsTyping(1);
     }
     if (JSON.parse(data) == "chatbotIsNotTyping") {
-        // console.log("MATCH MESSAGE BOARD CHATBOT IS NOT TYPING");
         otherSideIsNotTyping();
         otherSideIsTyping(0);
     }
     if (JSON.parse(data) == "0") {
         data = data.replace(/^"(.*)"$/, '$1');
-        // console.log(data);
         let conIndic = document.getElementById("conIndic");
         conIndic.style.opacity = data;
     }
     if (JSON.parse(data) == "1") {
         data = data.replace(/^"(.*)"$/, '$1');
-        // console.log(data);
         let conIndic = document.getElementById("conIndic");
         conIndic.style.opacity = data;
     }

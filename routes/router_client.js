@@ -230,11 +230,12 @@ routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {
     let orderInfo;
     orderInfo = await db.dbConfirmDeleteLastOrderById(userId);    
     orderInfo = JSON.stringify({
+        'sign': orderInfo.sign,
         'orderId': orderInfo.orderid,
         'sum': orderInfo.sum,
         'info': orderInfo.info,
         'time': orderInfo.time
-    });
+    });    
     orderInfo = JSON.parse(orderInfo);    
     loggedUserDetails = await db.dbGetClientDetailsById(userId);
     loggedUserDetails = JSON.stringify({
