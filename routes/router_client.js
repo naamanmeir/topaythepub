@@ -246,7 +246,7 @@ routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {
     loggedUserDetails = JSON.parse(loggedUserDetails);
     ordersLogger.orderDelete(`
     user: ${userId} 
-    contains: ${orderInfo}
+    contains: ${orderInfo.info}
     `);
     let deleteOrderConfirmPage = require("../module/html/content/orderDeleteConfirm");
     let html = JSON.stringify(deleteOrderConfirmPage.buildHtml(messageClient,messageUi,loggedUserDetails, orderInfo));    
