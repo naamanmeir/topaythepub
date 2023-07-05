@@ -21,8 +21,9 @@
 }
 
 .searchBoxDiv {
+    z-index: 80;
     margin: auto;
-    width: 80%;
+    width: 99%;
     margin-top: 0.5rem;
     height: 6rem;
     top: 0px;
@@ -34,12 +35,12 @@
 .searchBox {
     color: rgb(245, 191, 90);
     text-shadow: 1px 0px 0px var(--bg01);
-    border-radius: 25px;
-    border: 2px double orange;
+    border-radius: 1%;
+    border: 1px double orange;
     background-color: var(--bg01);
-    height: 100%;
+    height: 4rem;
     width: 100%;
-    font-size: 2rem;
+    font-size: 2.1rem;
     margin: auto;
     padding-top: 0px;
     padding-right: 1em;
@@ -53,7 +54,7 @@
 ::placeholder {
     color: var(--text01);
     opacity: 1;
-    padding-right: 25%;
+    padding-right: 16%;
 }
 
 *:focus {

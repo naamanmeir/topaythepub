@@ -7,7 +7,18 @@ exports.buildHtml = function (messageUi,array) {
         class="item" id="item${item.itemid}"
         onmousedown="addItem(${item.itemid})">
         <itemName>${item.itemname}</itemName>
-        <itemPrice>${messageUi.orderConfirmCurrency}${item.price}</itemPrice>
+        `        
+        if(item.price>0){
+            html +=`
+            <itemPrice>${messageUi.orderConfirmCurrency}${item.price}</itemPrice>
+            `;
+        }else{
+            html +=`
+            <itemPrice></itemPrice>
+            <br><br>
+            `;
+        }
+        html +=`        
         <img src="${item.itemimgpath}">        
         <div class="itemCount" id="itemCount${item.itemid}"></div>
         </div>
@@ -16,5 +27,4 @@ exports.buildHtml = function (messageUi,array) {
 
     });
     return html;
-    // style="background-image: url('${item.itemimgpath}')" 
 };
