@@ -545,7 +545,7 @@ exports.dbChangeNickById = function (newNick,clientId) {
 
 //-----------------------GET ALL CLIENT DETAILS BY ID----------------------//
 exports.dbGetClientInfoById = function (id) {
-  return pool.query("SELECT sum,info," +
+  return pool.query("SELECT sign,sum,info," +
     "DATE_FORMAT(`time`, '%Y-%m-%d %H:%i') AS `formatted_date`,orderid FROM " +
     tableOrders +
     " WHERE clientid LIKE " + id +

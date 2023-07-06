@@ -30,13 +30,8 @@ routerClient.post('/searchName/', async (req, res) => {
 routerClient.post('/userLogin/', async (req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let loggedUserDetails = [];
+    actionsLogger.login(actionsLogger.login(req.body.id));
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);    
-    actionsLogger.login(`
-        id: ${req.body.id} ,
-        name:${loggedUserDetails[0].name},
-        nick:${loggedUserDetails[0].nick},
-        account:${loggedUserDetails[0].account}
-        `);
     loggedUserDetails = JSON.stringify({
         'id': req.body.id,
         'name': loggedUserDetails[0].name,
@@ -53,6 +48,7 @@ routerClient.post('/userLogout/', async (req,res)=>{
         if(req.body.id > 0 && req.body.id < 1000){
             console.log("CLIENT USER LOGOUT:");
             console.log(req.body.id);
+            actionsLogger.logout(`id: ${req.body.id}`);
             res.send(JSON.stringify({"message":`userId ${req.body.id}LogOut Verifyed on Server`}));
             return;
         };
