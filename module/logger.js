@@ -4,6 +4,7 @@ const logLevels = {
     levels:{
         error: 0,
         login: 1,
+        logout:11,
         order: 2,
         userAction: 3,
         clientLogin: 4,
@@ -59,12 +60,14 @@ const clientLogger = createLogger({
 const actionsLogger = createLogger({
     levels: logLevels.levels,
     format: format.combine(
-        format.timestamp(),
+        // format.timestamp(),
         simple(),
     ),
     transports: [
         new transports.Console({level:'login'}),
         new transports.File({ filename: 'login.log',level:'login' }),
+        new transports.Console({level:'logout'}),
+        new transports.File({ filename: 'login.log',level:'logout' }),
         new transports.Console({level:'userAction'}),
         new transports.File({ filename: 'actions.log',level:'userAction' })
     ]
