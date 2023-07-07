@@ -472,28 +472,7 @@ exports.dbInsertOrderToClient = async function (orderTime, clientId, totalPrice)
   ];
   let sqlReturn = await pool.query(sql,values);
   let dbReturn = sqlReturn;
-  console.log("INSERT TO CLIENT TABLE:");
-  console.log(dbReturn);
-  console.log("-----------------------");
   return dbReturn;
-
-
-
-  // orderResult = await pool.query(`UPDATE ${tableClients} SET last_action = (NOW()),
-  //  sum = sum+${totalPrice}
-  //  WHERE id = ${clientId};`)
-  //   .then((rows) => {
-  //     // console.log(rows);
-  //     return (rows)
-  //   })
-  //   .catch(err => {
-  //     console.log("CONNECTION Error: " + err)
-  //   })
-  // orderResult = orderResult.affectedRows.toString();
-  // // console.log("------------------------------------------");
-  // // console.log(orderResult);
-  // // console.log("------------------------------------------");
-  // return orderResult;
 };
 
 exports.dbInsertOrderToClientOld = async function (orderTime, clientId, totalPrice) {
