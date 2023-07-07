@@ -68,7 +68,7 @@ const actionsLogger = createLogger({
         new transports.File({ filename: 'login.log',level:'login' }),
         new transports.Console({level:'logout'}),
         new transports.File({ filename: 'login.log',level:'logout' }),
-        new transports.Console({level:'userAction'}),
+        // new transports.Console({level:'userAction'}),
         new transports.File({ filename: 'actions.log',level:'userAction' })
     ]
 });
@@ -79,9 +79,9 @@ const ordersLogger = createLogger({
         simple(),
     ),
     transports: [
-        new transports.Console({level:'order'}),
+        // new transports.Console({level:'order'}),
         new transports.File({ filename: 'orders.log' , level:'order'}),
-        new transports.Console({level:'orderDelete'}),
+        // new transports.Console({level:'orderDelete'}),
         new transports.File({ filename: 'orders.log' , level:'orderDelete'})
     ]
 });
