@@ -448,16 +448,12 @@ exports.dbInsertOrderToOrders = async function (orderTime, clientId, orderInfo, 
   clientName = await this.dbGetClientNameById(clientId);
   clientName[0].name = clientName[0].name.replace(/\'/g, "''");
   orderInfo = orderInfo.replace(/\'/g, "''");
-
   let sql = ('INSERT INTO '+tableOrders+' (time,info,sum,clientid,client) VALUES (now(),?);');
   let values = [
     [orderInfo,totalPrice,clientId,clientName[0].name]
   ];
   let sqlReturn = await pool.query(sql,values);
   let dbReturn = sqlReturn;
-  console.log("INSERT TO ORDERS TABLE:");
-  console.log(dbReturn);
-  console.log("-----------------------");
   return dbReturn;
 };
 

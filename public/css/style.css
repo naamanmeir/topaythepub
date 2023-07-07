@@ -277,6 +277,14 @@ p {
     font-size: x-large;
 }
 
+@media screen and (max-height: 700px),
+(max-width: 500px) {
+    .messageWindow p {
+        font-size: 2rem;
+    }
+
+}
+
 .closeButton {
     width: fit-content;
     margin: auto;
@@ -1010,7 +1018,7 @@ p {
     color: var(--text02);
     width: 15%;
     right: 0px;
-    bottom: 0px;
+    bottom: 16rem;
     padding-left: 10px;
     position: absolute;
     z-index: 30;
@@ -1076,6 +1084,21 @@ p {
     margin-left: 25px;
     padding: 0px;
     color: rgb(255, 242, 0);
+}
+
+@media screen and (max-height: 700px),
+(max-width: 500px) {
+    .openSideMenu {
+        top: 0px;
+        bottom: auto;
+    }
+
+    .sideMenu {
+        bottom: 100%;
+        top: 0px;
+
+    }
+
 }
 
 .topMenuDiv {
