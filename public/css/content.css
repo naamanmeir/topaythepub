@@ -23,7 +23,7 @@
     margin-top: 0.5rem;
     height: 6rem;
     top: 0px;
-    margin-bottom: 1rem;
+    margin-bottom: 0px;
     align-items: center;
     text-align: center;
 }
@@ -191,10 +191,6 @@
 }
 
 .item itemPrice {
-    /* position: relative; */
-    /* right: 2rem; */
-    /* top: 10%; */
-    /* margin-left: 5%; */
     padding-left: 1rem;
     padding-right: 2rem;
     padding-bottom: 0px;
@@ -225,18 +221,35 @@
     display: none;
 }
 
-/* @media screen and (max-height: 700px),
+@media screen and (max-height: 700px),
 (max-width: 500px) {
-    .item {
-        border: 2px outset rgb(240, 152, 0);
+    .items {
+        /* border: 1px outset rgb(240, 152, 0); */
+        top: 0px;
+        margin-top: 0px;
+        max-height: 69vh;
+        width: 100%;
     }
 
-    .item p {
-        font-size: 1.2rem;
+    .item itemName {
+        font-size: 1.3rem;
     }
 
-    .item img {        
-        max-height: 4rem;
+    .item itemPrice {
+        font-size: 1.7rem;
+    }
+
+    .item img {
+        max-height: 80%;
+    }
+
+    /* .itemCount {
+        font-size: 4rem;
+    } */
+
+    .searchBoxDiv {
+        height: 3rem;
+        margin-bottom: 0rem;
     }
 
     .searchBox {
@@ -244,8 +257,13 @@
         width: 100%;
         font-size: 1.5rem;
         padding: 0.2rem;
+        padding-bottom: 0px;
     }
-} */
+
+    .autocomplete-items {
+        font-size: 2rem;
+    }
+}
 
 /* ------------------scrollbar--------------------- */
 ::-webkit-scrollbar {

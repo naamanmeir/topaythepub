@@ -125,21 +125,7 @@ p {
     flex: 1;
 }
 
-.openSideMenu {
-    color: var(--text02);
-    width: 15%;
-    right: 0px;
-    bottom: 30%;
-    padding-left: 10px;
-    position: absolute;
-    z-index: 30;
-}
 
-.openSideMenu img {
-    width: 55%;
-    height: 55%;
-    filter: invert(0.6);
-}
 
 #main {
     transition: margin-left .5s;
@@ -189,7 +175,7 @@ p {
     width: fit-content;
     max-width: 7rem;
     z-index: 40;
-    bottom: 50%;
+    bottom: 40%;
     left: 1%;
     border-radius: 50%;
     border: 1px outset var(--border02);
@@ -230,6 +216,20 @@ p {
     z-index: 40;
     background-color: var(--bg02);
     color: var(--text02);
+}
+
+@media screen and (max-height: 700px),
+(max-width: 500px) {
+    .floatMenuDiv {
+        bottom: 40%;
+        left: 1%;
+    }
+
+    .floatMenuDiv p {
+        font-size: 1rem;
+
+    }
+
 }
 
 .messageWindow {
@@ -777,6 +777,15 @@ p {
     word-break: break-word;
 }
 
+@media screen and (max-height: 700px),
+(max-width: 500px) {
+    .window p {
+        font-size: 1rem;
+        margin-right: 1%;
+    }
+
+}
+
 .tableEven {
     background-color: lightblue;
 }
@@ -997,6 +1006,22 @@ p {
     }
 }
 
+.openSideMenu {
+    color: var(--text02);
+    width: 15%;
+    right: 0px;
+    bottom: 0px;
+    padding-left: 10px;
+    position: absolute;
+    z-index: 30;
+}
+
+.openSideMenu img {
+    width: 55%;
+    height: 55%;
+    filter: invert(0.6);
+}
+
 .sideMenu {
     height: fit-content;
     padding-top: 1rem;
@@ -1057,9 +1082,11 @@ p {
     direction: ltr;
     max-width: 80%;
     margin: auto;
+    padding: 0px;
     color: aliceblue;
     text-align: center;
     justify-content: center;
+    width: 100%;
     height: 2rem;
 }
 
@@ -1070,10 +1097,14 @@ p {
 }
 
 #userIndic {
-    position: absolute;
-    margin-right: 2rem;
-    margin-bottom: 1rem;
-    padding: 2px;
+    left: 75%;
+    z-index: 200;
+    margin-right: 5rem;
+    margin-bottom: 2rem;
+    width: fit-content;
+    font-size: 2rem;
+    color: var(--text01);
+    white-space: nowrap;
 }
 
 #userPageButton {
@@ -1118,6 +1149,22 @@ p {
 .conOk {
     /* animation: indicOk 5s linear infinite; */
 }
+
+@media screen and (max-height: 700px),
+(max-width: 500px) {
+    #userIndic {}
+
+    .connectionIndic {
+        top: 1rem;
+        left: -2rem;
+        height: 7px;
+        width: 7px;
+        border-radius: 50%;
+        transition: opacity 2s ease;
+        background-color: green;
+    }
+}
+
 
 @keyframes indicOk {
     0% {
