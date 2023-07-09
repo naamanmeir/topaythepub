@@ -13,10 +13,10 @@
     --border03: rgb(29, 182, 50);
 
     --buttonYes: rgb(3, 183, 3);
-    --buttonNo: rgb(255, 3, 3);
+    --buttonNo: rgb(255, 116, 3);
 
     --buttonBgYes: rgb(3, 183, 3);
-    --buttonBgNo: rgb(255, 0, 0);
+    --buttonBgNo: rgb(255, 94, 0);
 
     --listItemOdd: #b9c1c3;
     --listItemEven: #d4d4d4;
@@ -55,7 +55,6 @@ input:-webkit-autofill:active {
 }
 
 /* ------------------scrollbar--------------------- */
-
 
 html,
 body {
@@ -124,8 +123,6 @@ p {
     /* flex-basis: 100%; */
     flex: 1;
 }
-
-
 
 #main {
     transition: margin-left .5s;
@@ -239,7 +236,7 @@ p {
     height: fit-content;
     max-width: 95%;
     width: 95%;
-    top: 30%;
+    top: 60%;
     padding: 2%;
     background-color: var(--bg01);
     border: 2px groove var(--border01);
@@ -266,7 +263,7 @@ p {
 }
 
 .messageWindow .green {
-    color: green;
+    color: rgb(157, 255, 0);
 }
 
 .messageWindow .red {
@@ -279,8 +276,12 @@ p {
 
 @media screen and (max-height: 700px),
 (max-width: 500px) {
+    .messageWindow {
+        top: 5%;
+    }
+
     .messageWindow p {
-        font-size: 2rem;
+        font-size: 3rem;
     }
 
 }
@@ -695,27 +696,6 @@ p {
     flex-direction: column;
 }
 
-/* 
-.messageWindow {
-    z-index: 100;
-    position: absolute;
-    max-height: 20%;
-    height: fit-content;
-    max-width: 100%;
-    width: 100%;
-    top: 30%;
-    margin: 0px 0px 0px 0px;
-    padding: 5px 5px 5px 5px;
-    background-color: rgb(0, 0, 0);
-    border: 2px groove var(--text02);    
-    margin: auto;
-    text-align: right;
-}
-
-.messageWindow p {
-    color: var(--text02);
-} */
-
 .window {
     z-index: 50;
     position: absolute;
@@ -787,8 +767,13 @@ p {
 
 @media screen and (max-height: 700px),
 (max-width: 500px) {
-    .window p {
+
+    .windowButton {
         font-size: 1rem;
+    }
+
+    .window p {
+        font-size: 1.2rem;
         margin-right: 1%;
     }
 
@@ -1016,12 +1001,14 @@ p {
 
 .openSideMenu {
     color: var(--text02);
-    width: 15%;
-    right: 0px;
-    bottom: 16rem;
+    width: 4rem;
+    right: 0.5rem;
+    /* bottom: 16rem; */
     padding-left: 10px;
     position: absolute;
     z-index: 30;
+    top: 0.5rem;
+    bottom: auto;
 }
 
 .openSideMenu img {
@@ -1037,7 +1024,8 @@ p {
     width: 0;
     position: fixed;
     z-index: 60;
-    bottom: 0px;
+    top: 0px;
+    bottom: 100%;
     right: 0;
     background-color: rgba(11, 49, 58, 1);
     border: 0px solid #97480f;

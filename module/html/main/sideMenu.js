@@ -3,13 +3,18 @@ exports.buildHtml = function (message) {
     html +=
         `
         <div class="sideMenuDiv">
-            <p id="openAbout" onclick="populateAbout()">${message.sideMenuOpenAbout}</p>
-            <p id="fullScreenButton">${message.sideMenuFullScreen}</p>
-            <p onclick="refreshCss()">${message.sideMenuRefreshCss}</p>
-            <p onclick="refreshPage()">${message.SideMenuRefreshPage}</p>
-            <p onclick="clientLogout()">${message.SideMenuLogOutClient}</p>
             <p id="closeSideMenu" class="closeSideMenu">${message.SideMenuCloseSideMenu}</p>
+            <p id="openAbout" onclick="populateAbout()">${message.sideMenuOpenAbout}</p>            
+            <p onclick="refreshCss()">${message.sideMenuRefreshCss}</p>
+            <p onclick="refreshPage()">${message.SideMenuRefreshPage}</p>            
         </div>      
     `;
     return html;
-    };    
+    };
+
+    // <p id="closeSideMenu" class="closeSideMenu">${message.SideMenuCloseSideMenu}</p>
+    // <p id="openAbout" onclick="populateAbout()">${message.sideMenuOpenAbout}</p>
+    // <p id="fullScreenButton">${message.sideMenuFullScreen}</p>
+    // <p onclick="refreshCss()">${message.sideMenuRefreshCss}</p>
+    // <p onclick="refreshPage()">${message.SideMenuRefreshPage}</p>
+    // <p onclick="clientLogout()">${message.SideMenuLogOutClient}</p>

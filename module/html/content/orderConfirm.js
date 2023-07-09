@@ -14,12 +14,15 @@ exports.buildHtml = function (messageUi,userInfo, orderData, orderPriceSum) {
     for (i = 0; i < orderData.length; i++) {
         html += `<div class="orderConfirmItem">
         <p>${orderData[i][0]} ${orderData[i][1]} ${messageUi.orderConfirmPrice} ${messageUi.orderConfirmCurrency}${orderData[i][2]}
+        <img src="${orderData[i][4]}" width="30px" height="30px">
+        <br>
         ${messageUi.orderConfirmSum} ${messageUi.orderConfirmCurrency}${orderData[i][3]}
-                <img src="${orderData[i][4]}" width="30px" height="30px"></p>        
+        <br>
+                </p>        
         </div>`
     };
     html += `<br><p>${messageUi.orderConfirmTotalSum} ${messageUi.orderConfirmCurrency}${orderPriceSum}</p>`
-    html += `<br><p>${messageUi.orderConfirmToName} ${userInfo.name} &emsp;
+    html += `<br><p>${messageUi.orderConfirmToName} ${userInfo.name} <br> &emsp;
     ${messageUi.orderConfirmToAccount} ${userInfo.account}</p>><br>`
 
     html += `</div>

@@ -14,17 +14,16 @@ exports.buildHtml = function (messageUi,userInfo, userData) {
             <br>`
         html += `<div id="userInfoTableDiv" class="userInfoTableDiv">
             <table id="userInfoTable" class="userInfoTable"><tbody>`
-        html += `<tr class="tableHead"><th>${messageUi.userPageTableSum}</th>
+        html += `<tr class="tableHead"><th>${messageUi.userPageTableSign}</th><th>${messageUi.userPageTableSum}</th>
             <th>${messageUi.userPageTableDetails}</th><th>${messageUi.userPageTableDate}</th>
-            <th>${messageUi.userPageTableId}</th><th>${messageUi.userPageTableSign}</th></tr>`
+            <th>${messageUi.userPageTableId}</th></tr>`
         userData.forEach((order, i) => {
                 var bg;
                 var sign = order.sign == 1 ? messageUi.userPageOrderSignYes:messageUi.userPageOrderSignNo;                
                 let timezone = "Indian/Kerguelen";
                 let time = new Date(order.formatted_date).toLocaleString("he-IL", { timeZone: timezone}).slice(0,-3).replace('.2023','');
                 if (i % 2 === 0) { bg = 'class="tableEven"' } else { bg = 'class="tableOdd"' };
-                html += `<tr ${bg}><td>${order.sum}</td><td>${order.info}</td><td>${time}</td><td>${order.orderid}</td>
-                <td>${sign}</td>
+                html += `<tr ${bg}><td>${sign}</td><td>${order.sum}</td><td>${order.info}</td><td>${time}</td><td>${order.orderid}</td>                
                 </tr>`
         });
         html += `</tbody></table></div>`;

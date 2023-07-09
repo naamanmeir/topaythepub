@@ -430,6 +430,7 @@ function deleteLastOrderConfirm(id){
 };
 function openDeleteOrderConfirm(content){
     userWindow.remove();
+    resetAutoLogout();
     deleteOrderWindow = document.createElement('div');
     deleteOrderWindow.className = ("window fontLarge");
     deleteOrderWindow.innerHTML = (content);

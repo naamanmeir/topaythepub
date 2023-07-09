@@ -31,11 +31,11 @@
             "userPageId": "מספר זיהוי:",
             "userPageNickButtonYes": "החלפת כינוי",
             "userPageNickButtonNo": "ביטול החלפת כינוי",
-            "userPageTableId": "מס. רישום",
-            "userPageTableDate": "זמן רישום",
+            "userPageTableId": "#",
+            "userPageTableDate": "זמן",
             "userPageTableDetails": "פרטים",
             "userPageTableSum": "סכום",
-            "userPageTableSign": "שולם",
+            "userPageTableSign": "📋",
             "userPageButtonCloseWindow": "סגור חלון",
             "userPageButtonDeleteOrder": "למחוק רישום אחרון",
             "userPageButtonDeleteOrderYes": "בצע מחיקה",
@@ -48,9 +48,9 @@
             "orderConfirmHello": "היי",
             "orderConfirmPleaseAprove": "נא לאשר רישום של:",
             "orderConfirmCurrency": "₪",
-            "orderConfirmSum": "בסך הכל :",
+            "orderConfirmSum": "זה ",
             "orderConfirmPrice": "שעולה :",
-            "orderConfirmTotalSum": "סך כל הרישום :",
+            "orderConfirmTotalSum": "סך הכל:",
             "orderConfirmToName": "לחשבון :",
             "orderConfirmToAccount": "מספר :",
             "deleteorderConfirmAborted": "ההזמנה כבר שולמה",
@@ -125,7 +125,7 @@
     ],
     "client": [
         {
-            "inputPlaceholder": "נא להכניס שם 👉👉",
+            "inputPlaceholder": "שם משתמש 👉👉",
             "logged": "👋👍",
             "notExist": "משתמש👨‍💻לא🧑‍🔧קיים",
             "enterName": "👇🏼לבחור👇🏼",
@@ -145,7 +145,7 @@
     "error": [
         {
             "orderQuantity": "שגיאה בחישוב כמות הזמנה",
-            "orderNoLoggedUSer": "לפני ביצוע רישום יש לרשום שם",
+            "orderNoLoggedUSer": "👆 נא להכניס שם לרישום  ☝",
             "orderNoOrderData": "נא להכניס פרטים לרישום "
         }
     ]
