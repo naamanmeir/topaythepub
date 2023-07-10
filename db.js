@@ -139,6 +139,7 @@ exports.dbCreateTablePosts = async function () {
         "`user` INT,"+
         "`post` TEXT(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,"+
         "`img` VARCHAR(1024),"+
+        "`pin` INT,"+
         "PRIMARY KEY (`postid`)"+
         ");"
       )
@@ -829,6 +830,39 @@ exports.dbGetAllPosts = async function (){
   return messageReturn;
 };
 
+exports.dbGetPindPosts = async function (){
+  let sql = (`SELECT post FROM ${tablePosts} WHERE pin = 1 ORDER BY postid ASC;`);
+  let messageReturn = await pool.query(sql);  
+  return messageReturn;
+};
+
+exports.dbGetPostById = async function (postid){
+  let sql = (`SELECT * FROM ${tablePosts} WHERE postid = ?;`);
+  let values = [
+    [postid]
+  ];
+  let messageReturn = await pool.query(sql,values);
+  return messageReturn;
+};
+
+exports.dbIsPostPindById = async function (postid){
+  let sql = (`SELECT pin FROM ${tablePosts} WHERE postid = ?;`);
+  let values = [
+    [postid]
+  ];
+  let messageReturn = await pool.query(sql,values);
+  return messageReturn;
+};
+
+exports.dbPinPostById = async function (pin,postid){
+  let sql = (`UPDATE ${tablePosts} SET pin=? WHERE postid=${postid};`);
+  let values = [
+    [pin]
+  ];
+  let messageReturn = await pool.query(sql,values);  
+  return messageReturn;
+};
+
 exports.dbDeletePostById = async function (postid){  
   let sql = ('DELETE FROM '+tablePosts+' WHERE postid = '+postid+';');  
   let messageReturn = await pool.query(sql);
@@ -873,3 +907,12 @@ exports.dbGetFacts = async function(){
   let messageReturn = await pool.query(sql);
   return messageReturn;
 };
+
+//-------------------------------DISPLAY MESSAGES----------------//
+
+exports.dbGetDisplayInfoByClient = async function(){
+  let sql = ('SELECT fact FROM '+tableFacts+';');  
+  let messageReturn = await pool.query(sql);
+  return messageReturn;
+};
+

@@ -14,6 +14,7 @@ const autoCompleteDiv = document.getElementById("autoComplete");
 const contentDiv = document.getElementById("divContent");
 const userPage = document.getElementById("userPage");
 const userIndic = document.getElementById("userIndic");
+const display = document.getElementById("display");
 
 let userWindow;
 let messageWindow;
@@ -96,6 +97,7 @@ function loadUtiliti() {
     buttonsMain.className = ("buttons");
     buttonOrder.className = ("placeOrder");
     buttonCancel.className = ("cancel");
+    requestDisplayInfo(1);
 };
 loadUtiliti();
 
@@ -524,3 +526,62 @@ function generateRandomColor() {
     let randColor = randomNumber.padStart(6, 0);
     return `#${randColor.toUpperCase()}`
 };
+
+//---------------------- UI ELEMENTS ----------------------//
+function requestDisplayInfo(id) {
+    id = JSON.stringify({ "id": id });
+    postRequest('./client/getDisplayInfo/', window.parent.openDisplayInfo, id);
+    return;
+};
+function openDisplayInfo(content) {
+    let pDiv = document.getElementById('displayMessage');    
+    for(let i=0;i<content.length;i++){
+        let p = document.createElement('p');
+        p.innerHTML = "&emsp;&emsp;&emsp;&emsp;"+content[i].post+"&emsp;&emsp;&emsp;&emsp;";
+        // console.log(content[i].post);
+        pDiv.appendChild(p);
+    };
+    display.appendChild(pDiv);    
+    return;
+};
+
+function scrollScrollBar(){
+    document.addEventListener('DOMContentLoaded', _ => {
+         
+        const items = [...document.getElementsByClassName('list__item')];
+        const containerElem = document.getElementById('containerElem');
+        const leftSideOfContainer = containerElem.getBoundingClientRect().left;
+        const listElem = document.getElementById('list');
+        let currentLeftValue = 0;
+        
+        // Kick off for the animation function.
+        window.setInterval(animationLoop, 50);
+        
+        /* 
+          Looks at first item in the list and checks if it goes out of the visible area 
+          by comparing the right position of the first list item to the left position 
+          of the containing element. 
+        */
+        function animationLoop() {
+          const firstListItem = listElem.querySelector('.list__item:first-child');
+          
+          let rightSideOfFirstItem = firstListItem.getBoundingClientRect().right;
+          
+          /* 
+            If first list item is out of viewable area, move it to the end of the list. 
+            Also, set the current left value to -1 so we won't stutter.
+          */
+          if(rightSideOfFirstItem == leftSideOfContainer){
+            currentLeftValue = -1;
+            listElem.appendChild(firstListItem);
+          }
+          
+          // The part that keeps it all going: animating the margin left value of the list.
+          listElem.style.marginLeft = `${currentLeftValue}px`;
+          currentLeftValue--;
+        }
+      });
+
+}
+
+

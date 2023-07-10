@@ -95,7 +95,8 @@ function postContextMenu(e){
                 menu.setAttribute('id','contextMenu');
                 menu.setAttribute('class','contextMenu');            
                 menu.innerHTML = 
-                `                
+                `
+                <div class="cmenuItems" id="cmenuPin"></div>
                 <div class="cmenuItems" id="cmenuCopy"></div>
                 <div class="cmenuItems" id="cmenuErase"></div>
                 
@@ -103,19 +104,27 @@ function postContextMenu(e){
                 target.appendChild(menu);
                 let cmenuErase = document.getElementById("cmenuErase");
                 let cmenuCopy = document.getElementById("cmenuCopy");
+                let cmenuPin = document.getElementById("cmenuPin");
                 cmenuErase.style.backgroundImage="url(./img/ui/cmenu_erase.png)";
                 cmenuCopy.style.backgroundImage="url(./img/ui/cmenu_copy.png)";
+                cmenuPin.style.backgroundImage="url(./img/ui/cmenu_pin.png)";
                 cmenuErase.addEventListener('touchstart',()=>{
                     postDelete(postid)
                 });
                 cmenuCopy.addEventListener('touchstart',()=>{
                     postCopy(postdiv)
                 });
+                cmenuPin.addEventListener('touchstart',()=>{
+                    postPin(postid)
+                });
                 cmenuErase.addEventListener('mousedown',()=>{
                     postDelete(postid)
                 });
                 cmenuCopy.addEventListener('mousedown',()=>{
                     postCopy(postdiv)
+                });
+                cmenuPin.addEventListener('mousedown',()=>{
+                    postPin(postid)
                 });
                 
                 document.getElementById("contextMenu").scrollIntoView(
@@ -125,7 +134,7 @@ function postContextMenu(e){
                 document.getElementById("contextMenu").remove();
             }            
         };
-    },600);
+    },200);
 };
 
 function postLenghthCheck(){    
@@ -181,7 +190,7 @@ function postDelete(postid){
     },1000);
 };
 
-function postCopy(postdiv){    
+function postCopy(postdiv){
     let panel = document.getElementById("contextMenu");
     let preColor = panel.style.backgroundColor;
     panel.style.transition =  "all 0.4s";
@@ -213,6 +222,31 @@ function postCopy(postdiv){
         document.getElementById("contextMenu").remove();
         return;
     },400);
+};
+
+function postPin(postid){
+    let panel = document.getElementById("contextMenu");
+    let preColor = panel.style.backgroundColor;
+    panel.style.transition =  "all 0.2s";
+    panel.style.backgroundColor = "yellow";
+
+    postsDiv.addEventListener('mouseup',()=>{        
+        clearTimeout(pressTimer);
+        panel.style.backgroundColor = preColor;
+        return;
+    });
+
+    postsDiv.addEventListener('touchend',()=>{        
+        clearTimeout(pressTimer);
+        panel.style.backgroundColor = preColor;
+        return;
+    });
+    
+    let pressTimer = setTimeout(function(){        
+        postid = JSON.stringify({'postid':postid});
+        postRequest('./mboard/pinPost', window.parent.messageBoardRefreshPosts, postid);
+        return;
+    },200);
 };
 
 function postSend(){    

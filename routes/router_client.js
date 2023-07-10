@@ -263,6 +263,24 @@ routerClient.post('/deleteLastOrder/', async (req, res) => {
 
 //------------------------CLIENT UI ACTIONS-------------------//
 
+routerClient.post('/getDisplayInfo/', async (req, res) => {
+    if (!req.body.id || req.body.id == null) { res.end(); return; }
+    let reqId = req.body.id;
+
+    let displayInfo = await db.dbGetPindPosts();
+    // console.log(displayInfo);
+    let displayInfoHtml = require("../module/html/content/getDisplayInfo");
+    // console.log(displayInfo)
+    let html = JSON.stringify(displayInfo);
+
+    // collect all messages to array and send one of them
+
+    // let html = JSON.stringify("שטח פרסום זה יכול להיות שלך");
+    res.send(html);
+    delete require.cache[require.resolve("../module/html/content/getDisplayInfo")];
+    return;
+});
+
 routerClient.get('/windowIsOpen/', async(req,res) => {
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
     // actionsLogger.userAction(`

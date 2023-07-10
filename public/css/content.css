@@ -127,8 +127,8 @@
     margin: auto;
     width: 100%;
     height: 100%;
-    margin-top: 0px;
-    margin-bottom: 11%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     transition: background-color 0.8s ease;
     overflow-y: auto;
     overflow-x: hidden;
@@ -142,7 +142,7 @@
     width: fit-content;
     background-color: var(--bg03);
     border: 1px outset var(--border01);
-    margin-top: 2%;
+    margin-top: 0px;
     margin-bottom: 1%;
     padding: 1%;
     transition: background-color 0.5s ease;
@@ -290,13 +290,13 @@
 }
 
 .buttons {
-    position: absolute;
+    /* position: absolute; */
     display: flex;
     flex-direction: row;
-    width: 90%;
+    width: 100%;
     margin: auto;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 0px;
+    margin-bottom: 2rem;
     bottom: 0px;
     left: -50%;
     right: -50%;
@@ -470,5 +470,44 @@
     100% {
         opacity: 0;
         transform: scale(0);
+    }
+}
+
+.display {
+    border-top: 1px dotted green;
+    border-bottom: 1px dotted green;
+    height: 2rem;
+    /* width: 100%; */
+    margin-bottom: 0.1rem;
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+}
+
+.display p {
+    color: wheat;
+    font-size: 1.5rem;
+    /* white-space: pre; */
+    /* transition: all 20s; */
+    color: orange;
+    display: inline-flex;
+    flex-direction: row;
+}
+
+.displayMessage {
+    /* position: absolute; */
+    /* width: 100%; */
+    height: 2rem;
+    /* background-color: green; */
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    transform: translateX(-100%);
+    animation: move 20s linear infinite;
+}
+
+@keyframes move {
+    to {
+        transform: translateX(100%);
     }
 }

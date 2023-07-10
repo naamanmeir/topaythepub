@@ -57,6 +57,32 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     return;
 });
 
+routerMessageBoard.post('/pinPost/', async (req, res) => {    
+    if (!req.body.postid || req.body.postid == null) { res.end(); return; };    
+    let postid = JSON.parse(req.body.postid);
+    if (!Number.isInteger(postid)) {res.end();return;};
+    let dbResponse = await db.dbIsPostPindById(postid);
+    let dbAction;
+    let currentPin = dbResponse[0].pin;
+    let newPin;
+    if(currentPin==null){
+        currentPin=0;
+        newPin = 1};
+    newPin = currentPin==0?1:0;
+    console.log(currentPin);
+    console.log(newPin);
+    console.log("-----------------------------");
+    dbAction = await db.dbPinPostById(newPin,postid);
+    console.log(dbAction);
+    messageBoardLogger.clientMessageBoard(`
+    set ${postid} pin value to ${newPin}
+    `);
+    res.end();
+    sendRefreshPostsEventToAllClients();
+    return;
+});
+
+
 routerMessageBoard.post('/deletePost/', async (req, res) => {    
     if (!req.body.postid || req.body.postid == null) { res.end(); return; };    
     let postid = JSON.parse(req.body.postid);
