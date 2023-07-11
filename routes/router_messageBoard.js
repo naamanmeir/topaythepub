@@ -14,7 +14,8 @@ let messageError = messagesJson.error[0];
 
 const MaxPostLength = 400;
 
-let chatbot = require("../module/chatbot/chatbot");
+let chatbot = require("../module/outsource/chatbot");
+let photobot =  require("../module/outsource/hug_circulus")
 
 let chatbotCall = messageUi.chatbotName1;
 
@@ -41,6 +42,7 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     var post = (req.body.post);
     if(post.length > MaxPostLength){ res.end(); return; };
     if(findReferences(post,messageUi.chatbotName1Variations)==true){sendPostToChatbot(post);};
+    if(findReferences(post,messageUi.photobotCodeActivate)==true){sendPostToPhotobot(post);};
     var img;
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
@@ -69,11 +71,11 @@ routerMessageBoard.post('/pinPost/', async (req, res) => {
         currentPin=0;
         newPin = 1};
     newPin = currentPin==0?1:0;
-    console.log(currentPin);
-    console.log(newPin);
-    console.log("-----------------------------");
+    // console.log(currentPin);
+    // console.log(newPin);
+    // console.log("-----------------------------");
     dbAction = await db.dbPinPostById(newPin,postid);
-    console.log(dbAction);
+    // console.log(dbAction);
     messageBoardLogger.clientMessageBoard(`
     set ${postid} pin value to ${newPin}
     `);
@@ -81,7 +83,6 @@ routerMessageBoard.post('/pinPost/', async (req, res) => {
     sendRefreshPostsEventToAllClients();
     return;
 });
-
 
 routerMessageBoard.post('/deletePost/', async (req, res) => {    
     if (!req.body.postid || req.body.postid == null) { res.end(); return; };    
@@ -138,7 +139,7 @@ routerMessageBoard.post('/insertImage', async (req, res) => {
         post = fields.post;
         finalImageName = (path.parse(originalName).name)+path.parse(originalName).ext;        
         finalImageName = JSON.stringify(finalImageName);
-        insertPostWithImage(req,res,post,null,finalImageName)
+        insertPostWithImage(req,res,post,null,finalImageName);
     });
    
 });
@@ -189,6 +190,23 @@ function findReferencesWithIndex(source,target){
     };
     return -1;
 };
+
+async function sendPostToPhotobot(post){
+    let messageStart = findReferencesWithIndex(post,messageUi.photobotCodeActivate);
+    messageStart = messageStart+messageUi.photobotCodeActivate.length+1;
+    post = post.substring(messageStart);
+    let photobotPhoto = await photobot.askForPhoto(post);
+    let image = JSON.stringify(photobotPhoto);
+    let user = 100;
+    let dbResponse = await db.dbInsertPost(post,user,image);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED POST FROM PHOTOBOT"
+    `); 
+    sendRefreshPostsEventToAllClients();
+    return;
+}
 
 async function sendPostToChatbot(post){
     let findChatbotCodeRemember = findReferencesWithIndex(post,messageUi.chatbotRememberCode);

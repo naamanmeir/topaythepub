@@ -9,7 +9,12 @@ exports.buildHtml = function (messageUi,posts) {
             continue;
         }
         if(posts[i].img != 0){
-            let img = JSON.parse(posts[i].img);
+            let img;
+            try {
+                img = JSON.parse(posts[i].img);
+            } catch (e) {
+                console.log("error on image loading");
+            };            
             html += `<div class="postDisplay" id="postImg${posts[i].postid}">
             <div class="postDisplayImg"><img src="./img/posts/${img}"></div></div>`
         };        

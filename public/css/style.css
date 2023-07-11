@@ -353,12 +353,12 @@ p {
     z-index: 80;
     position: absolute;
     display: inline-block;
-    top: 5%;
+    top: 10%;
     left: 5%;
     right: 5%;
     width: 85%;
     max-width: 650px;
-    height: 92%;
+    height: 85%;
     margin: auto;
     background-color: var(--bg01);
     border: 1px solid var(--border02);
@@ -400,9 +400,9 @@ p {
 }
 
 .mboardButton {
-    position: relative;
+    /* position: relative; */
     width: fit-content;
-    height: 2rem;
+    height: fit-content;
     font-size: 1.5rem;
     color: black;
     left: 0px;
@@ -500,7 +500,6 @@ p {
     overflow-y: auto;
     overflow-x: hidden;
     clear: both;
-    padding: 1rem;
     font-size: 1.2rem;
     word-wrap: break-word;
     scroll-behavior: smooth;
@@ -636,6 +635,22 @@ p {
     padding: 0px;
     padding-bottom: 0px;
     border-radius: 1em;
+}
+
+@media screen and (max-height: 700px),
+(max-width: 500px) {
+    .messageBoardWindow {
+        /* height: 80%; */
+        top: 7%;
+    }
+
+    .mboardButton {
+        /* position: absolute; */
+        /* bottom: 1rem; */
+        font-size: 1.2rem;
+    }
+
+
 }
 
 .shadow1 {
@@ -1119,16 +1134,20 @@ p {
 }
 
 #userPageButton {
-    border: 3px outset rgb(17, 69, 118);
-    border-radius: 50%;
+    border: 4px outset rgb(17, 69, 118);
+    background-color: black;
+    border-radius: 00%;
     padding: 0.5rem;
-    margin-right: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 0px;
+    margin-right: 0rem;
     position: absolute;
     right: 10px;
+    font-size: 1.2rem;
 }
 
 #userPageButton:active {
-    border: 2px inset rgb(17, 69, 118);
+    border: 4px inset rgb(17, 69, 118);
 }
 
 .userPageHidden {
@@ -1192,5 +1211,48 @@ p {
 
     100% {
         background-color: black;
+    }
+}
+
+/* ----------------Display----------------- */
+.display {
+    position: absolute;
+    /* border-top: 1px dotted green; */
+    /* border-bottom: 1px dotted green; */
+    height: 2rem;
+    /* width: 90%; */
+    /* left: 0px; */
+    margin-bottom: 0.1rem;
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    z-index: -1;
+}
+
+.display p {
+    color: wheat;
+    font-size: 1.5rem;
+    /* white-space: pre; */
+    /* transition: all 20s; */
+    color: orange;
+    display: inline-flex;
+    flex-direction: row;
+}
+
+.displayMessage {
+    /* position: absolute; */
+    /* width: 100%; */
+    height: 2rem;
+    /* background-color: green; */
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    animation: move 120s linear infinite;
+}
+
+@keyframes move {
+    to {
+        transform: translateX(100%);
     }
 }

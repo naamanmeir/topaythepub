@@ -110,7 +110,8 @@
             "chatbotRememberCode": "תזכור",
             "chatbotForgetCode": "תשכח",
             "chatbotForgetEverythingCode": "תשכח הכלהכלהכלהכלהכל אבל הכל ממש",
-            "otherSideIsTypingMessage": "דייויד כותב...✍...🤔...📡"
+            "otherSideIsTypingMessage": "דייויד כותב...✍...🤔...📡",
+            "photobotCodeActivate": "צייר לי תמונה של"
         }
     ],
     "sideMenu": [

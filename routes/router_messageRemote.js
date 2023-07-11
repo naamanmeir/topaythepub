@@ -14,7 +14,7 @@ let messageError = messagesJson.error[0];
 
 const MaxPostLength = 400;
 
-let chatbot = require("../module/chatbot/chatbot");
+let chatbot = require("../module/outsource/chatbot");
 
 let chatbotCall = messageUi.chatbotName1;
 
