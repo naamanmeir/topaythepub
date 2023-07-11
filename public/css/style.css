@@ -351,18 +351,18 @@ p {
 
 .messageBoardWindow {
     z-index: 80;
-    position: absolute;
-    display: inline-block;
-    top: 10%;
-    left: 5%;
-    right: 5%;
+    position: relative;
+    /* display: inline-block; */
+    /* top: 10%; */
+    /* left: 5%; */
+    /* right: 5%; */
     width: 85%;
     max-width: 650px;
     height: 85%;
     margin: auto;
     background-color: var(--bg01);
     border: 1px solid var(--border02);
-    padding: 1rem;
+    /* padding: 1rem; */
     padding-top: 0.2rem;
     color: var(--text03);
 }
@@ -560,7 +560,7 @@ p {
     height: fit-content;
     position: absolute;
     padding: 0.5rem;
-    left: 1.5rem;
+    margin: auto;
     color: white;
     background-color: rgba(23, 107, 140, 0.526);
 }
@@ -641,7 +641,7 @@ p {
 (max-width: 500px) {
     .messageBoardWindow {
         /* height: 80%; */
-        top: 7%;
+        /* top: 7%; */
     }
 
     .mboardButton {

@@ -404,11 +404,19 @@ function eventHandler(event) {
     if (JSON.parse(data) == "reloadPosts") {
         messageBoardRefreshPosts();
         otherSideIsTyping(0);
+        photobotIsPainting(0);
     }
     if (JSON.parse(data) == "chatbotIsTyping") {
         otherSideIsTyping(1);
     }
     if (JSON.parse(data) == "chatbotIsNotTyping") {
+        otherSideIsNotTyping();
+        otherSideIsTyping(0);
+    }
+    if (JSON.parse(data) == "photobotIsPainting") {
+        otherSideIsTyping(2);
+    }
+    if (JSON.parse(data) == "photobotIsNotPainting") {
         otherSideIsNotTyping();
         otherSideIsTyping(0);
     }

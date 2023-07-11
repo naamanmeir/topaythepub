@@ -272,10 +272,6 @@ routerClient.post('/getDisplayInfo/', async (req, res) => {
     let displayInfoHtml = require("../module/html/content/getDisplayInfo");
     // console.log(displayInfo)
     let html = JSON.stringify(displayInfo);
-
-    // collect all messages to array and send one of them
-
-    // let html = JSON.stringify("שטח פרסום זה יכול להיות שלך");
     res.send(html);
     delete require.cache[require.resolve("../module/html/content/getDisplayInfo")];
     return;

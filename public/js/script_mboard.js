@@ -7,6 +7,7 @@ let progBarDiv;
 let progBar;
 
 let chatbotIsTyping;
+let photobotIsPainting;
 
 function callMessageBoard(){
     getRequest("./mboard/openBoard", displayMessageBoard);
@@ -362,12 +363,13 @@ function scrollPosts(){
 };
 
 function otherSideIsTyping(act){
-    
+
+    if(chatbotIsTyping == 1){return;};
+    if(photobotIsPainting == 1){return;};
+
     let placeholder = "";
     let placeholderDefault = messageUi.mBoardPlaceHolder;    
     let inputElement = document.getElementById("postInput");
-
-    if(chatbotIsTyping == 1){return;};
 
     if(act==1){
         
@@ -392,6 +394,29 @@ function otherSideIsTyping(act){
                 type()
             },1500);
     };
+    if(act==2){
+        
+        photobotIsPainting = 1;
+        let i = 0;
+        const txt = messageUi.photobotIsPainting;
+        let speed = Math.random() * (500 - 90) + 90;    
+
+        function type(){        
+            if(photobotIsPainting==0){return;};
+            placeholder = txt.substring(0,i+1);
+            inputElement.setAttribute("placeholder",placeholder);
+            i++;
+            speed = Math.random() * (500 - 90) + 90;
+            if(i>=txt.length){
+                placeholder = "";
+                i=11;
+            };
+            setTimeout(type,speed);            
+            };
+            setTimeout(() => {
+                type()
+            },1500);
+    };
     if(act==0){        
         inputElement.setAttribute("placeholder",placeholderDefault);
         return;
@@ -400,5 +425,47 @@ function otherSideIsTyping(act){
 };
 
 function otherSideIsNotTyping(){
+    chatbotIsTyping = 0;    
+};
+
+// function photobotIsPainting(act){
+    
+//     let placeholder = "";
+//     let placeholderDefault = messageUi.mBoardPlaceHolder;    
+//     let inputElement = document.getElementById("postInput");
+
+//     if(chatbotIsTyping == 1){return;};
+
+//     if(act==1){
+        
+//         chatbotIsTyping = 1;
+//         let i = 0;
+//         const txt = messageUi.otherSideIsTypingMessage;
+//         let speed = Math.random() * (500 - 90) + 90;    
+
+//         function type(){        
+//             if(chatbotIsTyping==0){return;};
+//             placeholder = txt.substring(0,i+1);
+//             inputElement.setAttribute("placeholder",placeholder);
+//             i++;
+//             speed = Math.random() * (500 - 90) + 90;
+//             if(i>=txt.length){
+//                 placeholder = "";
+//                 i=11;
+//             };
+//             setTimeout(type,speed);            
+//             };
+//             setTimeout(() => {
+//                 type()
+//             },1500);
+//     };
+//     if(act==0){        
+//         inputElement.setAttribute("placeholder",placeholderDefault);
+//         return;
+//     };
+//     return;
+// };
+
+function photobotIsNotPainting(){
     chatbotIsTyping = 0;    
 };

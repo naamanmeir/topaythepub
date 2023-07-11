@@ -278,6 +278,17 @@ function sendChatBotIsNotTypingToAllClients(){
     clientEvents.sendEvents("chatbotIsNotTyping");
     return;
 };
+function sendPhotobotIsThinkingToAllClients(){
+    // console.log("SENDING EVENT photobotIsPainting");
+    clientEvents.sendEvents("photobotIsPainting");
+    return;
+};
+
+function sendPhotobotIsNotThinkingToAllClients(){
+    // console.log("SENDING EVENT photobotIsNotPainting");
+    clientEvents.sendEvents("photobotIsNotPainting");
+    return;
+};
 
 routerMessageBoard.get('/reloadPosts/', async (req, res) => {
     let posts = await db.dbGetAllPosts();

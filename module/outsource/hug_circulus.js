@@ -7,7 +7,7 @@ const HUG_CIRCULUS = process.env.HUGGINGFACE_CIRCULUS;
 
 async function query(data) {
 	const response = await fetch(
-		"https://api-inference.huggingface.co/models/circulus/sd-photoreal-real-v2",
+		"https://api-inference.huggingface.co/models/circulus/canvers-anime-v3.6",
 		{
 			headers: { Authorization: "Bearer "+HUG_CIRCULUS },
 			method: "POST",
@@ -19,14 +19,14 @@ async function query(data) {
 }
 
 exports.askForPhoto = async function(userInput){
-    let photo = await query({"inputs": userInput}).then((response) => {        
+    let photo = await query({"inputs": userInput}).then((response) => {            
         return response;        
     });
 
     const buffer = Buffer.from( await photo.arrayBuffer() );    
     let originalName = (__dirname + '/../../public/img/photobot/') + (userInput+".jpg");
     originalName = renameFileIfExist(originalName);
-    // console.log(originalName);
+    console.log(originalName);
     fs.writeFile(originalName, buffer, () => {
 
         // console.log('photobot '+originalName); 
