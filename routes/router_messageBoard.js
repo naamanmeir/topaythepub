@@ -192,9 +192,13 @@ function findReferencesWithIndex(source,target){
 };
 
 async function sendPostToPhotobot(post){
+    if(photobot.photobotIsBusy == 1){messageBoardLogger.clientMessageBoard(`"PHOTOBOT BUSY"`);return;};
     let messageStart = findReferencesWithIndex(post,messageUi.photobotCodeActivate);
     messageStart = messageStart+messageUi.photobotCodeActivate.length+1;
     post = post.substring(messageStart);
+    photobot.photobotIsBusy = 1;
+    sendPhotobotIsNotPaintingToAllClients();
+    sendPhotobotIsPaintingToAllClients();
     let photobotPhoto = await photobot.askForPhoto(post);
     let image = JSON.stringify(photobotPhoto);
     let user = 100;
@@ -204,7 +208,9 @@ async function sendPostToPhotobot(post){
     time: ${funcTime} 
     "INSERTED POST FROM PHOTOBOT"
     `); 
+    sendPhotobotIsNotPaintingToAllClients();
     sendRefreshPostsEventToAllClients();
+    photobot.photobotIsBusy = 0;
     return;
 }
 
@@ -278,13 +284,13 @@ function sendChatBotIsNotTypingToAllClients(){
     clientEvents.sendEvents("chatbotIsNotTyping");
     return;
 };
-function sendPhotobotIsThinkingToAllClients(){
+function sendPhotobotIsPaintingToAllClients(){
     // console.log("SENDING EVENT photobotIsPainting");
     clientEvents.sendEvents("photobotIsPainting");
     return;
 };
 
-function sendPhotobotIsNotThinkingToAllClients(){
+function sendPhotobotIsNotPaintingToAllClients(){
     // console.log("SENDING EVENT photobotIsNotPainting");
     clientEvents.sendEvents("photobotIsNotPainting");
     return;

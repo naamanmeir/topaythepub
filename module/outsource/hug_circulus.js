@@ -1,13 +1,18 @@
 require("dotenv").config();
 const fs = require('fs');
 const path = require('path');
-
+let translate =  require("./hug_translate");
 
 const HUG_CIRCULUS = process.env.HUGGINGFACE_CIRCULUS;
 
-async function query(data) {
+let photobotIsBusy = 0;
+
+exports.photobotIsBusy = photobotIsBusy;
+
+async function requestImage(data) {
+    // console.log("start painting");
 	const response = await fetch(
-		"https://api-inference.huggingface.co/models/circulus/canvers-anime-v3.6",
+		"https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5",
 		{
 			headers: { Authorization: "Bearer "+HUG_CIRCULUS },
 			method: "POST",
@@ -18,22 +23,19 @@ async function query(data) {
 	return result;
 }
 
-exports.askForPhoto = async function(userInput){
-    let photo = await query({"inputs": userInput}).then((response) => {            
-        return response;        
+exports.askForPhoto = async function(userInput){    
+    // let input = await translate.askForTranslation(userInput); // TRANSLATE TO ENGLISH
+    let photo = await requestImage({"inputs": userInput}).then((response) => {        
+        return response;
     });
 
     const buffer = Buffer.from( await photo.arrayBuffer() );    
     let originalName = (__dirname + '/../../public/img/photobot/') + (userInput+".jpg");
     originalName = renameFileIfExist(originalName);
-    console.log(originalName);
-    fs.writeFile(originalName, buffer, () => {
-
-        // console.log('photobot '+originalName); 
+    fs.writeFile(originalName, buffer, () => {// console.log('photobot '+originalName); 
     });
-    let fileReturn = "../photobot/"+path.basename(originalName);
-    // console.log(fileReturn);
-    return fileReturn;    
+    let fileReturn = "../photobot/"+path.basename(originalName);    
+    return fileReturn;
 };
 
 function renameFileIfExist(file){

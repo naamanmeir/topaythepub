@@ -125,6 +125,7 @@ routerManage.post('/deleteProduct/:data', async (req, res, next) => {
 });
 
 routerManage.post('/uploadItemImg', async (req, res) => {
+    console.log("START");
     const options = {
         uploadDir: __dirname + '/../public/img/items',
         filter: function ({ name, originalFilename, mimetype }) {
@@ -142,7 +143,8 @@ routerManage.post('/uploadItemImg', async (req, res) => {
         });
     });
     functions.itemImgArray();
-    res.redirect(req.get('referer'));
+    res.send('עלה אבל יש תקלה אז צריך לחזור דף אחורה זהו התמונה שם');
+    res.end();
 });
 
 //-------------------------------------USERS---------------------------------------------//

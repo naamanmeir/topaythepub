@@ -404,7 +404,6 @@ function eventHandler(event) {
     if (JSON.parse(data) == "reloadPosts") {
         messageBoardRefreshPosts();
         otherSideIsTyping(0);
-        photobotIsPainting(0);
     }
     if (JSON.parse(data) == "chatbotIsTyping") {
         otherSideIsTyping(1);

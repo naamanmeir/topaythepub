@@ -425,7 +425,8 @@ function otherSideIsTyping(act){
 };
 
 function otherSideIsNotTyping(){
-    chatbotIsTyping = 0;    
+    chatbotIsTyping = 0;
+    photobotIsPainting = 0;    
 };
 
 // function photobotIsPainting(act){
