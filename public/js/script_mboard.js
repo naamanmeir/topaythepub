@@ -245,10 +245,18 @@ function postPin(postid){
     
     let pressTimer = setTimeout(function(){        
         postid = JSON.stringify({'postid':postid});
-        postRequest('./mboard/pinPost', window.parent.messageBoardRefreshPosts, postid);
+        // console.log("test222");
+        postRequest('./mboard/pinPost', window.parent.afterPostPind, postid);
         return;
     },200);
 };
+
+function afterPostPind(content){
+    // console.log("test");
+    window.parent.requestDisplayInfo(1);
+    // console.log("test");
+    messageBoardRefreshPosts();
+}
 
 function postSend(){    
     if (postInput.value == ""){return;};

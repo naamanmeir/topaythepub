@@ -79,6 +79,7 @@ routerMessageBoard.post('/pinPost/', async (req, res) => {
     messageBoardLogger.clientMessageBoard(`
     set ${postid} pin value to ${newPin}
     `);
+    res.json('ok post pind');
     res.end();
     sendRefreshPostsEventToAllClients();
     return;

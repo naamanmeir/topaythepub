@@ -529,12 +529,15 @@ function generateRandomColor() {
 
 //---------------------- UI ELEMENTS ----------------------//
 function requestDisplayInfo(id) {
+    // console.log("send req to monitor");
     id = JSON.stringify({ "id": id });
     postRequest('./client/getDisplayInfo/', window.parent.openDisplayInfo, id);
     return;
 };
 function openDisplayInfo(content) {
-    let pDiv = document.getElementById('displayMessage');    
+    // console.log("open display");
+    let pDiv = document.getElementById('displayMessage');  
+    pDiv.innerHTML = '';
     for(let i=0;i<content.length;i++){
         let p = document.createElement('p');
         p.innerHTML = "&emsp;&emsp;&emsp;&emsp;"+content[i].post+"&emsp;&emsp;&emsp;&emsp;";

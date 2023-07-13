@@ -1247,12 +1247,12 @@ p {
     display: flex;
     flex-direction: row;
     white-space: nowrap;
-    transform: translateX(-50%);
-    animation: move 120s linear infinite;
+    transform: translateX(-200%);
+    animation: move 40s linear infinite;
 }
 
 @keyframes move {
     to {
-        transform: translateX(100%);
+        transform: translateX(200%);
     }
 }
