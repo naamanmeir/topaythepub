@@ -1248,7 +1248,7 @@ p {
     flex-direction: row;
     white-space: nowrap;
     transform: translateX(-200%);
-    animation: move 40s linear infinite;
+    animation: move 90s linear infinite;
 }
 
 @keyframes move {
