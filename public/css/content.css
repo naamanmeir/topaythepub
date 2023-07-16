@@ -290,14 +290,15 @@
 }
 
 .buttons {
-    /* position: absolute; */
+    position: sticky;
     display: flex;
     flex-direction: row;
     width: 100%;
+    min-height: 1rem;
     margin: auto;
     margin-top: 0px;
     margin-bottom: 2rem;
-    bottom: 0px;
+    bottom: 1rem;
     left: -50%;
     right: -50%;
     text-align: center;
@@ -307,7 +308,7 @@
 .buttons button {
     margin: auto;
     min-width: 0px;
-    min-height: 0px;
+    min-height: 1rem;
     width: 100%;
     height: fit-content;
     color: black;

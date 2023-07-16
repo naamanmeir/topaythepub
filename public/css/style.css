@@ -58,11 +58,11 @@ input:-webkit-autofill:active {
 
 html,
 body {
-    height: 100%;
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
-    top: 0px;
+    /* height: 100%; */
+    /* width: 100%; */
+    /* margin: 0px; */
+    /* padding: 0px; */
+    /* top: 0px; */
     height: -webkit-fill-available;
     overflow: hidden;
     overscroll-behavior: contain;
@@ -77,14 +77,86 @@ body {
 }
 
 body {
-    display: flex;
-    flex-direction: column;
+    /* display: flex; */
+    /* flex-direction: column; */
     background-color: var(--bg01);
 }
 
 p {
     margin: 0px;
     padding: 0px;
+}
+
+/* ----------------------- HEADER MAIN HEADER --------------------------------------------- */
+
+.header {
+    display: flex;
+    text-align: center;
+    right: 0px;
+    margin: auto;
+    margin-bottom: 0.2rem;
+    margin-top: 0.5rem;
+    padding: 0px;
+    padding-bottom: 0px;
+    border-radius: 1em;
+}
+
+.shadow1 {
+    text-shadow: 3px 1px 2px rgba(163, 130, 69, 0.616);
+}
+
+.header p {
+    border-radius: 2rem;
+    color: rgba(225, 170, 68, 0.896);
+    font-size: 2rem;
+    line-height: 0.4rem;
+    margin: 0px;
+    margin-bottom: 0.2rem;
+    padding: 0px;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+.animColor1 {
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+    background-color: transparent;
+    background-size: 0px;
+    animation: anim1Color1 64s ease infinite running;
+}
+
+@keyframes anim1Color1 {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.animColor2 {
+    background-image: none;
+    background-color: transparent;
+    background-size: 0px;
+    animation: anim1Color1 64s ease infinite running;
+}
+
+@keyframes anim2Color2 {
+    0% {
+        filter: hue-rotate(180deg);
+    }
+
+    100% {
+        filter: hue-rotate(179deg);
+    }
+}
+
+.row {
+    flex-direction: row;
+}
+
+.column {
+    flex-direction: column;
 }
 
 .menu {
@@ -349,6 +421,8 @@ p {
     opacity: 1;
 }
 
+/* --------------------------MESSAGE BOARD------------------------------ */
+
 .messageBoardWindow {
     z-index: 80;
     position: relative;
@@ -358,12 +432,12 @@ p {
     /* right: 5%; */
     width: 85%;
     max-width: 650px;
-    height: 85%;
+    height: 80vh;
     margin: auto;
     background-color: var(--bg01);
     border: 1px solid var(--border02);
     /* padding: 1rem; */
-    padding-top: 0.2rem;
+    padding-top: 0.1rem;
     color: var(--text03);
 }
 
@@ -389,13 +463,14 @@ p {
 }
 
 .postInputTypes {
+    position: relative;
     display: flex;
     flex-direction: row;
     width: 80%;
     margin: auto;
     margin-top: 0px;
-    margin-bottom: 0px;
-    bottom: 0.5rem;
+    margin-bottom: 1rem;
+    bottom: 1rem;
     width: 80%;
 }
 
@@ -625,23 +700,16 @@ p {
     width: 0px;
 }
 
-.header {
-    display: flex;
-    text-align: center;
-    right: 0px;
-    margin: auto;
-    margin-bottom: 0.2rem;
-    margin-top: 0.5rem;
-    padding: 0px;
-    padding-bottom: 0px;
-    border-radius: 1em;
-}
-
 @media screen and (max-height: 700px),
 (max-width: 500px) {
     .messageBoardWindow {
-        /* height: 80%; */
+        height: 80vh;
         /* top: 7%; */
+    }
+
+    .postInput {
+        height: 2rem;
+        font-size: 1rem;
     }
 
     .mboardButton {
@@ -653,63 +721,34 @@ p {
 
 }
 
-.shadow1 {
-    text-shadow: 3px 1px 2px rgba(163, 130, 69, 0.616);
-}
-
-.header p {
-    border-radius: 2rem;
-    color: rgba(225, 170, 68, 0.896);
-    font-size: 2.2rem;
-    line-height: 0.4rem;
-    margin: 0px;
-    margin-bottom: 0.2rem;
-    padding: 0px;
-    padding-top: 3%;
-    padding-bottom: 3%;
-}
-
-.animColor1 {
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
-    background-color: transparent;
-    background-size: 0px;
-    animation: anim1Color1 64s ease infinite running;
-}
-
-@keyframes anim1Color1 {
-    0% {
-        filter: hue-rotate(0deg);
+@media screen and (max-height: 525px) {
+    .messageBoardWindow {
+        height: 78vh;
     }
 
-    100% {
-        filter: hue-rotate(360deg);
+    .postInput {
+        /* height: 1.7rem; */
+        /* font-size: 1rem; */
+    }
+
+}
+
+@media screen and (max-height: 425px) {
+    .messageBoardWindow {
+        height: 58vh;
+    }
+
+    .postInput {
+        /* height: 1.5rem; */
+        /* font-size: 1rem; */
+    }
+
+    .mboardButton {
+        font-size: 1rem;
     }
 }
 
-.animColor2 {
-    background-image: none;
-    background-color: transparent;
-    background-size: 0px;
-    animation: anim1Color1 64s ease infinite running;
-}
 
-@keyframes anim2Color2 {
-    0% {
-        filter: hue-rotate(180deg);
-    }
-
-    100% {
-        filter: hue-rotate(179deg);
-    }
-}
-
-.row {
-    flex-direction: row;
-}
-
-.column {
-    flex-direction: column;
-}
 
 .window {
     z-index: 50;
@@ -737,7 +776,7 @@ p {
     flex-direction: row;
     width: 100%;
     margin: auto auto 5% auto;
-    margin-bottom: 0px;
+    margin-bottom: 1rem;
     bottom: 0px;
 }
 
@@ -746,9 +785,10 @@ p {
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 2rem;
+    padding: 1rem;
     width: 90%;
-    height: 5rem;
+    height: 2rem;
     max-height: 20rem;
     margin: auto;
     margin-top: 1rem;
