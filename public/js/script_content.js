@@ -1,7 +1,7 @@
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
 const messageTimeoutTime = 3000;
-const displaySpeed = 18;
+const displaySpeed = 26;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 
@@ -596,7 +596,7 @@ function openDisplayInfo() {
     for(let i=0;i<displayMessages.length;i++){
         let p = document.createElement('p');
         p.className = 'displayPs';
-        p.innerHTML = ""+displayMessages[i].post+"";
+        p.innerText = displayMessages[i].post;
         pDiv.appendChild(p);
     };
     display.appendChild(pDiv);

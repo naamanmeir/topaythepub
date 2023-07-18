@@ -138,6 +138,7 @@ app.use(express.static(__dirname + 'public'));
 app.use('/css', express.static(__dirname + '/public/css'));
 app.use('/js', sessionClassMW(120), express.static(__dirname + '/public/js'));
 app.use('/img', sessionClassMW(120), express.static(__dirname + '/public/img'));
+app.use('/fonts', sessionClassMW(120), express.static(__dirname + '/public/fonts'));
 app.use('/report', sessionClassMW(120), express.static(__dirname + '/public/report'));
 app.use('/items', sessionClassMW(120), express.static(__dirname + '/public/img/items'));
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
