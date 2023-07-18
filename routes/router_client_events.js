@@ -47,7 +47,7 @@ function eventSendStatus(res) {
             return;
         }
         return;
-    }, 10000);
+    }, 20000);
 }
 
 routerClientEvents.get('/refreshClients', function (req, res) {

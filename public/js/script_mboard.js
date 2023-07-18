@@ -244,17 +244,14 @@ function postPin(postid){
     });
     
     let pressTimer = setTimeout(function(){        
-        postid = JSON.stringify({'postid':postid});
-        // console.log("test222");
+        postid = JSON.stringify({'postid':postid});        
         postRequest('./mboard/pinPost', window.parent.afterPostPind, postid);
         return;
     },200);
 };
 
-function afterPostPind(content){
-    // console.log("test");
-    window.parent.requestDisplayInfo(1);
-    // console.log("test");
+function afterPostPind(content){    
+    window.parent.requestDisplayInfoRefresh(1);    
     messageBoardRefreshPosts();
 }
 
@@ -345,7 +342,7 @@ function imageCancel(){
 
 function messageBoardRefreshPosts(){
     if(document.getElementById("messageBoardDivPosts") != null){
-        getRequest("./mboard/reloadPosts", displayPostsInDiv);        
+        getRequest("./mboard/reloadPosts", displayPostsInDiv);
         return;
     }else{        
         return;
@@ -358,6 +355,7 @@ function displayPostsInDiv(content){
         postsDiv = document.getElementById("messageBoardDivPosts");
         postsDiv.innerHTML = content;
         scrollPosts();
+        window.parent.requestDisplayInfoRefresh(1);    
         return;
     }else{
         return;

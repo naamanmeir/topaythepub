@@ -8,6 +8,10 @@ exports.buildHtml = function (messageUi,posts) {
             html += `<div class="postDisplay chatbotPost" id="post${posts[i].postid}"><p>${postValid}</p></div>`;
             continue;
         }
+        let pinClass = '';
+        if(posts[i].pin == 1){
+            pinClass = 'postPind';
+        }
         if(posts[i].img != 0){
             let img;
             try {
@@ -19,9 +23,9 @@ exports.buildHtml = function (messageUi,posts) {
             <div class="postDisplayImg"><img src="./img/posts/${img}"></div></div>`
         };        
         if(i%2==0){
-            html += `<div class="postDisplay evenPost" id="post${posts[i].postid}"><p>${postValid}</p></div>`
+            html += `<div class="postDisplay evenPost ${pinClass}" id="post${posts[i].postid}"><p>${postValid}</p></div>`
         }else{
-            html += `<div class="postDisplay oddPost" id="post${posts[i].postid}"><p>${postValid}</p></div>`
+            html += `<div class="postDisplay oddPost ${pinClass}" id="post${posts[i].postid}"><p>${postValid}</p></div>`
         };
     };    
     return html;

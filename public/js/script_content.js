@@ -1,6 +1,7 @@
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 4;
 const messageTimeoutTime = 3000;
+const displaySpeed = 18;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 
@@ -15,6 +16,10 @@ const contentDiv = document.getElementById("divContent");
 const userPage = document.getElementById("userPage");
 const userIndic = document.getElementById("userIndic");
 const display = document.getElementById("display");
+
+let displayMessages;
+let displayRefreshTimer;
+let displayIsScrolling = 0;
 
 let userWindow;
 let messageWindow;
@@ -40,6 +45,7 @@ keyboardFocusMain();
 
 searchBox1.addEventListener('focus', function () {
     // console.log("focus");
+    monitorSwitch(1);
     searchBox1.placeholder = (messageClient.inputPlaceholder);
     if (searchBox1.value.length > 0) { searchBox1.placeholder = (""); };
     if (searchBox1.value.length < 1) { searchBox1.placeholder = (messageClient.inputPlaceholder); };
@@ -54,6 +60,7 @@ searchBox1.addEventListener('focus', function () {
 });
 searchBox1.addEventListener('blur', function () {
     // console.log("blur");
+    monitorSwitch(0);
     searchBox1.placeholder = (messageClient.inputPlaceholder);
     let input = searchBox1.value;
     input = inputSanitize(input);
@@ -65,6 +72,7 @@ searchBox1.addEventListener('blur', function () {
     };
 });
 searchBox1.addEventListener('input', function () {
+    monitorSwitch(1);
     let input = searchBox1.value;
     input = inputSanitize(input);
     searchBox1.value = input;
@@ -98,6 +106,7 @@ function loadUtiliti() {
     buttonOrder.className = ("placeOrder");
     buttonCancel.className = ("cancel");
     requestDisplayInfo(1);
+    monitorSwitch(0);
 };
 loadUtiliti();
 
@@ -528,63 +537,101 @@ function generateRandomColor() {
 };
 
 //---------------------- UI ELEMENTS ----------------------//
+
+function monitorSwitch(fnc){    
+    let pDiv = document.getElementById('displayMessage');
+    let fade = 1;
+    pDiv.style.transition = 'opacity '+fade+'s';
+    userIndic.style.transition = 'opacity '+fade+'s';
+    switch (fnc) {
+        case 0:
+            userIndic.style.opacity = '0';
+            pDiv.style.opacity = '1';
+            break;
+        case 1:
+            userIndic.style.opacity = '1';
+            pDiv.style.opacity = '0';
+            break;
+        default:
+            break;
+    };
+    return;    
+};
+
 function requestDisplayInfo(id) {
     // console.log("send req to monitor");
     id = JSON.stringify({ "id": id });
-    postRequest('./client/getDisplayInfo/', window.parent.openDisplayInfo, id);
+    postRequest('./client/getDisplayInfo/', window.parent.storeDisplayMessagesArrayAndStartPlay, id);
     return;
 };
-function openDisplayInfo(content) {
+
+function requestDisplayInfoRefresh(id) {
+    // console.log("send req to monitor");
+    id = JSON.stringify({ "id": id });
+    if(displayIsScrolling==0){
+        postRequest('./client/getDisplayInfo/', window.parent.storeDisplayMessagesArrayAndStartPlay, id);
+    }
+    if(displayIsScrolling==1){
+        postRequest('./client/getDisplayInfo/', window.parent.storeDisplayMessagesArray, id);    
+    }    
+    return;
+};
+
+function storeDisplayMessagesArrayAndStartPlay(content){
+    displayMessages = content;
+    openDisplayInfo();
+};
+
+function storeDisplayMessagesArray(content){
+    displayMessages = content;    
+};
+
+function openDisplayInfo() {
     // console.log("open display");
+    // console.log(displayMessages.length);
+    if(displayMessages.length == 0 || displayMessages == ''){displayIsScrolling = 0;return;};
+    document.getElementById('displayMessage').innerHTML = '';
     let pDiv = document.getElementById('displayMessage');  
     pDiv.innerHTML = '';
-    for(let i=0;i<content.length;i++){
+    for(let i=0;i<displayMessages.length;i++){
         let p = document.createElement('p');
-        p.innerHTML = "&emsp;&emsp;&emsp;&emsp;"+content[i].post+"&emsp;&emsp;&emsp;&emsp;";
-        // console.log(content[i].post);
+        p.className = 'displayPs';
+        p.innerHTML = ""+displayMessages[i].post+"";
         pDiv.appendChild(p);
     };
-    display.appendChild(pDiv);    
+    display.appendChild(pDiv);
+    scrollScrollBar();
     return;
 };
 
 function scrollScrollBar(){
-    document.addEventListener('DOMContentLoaded', _ => {
-         
-        const items = [...document.getElementsByClassName('list__item')];
-        const containerElem = document.getElementById('containerElem');
-        const leftSideOfContainer = containerElem.getBoundingClientRect().left;
-        const listElem = document.getElementById('list');
-        let currentLeftValue = 0;
-        
-        // Kick off for the animation function.
-        window.setInterval(animationLoop, 50);
-        
-        /* 
-          Looks at first item in the list and checks if it goes out of the visible area 
-          by comparing the right position of the first list item to the left position 
-          of the containing element. 
-        */
-        function animationLoop() {
-          const firstListItem = listElem.querySelector('.list__item:first-child');
-          
-          let rightSideOfFirstItem = firstListItem.getBoundingClientRect().right;
-          
-          /* 
-            If first list item is out of viewable area, move it to the end of the list. 
-            Also, set the current left value to -1 so we won't stutter.
-          */
-          if(rightSideOfFirstItem == leftSideOfContainer){
-            currentLeftValue = -1;
-            listElem.appendChild(firstListItem);
-          }
-          
-          // The part that keeps it all going: animating the margin left value of the list.
-          listElem.style.marginLeft = `${currentLeftValue}px`;
-          currentLeftValue--;
+    let items = [...document.getElementsByClassName('displayPs')];
+    const displayMessage = document.getElementById("displayMessage");
+    const displayDiv = document.getElementById("display");
+    let displayRight = displayDiv.getBoundingClientRect().right;
+    let displayLeft = displayDiv.getBoundingClientRect().left;
+    let displayMessageRight = displayMessage.getBoundingClientRect().right;
+    let displayMessageLeft = displayMessage.getBoundingClientRect().left;
+    let displayFirstMessage = items[0];
+
+    let left = -(displayRight+100);
+    let amnt = 1
+
+    function moveLoop(){
+        displayIsScrolling = 1;
+        let displayFirstMessageLeft = displayFirstMessage.getBoundingClientRect().left;
+        if(items.length == 0){
+            clearTimeout(displayRefreshTimer);            
+            return openDisplayInfo();
+        };        
+        for(let i = 0;i<items.length;i++){
+            items[i].style.left = `${left}px`;
+            if(items[i].getBoundingClientRect().left > displayRight+100){
+                items.splice(i,1);                
+            }
         }
-      });
-
-}
-
-
+        left = left+amnt;
+        displayRefreshTimer = setTimeout(moveLoop,displaySpeed);
+    };
+    return moveLoop();    
+};

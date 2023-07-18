@@ -269,11 +269,11 @@ routerClient.post('/getDisplayInfo/', async (req, res) => {
 
     let displayInfo = await db.dbGetPindPosts();
     // console.log(displayInfo);
-    let displayInfoHtml = require("../module/html/content/getDisplayInfo");
+    // let displayInfoHtml = require("../module/html/content/getDisplayInfo");
     // console.log(displayInfo)
     let html = JSON.stringify(displayInfo);
     res.send(html);
-    delete require.cache[require.resolve("../module/html/content/getDisplayInfo")];
+    // delete require.cache[require.resolve("../module/html/content/getDisplayInfo")];
     return;
 });
 

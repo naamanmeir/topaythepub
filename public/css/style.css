@@ -349,11 +349,11 @@ p {
 @media screen and (max-height: 700px),
 (max-width: 500px) {
     .messageWindow {
-        top: 5%;
+        top: 25%;
     }
 
     .messageWindow p {
-        font-size: 3rem;
+        font-size: 2rem;
     }
 
 }
@@ -612,7 +612,7 @@ p {
 }
 
 .postDisplay {
-    color: #ebcb3d;
+    color: #ffffff;
     border: 1px dotted rgb(6, 143, 129);
     border-radius: 2%;
     display: flex;
@@ -670,6 +670,11 @@ p {
 
 .evenPost {
     background-color: #103b4fc1;
+}
+
+.postPind {
+    background-color: rgba(255, 209, 4, 0.428);
+    color: rgb(144, 208, 196);
 }
 
 .chatbotPost {
@@ -1164,12 +1169,12 @@ p {
 
 #userIndic {
     position: relative;
-    left: -8.5rem;
-    bottom: -2rem;
-    z-index: 300;
-    margin: 0px;
-    padding: 0px;
-    width: 100%;
+    /* left: -50%; */
+    /* bottom: -2.5rem; */
+    z-index: 150;
+    margin: auto;
+    /* padding: 0px; */
+    /* width: 100vw; */
     font-size: 2rem;
     color: var(--text01);
     white-space: nowrap;
@@ -1224,7 +1229,9 @@ p {
 
 @media screen and (max-height: 700px),
 (max-width: 500px) {
-    #userIndic {}
+    #userIndic {
+        font-size: 1rem;
+    }
 
     .connectionIndic {
         top: 1rem;
@@ -1271,26 +1278,33 @@ p {
     z-index: -1;
 }
 
+.displayPs {
+    /* background-color: #19e607; */
+}
+
 .display p {
+    position: relative;
     color: wheat;
     font-size: 1.5rem;
     /* white-space: pre; */
-    /* transition: all 20s; */
+    /* transition: all 1s; */
     color: orange;
     display: inline-flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
 }
 
 .displayMessage {
-    /* position: absolute; */
+    position: absolute;
     width: 100%;
     height: 2rem;
     /* background-color: green; */
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
+    column-gap: 10rem;
     white-space: nowrap;
     /* transform: translateX(-200%); */
     /* animation: move 90s linear infinite; */
+    /* transition: all 22s; */
 }
 
 @keyframes move {

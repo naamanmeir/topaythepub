@@ -831,7 +831,7 @@ exports.dbGetAllPosts = async function (){
 };
 
 exports.dbGetPindPosts = async function (){
-  let sql = (`SELECT post FROM ${tablePosts} WHERE pin = 1 ORDER BY postid ASC;`);
+  let sql = (`SELECT post FROM ${tablePosts} WHERE pin = 1 ORDER BY postid DESC;`);
   let messageReturn = await pool.query(sql);  
   return messageReturn;
 };
