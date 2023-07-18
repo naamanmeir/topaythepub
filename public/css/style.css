@@ -621,6 +621,7 @@ p {
 
 .postDisplay {
     color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
     border: 1px dotted rgb(6, 143, 129);
     border-radius: 2%;
     display: flex;
@@ -1274,6 +1275,8 @@ p {
 /* ----------------Display----------------- */
 .display {
     position: absolute;
+    text-align: right;
+
     /* border-top: 1px dotted green; */
     /* border-bottom: 1px dotted green; */
     height: 2rem;
@@ -1284,18 +1287,22 @@ p {
     flex-direction: row;
     white-space: nowrap;
     z-index: -1;
-    font-family: DanaYad;
+    /* font-family: DanaYad; */
 
 }
 
 .displayPs {
-    font-family: DanaYad;
+    /* font-family: DanaYad; */
+    text-align: right;
+
 
     /* background-color: #19e607; */
 }
 
 .display p {
     position: relative;
+    text-align: right;
+
     /* font: ; */
     font-family: DanaYad;
     color: rgb(255, 255, 255);
@@ -1310,8 +1317,10 @@ p {
 
 .displayMessage {
     position: absolute;
-    font-family: DanaYad;
-    justify-content: right;
+    /* font-family: DanaYad; */
+    /* justify-content: right;
+    align-content: start; */
+    text-align: right;
     width: 100%;
     height: 2rem;
     /* background-color: green; */

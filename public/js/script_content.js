@@ -596,7 +596,10 @@ function openDisplayInfo() {
     for(let i=0;i<displayMessages.length;i++){
         let p = document.createElement('p');
         p.className = 'displayPs';
-        p.innerText = displayMessages[i].post;
+        let text = String(displayMessages[i].post);
+        let textNode = document.createTextNode(text); 
+        p.appendChild(textNode);
+        // p.innerText = text;
         pDiv.appendChild(p);
     };
     display.appendChild(pDiv);
