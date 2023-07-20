@@ -1276,7 +1276,6 @@ p {
 .display {
     position: absolute;
     text-align: right;
-
     /* border-top: 1px dotted green; */
     /* border-bottom: 1px dotted green; */
     height: 2rem;
@@ -1292,23 +1291,19 @@ p {
 }
 
 .displayPs {
-    /* font-family: DanaYad; */
     text-align: right;
-
-
-    /* background-color: #19e607; */
 }
 
 .display p {
     position: relative;
     text-align: right;
-
-    /* font: ; */
     font-family: DanaYad;
-    color: rgb(255, 255, 255);
-    font-size: 1.7rem;
+    font-style: italic;
+    color: rgb(251, 240, 197);
+    font-size: 1.8rem;
     padding-bottom: 0.3rem;
     /* white-space: pre; */
+    clear: both;
     /* transition: all 1s; */
     display: inline-flex;
     justify-content: right;
