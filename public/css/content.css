@@ -19,7 +19,7 @@
 .searchBoxDiv {
     z-index: 50;
     margin: auto;
-    width: 99%;
+    width: 100%;
     margin-top: 0.5rem;
     height: 6rem;
     top: 0px;
@@ -34,7 +34,7 @@
     border-radius: 1%;
     border: 1px double orange;
     background-color: var(--bg01);
-    height: 4rem;
+    height: 100%;
     min-height: 4rem;
     flex-shrink: 0;
     width: 100%;

@@ -38,9 +38,16 @@ window.addEventListener('load', loadUtiliti, true);
 function loadUtiliti() {
     populateUtilities();
     mainDivsAutoRefreshInterval();
+    setViewport();
     // populateMainDivs();
     // populateElements();
 };
+
+function setViewport(){
+    setTimeout(()=>
+    document.querySelector("meta[name=viewport]").setAttribute("content", "height=" + screen.height*0.9 + "px, width=device-width, initial-scale=1.0")
+ , 300);
+}
 
 function populateUtilities(){
     getRequest("./app/messages", buildMessage);
