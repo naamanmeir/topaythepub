@@ -35,6 +35,8 @@
     border: 1px double orange;
     background-color: var(--bg01);
     height: 4rem;
+    min-height: 4rem;
+    flex-shrink: 0;
     width: 100%;
     font-size: 2.1rem;
     margin: auto;
