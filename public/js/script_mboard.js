@@ -354,7 +354,7 @@ function displayPostsInDiv(content){
     if(document.getElementById("messageBoardDivPosts") != null){
         postsDiv = document.getElementById("messageBoardDivPosts");
         postsDiv.innerHTML = content;
-        scrollPosts();
+        // scrollPosts();
         window.parent.requestDisplayInfoRefresh(1);    
         return;
     }else{

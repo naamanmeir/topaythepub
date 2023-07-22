@@ -1293,7 +1293,7 @@ p {
     height: 2rem;
     width: 100%;
     left: 0px;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.5rem;
     display: flex;
     flex-direction: row;
     white-space: nowrap;
@@ -1304,14 +1304,16 @@ p {
 
 .displayPs {
     text-align: right;
+    /* min-width: fit-content; */
     /* margin-left: 15rem; */
     /* padding-left: 15rem; */
 }
 
 .display p {
+    min-width: fit-content;
     position: relative;
     text-align: right;
-    font-family: DanaYad;
+    /* font-family: DanaYad; */
     font-style: italic;
     color: rgb(251, 240, 197);
     font-size: 1.8rem;
@@ -1325,6 +1327,7 @@ p {
 }
 
 .displayMessage {
+    min-width: fit-content;
     position: absolute;
     text-align: right;
     width: 100%;
@@ -1335,7 +1338,7 @@ p {
     display: flex;
     flex-direction: row-reverse;
     /* column-gap: 15rem; */
-    white-space: nowrap;
+    /* white-space: nowrap; */
     white-space: pre-line;
     /* transform: translateX(-200%); */
     /* animation: move 90s linear infinite; */
