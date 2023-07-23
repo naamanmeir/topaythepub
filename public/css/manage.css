@@ -342,3 +342,44 @@ button {
 .data {}
 
 .manage {}
+
+.productImgUploadPreview {
+    max-width: 5rem;
+    max-height: 3rem;
+}
+
+/* .uploadImg {
+    display: flex;
+    height: fit-content;
+} */
+
+#imageAddButton {
+    background-color: rgb(6, 101, 130);
+    right: 0px;
+    margin: auto;
+    margin-right: 0px;
+}
+
+#imageRemoveButton {
+    background-color: rgb(6, 101, 130);
+    right: 0px;
+    margin: auto;
+    margin-right: 0px;
+}
+
+.progressBarDiv {
+    width: 80%;
+    margin: auto;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    height: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    /* position: absolute; */
+}
+
+.progressBar {
+    background-color: green;
+    height: 10px;
+    width: 0px;
+}

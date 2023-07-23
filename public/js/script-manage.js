@@ -8,24 +8,77 @@ let productPrice;
 let productImage;
 let productStock;
 let productId;
-// FUNCTIONS TO RUN SERVER ACTIONS
-async function placeOrder(orderPack) {
-    xhttp.open("GET", "./order/" + orderPack, true);
-    xhttp.send();
-};
 
-async function createTable() {
-    xhttp.open("GET", "./retable/", true);
-    xhttp.send();
+let progBarDiv;
+let progBar;
 
+// ------------  REQUEST MANAGE FUNCTION -------------------------------------//
+
+//------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
+async function getRequest(url, callback, data) {
+    var xhttp = new XMLHttpRequest();
+    // console.log("SENDING GET REQUEST TO: " + url);
+    if (data != null) { xhttp.open("GET", url + data, true); }
+    if (data == null) { xhttp.open("GET", url, true); }
+    xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);
-            return;
-        }
+            // console.log("RESPONSE: " + this.response);
+            if (this.response.errorClient){
+                window.parent.openMessageWindow(this.response.errorClient)
+            };
+            if (callback != null) { callback(this.response); }            
+            return this.response;
+        };
     };
+
+};
+//------------------------SEND POST REQUEST TO: url WITH -> callback function AND APPENDED data----------------
+async function postRequest(url, callback, data) {
+    if (data == null) { return; }
+    var xhttp = new XMLHttpRequest();
+    // console.log("SENDING POST REQUEST TO: " + url);
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    // console.log("SENDING DATA AS JSON: " + data);
+    xhttp.send(data);
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {            
+            // console.log("RESPONSE: ");
+            // console.log(this.response);
+            if(isJson(this.response)){
+                let parsedReponse = JSON.parse(this.response);
+                // console.log(parsedReponse);            
+                if (parsedReponse.errorClient){
+                    window.parent.openMessageWindow(parsedReponse.errorClient)
+                };
+                if (callback != null) { callback(parsedReponse); }
+                return parsedReponse;
+            }else{
+                return;
+            }
+            if (callback != null) { callback(this.response); }
+            return this.response;
+        };
+    };
+
 };
 
+function isJson(input) {
+    // console.log("testing for JSON input:");
+    // console.log(input);
+    try {        
+        JSON.parse(input);
+    } catch (e) {
+        // console.log("false");
+        // console.log(e);
+        return false;
+    }
+    // console.log("true");
+    return true;
+};
+
+//-----------------------------UI-------------------------//
 function navtab(select) {
     var i;
     var x = document.getElementsByClassName("page");
@@ -34,10 +87,11 @@ function navtab(select) {
     }
     document.getElementById(select).style.display = "block";
 };
-
 function addImgDropdown() {
     let imgDiv = document.getElementById("imgDiv");
-}
+};
+
+//--------------USER SEARCH FUNCTIONS----------------------------//
 const searchBox1 = document.getElementById("getUserByName");
 searchBox1.addEventListener('focus', function () {
     searchBoxClear();
@@ -55,9 +109,7 @@ searchBox1.addEventListener('input', function () {
     searchBox(searchBox1.value);
 });
 
-
 function searchBox(text) {
-    // const searchBox = document.getElementById("searchBox");
     let searchText = text;
     searchText = searchText.replace(/\\/g, '');
     searchText = searchText.replace(/\//g, '');
@@ -165,11 +217,13 @@ function clearAutoComplete(autoDiv) {
     };
 };
 
+//--------------USER EDIT MANAGEMANENT FUNCTIONS----------------------------//
+
 let clientId;
 let clientName;
 let clientAccount;
 let clientNick;
-//-------------------LOGGED IN CLIENT FOR EDIT
+
 function copyTextToSearchBox(clientsSelected) {
     clientId = clientsSelected[0];
     clientName = clientsSelected[1];
@@ -388,6 +442,26 @@ function deleteClient() {
     };
 };
 
+// ------------------------------ FUNCTIONS TO RUN SERVER ACTIONS
+async function placeOrder(orderPack) {
+    xhttp.open("GET", "./order/" + orderPack, true);
+    xhttp.send();
+};
+
+async function createTable() {
+    xhttp.open("GET", "./retable/", true);
+    xhttp.send();
+
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            return;
+        }
+    };
+};
+
+// ------------------------------ PRODUCTS DATA EDIT ADD DELETE -----------------------------//
+
 async function getAllData(scope) {
     console.log("GET ALL DATA FUNC: ");
     let itemsBought;
@@ -578,7 +652,8 @@ function imgClickSelect(img, imgId) {
 function insertProduct() {
     let newItem = document.getElementById("insertProduct");
     let newPrice = document.getElementById("insertPrice");
-    let newStock = document.getElementById("insertStock");
+    // let newStock = document.getElementById("insertStock");
+    let newStock = {value: 10}
     let newImg = imgSelect;
     if (newItem.value == '' | newPrice.value == '' | newStock.value == '' | newImg == '') { return };
     let newData = [newItem.value, newPrice.value, newImg, newStock.value];
@@ -613,7 +688,78 @@ function deleteProduct() {
             return;
         }
     };
+};
+
+// ------------------------------UPLOAD PRODUCT IMAGE----------------------------------------------- //
+
+function productImageUploadSend(){
+    const formData = new FormData();    
+    formData.append("img",imageSelector.files[0]);
+    var req = new XMLHttpRequest();       
+    req.upload.addEventListener("progress", updateProgress);
+    req.open("POST", "./manage/uploadItemImg");
+    req.send(formData);
+    imageSelector.value = "";
+    imageCancel();
+    imagePreview();
+    return;
 }
+
+function resetProgressBar(){
+    progBar.style.width = "0px";
+};
+
+function updateProgress(e){
+    progBar.style.width = (((e.loaded/e.total)*100))+ "%";
+    if((e.loaded/e.total)==1){        
+        setTimeout(resetProgressBar,2000);
+        location.reload();
+    };
+};
+
+function createProgressBar(){    
+    progBarDiv = document.getElementById("progBarDiv");
+    progBar = document.getElementById("progBar");
+    progBarDiv.className = "progressBarDiv";
+    progBar.className = "progressBar";
+};
+
+function imagePreview(){
+    var productImgUploadPreview = document.getElementById('productImgUploadPreview');
+    var imageAddButton = document.getElementById('imageAddButton');
+    var imageRemoveButton = document.getElementById('imageRemoveButton');
+    var productImageSendButton = document.getElementById('productImageSendButton');
+    productImgUploadPreview.style.display = "none";
+    productImageSendButton.style.display = "none";
+    imageSelector.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            imageAddButton.style.display = "block";
+            imageRemoveButton.style.display = "none";
+            productImageSendButton.style.display = "none";
+            productImgUploadPreview.onload = () => {
+                URL.revokeObjectURL(productImgUploadPreview.src);
+                imageAddButton.style.display = "none";
+                imageRemoveButton.style.display = "block";
+                productImageSendButton.style.display = "block";
+            }
+            productImgUploadPreview.src = URL.createObjectURL(this.files[0]);
+            productImgUploadPreview.style.display = "block";            
+        }
+    });
+};
+
+function imageCancel(){    
+    var productImgUploadPreview = document.getElementById('productImgUploadPreview');
+    productImgUploadPreview.style.display = "none";
+    imageSelector.value = "";
+    imageAddButton.style.display = "block";
+    imageRemoveButton.style.display = "none";
+    productImageSendButton.style.display = "none";
+};
+
+
+
+// ------------------------------------------------------------------------------------- //
 
 function openInfotables() {
     xhttp.onreadystatechange = function () {
@@ -624,7 +770,7 @@ function openInfotables() {
     };
     xhttp.open("GET", "./manage/infotables", false);
     xhttp.send();
-}
+};
 
 function showOrdersTable(data) {
     const table = document.createElement("table");
@@ -811,6 +957,8 @@ function removeOldBackups() {
     };
 };
 
+// --------------------------- UTILITIES AND LOADERS ------------------------------ //
+
 function defineInputFields() {
     let inputElements = document.getElementsByClassName("textbox");
     const inputs = document.querySelectorAll('input');
@@ -856,21 +1004,7 @@ function login(name) {
         xhttp.send();
     };
 };
-// LOG CONSOLE TO SCREEN ------------------------------
-// function clearConsole(){
-//     document.getElementById("console").innerHTML ="";
-// };
-// if (typeof console  != "undefined") 
-//   if (typeof console.log != 'undefined')
-//     console.olog = console.log;
-// else
-//   console.olog = function() {};
 
-// console.log = function(message) {
-//   console.olog(message);
-//   document.getElementById("console").append('<p>' + message + '</p>');
-// };
-// console.error = console.debug = console.info =  console.log;
 window.addEventListener('load', loadUtiliti, false);
 function loadUtiliti() {
     setTimeout(function () {
@@ -881,6 +1015,8 @@ function loadUtiliti() {
     }, 400);    
     setTimeout(function () {
         connectedTerminalsStatus();
+        imagePreview();
+        createProgressBar();
     }, 800);
 
 };
@@ -908,5 +1044,4 @@ function connectedTerminalsStatus() {
             return;
         }
     };
-}
-
+};

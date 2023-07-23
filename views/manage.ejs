@@ -95,10 +95,10 @@
                                 height="50px" onclick="imgClickSelect('<%=img%>','image-<%=img%>')">
                             <% }); %>
                     </div>
-
+                    <!-- 
                     <p> כמות : </p>
                     <input type="text" class="textboxNumber" id="insertStock" min="0" maxlength="4" id="pin"
-                        pattern="\d{4}" required spellcheck="false" placeholder=" הכנס כמות  ">
+                        pattern="\d{4}" required spellcheck="false" placeholder=" הכנס כמות  "> -->
                     <button class="green" onclick="insertProduct()">הכנס מוצר</button>
                     </p>
                 </div>
@@ -111,13 +111,29 @@
 
             <div class="row linebreak"></div>
 
-            <div class="uploadImg">
+            <!-- <div class="uploadImg">
                 <p>הוספת תמונה</p>
                 <p>כמובן שכדאי תמונות קטנות ככל האפשר</p>
                 <form action="manage/uploadItemImg" method="POST" enctype="multipart/form-data">
                     <input class="manage-button" type="file" name="imgUpload" text="בחר תמונה"><br>
                     <input class="manage-button" type="submit" value="שלח">
                 </form>
+            </div> -->
+
+            <div class="uploadImg">
+                <p>הוספת תמונה</p>
+                <input id="imageSelector" type="file" name="imgUpload" text="" style="display: none;">
+                <input type="button" class="mboardButton" value="בחר תמונה"
+                    onclick="document.getElementById('imageSelector').click();" id="imageAddButton"
+                    style="display: block;" />
+                <input type="button" class="mboardButton" value="הסר תמונה" onclick="imageCancel()"
+                    id="imageRemoveButton" style="display: none;" />
+                <img class="productImgUploadPreview" id="productImgUploadPreview" src="#">
+                <input type="button" id="productImageSendButton" class="mboardButton" value="שלח תמונה"
+                    onclick="productImageUploadSend()" style="display: none;">
+                <div id="progBarDiv" class="progBarDiv">
+                    <div id="progBar" class="progBar"></div>
+                </div>
             </div>
 
             <div class="row linebreak"></div>

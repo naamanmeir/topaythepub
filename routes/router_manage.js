@@ -1,10 +1,11 @@
 const express = require('express');
 const routerManage = express.Router();
+const db = require('./../db.js');
 const functions = require('../functions');
 const sessionClassMW = require("../module/session/sessionClass");
-var formidable = require('formidable');
 const fs = require('fs');
-const db = require('./../db.js');
+const path = require('path');
+const formidable = require('formidable');
 const { stringify } = require("csv-stringify");
 const clientEvents = require('./router_client_events');
 
@@ -124,7 +125,7 @@ routerManage.post('/deleteProduct/:data', async (req, res, next) => {
     res.send(response);
 });
 
-routerManage.post('/uploadItemImg', async (req, res) => {
+routerManage.post('/uploadItemImgOld', async (req, res) => {
     console.log("START");
     const options = {
         uploadDir: __dirname + '/../public/img/items',
@@ -145,6 +146,49 @@ routerManage.post('/uploadItemImg', async (req, res) => {
     functions.itemImgArray();
     res.send('עלה אבל יש תקלה אז צריך לחזור דף אחורה זהו התמונה שם');
     res.end();
+});
+
+function renameFileIfExist(file){
+    if(fs.existsSync(file)){
+        let fileNameDir = path.parse(file).dir;
+        let fileNameBase = path.parse(file).name;
+        let fileNameExt = path.parse(file).ext;
+        let currentTime = Date.now();
+        let nameAfterRename = fileNameDir + "/" + fileNameBase + currentTime + fileNameExt;        
+        return nameAfterRename;
+        }else{        
+        return file;
+        }
+    };
+
+routerManage.post('/uploadItemImg', async (req, res) => {
+    const options = {
+        uploadDir: __dirname + '/../public/img/items/',
+        filter: function ({ name, originalFilename, mimetype }) {
+            return mimetype && mimetype.includes("image");
+        }
+    };
+    const form = formidable(options);
+    let newName;
+    let originalName;
+    let post;    
+    let finalImageName;
+    form.parse(req, function (err, fields, files) {
+        newName = files.img.filepath;
+        originalName = (__dirname + '/../public/img/items/') + (files.img.originalFilename);
+        originalName = renameFileIfExist(originalName);
+        fs.rename(newName, originalName, function(err) {
+            if (err) console.log(err);
+        });
+        post = fields.post;
+        finalImageName = (path.parse(originalName).name)+path.parse(originalName).ext;        
+        finalImageName = JSON.stringify(finalImageName);
+        // insertPostWithImage(req,res,post,null,finalImageName);
+    });
+    let response = "INSERTED IMAGE TO PRODUCTS IMAGES";
+    // res.json(response);
+    console.log("SENT PIC");    
+    res.redirect('/manage');
 });
 
 //-------------------------------------USERS---------------------------------------------//
