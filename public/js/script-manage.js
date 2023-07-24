@@ -490,6 +490,19 @@ async function getAllData(scope) {
     };
 };
 
+async function getItemImagesAsHtml(){
+    console.log('GET IMAGES');
+    getRequest('./manage/getItemImgs/', window.parent.displayItemImagesInDiv,null);
+    return;
+};
+
+function displayItemImagesInDiv(content){
+    console.log(content);
+    let imgDiv = document.getElementById('imgDiv');
+    imgDiv.innerHTML = content;
+    return;
+}
+
 async function getItemsBought() {
     xhttp.open("GET", "./manage/getItemsBought/", false);
     xhttp.send();
@@ -713,7 +726,9 @@ function updateProgress(e){
     progBar.style.width = (((e.loaded/e.total)*100))+ "%";
     if((e.loaded/e.total)==1){        
         setTimeout(resetProgressBar,2000);
-        location.reload();
+        setTimeout(function(){
+            getItemImagesAsHtml();
+        },4000);        
     };
 };
 
@@ -1018,6 +1033,7 @@ function loadUtiliti() {
         imagePreview();
         createProgressBar();
     }, 800);
+    getItemImagesAsHtml();
 
 };
 

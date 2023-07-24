@@ -4,8 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"> -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
     <title>ניהול</title>
     <link rel="stylesheet" href="css/manage.css">
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
@@ -21,7 +19,7 @@
             <button class="nav-link" onclick="navtab('data')">נתונים</button></li>
             <button class="nav-link" onclick="navtab('manage')">ניהול</button></li>
             <button class="nav-link" onclick="navtab('chatbot')">chatbot</button></li>
-            <button class="nav-link"><a class="nav-link" href="./accountant" target="_blank">accountant</a></button>
+            <button class="nav-link"><a href="./accountant" target="_blank">accountant</a></button>
             </li>
         </div>
 
@@ -89,16 +87,7 @@
                     <input type="text" class="textboxNumber" id="insertPrice" min="0" maxlength="4" id="pin"
                         pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מחיר  ">
                     <p> תמונה : </p>
-                    <div class="imgDiv row" id="imgDiv">
-                        <% imgArray.forEach(function(element) {var img=element;%>
-                            <img class="imgSelector" id="image-<%=img%>" src="img/items/<%=img%>" alt="" width="50px"
-                                height="50px" onclick="imgClickSelect('<%=img%>','image-<%=img%>')">
-                            <% }); %>
-                    </div>
-                    <!-- 
-                    <p> כמות : </p>
-                    <input type="text" class="textboxNumber" id="insertStock" min="0" maxlength="4" id="pin"
-                        pattern="\d{4}" required spellcheck="false" placeholder=" הכנס כמות  "> -->
+                    <div class="imgDiv row" id="imgDiv"></div>
                     <button class="green" onclick="insertProduct()">הכנס מוצר</button>
                     </p>
                 </div>
@@ -110,15 +99,6 @@
             </div>
 
             <div class="row linebreak"></div>
-
-            <!-- <div class="uploadImg">
-                <p>הוספת תמונה</p>
-                <p>כמובן שכדאי תמונות קטנות ככל האפשר</p>
-                <form action="manage/uploadItemImg" method="POST" enctype="multipart/form-data">
-                    <input class="manage-button" type="file" name="imgUpload" text="בחר תמונה"><br>
-                    <input class="manage-button" type="submit" value="שלח">
-                </form>
-            </div> -->
 
             <div class="uploadImg">
                 <p>הוספת תמונה</p>

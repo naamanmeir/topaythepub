@@ -5,6 +5,7 @@ const functions = require('../functions');
 const sessionClassMW = require("../module/session/sessionClass");
 const fs = require('fs');
 const path = require('path');
+const getItemImgs = require("../module/html/elements/manageGetItemImg.js");
 const formidable = require('formidable');
 const { stringify } = require("csv-stringify");
 const clientEvents = require('./router_client_events');
@@ -12,13 +13,19 @@ const clientEvents = require('./router_client_events');
 //---------------------MANAGE MAIN PAGE-----------------------------//
 
 routerManage.get('/', (req, res) => {
-    console.log("LOGIN TO MANAGE PANEL ON: " + Date());
+    console.log("MANAGE : " + Date());
     let itemImgArray = functions.itemImgArray();
     let session = req.session;
     res.render('manage', {
-        imgArray: itemImgArray,
-        username: session.userid
+        imgArray: itemImgArray
     })
+});
+
+routerManage.get('/getItemImgs',(req,res) => {    
+    let itemImgArray = functions.itemImgArray();    
+    let html = getItemImgs.buildHtml(itemImgArray);    
+    res.send(html);
+    return;
 });
 
 //---------------------UI FUNCTIONS-----------------------------//
@@ -150,6 +157,7 @@ routerManage.post('/uploadItemImgOld', async (req, res) => {
 
 function renameFileIfExist(file){
     if(fs.existsSync(file)){
+        console.log("if exist rename try 1")
         let fileNameDir = path.parse(file).dir;
         let fileNameBase = path.parse(file).name;
         let fileNameExt = path.parse(file).ext;
@@ -162,8 +170,13 @@ function renameFileIfExist(file){
     };
 
 routerManage.post('/uploadItemImg', async (req, res) => {
+    // console.log("start upload");
+    // console.log(req);
+    let maxFileSize = 70 * 1024 * 1024;;    
     const options = {
         uploadDir: __dirname + '/../public/img/items/',
+        maxFileSize: maxFileSize,
+        keepExtensions: true,
         filter: function ({ name, originalFilename, mimetype }) {
             return mimetype && mimetype.includes("image");
         }
@@ -171,23 +184,24 @@ routerManage.post('/uploadItemImg', async (req, res) => {
     const form = formidable(options);
     let newName;
     let originalName;
-    let post;    
     let finalImageName;
     form.parse(req, function (err, fields, files) {
+        // console.log("start image upload form parse")
+        // console.log(fields);
+        // console.log(files);        
         newName = files.img.filepath;
+        // console.log(newName)
         originalName = (__dirname + '/../public/img/items/') + (files.img.originalFilename);
         originalName = renameFileIfExist(originalName);
+        // console.log(originalName)
         fs.rename(newName, originalName, function(err) {
             if (err) console.log(err);
         });
-        post = fields.post;
+        // console.log(files.img.originalFilename);
+        // console.log(originalName);        
         finalImageName = (path.parse(originalName).name)+path.parse(originalName).ext;        
         finalImageName = JSON.stringify(finalImageName);
-        // insertPostWithImage(req,res,post,null,finalImageName);
     });
-    let response = "INSERTED IMAGE TO PRODUCTS IMAGES";
-    // res.json(response);
-    console.log("SENT PIC");    
     res.redirect('/manage');
 });
 
