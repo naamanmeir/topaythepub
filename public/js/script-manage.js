@@ -496,8 +496,7 @@ async function getItemImagesAsHtml(){
     return;
 };
 
-function displayItemImagesInDiv(content){
-    console.log(content);
+function displayItemImagesInDiv(content){    
     let imgDiv = document.getElementById('imgDiv');
     imgDiv.innerHTML = content;
     return;

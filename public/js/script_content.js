@@ -599,8 +599,9 @@ function openDisplayInfo() {
         let text = String(displayMessages[i].post);
         let textNode = document.createTextNode(text);
         // p.appendChild(textNode);
-        p.innerHTML = "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+text+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
-        pDiv.appendChild(p);
+        p.innerHTML = text;
+        // p.innerHTML = "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+text+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+        pDiv.appendChild(p);        
     };
     display.appendChild(pDiv);
     scrollScrollBar();
@@ -617,7 +618,7 @@ function scrollScrollBar(){
     let displayMessageLeft = displayMessage.getBoundingClientRect().left;
     let displayFirstMessage = items[0];
 
-    let left = -(displayRight+100);
+    let left = -(displayRight-200);
     let amnt = 1
 
     function moveLoop(){
