@@ -618,7 +618,7 @@ function scrollScrollBar(){
     let displayMessageLeft = displayMessage.getBoundingClientRect().left;
     let displayFirstMessage = items[0];
 
-    let left = -(displayRight+100);
+    let left = -2600;
     let amnt = 1
 
     function moveLoop(){
@@ -629,8 +629,10 @@ function scrollScrollBar(){
             return openDisplayInfo();
         };        
         for(let i = 0;i<items.length;i++){
+            // console.log(displayRight);
+            // console.log(items[i].style.left);
             items[i].style.left = `${left}px`;
-            if(items[i].getBoundingClientRect().left > displayRight+100){
+            if(items[i].getBoundingClientRect().left > displayRight){
                 items.splice(i,1);                
             }
         }
