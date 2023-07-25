@@ -630,7 +630,7 @@ function scrollScrollBar(){
         };        
         for(let i = 0;i<items.length;i++){
             items[i].style.left = `${left}px`;
-            if(items[i].getBoundingClientRect().left > displayRight+100){
+            if(items[i].getBoundingClientRect().left > displayRight){
                 items.splice(i,1);                
             }
         }
