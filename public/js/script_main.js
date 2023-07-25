@@ -348,6 +348,13 @@ function refreshPage() {
     location.reload();
 };
 
+function gotoManagePage(){
+    window.location.href = './manage';
+
+    // getRequest('./manage',null,null);    
+    return;
+};
+
 function clientLogout(){
     getRequest('./logout',null,null);
     setTimeout(refreshPage,3500)

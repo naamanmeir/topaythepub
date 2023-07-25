@@ -4,9 +4,11 @@ exports.buildHtml = function (message) {
         `
         <div class="sideMenuDiv">
             <p id="closeSideMenu" class="closeSideMenu">${message.SideMenuCloseSideMenu}</p>
-            <p id="openAbout" onclick="populateAbout()">${message.sideMenuOpenAbout}</p>            
+            <p id="openAbout" onclick="populateAbout()">${message.sideMenuOpenAbout}</p>
             <p onclick="refreshCss()">${message.sideMenuRefreshCss}</p>
-            <p onclick="refreshPage()">${message.SideMenuRefreshPage}</p>            
+            <p onclick="refreshPage()">${message.SideMenuRefreshPage}</p>
+            <p onclick="gotoManagePage()">${message.SideMenuGotoManage}</p>
+            <p onclick="clientLogout()">${message.SideMenuLogOutClient}</p>
         </div>      
     `;
     return html;
