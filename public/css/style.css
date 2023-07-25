@@ -1287,10 +1287,10 @@ p {
 .display {
     overflow-x: hidden;
     position: absolute;
-    text-align: right;
+    text-align: left;
     height: 2rem;
-    width: 100%;
-    min-width: fit-content;
+    width: 100dvw;
+    /* min-width: fit-content; */
     left: 0px;
     margin-bottom: 0.5rem;
     /* display: flex; */
