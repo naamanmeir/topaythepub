@@ -618,7 +618,7 @@ function scrollScrollBar(){
     let displayMessageLeft = displayMessage.getBoundingClientRect().left;
     let displayFirstMessage = items[0];
 
-    let left = -(displayRight-200);
+    let left = -(displayRight+100);
     let amnt = 1
 
     function moveLoop(){
