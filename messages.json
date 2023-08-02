@@ -129,7 +129,8 @@
     ],
     "client": [
         {
-            "inputPlaceholder": "כיתבו כאן את שמכם",
+            "inputPlaceholder": "לחצו כאן להכנסת שם משתמש",
+            "inputPlaceholderFocus": "כיתבו שם משתמש",
             "logged": "🙌מחובר🙋",
             "notExist": "؟שם👨‍💻לא🧑‍🔧ידוע؟",
             "enterName": "👇🏼לבחור מהרשימה👇🏼",

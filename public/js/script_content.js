@@ -46,9 +46,9 @@ keyboardFocusMain();
 searchBox1.addEventListener('focus', function () {
     // console.log("focus");
     monitorSwitch(1);
-    searchBox1.placeholder = (messageClient.inputPlaceholder);
+    searchBox1.placeholder = (messageClient.inputPlaceholderFocus);
     if (searchBox1.value.length > 0) { searchBox1.placeholder = (""); };
-    if (searchBox1.value.length < 1) { searchBox1.placeholder = (messageClient.inputPlaceholder); };
+    if (searchBox1.value.length < 1) { searchBox1.placeholder = (messageClient.inputPlaceholderFocus); };
     let input = searchBox1.value;
     input = inputSanitize(input);
     searchBox1.value = input;
@@ -77,7 +77,7 @@ searchBox1.addEventListener('input', function () {
     input = inputSanitize(input);
     searchBox1.value = input;
     if (input == '' || input == null) {
-        searchBox1.placeholder = (messageClient.inputPlaceholder);
+        searchBox1.placeholder = (messageClient.inputPlaceholderFocus);
         clearAutoComplete(autoCompleteDiv);
         userIndicState(0, null);
         return;

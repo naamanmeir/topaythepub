@@ -6,6 +6,7 @@
     --text01: rgb(225, 168, 10);
     --text02: rgb(255, 255, 0);
     --text03: rgb(148, 158, 158);
+    --text04: rgb(55, 227, 58);
     --textBlack: black;
 
     --border01: rgba(194, 172, 4, 0.353);
@@ -812,7 +813,7 @@ p {
     padding: 1rem;
     width: 90%;
     height: 6rem;
-    min-height: 3rem;
+    min-height: fit-content;
     max-height: 20rem;
     margin: auto;
     margin-top: 1rem;
@@ -1201,7 +1202,7 @@ p {
 }
 
 #userPageButton {
-    z-index: 150;
+    z-index: 49;
     border: 4px outset rgb(17, 69, 118);
     background-color: black;
     border-radius: 00%;
