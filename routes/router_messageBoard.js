@@ -44,6 +44,7 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     if(post.length > MaxPostLength){ res.end(); return; };
     if(findReferences(post,messageUi.chatbotName1Variations)==true){sendPostToChatbot(post);};
     if(findReferences(post,messageUi.photobotCodeActivate)==true){sendPostToPhotobot(post);};
+    if(findReferences(post,messageUi.photobotCodeActivateItemImage)==true){sendPostToPhotobotItemPhoto(post);};    
     var img;
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
@@ -218,7 +219,34 @@ async function sendPostToPhotobot(post){
     sendRefreshPostsEventToAllClients();
     photobot.photobotIsBusy = 0;
     return;
-}
+};
+
+async function sendPostToPhotobotItemPhoto(post){
+    if(photobot.photobotIsBusy == 1){messageBoardLogger.clientMessageBoard(`"PHOTOBOT BUSY"`);return;};
+    let messageStart = findReferencesWithIndex(post,messageUi.photobotCodeActivate);
+    messageStart = messageStart+messageUi.photobotCodeActivateItemImage.length+1;
+    post = post.substring(messageStart);
+    photobot.photobotIsBusy = 1;
+    sendPhotobotIsNotPaintingToAllClients();
+    sendPhotobotIsPaintingToAllClients();
+    let inputTranslated = await translate.askForTranslation(post).then((translatedInput)=>{
+        return translatedInput;
+    });
+    let photobotPhoto = await photobot.askForPhoto(inputTranslated,1);
+    let image = JSON.stringify(photobotPhoto);
+    let user = 76;
+    post = '';
+    let dbResponse = await db.dbInsertPost(post,user,image);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED ITEM PHOTO FROM PHOTOBOT"
+    `); 
+    sendPhotobotIsNotPaintingToAllClients();
+    sendRefreshPostsEventToAllClients();
+    photobot.photobotIsBusy = 0;
+    return;
+};
 
 async function sendPostToChatbot(post){
     let findChatbotCodeRemember = findReferencesWithIndex(post,messageUi.chatbotRememberCode);

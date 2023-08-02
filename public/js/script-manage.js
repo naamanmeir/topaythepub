@@ -374,7 +374,7 @@ function clientOrderHistory(data) {
 };
 
 function editLog(text) {
-    console.log(text);
+    // console.log(text);
     document.getElementById("editLog").innerText = text;
     document.getElementById("editName").value = '';
     document.getElementById("editNick").value = '';
@@ -629,7 +629,7 @@ function editProduct() {
     let newPrice = document.getElementById("productPrice");
     // let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/','').replace('.png','');
     let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/', '');
-    let newStock = document.getElementById("productStock");
+    let newStock = document.getElementById("productStock");    
     let data = [productId, newName.value, newPrice.value, newImage, newStock.value];
     // console.log(data);
     if (window.confirm("לערוך נתונים של " + productName + "?")) {
