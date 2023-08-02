@@ -160,9 +160,11 @@
     user-select: none;
     pointer-events: none;
     position: absolute;
+    border: 1px outset var(--border01);
+    border-radius: 7%;
     top: 0px;
     padding: 0px;
-    margin: 0.2rem;
+    margin: 0.25rem;
     max-height: 9rem;
     max-width: 9rem;
     left: 0.2rem;
@@ -171,9 +173,13 @@
     object-fit: contain;
 }
 
+.item img:active {
+    border: 1px inset rgba(209, 155, 17, 0.676);
+}
+
 .item:active {
     border: 1px inset rgba(209, 155, 17, 0.676);
-    background-color: rgba(240, 120, 0, 0.383);
+    background-color: rgba(105, 60, 1, 0.27);
     transition: none;
     user-select: none;
     transition: background-size 0.1s linear;
