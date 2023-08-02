@@ -16,6 +16,7 @@ const MaxPostLength = 400;
 
 let chatbot = require("../module/outsource/chatbot");
 let photobot =  require("../module/outsource/hug_circulus")
+let translate =  require("../module/outsource/gpt_translate");
 
 let chatbotCall = messageUi.chatbotName1;
 
@@ -200,9 +201,13 @@ async function sendPostToPhotobot(post){
     photobot.photobotIsBusy = 1;
     sendPhotobotIsNotPaintingToAllClients();
     sendPhotobotIsPaintingToAllClients();
-    let photobotPhoto = await photobot.askForPhoto(post);
+    let inputTranslated = await translate.askForTranslation(post).then((translatedInput)=>{
+        return translatedInput;
+    });
+    let photobotPhoto = await photobot.askForPhoto(inputTranslated);
     let image = JSON.stringify(photobotPhoto);
-    let user = 100;
+    let user = 76;
+    post = '';
     let dbResponse = await db.dbInsertPost(post,user,image);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
