@@ -26,9 +26,9 @@ async function requestImage(data) {
 	return result;
 }
 
-exports.askForPhoto = async function(input){
+exports.askForPhoto = async function(input,mode){
     console.log("ASK FOR PHOTO HUGGINGFACE");
-    console.log(input);
+    console.log(input);    
     let photo;
     let buffer;
     try {
@@ -46,19 +46,70 @@ exports.askForPhoto = async function(input){
     } catch (error) {
         console.error('Error with photobot response:', error);
     }
+    input = input.replace(',','');
     let currentTime = Date.now();
-    if(input.length >= 24){input = (input.slice(0,25)+currentTime)}
+    if(input.length >= 24){input = (input.slice(0,20)+currentTime)}
     let originalName = (__dirname + '/../../public/img/photobot/') + (input+".jpg");
     originalName = renameFileIfExist(originalName);
     try {
         fs.writeFile(originalName, buffer, () => {});    
     } catch (error) {
-        console.error('Error with photobot response:', error);
+        console.error('Error with photobot writing to file:', error);
     }
-    
+    if(mode==null){
+        let fileReturn = "../photobot/"+path.basename(originalName);    
+        return fileReturn;
+    }
+    if(mode!=null && mode==1){
+        console.log("adding item photo");
+        let itemPhotoName = (__dirname + '/../../public/img/items/') + (input+".jpg");
+        itemPhotoName = renameFileIfExist(itemPhotoName);
+        try {
+            fs.writeFile(itemPhotoName, buffer, () => {});    
+        } catch (error) {
+            console.error('Error with photobot adding item photo:', error);
+        }
+        console.log("ADDED ITEM PHOTO");
+    }    
     let fileReturn = "../photobot/"+path.basename(originalName);    
     return fileReturn;
 };
+
+// exports.askForItemPhoto = async function(input){
+//     console.log("ASK FOR ITEM PHOTO HUGGINGFACE");
+//     console.log(input);
+//     input = input.replace(',','');
+//     let photo;
+//     let buffer;
+//     try {
+//         photo = await requestImage({"inputs": input})
+//     } catch (error) {
+//         console.error('Error with photobot api:', error);
+//     }
+//     // let photo = await requestImage({"inputs": input}).then((response) => {   
+//     //     console.log(response);     
+//     //     return response;
+//     // })
+//     // .catch(error => console.error('Error with photobot response:', error));
+//     try {
+//         buffer = Buffer.from( await photo.arrayBuffer() )
+//     } catch (error) {
+//         console.error('Error with photobot response:', error);
+//     }
+//     let currentTime = Date.now();
+//     if(input.length >= 14){input = (input.slice(0,25)+currentTime)}
+//     let originalName = (__dirname + '/../../public/img/items/') + (input+".jpg");
+//     originalName = renameFileIfExist(originalName);
+//     try {
+//         fs.writeFile(originalName, buffer, () => {});    
+//     } catch (error) {
+//         console.error('Error with photobot response:', error);
+//     }
+    
+//     let fileReturn = "../photobot/"+path.basename(originalName);    
+//     return fileReturn;
+// };
+
 
 function renameFileIfExist(file){    
     if(fs.existsSync(file)){

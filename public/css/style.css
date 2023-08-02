@@ -68,11 +68,12 @@ input:-webkit-autofill:active {
 html,
 body {
     /* height: 100%; */
-    /* width: 100%; */
+    /* width: 100vw; */
     /* margin: 0px; */
     /* padding: 0px; */
     /* top: 0px; */
     height: -webkit-fill-available;
+    /* width: -webkit-fill-available; */
     overflow: hidden;
     overscroll-behavior: contain;
     direction: rtl;
@@ -1169,7 +1170,7 @@ p {
 
 .topMenuDiv {
     direction: ltr;
-    max-width: 100vw;
+    max-width: 99vw;
     margin: auto;
     padding: 0px;
     color: aliceblue;
@@ -1200,6 +1201,7 @@ p {
 }
 
 #userPageButton {
+    z-index: 150;
     border: 4px outset rgb(17, 69, 118);
     background-color: black;
     border-radius: 00%;
@@ -1255,7 +1257,7 @@ p {
 
     .connectionIndic {
         top: 1rem;
-        left: -2rem;
+        left: 0.5rem;
         height: 7px;
         width: 7px;
         border-radius: 50%;
