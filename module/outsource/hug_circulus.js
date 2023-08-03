@@ -34,11 +34,11 @@ exports.askForPhoto = async function(input,mode){
     console.log(input);    
     let photo;
     let buffer;
-    try {
+    // try {
         photo = await requestImage({"inputs": input})
-    } catch (error) {
-        console.error('Error with photobot api:', error);
-    }
+    // } catch (error) {
+        // console.error('Error with photobot api:', error);
+    // }
     // let photo = await requestImage({"inputs": input}).then((response) => {   
     //     console.log(response);     
     //     return response;
