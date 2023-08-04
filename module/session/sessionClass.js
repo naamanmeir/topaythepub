@@ -9,7 +9,8 @@ module.exports = function (limit) {
             next();
         } else {
             console.log(`CREDENTIALS NEEDED ${limit} AND SESSIONCLASS FOUND NO REQUEST DATA AT: ${Date()}`)
-            res.redirect('/apps/topaythepub');
+            // res.redirect('/apps/topaythepub');
+            res.redirect('./');
             return;
         }
     };

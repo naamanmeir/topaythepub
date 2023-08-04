@@ -24,8 +24,8 @@ async function requestImage(data) {
 		}
 	);
 	const result = await response.blob();
-    console.log(response);
-    console.log(result);
+    // console.log(response);
+    // console.log(result);
 	return result;
 }
 
