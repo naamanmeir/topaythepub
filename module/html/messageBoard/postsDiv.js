@@ -4,13 +4,11 @@ exports.buildHtml = function (messageUi,posts) {
     for (i = 0; i < posts.length; i++) {   
         let postValid = posts[i].post.replace(/</gi,'&#60;').replace(/>/gi,'&#62;');
      
-        if(posts[i].user == 75){
+        if(posts[i].user == 75){  // IF POST FROM CHATBOT
             html += `<div class="postDisplay chatbotPost" id="post${posts[i].postid}"><p>${postValid}</p></div>`;
             continue;
         }
-        if(posts[i].user == 76){
-            html += `<div class="postDisplay" id="post${posts[i].postid}"></div>`;
-        }
+        if(posts[i].user == 76){} // IF POST FROM PHOTOBOT
         let pinClass = '';
         if(posts[i].pin == 1){
             pinClass = 'postPind';

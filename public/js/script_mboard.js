@@ -95,8 +95,7 @@ function postContextMenu(e){
                 postdiv = e.target.parentNode.id;
             }
             target = document.getElementById(target);
-            if(!document.getElementById("contextMenu")){
-                console.log(e.target.parentNode.id.substring(4));
+            if(!document.getElementById("contextMenu")){                
                 menu = document.createElement("div");
                 menu.setAttribute('id','contextMenu');
                 menu.setAttribute('class','contextMenu');
@@ -114,33 +113,36 @@ function postContextMenu(e){
                 let cmenuCopy = document.getElementById("cmenuCopy");
                 let cmenuPin = document.getElementById("cmenuPin");
                 cmenuErase.style.backgroundImage="url(./img/ui/cmenu_erase.png)";
-                cmenuCopy.style.backgroundImage="url(./img/ui/cmenu_copy.png)";
-                cmenuPin.style.backgroundImage="url(./img/ui/cmenu_pin.png)";
+                if(!e.target.parentNode.id.substring(4).startsWith("Img")){                
+                    cmenuCopy.style.backgroundImage="url(./img/ui/cmenu_copy.png)";
+                    cmenuPin.style.backgroundImage="url(./img/ui/cmenu_pin.png)";
+                };
                 cmenuErase.addEventListener('touchstart',()=>{
                     postDelete(postid)
-                });
-                cmenuCopy.addEventListener('touchstart',()=>{
-                    postCopy(postdiv)
-                });
-                cmenuPin.addEventListener('touchstart',()=>{
-                    postPin(postid)
                 });
                 cmenuErase.addEventListener('mousedown',()=>{
                     postDelete(postid)
                 });
-                cmenuCopy.addEventListener('mousedown',()=>{
-                    postCopy(postdiv)
-                });
-                cmenuPin.addEventListener('mousedown',()=>{
-                    postPin(postid)
-                });
-                
+                if(!e.target.parentNode.id.substring(4).startsWith("Img")){
+                    cmenuCopy.addEventListener('touchstart',()=>{
+                        postCopy(postdiv)
+                    });
+                    cmenuPin.addEventListener('touchstart',()=>{
+                        postPin(postid)
+                    });
+                    cmenuCopy.addEventListener('mousedown',()=>{
+                        postCopy(postdiv)
+                    });
+                    cmenuPin.addEventListener('mousedown',()=>{
+                        postPin(postid)
+                    });
+                };                
                 document.getElementById("contextMenu").scrollIntoView(
                     { behavior: "smooth", block: "start", inline: "center" }
                 );
-            }else{            
+            }else{
                 document.getElementById("contextMenu").remove();
-            }            
+            };
         };
     },pressTimerTime);
 };
@@ -193,7 +195,7 @@ function postDelete(postid){
     
     let pressTimer = setTimeout(function(){
         postid = JSON.stringify({'postid':postid});
-        postRequest('./mboard/deletePost', window.parent.messageBoardRefreshPosts, postid);
+        postRequest('./mboard/deletePost', window.parent.messageBoardRefreshPostsNoScroll, postid);
         return;
     },pressTimerDelete);
 };
@@ -259,7 +261,7 @@ function postPin(postid){
 
 function afterPostPind(content){    
     window.parent.requestDisplayInfoRefresh(1);    
-    messageBoardRefreshPosts();
+    messageBoardRefreshPostsNoScroll();
 }
 
 function postSend(){    
@@ -357,12 +359,33 @@ function messageBoardRefreshPosts(){
     }
 };
 
+function messageBoardRefreshPostsNoScroll(){
+    if(document.getElementById("messageBoardDivPosts") != null){
+        getRequest("./mboard/reloadPosts", displayPostsInDivNoScroll);        
+        return;
+    }else{        
+        return;
+    }
+};
+
 function displayPostsInDiv(content){
     content = JSON.parse(content);
     if(document.getElementById("messageBoardDivPosts") != null){
         postsDiv = document.getElementById("messageBoardDivPosts");
         postsDiv.innerHTML = content;
         scrollPosts();
+        window.parent.requestDisplayInfoRefresh(1);    
+        return;
+    }else{
+        return;
+    }
+};
+
+function displayPostsInDivNoScroll(content){
+    content = JSON.parse(content);
+    if(document.getElementById("messageBoardDivPosts") != null){
+        postsDiv = document.getElementById("messageBoardDivPosts");
+        postsDiv.innerHTML = content;        
         window.parent.requestDisplayInfoRefresh(1);    
         return;
     }else{
