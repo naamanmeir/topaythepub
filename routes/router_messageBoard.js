@@ -20,6 +20,21 @@ let translate =  require("../module/outsource/gpt_translate");
 
 let chatbotCall = messageUi.chatbotName1;
 
+//------------------------REMOTE CLIENT BOARD-------------------//
+
+routerMessageBoard.get('/remoteMboard/', async function (req, res) {
+    res.render('remoteMessage',{
+        msgHeader:messageUi.remoteMessageBoardHeader,
+        msgButtonSend:messageUi.remoteMessageBoardButtonSendMessage,
+        msgButtonSendError:messageUi.remoteMessageBoardButtonErrorMessage,
+        msgInputPlaceholder:messageUi.remoteMessageBoardPlaceholder,
+        msgOtherSideIsTypingMessage:messageUi.otherSideIsTypingMessage,
+        msgButtonAddPicture:messageUi.remoteMessageBoardButtonAddPicture,
+        msgButtonRemovePicture:messageUi.remoteMessageBoardButtonRemovePicture,
+        msgButtonSendError:messageUi.remoteMessageBoardButtonErrorMessage
+    });
+});
+
 
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
 

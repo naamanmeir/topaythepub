@@ -56,6 +56,7 @@ function mBoardUtilities(){
     imagePreview();
     createProgressBar();
     keyboardFocusMboard();
+    preventAutoCloseOnTyping();
     postsDiv.addEventListener('touchstart', (e) => {postContextMenu(e)});
     postsDiv.addEventListener('mousedown', (e) => {postContextMenu(e)});
     postInput.maxLength = PostLengthMax;
@@ -169,6 +170,12 @@ function keyboardFocusMboard(){
     }
         return;
 };
+
+function preventAutoCloseOnTyping(){
+    postInput.addEventListener("keypress", function(event) {        
+        window.parent.resetAutoLogout();
+    });
+}
 
 function resetAutoLogoutMboard(){    
     resetAutoLogout();
