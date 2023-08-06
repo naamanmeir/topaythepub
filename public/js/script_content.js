@@ -368,14 +368,12 @@ function displayUserPageButton() {
     enableUserPageButton();
     return;
 };
-
 function enableUserPageButton(){
     if(userPageButton.getAttribute('userPageButtonEnableListener')!= 1){
         userPageButton.addEventListener('click', callRequestUserPage);
     };
     return;
 };
-
 function callRequestUserPage(){
     userPageButton.setAttribute('userPageButtonEnableListener', 1);
     userPageButton.style.pointerEvents = "none";
@@ -438,7 +436,6 @@ function openUserPage(content) {
         return;
     });
 };
-
 function deleteLastOrderConfirm(id){
     id = JSON.stringify({ "id": id });
     let deleteOrderResponse = postRequest('./client/deleteLastOrderConfirm/', openDeleteOrderConfirm, id);    
