@@ -1,4 +1,8 @@
 const PostLengthMax = 400;
+const pressTimerTime = 400;
+const pressTimerDelete = 1000;
+const pressTimerPost = 400;
+const pressTimerPin = 400;
 
 let postInput;
 let postsDiv;
@@ -92,16 +96,19 @@ function postContextMenu(e){
             }
             target = document.getElementById(target);
             if(!document.getElementById("contextMenu")){
+                console.log(e.target.parentNode.id.substring(4));
                 menu = document.createElement("div");
                 menu.setAttribute('id','contextMenu');
-                menu.setAttribute('class','contextMenu');            
-                menu.innerHTML = 
-                `
-                <div class="cmenuItems" id="cmenuPin"></div>
-                <div class="cmenuItems" id="cmenuCopy"></div>
-                <div class="cmenuItems" id="cmenuErase"></div>
-                
-                `
+                menu.setAttribute('class','contextMenu');
+                menu.innerHTML = ''
+                if(!e.target.parentNode.id.substring(4).startsWith("Img")){                
+                    menu.innerHTML += `<div class="cmenuItems" id="cmenuPin"></div>`;
+                    menu.innerHTML += `<div class="cmenuItems" id="cmenuCopy"></div>`;
+                };
+                if(e.target.parentNode.id.substring(4).startsWith("Img")){
+                    // console.log("it is image")
+                };
+                menu.innerHTML += `<div class="cmenuItems" id="cmenuErase"></div>`;                
                 target.appendChild(menu);
                 let cmenuErase = document.getElementById("cmenuErase");
                 let cmenuCopy = document.getElementById("cmenuCopy");
@@ -135,7 +142,7 @@ function postContextMenu(e){
                 document.getElementById("contextMenu").remove();
             }            
         };
-    },200);
+    },pressTimerTime);
 };
 
 function postLenghthCheck(){    
@@ -188,7 +195,7 @@ function postDelete(postid){
         postid = JSON.stringify({'postid':postid});
         postRequest('./mboard/deletePost', window.parent.messageBoardRefreshPosts, postid);
         return;
-    },1000);
+    },pressTimerDelete);
 };
 
 function postCopy(postdiv){
@@ -222,7 +229,7 @@ function postCopy(postdiv){
         document.body.removeChild(tempInput);
         document.getElementById("contextMenu").remove();
         return;
-    },400);
+    },pressTimerPost);
 };
 
 function postPin(postid){
@@ -247,7 +254,7 @@ function postPin(postid){
         postid = JSON.stringify({'postid':postid});        
         postRequest('./mboard/pinPost', window.parent.afterPostPind, postid);
         return;
-    },200);
+    },pressTimerPin);
 };
 
 function afterPostPind(content){    
