@@ -61,6 +61,8 @@ searchBox1.addEventListener('focus', function () {
 searchBox1.addEventListener('blur', function () {
     // console.log("blur");
     monitorSwitch(0);
+    // setTimeout(()=>{
+        // monitorSwitch(0)},250);
     searchBox1.placeholder = (messageClient.inputPlaceholder);
     let input = searchBox1.value;
     input = inputSanitize(input);
@@ -227,7 +229,7 @@ function userLogged(data) {
     // ${currentUserLogged.id}`);
     displayUserPageButton();
     userIndicLogged();    
-    resetAutoLogout()
+    resetAutoLogout();
 };
 
 function userLogout(){
@@ -251,7 +253,10 @@ function userIndicLogged() {
     let par = document.createElement("p");
     par.innerText = currentUserLogged.message;
     userIndic.innerHTML = "";
-    userIndic.append(par);
+    userIndic.append(par);    
+    monitorSwitch(1);
+    setTimeout(()=>{
+        monitorSwitch(0)},2500);
 };
 function userIndicMessage(message) {
     let par = document.createElement("p");

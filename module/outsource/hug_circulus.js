@@ -30,8 +30,8 @@ async function requestImage(data) {
 }
 
 exports.askForPhoto = async function(input,mode){
-    console.log("ASK FOR PHOTO HUGGINGFACE");
-    console.log(input);    
+    // console.log("ASK FOR PHOTO HUGGINGFACE");
+    // console.log(input);
     let photo;
     let buffer;
     // try {
