@@ -73,17 +73,13 @@ routerMessageBoard.post('/pinPost/', async (req, res) => {
         currentPin=0;
         newPin = 1};
     newPin = currentPin==0?1:0;
-    // console.log(currentPin);
-    // console.log(newPin);
-    // console.log("-----------------------------");
-    dbAction = await db.dbPinPostById(newPin,postid);
-    // console.log(dbAction);
+    dbAction = await db.dbPinPostById(newPin,postid);    
     messageBoardLogger.clientMessageBoard(`
     set ${postid} pin value to ${newPin}
     `);
     res.json('ok post pind');
     res.end();
-    sendRefreshPostsEventToAllClients();
+    sendRefreshPostsNoScrollEventToAllClients();
     return;
 });
 
@@ -103,7 +99,7 @@ routerMessageBoard.post('/deletePost/', async (req, res) => {
     let html = renderMessageBoard.buildHtml(messageUi,posts);
     res.json(html);
     res.end();
-    sendRefreshPostsEventToAllClients();
+    sendRefreshPostsNoScrollEventToAllClients();
     return;    
 });
 
@@ -304,6 +300,11 @@ async function sendRemoveAllFactsToChatbot(){
 
 function sendRefreshPostsEventToAllClients(){
     clientEvents.sendEvents("reloadPosts");
+    return;
+};
+
+function sendRefreshPostsNoScrollEventToAllClients(){
+    clientEvents.sendEvents("reloadPostsNoScroll");
     return;
 };
 

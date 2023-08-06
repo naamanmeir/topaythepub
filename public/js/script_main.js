@@ -419,6 +419,10 @@ function eventHandler(event) {
         messageBoardRefreshPosts();
         otherSideIsTyping(0);
     }
+    if (JSON.parse(data) == "reloadPostsNoScroll") {
+        messageBoardRefreshPostsNoScroll();
+        otherSideIsTyping(0);
+    }
     if (JSON.parse(data) == "chatbotIsTyping") {
         otherSideIsTyping(1);
     }
