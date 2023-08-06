@@ -80,7 +80,7 @@
             "SideMenuCloseSideMenu": "⟹",
             "floatMenuButton": "הפורום של הפאב לחצו כאן",
             "footerText": " זה של הפאב ונוצר על ידי ניבה גבינהצהובה",
-            "mBoardHeader": "לוח מודעות",
+            "mBoardHeader": "פורום או משהו כזה",
             "mBoardPlaceHolder": "כיתבו פה משהו",
             "mBoardButtonSend": "שלח",
             "mBoardButtonSendError": "לא",
@@ -106,7 +106,8 @@
                 "זיויד",
                 "דייב",
                 "דייוו",
-                "דייוי"
+                "דייוי",
+                "דיוויד"
             ],
             "chatbotRememberCode": "תזכור",
             "chatbotForgetCode": "תשכח",
