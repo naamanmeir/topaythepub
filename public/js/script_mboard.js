@@ -69,6 +69,7 @@ function postContextMenu(e){
     let target;
     let postid;
     let postdiv;
+    let imgSrc;
     let menu;
 
     if(document.getElementById("contextMenu") && e.target.parentNode.id != "contextMenu"){
@@ -86,37 +87,47 @@ function postContextMenu(e){
     });
 
     let pressTimer = setTimeout(function(){
+        let mode = 1;
         if(e.target.parentNode.id.startsWith("post")){
-            target = e.target.parentNode.id;
-            
-            if(e.target.parentNode.id.substring(4).startsWith("Img")){                
+            target = e.target.parentNode.id;            
+            if(e.target.parentNode.id.substring(4).startsWith("Img")){
                 postid = e.target.parentNode.id.substring(7);
+                imgSrc = e.target.parentNode.getElementsByTagName('img')[0].src;                
+                mode = 2;
             }else{                
                 postid = e.target.parentNode.id.substring(4);
                 postdiv = e.target.parentNode.id;
             }
             target = document.getElementById(target);
-            if(!document.getElementById("contextMenu")){                
+            if(!document.getElementById("contextMenu")){
                 menu = document.createElement("div");
                 menu.setAttribute('id','contextMenu');
                 menu.setAttribute('class','contextMenu');
                 menu.innerHTML = ''
-                if(!e.target.parentNode.id.substring(4).startsWith("Img")){                
+                if(mode!=2){
                     menu.innerHTML += `<div class="cmenuItems" id="cmenuPin"></div>`;
                     menu.innerHTML += `<div class="cmenuItems" id="cmenuCopy"></div>`;
                 };
-                if(e.target.parentNode.id.substring(4).startsWith("Img")){
-                    // console.log("it is image")
+                if(mode==2){
+                    menu.innerHTML += `<div class="cmenuItems" id="cmenuImgFull"></div>`;
                 };
                 menu.innerHTML += `<div class="cmenuItems" id="cmenuErase"></div>`;                
                 target.appendChild(menu);
                 let cmenuErase = document.getElementById("cmenuErase");
-                let cmenuCopy = document.getElementById("cmenuCopy");
-                let cmenuPin = document.getElementById("cmenuPin");
+                if(mode!=2){
+                    let cmenuCopy = document.getElementById("cmenuCopy");
+                    let cmenuPin = document.getElementById("cmenuPin");
+                };
+                if(mode==2){
+                    let cmenuImgFull = document.getElementById("cmenuImgFull");
+                }
                 cmenuErase.style.backgroundImage="url(./img/ui/cmenu_erase.png)";
-                if(!e.target.parentNode.id.substring(4).startsWith("Img")){                
+                if(mode!=2){                
                     cmenuCopy.style.backgroundImage="url(./img/ui/cmenu_copy.png)";
                     cmenuPin.style.backgroundImage="url(./img/ui/cmenu_pin.png)";
+                };
+                if(mode==2){
+                    cmenuImgFull.style.backgroundImage="url(./img/ui/cmenu_resize.png)";
                 };
                 cmenuErase.addEventListener('touchstart',()=>{
                     postDelete(postid)
@@ -124,7 +135,7 @@ function postContextMenu(e){
                 cmenuErase.addEventListener('mousedown',()=>{
                     postDelete(postid)
                 });
-                if(!e.target.parentNode.id.substring(4).startsWith("Img")){
+                if(mode!=2){
                     cmenuCopy.addEventListener('touchstart',()=>{
                         postCopy(postdiv)
                     });
@@ -137,7 +148,15 @@ function postContextMenu(e){
                     cmenuPin.addEventListener('mousedown',()=>{
                         postPin(postid)
                     });
-                };                
+                };
+                if(mode==2){
+                    cmenuImgFull.addEventListener('touchstart',()=>{
+                        postImgFull(imgSrc)
+                    });
+                    cmenuImgFull.addEventListener('mousedown',()=>{
+                        postImgFull(imgSrc)
+                    });
+                }
                 document.getElementById("contextMenu").scrollIntoView(
                     { behavior: "smooth", block: "start", inline: "center" }
                 );
@@ -266,9 +285,38 @@ function postPin(postid){
     },pressTimerPin);
 };
 
-function afterPostPind(content){    
-    window.parent.requestDisplayInfoRefresh(1);    
+function afterPostPind(content){
+    window.parent.requestDisplayInfoRefresh(1);
     messageBoardRefreshPostsNoScroll();
+};
+
+function postImgFull(imgSrc){
+    let panel = document.getElementById("contextMenu");
+    let preColor = panel.style.backgroundColor;
+    panel.style.transition =  "all 0.2s";
+    panel.style.backgroundColor = "blue";
+
+    postsDiv.addEventListener('mouseup',()=>{        
+        clearTimeout(pressTimer);
+        panel.style.backgroundColor = preColor;
+        return;
+    });
+
+    postsDiv.addEventListener('touchend',()=>{        
+        clearTimeout(pressTimer);
+        panel.style.backgroundColor = preColor;
+        return;
+    });
+    
+    let pressTimer = setTimeout(function(){
+        // let imageWindow = document.createElement('div');
+        // let image = document.createElement('img');
+        // image.src = imgSrc;
+        imgSrc = imgSrc.replace('/img','');
+        panel.remove();
+        window.open(imgSrc,'Image','width=image.style.width,height=image.style.height,resizable=1');
+        return;
+    },pressTimerPin);
 };
 
 function postSend(){
