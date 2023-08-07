@@ -4,12 +4,12 @@ const mainDivsAutoRefreshIntervalTime = 600000;
 const timerRefreshContentTime = 9995000;
 const timerRefreshElementsTime = 9995000;
 const timerRefreshCssTime = 9995000;
-const logOutTime = 60000;
+// const logOutTime = 60000;
 const closeSideMenuTimeoutTime = 10000;
 const sideMenuSlideTime = "0.6s";
 const windowFadeTime = 800;
 
-const autoLogoutTime = 60000;
+let autoLogoutTime = 90000;
 
 //-----------------RUNTIME PARAMS-----------------//
 const timerClearLoggedUSerTIme = 999999;

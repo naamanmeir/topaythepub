@@ -58,8 +58,9 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     var post = (req.body.post);
     if(post.length > MaxPostLength){ res.end(); return; };
     if(findReferences(post,messageUi.chatbotName1Variations)==true){sendPostToChatbot(post);};
-    if(findReferences(post,messageUi.photobotCodeActivate)==true){sendPostToPhotobot(post);};
-    if(findReferences(post,messageUi.photobotCodeActivateItemImage)==true){sendPostToPhotobotItemPhoto(post);};
+    if(findReferences(post,messageUi.photobotCodeActivate)==true){sendPostToPhotobot(1,post);};
+    if(findReferences(post,messageUi.photobotCodeActivatePainting)==true){sendPostToPhotobot(2,post);};
+    if(findReferences(post,messageUi.photobotCodeActivateItemImage)==true){sendPostToPhotobotItemPhoto(post);};    
     var img;
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
@@ -205,7 +206,7 @@ function findReferencesWithIndex(source,target){
     return -1;
 };
 
-async function sendPostToPhotobot(post){
+async function sendPostToPhotobot(mode,post){
     if(photobot.photobotIsBusy == 1){messageBoardLogger.clientMessageBoard(`"PHOTOBOT BUSY"`);return;};
     let messageStart = findReferencesWithIndex(post,messageUi.photobotCodeActivate);
     messageStart = messageStart+messageUi.photobotCodeActivate.length+1;
@@ -216,7 +217,13 @@ async function sendPostToPhotobot(post){
     let inputTranslated = await translate.askForTranslation(post).then((translatedInput)=>{
         return translatedInput;
     });
-    let photobotPhoto = await photobot.askForPhoto(inputTranslated);
+    let photobotPhoto;
+    if(mode==1){
+        photobotPhoto = await photobot.askForPhoto(1,inputTranslated);
+    };
+    if(mode==2){
+        photobotPhoto = await photobot.askForPhoto(2,inputTranslated);
+    };    
     let image = JSON.stringify(photobotPhoto);
     let user = 76;
     post = '';
@@ -237,13 +244,16 @@ async function sendPostToPhotobotItemPhoto(post){
     let messageStart = findReferencesWithIndex(post,messageUi.photobotCodeActivate);
     messageStart = messageStart+messageUi.photobotCodeActivateItemImage.length+1;
     post = post.substring(messageStart);
+    post = post.indexOf(' ') == 0 ? post.substring(1) : post;
+    let isPainting = findReferencesWithIndex(post,messageUi.photobotCodeActivateItemImagePainting);    
+    let mode = (isPainting>=0)? 2:1;
     photobot.photobotIsBusy = 1;
     sendPhotobotIsNotPaintingToAllClients();
     sendPhotobotIsPaintingToAllClients();
     let inputTranslated = await translate.askForTranslation(post).then((translatedInput)=>{
         return translatedInput;
     });
-    let photobotPhoto = await photobot.askForPhoto(inputTranslated,1);
+    let photobotPhoto = await photobot.askForPhoto(mode,inputTranslated,1);
     let image = JSON.stringify(photobotPhoto);
     let user = 76;
     post = '';

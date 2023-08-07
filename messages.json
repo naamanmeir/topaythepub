@@ -114,8 +114,11 @@
             "chatbotForgetEverythingCode": "תשכח הכלהכלהכלהכלהכל אבל הכל ממש",
             "otherSideIsTypingMessage": "דייויד כותב...✍...🤔...📡",
             "photobotIsPainting": " 🎶 מצייר תמונה 📻 ",
+            "photobotIsPaintingPainting": " 🎶 מצייר ציור 📻 ",
             "photobotCodeActivate": "צייר לי תמונה של",
-            "photobotCodeActivateItemImage": "צייר לי מוצר שנראה כמו"
+            "photobotCodeActivatePainting": "צייר לי ציור של",
+            "photobotCodeActivateItemImage": "צייר לי מוצר שנראה כמו",
+            "photobotCodeActivateItemImagePainting": "ציור של"
         }
     ],
     "sideMenu": [

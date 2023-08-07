@@ -10,6 +10,7 @@ exports.photobotIsBusy = photobotIsBusy;
 
 async function requestImage(data) {    
 	const response = await fetch(
+        // "https://api-inference.huggingface.co/models/nitrosocke/Ghibli-Diffusion",
         "https://api-inference.huggingface.co/models/prompthero/openjourney-v4",
         // "https://api-inference.huggingface.co/models/xyn-ai/anything-v4.0",
         // "https://api-inference.huggingface.co/models/circulus/sd-photoreal-v2.5",
@@ -29,13 +30,33 @@ async function requestImage(data) {
 	return result;
 }
 
-exports.askForPhoto = async function(input,mode){
+async function requestPainting(data) {    
+    data.inputs = data.inputs+' ghibli style';    
+	const response = await fetch(
+        "https://api-inference.huggingface.co/models/nitrosocke/Ghibli-Diffusion",        
+		{
+			headers: { Authorization: "Bearer "+HUG_CIRCULUS },
+			method: "POST",
+			body: JSON.stringify(data),            
+		}
+	);
+	const result = await response.blob();
+	return result;
+}
+
+exports.askForPhoto = async function(mode,input,item){
     // console.log("ASK FOR PHOTO HUGGINGFACE");
     // console.log(input);
     let photo;
     let buffer;
+    input = input.indexOf(' ') == 0 ? input.substring(1) : input;
     // try {
+    if(mode==1){
         photo = await requestImage({"inputs": input})
+    };
+    if(mode==2){
+        photo = await requestPainting({"inputs": input})
+    };
     // } catch (error) {
         // console.error('Error with photobot api:', error);
     // }
@@ -49,6 +70,7 @@ exports.askForPhoto = async function(input,mode){
     } catch (error) {
         console.error('Error with photobot response:', error);
     }
+    input = input.indexOf(' ') == 0 ? input.substring(1) : input;
     input = input.replace(',','');
     let currentTime = Date.now();
     if(input.length >= 24){input = (input.slice(0,20)+currentTime)}
@@ -63,7 +85,7 @@ exports.askForPhoto = async function(input,mode){
         let fileReturn = "../photobot/"+path.basename(originalName);    
         return fileReturn;
     }
-    if(mode!=null && mode==1){
+    if(item!=null && item==1){
         console.log("adding item photo");
         let itemPhotoName = (__dirname + '/../../public/img/items/') + (input+".jpg");
         itemPhotoName = renameFileIfExist(itemPhotoName);

@@ -22,12 +22,13 @@ var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
 //--------------RATE LIMIT------------------------//
 const rateLimit = require('express-rate-limit');
 const rateLimitMain = rateLimit({
-	windowMs: 1 * 25 * 1000,
-	max: 500,
+	windowMs: 1 * 15 * 1000,
+	max: 1000,
 	standardHeaders: true,
 	legacyHeaders: false,  
   handler: function(req,res){
-    console.log("--------RATE LIMIT---------")
+    console.log(getTime());
+    console.log("--------RATE LIMIT---------");
     return res.end();
   }
 });
@@ -138,6 +139,7 @@ app.use(express.static(__dirname + 'public'));
 app.use('/css', express.static(__dirname + '/public/css'));
 app.use('/js', sessionClassMW(120), express.static(__dirname + '/public/js'));
 app.use('/img', sessionClassMW(120), express.static(__dirname + '/public/img'));
+app.use('/photobot', express.static(__dirname + '/public/img/photobot'));
 app.use('/fonts', sessionClassMW(120), express.static(__dirname + '/public/fonts'));
 app.use('/report', sessionClassMW(120), express.static(__dirname + '/public/report'));
 app.use('/items', sessionClassMW(120), express.static(__dirname + '/public/img/items'));

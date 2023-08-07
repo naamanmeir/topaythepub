@@ -68,14 +68,14 @@ input:-webkit-autofill:active {
 
 html,
 body {
-    /* height: 100%; */
+    /* height: 100vh; */
     /* width: 100vw; */
     /* margin: 0px; */
     /* padding: 0px; */
     /* top: 0px; */
     height: -webkit-fill-available;
-    /* width: -webkit-fill-available; */
-    overflow: hidden;
+    width: -webkit-fill-available;
+    /* overflow: hidden; */
     overscroll-behavior: contain;
     direction: rtl;
     -webkit-user-select: none;
@@ -101,22 +101,71 @@ p {
 /* ----------------------- HEADER MAIN HEADER --------------------------------------------- */
 
 .header {
+    z-index: 150;
+    /* width: 100%; */
+    height: fit-content;
     display: flex;
     text-align: center;
     right: 0px;
     margin: auto;
     margin-bottom: 0.2rem;
-    margin-top: 0.5rem;
+    margin-top: 0px;
     padding: 0px;
-    padding-bottom: 0px;
-    border-radius: 1em;
+}
+
+.shadow1 {
+    text-shadow: 3px 1px 2px rgba(163, 130, 69, 0.616);
+}
+
+.header p {
+    border-radius: 2rem;
+    color: rgba(225, 170, 68, 0.896);
+    font-size: 2.2rem;
+    /* line-height: 0.4rem; */
+    margin: 0px;
+    /* margin-bottom: 0.2rem; */
+    padding: 0px;
+}
+
+.animColor1 {
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+    background-color: transparent;
+    background-size: 0px;
+    animation: anim1Color1 64s ease infinite running;
+}
+
+@keyframes anim1Color1 {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.animColor2 {
+    background-image: none;
+    background-color: transparent;
+    background-size: 0px;
+    animation: anim1Color1 64s ease infinite running;
+}
+
+@keyframes anim2Color2 {
+    0% {
+        filter: hue-rotate(180deg);
+    }
+
+    100% {
+        filter: hue-rotate(179deg);
+    }
 }
 
 /* --------------------------MESSAGE BOARD------------------------------ */
 
 .remoteMboardPage {
-    height: 98vh;
-    width: 100vw;
+    /* height: 98vh; */
+    /* width: 100vw; */
 }
 
 .messageBoardWindow {
@@ -262,14 +311,14 @@ p {
 
 .posts {
     position: relative;
-    height: 75%;
-    width: 95%;
+    height: 70vh;
+    /* width: 97vw; */
     flex-wrap: nowrap;
     justify-content: center;
     margin: auto;
     margin-top: 0px;
     margin-bottom: 1%;
-    right: 0.2rem;
+    right: 0px;
     transition: background-color 0.8s ease;
     overflow-y: auto;
     overflow-x: hidden;
@@ -279,6 +328,7 @@ p {
 }
 
 .contextMenu {
+    position: relative;
     padding: 0rem 1rem 0rem 1rem;
     margin: 0 auto 0 auto;
     display: flex;

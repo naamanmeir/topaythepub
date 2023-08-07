@@ -755,6 +755,14 @@ p {
         /* top: 7%; */
     }
 
+    .mBoardHeader {
+        font-size: 1rem;
+    }
+
+    .closeButton {
+        font-size: 1rem;
+    }
+
     .postInput {
         height: 2rem;
         font-size: 1rem;

@@ -5,11 +5,12 @@ module.exports = function () {
     const rateLimit = require('express-rate-limit');
         return async function (req, res, next) {
             const rateLimitClient = rateLimit({
-            windowMs: 1 * 25 * 1000,
-            max: 250,
+            windowMs: 1 * 30 * 1000,
+            max: 1000,
             standardHeaders: true,
             legacyHeaders: false,
             handler: function(req,res){
+                console.log(getTime());
                 console.log("--------RATE LIMIT---------");
                 return res.end();
             }
