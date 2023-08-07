@@ -475,8 +475,32 @@ p {
     bottom: 0.2rem;
 }
 
+.postInputDivRemote {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 5%;
+    width: 95%;
+    bottom: 0.2rem;
+}
+
 .postInputTypes {
     position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: 1rem;
+    bottom: 0.1vh;
+    width: 80%;
+}
+
+.postInputTypesRemote {
+    position: absolute;
     display: flex;
     flex-direction: row;
     width: 80%;

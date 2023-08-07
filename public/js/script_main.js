@@ -411,40 +411,40 @@ function eventHandler(event) {
     let data = event.data;
     if (JSON.parse(data) == "refresh") {
         refreshPage();
-    }
+    };
     if (JSON.parse(data) == "reloadItems") {
         populateProducts();
-    }
+    };
     if (JSON.parse(data) == "reloadPosts") {
         messageBoardRefreshPosts();
         otherSideIsTyping(0);
-    }
+    };
     if (JSON.parse(data) == "reloadPostsNoScroll") {
         messageBoardRefreshPostsNoScroll();
         otherSideIsTyping(0);
-    }
+    };
     if (JSON.parse(data) == "chatbotIsTyping") {
         otherSideIsTyping(1);
-    }
+    };
     if (JSON.parse(data) == "chatbotIsNotTyping") {
         otherSideIsNotTyping();
         otherSideIsTyping(0);
-    }
+    };
     if (JSON.parse(data) == "photobotIsPainting") {
         otherSideIsTyping(2);
-    }
+    };
     if (JSON.parse(data) == "photobotIsNotPainting") {
         otherSideIsNotTyping();
         otherSideIsTyping(0);
-    }
+    };
     if (JSON.parse(data) == "0") {
         data = data.replace(/^"(.*)"$/, '$1');
         let conIndic = document.getElementById("conIndic");
         conIndic.style.opacity = data;
-    }
+    };
     if (JSON.parse(data) == "1") {
         data = data.replace(/^"(.*)"$/, '$1');
         let conIndic = document.getElementById("conIndic");
         conIndic.style.opacity = data;
-    }
+    };
 };

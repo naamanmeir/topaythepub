@@ -6,7 +6,7 @@
     <meta name="viewport" id="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link rel="stylesheet" href="../css/style.css?version=#">
+    <link rel="stylesheet" href="../css/remoteMboard.css?version=#">
     <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
     <title>
         <%= msgHeader %>
@@ -22,36 +22,42 @@
 </div>
 
 <body oncontextmenu="return false;">
-    <div class="posts" id="divPosts"></div>
-    <div class="postInputDiv" id="postInputDiv">
-        <textarea id="postInput" class="postInput" name="postInput" placeholder="<%= msgInputPlaceholder %>"></textarea>
-        <img class="postImgPreview" id="postImgPreview" src="#">
-    </div>
-
-    <div id="progBarDiv" class="progBarDiv">
-        <div id="progBar" class="progBar"></div>
-    </div>
-
-    <div class="postInputTypes">
-        <div class="uploadImg">
-            <input id="imageSelector" type="file" name="imgUpload" text="" style="display: none;">
-            <input type="button" class="mboardButton" value="<%=msgButtonAddPicture %>"
-                onclick="document.getElementById('imageSelector').click();" id="imageAddButton"
-                style="display: block;" />
-            <input type="button" class="mboardButton" value="<%=msgButtonRemovePicture %>" onclick="imageCancel()"
-                id="imageRemoveButton" style="display: none;" />
+    <div class="remoteMboardPage">
+        <div class="posts" id="divPosts"></div>
+        <div class="postInputDiv" id="postInputDiv">
+            <textarea id="postInput" class="postInput" name="postInput"
+                placeholder="<%= msgInputPlaceholder %>"></textarea>
+            <img class="postImgPreview" id="postImgPreview" src="#">
         </div>
-        <div class="mboardButton" id="mboardSend" onclick="postSend()">
-            <%= msgButtonSend %>
+
+        <div id="progBarDiv" class="progBarDiv">
+            <div id="progBar" class="progBar"></div>
         </div>
-        <div class="mboardButtonError" id="mboardSendError">
-            <%= msgButtonSendError %>
+
+        <div class="postInputTypes">
+            <div class="uploadImg">
+                <input id="imageSelector" type="file" name="imgUpload" text="" style="display: none;">
+                <input type="button" class="mboardButton" value="<%=msgButtonAddPicture %>"
+                    onclick="document.getElementById('imageSelector').click();" id="imageAddButton"
+                    style="display: block;" />
+                <input type="button" class="mboardButton" value="<%=msgButtonRemovePicture %>" onclick="imageCancel()"
+                    id="imageRemoveButton" style="display: none;" />
+            </div>
+            <div class="mboardButton" id="mboardSend" onclick="postSend()">
+                <%= msgButtonSend %>
+            </div>
+            <div class="mboardButtonError" id="mboardSendError">
+                <%= msgButtonSendError %>
+            </div>
         </div>
     </div>
     <script src="../js/script_remoteBoard.js"></script>
-    <script src="../js/script_mboard.js"></script>
-    <script> let otherSideIsTypingMessage = "<%= msgOtherSideIsTypingMessage %>";
+    <!-- <script src="../js/script_mboard.js"></script> -->
+    <script>
+        let otherSideIsTypingMessage = "<%= msgOtherSideIsTypingMessage %>";
         let msgInputPlaceholder = "<%= msgInputPlaceholder %>";
+        let mBoardPlaceHolder = "<%= mBoardPlaceHolder %>";
+        let photobotIsPaintingMessage = "<%= photobotIsPaintingMessage %>";
     </script>
     </div>
 </body>
