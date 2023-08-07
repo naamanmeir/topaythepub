@@ -140,9 +140,11 @@ app.use('/css', express.static(__dirname + '/public/css'));
 app.use('/js', sessionClassMW(120), express.static(__dirname + '/public/js'));
 app.use('/img', sessionClassMW(120), express.static(__dirname + '/public/img'));
 app.use('/photobot', express.static(__dirname + '/public/img/photobot'));
+app.use('/posts', sessionClassMW(120), express.static(__dirname + '/public/img/posts'));
 app.use('/fonts', sessionClassMW(120), express.static(__dirname + '/public/fonts'));
 app.use('/report', sessionClassMW(120), express.static(__dirname + '/public/report'));
 app.use('/items', sessionClassMW(120), express.static(__dirname + '/public/img/items'));
+app.use('/posts', sessionClassMW(120), express.static(__dirname + '/public/img/posts'));
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
 
 app.set('views', './views');
