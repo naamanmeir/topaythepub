@@ -6,7 +6,7 @@ module.exports = function () {
         return async function (req, res, next) {
             const rateLimitClient = rateLimit({
             windowMs: 1 * 25 * 1000,
-            max: 75,
+            max: 250,
             standardHeaders: true,
             legacyHeaders: false,
             handler: function(req,res){

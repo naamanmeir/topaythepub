@@ -1,4 +1,8 @@
 const PostLengthMax = 400;
+const pressTimerTime = 400;
+const pressTimerDelete = 1000;
+const pressTimerPost = 400;
+const pressTimerPin = 400;
 
 window.addEventListener('load', loadUtiliti, true);
 function loadUtiliti() {
@@ -19,6 +23,7 @@ let progBarDiv;
 let progBar;
 
 let chatbotIsTyping;
+let photobotIsPainting;
 
 function callMessageBoard(){
     getRequest("./openBoard", displayMessageBoard);
@@ -39,6 +44,7 @@ function mBoardUtilities(){
     postInput.addEventListener("keydown",postLenghthCheck);
     postInput.addEventListener("change",postLenghthCheck);
     postInput.addEventListener("paste",postLenghthCheck);
+    keyboardFocusMboard();
     scrollPosts();
 };
 
@@ -47,8 +53,6 @@ function postContextMenu(e){
     let postid;
     let postdiv;
     let menu;
-
-
 
     if(document.getElementById("contextMenu") && e.target.parentNode.id != "contextMenu"){
         document.getElementById("contextMenu").remove();
@@ -65,7 +69,6 @@ function postContextMenu(e){
     });
 
     let pressTimer = setTimeout(function(){
-
         if(e.target.parentNode.id.startsWith("post")){
             target = e.target.parentNode.id;
             
@@ -76,44 +79,56 @@ function postContextMenu(e){
                 postdiv = e.target.parentNode.id;
             }
             target = document.getElementById(target);
-            if(!document.getElementById("contextMenu")){
+            if(!document.getElementById("contextMenu")){                
                 menu = document.createElement("div");
                 menu.setAttribute('id','contextMenu');
                 menu.setAttribute('class','contextMenu');
-                menu.innerHTML = 
-                `                
-                <div class="cmenuItems" id="cmenuCopy"></div>
-                <div class="cmenuItems" id="cmenuErase"></div>
-                
-                `
+                menu.innerHTML = ''
+                if(!e.target.parentNode.id.substring(4).startsWith("Img")){                
+                    menu.innerHTML += `<div class="cmenuItems" id="cmenuPin"></div>`;
+                    menu.innerHTML += `<div class="cmenuItems" id="cmenuCopy"></div>`;
+                };
+                if(e.target.parentNode.id.substring(4).startsWith("Img")){
+                    // console.log("it is image")
+                };
+                menu.innerHTML += `<div class="cmenuItems" id="cmenuErase"></div>`;                
                 target.appendChild(menu);
                 let cmenuErase = document.getElementById("cmenuErase");
                 let cmenuCopy = document.getElementById("cmenuCopy");
+                let cmenuPin = document.getElementById("cmenuPin");
                 cmenuErase.style.backgroundImage="url(../img/ui/cmenu_erase.png)";
-                cmenuCopy.style.backgroundImage="url(../img/ui/cmenu_copy.png)";
-
+                if(!e.target.parentNode.id.substring(4).startsWith("Img")){                
+                    cmenuCopy.style.backgroundImage="url(../img/ui/cmenu_copy.png)";
+                    cmenuPin.style.backgroundImage="url(../img/ui/cmenu_pin.png)";
+                };
                 cmenuErase.addEventListener('touchstart',()=>{
                     postDelete(postid)
-                });
-                cmenuCopy.addEventListener('touchstart',()=>{
-                    postCopy(postdiv)
                 });
                 cmenuErase.addEventListener('mousedown',()=>{
                     postDelete(postid)
                 });
-                cmenuCopy.addEventListener('mousedown',()=>{
-                    postCopy(postdiv)
-                });
-
+                if(!e.target.parentNode.id.substring(4).startsWith("Img")){
+                    cmenuCopy.addEventListener('touchstart',()=>{
+                        postCopy(postdiv)
+                    });
+                    cmenuPin.addEventListener('touchstart',()=>{
+                        postPin(postid)
+                    });
+                    cmenuCopy.addEventListener('mousedown',()=>{
+                        postCopy(postdiv)
+                    });
+                    cmenuPin.addEventListener('mousedown',()=>{
+                        postPin(postid)
+                    });
+                };                
                 document.getElementById("contextMenu").scrollIntoView(
                     { behavior: "smooth", block: "start", inline: "center" }
                 );
-
-            }else{            
+            }else{
                 document.getElementById("contextMenu").remove();
-            }            
+            };          
         };
-    },600);
+    },pressTimerTime);
 };
 
 function postLenghthCheck(){
@@ -164,9 +179,9 @@ function postDelete(postid){
     
     let pressTimer = setTimeout(function(){
         postid = JSON.stringify({'postid':postid});
-        postRequest('./deletePost', window.parent.messageBoardRefreshPosts, postid);
+        postRequest('./deletePost', messageBoardRefreshPosts, postid);
         return;
-    },1000);
+    },pressTimerDelete);
 };
 
 function postCopy(postdiv){
@@ -200,7 +215,38 @@ function postCopy(postdiv){
         document.body.removeChild(tempInput);
         document.getElementById("contextMenu").remove();
         return;
-    },400);
+    },pressTimerPost);
+};
+
+function postPin(postid){
+    let panel = document.getElementById("contextMenu");
+    let preColor = panel.style.backgroundColor;
+    panel.style.transition =  "all 0.2s";
+    panel.style.backgroundColor = "yellow";
+
+    postsDiv.addEventListener('mouseup',()=>{        
+        clearTimeout(pressTimer);
+        panel.style.backgroundColor = preColor;
+        return;
+    });
+
+    postsDiv.addEventListener('touchend',()=>{        
+        clearTimeout(pressTimer);
+        panel.style.backgroundColor = preColor;
+        return;
+    });
+    
+    let pressTimer = setTimeout(function(){        
+        postid = JSON.stringify({'postid':postid});
+        console.log("TEST");
+        postRequest('./pinPost', afterPostPind, postid);
+        return;
+    },pressTimerPin);
+};
+
+function afterPostPind(content){    
+    // requestDisplayInfoRefresh(1);
+    messageBoardRefreshPostsNoScroll();
 };
 
 function postSend(){
@@ -294,6 +340,15 @@ function messageBoardRefreshPosts(){
     return;
 };
 
+function messageBoardRefreshPostsNoScroll(){
+        // if(document.getElementById("messageBoardDivPosts") != null){
+    getRequest("./reloadPosts", displayPostsInDivNoScroll);        
+        // return;
+        // }else{        
+    return;
+        // }
+};
+
 function displayPostsInDiv(content){
     content = JSON.parse(content);
     postsDiv.innerHTML = content;
@@ -301,21 +356,33 @@ function displayPostsInDiv(content){
     return;
 };
 
+function displayPostsInDivNoScroll(content){
+    content = JSON.parse(content);
+        // console.log("tete");
+        // if(document.getElementById("messageBoardDivPosts") != null){
+    // postsDiv = document.getElementById("divPosts");
+    postsDiv.innerHTML = content;
+        // requestDisplayInfoRefresh(1);
+    return;
+        // }else{
+        // return;
+        // }
+};
+
 function scrollPosts(){
     postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: smooth";
     postsDiv.scrollTop = postsDiv.scrollHeight;
-    setTimeout(() => {postsDiv.style = "scroll-behavior: auto";postsDiv.scrollTop = postsDiv.scrollHeight;}, 500);
-    postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: smooth";
-
+    setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: auto";}, 500);
 };
 
 function otherSideIsTyping(act){
-    
-    let placeholder = "";
-    let placeholderDefault = msgInputPlaceholder;    
-    let inputElement = document.getElementById("postInput");
 
     if(chatbotIsTyping == 1){return;};
+    if(photobotIsPainting == 1){return;};
+
+    let placeholder = "";
+    let placeholderDefault = mBoardPlaceHolder;    
+    let inputElement = document.getElementById("postInput");
 
     if(act==1){
         
@@ -340,6 +407,30 @@ function otherSideIsTyping(act){
                 type()
             },1500);
     };
+    if(act==2){
+        
+        photobotIsPainting = 1;
+        let i = 0;
+        const txt = photobotIsPaintingMessage;
+        let speed = Math.random() * (500 - 90) + 90;        
+
+        function type(){        
+            if(photobotIsPainting==0){return;};
+            placeholder = txt.substring(0,i+1);
+            inputElement.setAttribute("placeholder",placeholder);
+            i++;
+            speed = Math.random() * (500 - 90) + 90;
+            if(i>=txt.length){
+                let rndStart = Math.random() * 12;
+                placeholder = "";
+                i=rndStart;
+            };
+            setTimeout(type,speed);            
+            };
+            setTimeout(() => {
+                type()
+            },1500);
+    };
     if(act==0){        
         inputElement.setAttribute("placeholder",placeholderDefault);
         return;
@@ -348,10 +439,16 @@ function otherSideIsTyping(act){
 };
 
 function otherSideIsNotTyping(){
+    chatbotIsTyping = 0;
+    photobotIsPainting = 0;    
+};
+
+function photobotIsNotPainting(){
     chatbotIsTyping = 0;    
 };
 
-//------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
+//------------------------ UTILS REQUEST SEND----------------//
+
 async function getRequest(url, callback, data) {
     var xhttp = new XMLHttpRequest();    
     if (data != null) { xhttp.open("GET", url + data, true); }
@@ -360,7 +457,7 @@ async function getRequest(url, callback, data) {
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             if (this.response.errorClient){
-                window.parent.openMessageWindow(this.response.errorClient)
+                openMessageWindow(this.response.errorClient)
             };
             if (callback != null) { callback(this.response); }            
             return this.response;
@@ -368,7 +465,7 @@ async function getRequest(url, callback, data) {
     };
 
 };
-//------------------------SEND POST REQUEST TO: url WITH -> callback function AND APPENDED data----------------
+
 async function postRequest(url, callback, data) {
     if (data == null) { return; }
     var xhttp = new XMLHttpRequest();    
@@ -380,7 +477,7 @@ async function postRequest(url, callback, data) {
             if(isJson(this.response)){
                 let parsedReponse = JSON.parse(this.response);                
                 if (parsedReponse.errorClient){
-                    window.parent.openMessageWindow(parsedReponse.errorClient)
+                    openMessageWindow(parsedReponse.errorClient)
                 };
                 if (callback != null) { callback(parsedReponse); }
                 return parsedReponse;
@@ -400,11 +497,12 @@ async function postRequestNoJson(url, callback, data) {
     xhttp.setRequestHeader("Content-Type", "application/json");    
     xhttp.send(data);
     xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {                        
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
             if(isJson(this.response)){
                 let parsedReponse = JSON.parse(this.response);                
                 if (parsedReponse.errorClient){
-                    window.parent.openMessageWindow(parsedReponse.errorClient)
+                    openMessageWindow(parsedReponse.errorClient)
                 };
                 if (callback != null) { callback(parsedReponse); }
                 return parsedReponse;
@@ -563,30 +661,28 @@ function eventHandler(event) {
     if (JSON.parse(data) == "refresh") {
         // console.log("MATCH REFRESH TERMINAL");
         refreshPage();
-    }
-
+    };
     if (JSON.parse(data) == "reloadPosts") {
         messageBoardRefreshPosts();
-    }
-        if (JSON.parse(data) == "chatbotIsTyping") {
+    };
+    if (JSON.parse(data) == "reloadPostsNoScroll") {
+        messageBoardRefreshPostsNoScroll();
+        otherSideIsTyping(0);
+    };
+    if (JSON.parse(data) == "chatbotIsTyping") {
         // console.log("MATCH MESSAGE BOARD CHATBOT IS TYPING");
         otherSideIsTyping(1);
-    }
+    };
     if (JSON.parse(data) == "chatbotIsNotTyping") {
         // console.log("MATCH MESSAGE BOARD CHATBOT IS NOT TYPING");
         otherSideIsNotTyping();
         otherSideIsTyping(0);
-    }
-    // if (JSON.parse(data) == "0") {
-    //     data = data.replace(/^"(.*)"$/, '$1');
-    //     // console.log(data);
-    //     let conIndic = document.getElementById("conIndic");
-    //     conIndic.style.opacity = data;
-    // }
-    // if (JSON.parse(data) == "1") {
-    //     data = data.replace(/^"(.*)"$/, '$1');
-    //     // console.log(data);
-    //     let conIndic = document.getElementById("conIndic");
-    //     conIndic.style.opacity = data;
-    // }
+    };
+    if (JSON.parse(data) == "photobotIsPainting") {
+        otherSideIsTyping(2);
+    };
+    if (JSON.parse(data) == "photobotIsNotPainting") {
+        otherSideIsNotTyping();
+        otherSideIsTyping(0);
+    };
 };

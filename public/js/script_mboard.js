@@ -148,7 +148,7 @@ function postContextMenu(e){
     },pressTimerTime);
 };
 
-function postLenghthCheck(){    
+function postLenghthCheck(){
     if(postInput.value.length >= (PostLengthMax)){
         document.getElementById("mboardSend").style.display="none";
         document.getElementById("mboardSendError").style.display="block";
@@ -269,9 +269,9 @@ function postPin(postid){
 function afterPostPind(content){    
     window.parent.requestDisplayInfoRefresh(1);    
     messageBoardRefreshPostsNoScroll();
-}
+};
 
-function postSend(){    
+function postSend(){
     if (postInput.value == ""){return;};
     let img;
     let post = postInput.value;
@@ -321,14 +321,14 @@ function updateProgress(e){
     };
 };
 
-function createProgressBar(){    
+function createProgressBar(){
     progBarDiv = document.getElementById("progBarDiv");
     progBar = document.getElementById("progBar");
     progBarDiv.className = "progressBarDiv";
     progBar.className = "progressBar";
 };
 
-function imagePreview(){    
+function imagePreview(){
     var postImg = document.getElementById('postImgPreview');
     var imageAddButton = document.getElementById('imageAddButton');
     var imageRemoveButton = document.getElementById('imageRemoveButton');
@@ -348,7 +348,7 @@ function imagePreview(){
     });
 };
 
-function imageCancel(){    
+function imageCancel(){
     var postImg = document.getElementById('postImgPreview');
     postImg.style.display = "none";
     imageSelector.value = "";
@@ -425,7 +425,9 @@ function otherSideIsTyping(act){
         function type(){        
             if(chatbotIsTyping==0){return;};
             placeholder = txt.substring(0,i+1);
-            inputElement.setAttribute("placeholder",placeholder);
+            if(inputElement != null){
+                inputElement.setAttribute("placeholder",placeholder);
+            };            
             i++;
             speed = Math.random() * (500 - 90) + 90;
             if(i>=txt.length){
@@ -448,7 +450,9 @@ function otherSideIsTyping(act){
         function type(){        
             if(photobotIsPainting==0){return;};
             placeholder = txt.substring(0,i+1);
-            inputElement.setAttribute("placeholder",placeholder);
+            if(inputElement != null){
+                inputElement.setAttribute("placeholder",placeholder);
+            };
             i++;
             speed = Math.random() * (500 - 90) + 90;
             if(i>=txt.length){
@@ -462,8 +466,10 @@ function otherSideIsTyping(act){
                 type()
             },1500);
     };
-    if(act==0){        
-        inputElement.setAttribute("placeholder",placeholderDefault);
+    if(act==0){
+        if(inputElement != null){
+            inputElement.setAttribute("placeholder",placeholderDefault);
+        }
         return;
     };
     return;

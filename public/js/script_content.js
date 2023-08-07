@@ -631,13 +631,14 @@ function scrollScrollBar(){
             return openDisplayInfo();
         };        
         for(let i = 0;i<items.length;i++){
-            // console.log(displayRight);
-            // console.log(items[i].style.left);
             items[i].style.left = `${left}px`;
-            if(items[i].getBoundingClientRect().left > displayRight){
-                items.splice(i,1);                
-            }
-        }
+            if(items[i].getBoundingClientRect().left > displayRight && items.length>=1){                
+                items.splice(i,1);
+            };
+            if(items.length==0){
+                requestDisplayInfoRefresh(1);
+            };
+        };
         left = left+amnt;
         displayRefreshTimer = setTimeout(moveLoop,displaySpeed);
     };

@@ -22,18 +22,18 @@ let chatbotCall = messageUi.chatbotName1;
 
 //------------------------REMOTE CLIENT BOARD-------------------//
 
-routerMessageBoard.get('/remoteMboard/', async function (req, res) {
-    res.render('remoteMessage',{
-        msgHeader:messageUi.remoteMessageBoardHeader,
-        msgButtonSend:messageUi.remoteMessageBoardButtonSendMessage,
-        msgButtonSendError:messageUi.remoteMessageBoardButtonErrorMessage,
-        msgInputPlaceholder:messageUi.remoteMessageBoardPlaceholder,
-        msgOtherSideIsTypingMessage:messageUi.otherSideIsTypingMessage,
-        msgButtonAddPicture:messageUi.remoteMessageBoardButtonAddPicture,
-        msgButtonRemovePicture:messageUi.remoteMessageBoardButtonRemovePicture,
-        msgButtonSendError:messageUi.remoteMessageBoardButtonErrorMessage
-    });
-});
+    // routerMessageBoard.get('/remoteMboard/', async function (req, res) {
+    //     res.render('remoteMessage',{
+    //         msgHeader:messageUi.remoteMessageBoardHeader,
+    //         msgButtonSend:messageUi.remoteMessageBoardButtonSendMessage,
+    //         msgButtonSendError:messageUi.remoteMessageBoardButtonErrorMessage,
+    //         msgInputPlaceholder:messageUi.remoteMessageBoardPlaceholder,
+    //         msgOtherSideIsTypingMessage:messageUi.otherSideIsTypingMessage,
+    //         msgButtonAddPicture:messageUi.remoteMessageBoardButtonAddPicture,
+    //         msgButtonRemovePicture:messageUi.remoteMessageBoardButtonRemovePicture,
+    //         msgButtonSendError:messageUi.remoteMessageBoardButtonErrorMessage
+    //     });
+    // });
 
 
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
@@ -59,7 +59,7 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     if(post.length > MaxPostLength){ res.end(); return; };
     if(findReferences(post,messageUi.chatbotName1Variations)==true){sendPostToChatbot(post);};
     if(findReferences(post,messageUi.photobotCodeActivate)==true){sendPostToPhotobot(post);};
-    if(findReferences(post,messageUi.photobotCodeActivateItemImage)==true){sendPostToPhotobotItemPhoto(post);};    
+    if(findReferences(post,messageUi.photobotCodeActivateItemImage)==true){sendPostToPhotobotItemPhoto(post);};
     var img;
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
@@ -129,7 +129,7 @@ function renameFileIfExist(file){
         }else{        
         return file;
         }
-    };
+};
 
 routerMessageBoard.post('/insertImage', async (req, res) => {
     const options = {
@@ -334,6 +334,7 @@ function sendChatBotIsNotTypingToAllClients(){
     clientEvents.sendEvents("chatbotIsNotTyping");
     return;
 };
+
 function sendPhotobotIsPaintingToAllClients(){
     // console.log("SENDING EVENT photobotIsPainting");
     clientEvents.sendEvents("photobotIsPainting");
