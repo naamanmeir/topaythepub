@@ -39,7 +39,7 @@ window.addEventListener('load', loadUtiliti, true);
 function loadUtiliti() {
     window.history.pushState({}, '');
     window.addEventListener('popstate', function() {
-        console.log(closeAppAttempt);
+        // console.log(closeAppAttempt);
         if(closeAppAttempt>0){
             window.history.pushState({}, '');
             closeAppAttempt--;
