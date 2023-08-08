@@ -109,8 +109,20 @@ function loadUtiliti() {
     buttonCancel.className = ("cancel");
     requestDisplayInfo(1);
     monitorSwitch(0);
+    interactSearchbox1();
 };
 loadUtiliti();
+
+function interactSearchbox1(){
+    setTimeout(()=>{
+        let clickEvent = new Event('click');
+        searchBox1.focus();
+        searchBox1.dispatchEvent(clickEvent);        
+        setTimeout(()=>{            
+            searchBox1.blur();            
+        },500);
+    },500);
+};
 
 //-------------------------MESSAGE FLOATING WINDOW-------------------------//
 function openMessageWindow(message,className){
@@ -267,10 +279,9 @@ function userIndicMessage(message) {
 
 //---------------------- ORDER MANGE FUNCTIONS ----------------------//
 
-function addItem(item) {    
+function addItem(item) {
     if(orderData[item]==99){console.log("Max is 99");return;};
-    orderData[item] = (orderData[item] || 0) + 1;    
-    // console.log(orderData);
+    orderData[item] = (orderData[item] || 0) + 1;
     const count = document.getElementById(`itemCount${item}`)
     if (count.innerText < (parseInt(1) )) {
         count.innerText = 1;
@@ -318,6 +329,11 @@ function openOrderConfirm(content) {
         clearCounts();
         closeWindows();        
     });
+    window.addEventListener('popstate', function() {
+        orderClear();
+        clearCounts();
+        closeWindows();
+      });
     orderConfirmButtonNo.addEventListener('click', function () {
         orderClear();
         clearCounts();
@@ -420,6 +436,9 @@ function openUserPage(content) {
     closeWindowButton.addEventListener('click', function () {        
         closeWindows();
     });
+    window.addEventListener('popstate', function() {
+        closeWindows();
+    });
     deleteOrderButton.addEventListener('click', function () {
         closeWindows();
         return deleteLastOrderConfirm(currentUserLogged.id);
@@ -462,6 +481,10 @@ function openDeleteOrderConfirm(content){
     deleteOrderConfirmButtonYes.addEventListener('click', function () {
         closeWindows();
         return deleteLastOrder(currentUserLogged.id);
+    });
+    window.addEventListener('popstate', function() {
+        closeWindows();
+        return requestUserPage(currentUserLogged.id);
     });
 };
 function deleteLastOrder(id) {

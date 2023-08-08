@@ -63,6 +63,10 @@ function mBoardUtilities(){
     postInput.addEventListener("keydown",postLenghthCheck);
     postInput.addEventListener("change",postLenghthCheck);
     postInput.addEventListener("paste",postLenghthCheck);
+    window.addEventListener('popstate', function() {
+        divMessageBoard.innerHTML = null;
+        closeMessageBoard();
+      });
 };
 
 function postContextMenu(e){
