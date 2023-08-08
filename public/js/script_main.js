@@ -446,6 +446,9 @@ function eventHandler(event) {
     if (JSON.parse(data) == "photobotIsPainting") {
         otherSideIsTyping(2);
     };
+    if (JSON.parse(data) == "photobotIsPaintingApainting") {
+        otherSideIsTyping(3);
+    };
     if (JSON.parse(data) == "photobotIsNotPainting") {
         otherSideIsNotTyping();
         otherSideIsTyping(0);

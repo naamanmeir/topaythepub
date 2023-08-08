@@ -8,7 +8,10 @@ let photobotIsBusy = 0;
 
 exports.photobotIsBusy = photobotIsBusy;
 
-async function requestImage(data) {    
+async function requestImage(data) {   
+    
+    try {    
+
 	const response = await fetch(
         // "https://api-inference.huggingface.co/models/nitrosocke/Ghibli-Diffusion",
         "https://api-inference.huggingface.co/models/prompthero/openjourney-v4",
@@ -28,10 +31,33 @@ async function requestImage(data) {
     // console.log(response);
     // console.log(result);
 	return result;
+
+}catch (error) {
+    if (error.response) {
+        console.log(error.response.status);
+        console.log(error.response.data);
+        let errorMessage = `נראה שהייתה תקלה מספר ${error.response.status},
+        תעבירו את המספר הלאה
+        ומתישהו מישהו יעשה משהו כדי לתקן את זה איכשהו
+        `
+        return errorMessage;
+      } else {
+        console.log(error.message);
+        let errorMessage = `נראה שהייתה תקלה 
+          ${error.message},
+        תעבירו את ההודעה הלאה
+        ומתישהו מישהו יעשה משהו כדי לתקן את זה איכשהו
+        `
+        return error.message;
+      }
+}
 }
 
 async function requestPainting(data) {    
-    data.inputs = data.inputs+' ghibli style';    
+    data.inputs = data.inputs+' ghibli style';
+
+    try {    
+
 	const response = await fetch(
         "https://api-inference.huggingface.co/models/nitrosocke/Ghibli-Diffusion",        
 		{
@@ -42,6 +68,26 @@ async function requestPainting(data) {
 	);
 	const result = await response.blob();
 	return result;
+
+    }catch (error) {
+        if (error.response) {
+            console.log(error.response.status);
+            console.log(error.response.data);
+            let errorMessage = `נראה שהייתה תקלה מספר ${error.response.status},
+            תעבירו את המספר הלאה
+            ומתישהו מישהו יעשה משהו כדי לתקן את זה איכשהו
+            `
+            return errorMessage;
+          } else {
+            console.log(error.message);
+            let errorMessage = `נראה שהייתה תקלה 
+              ${error.message},
+            תעבירו את ההודעה הלאה
+            ומתישהו מישהו יעשה משהו כדי לתקן את זה איכשהו
+            `
+            return error.message;
+          }
+    }
 }
 
 exports.askForPhoto = async function(mode,input,item){
@@ -81,7 +127,11 @@ exports.askForPhoto = async function(mode,input,item){
     input = input.indexOf(' ') == 0 ? input.substring(1) : input;
     input = input.replace(',','');
     let currentTime = Date.now();
-    if(input.length >= 24){input = (input.slice(0,20)+currentTime)}
+    if(input.length >= 24){
+        input = (input.slice(0,20)+currentTime)
+        }else{
+            input = input+currentTime;
+        }
     let originalName = (__dirname + '/../../public/img/photobot/') + (input+".jpg");
     originalName = renameFileIfExist(originalName);
     try {

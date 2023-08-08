@@ -212,16 +212,17 @@ async function sendPostToPhotobot(mode,post){
     messageStart = messageStart+messageUi.photobotCodeActivate.length+1;
     post = post.substring(messageStart);
     photobot.photobotIsBusy = 1;
-    sendPhotobotIsNotPaintingToAllClients();
-    sendPhotobotIsPaintingToAllClients();
+    sendPhotobotIsNotPaintingToAllClients();    
     let inputTranslated = await translate.askForTranslation(post).then((translatedInput)=>{
         return translatedInput;
     });
     let photobotPhoto;
     if(mode==1){
+        sendPhotobotIsPaintingToAllClients();
         photobotPhoto = await photobot.askForPhoto(1,inputTranslated);
     };
     if(mode==2){
+        sendPhotobotIsPaintingApaintingToAllClients();
         photobotPhoto = await photobot.askForPhoto(2,inputTranslated);
     };    
     let image = JSON.stringify(photobotPhoto);
@@ -246,10 +247,15 @@ async function sendPostToPhotobotItemPhoto(post){
     post = post.substring(messageStart);
     post = post.indexOf(' ') == 0 ? post.substring(1) : post;
     let isPainting = findReferencesWithIndex(post,messageUi.photobotCodeActivateItemImagePainting);    
-    let mode = (isPainting>=0)? 2:1;
+    let mode = (isPainting>=0)? 2:1;    
     photobot.photobotIsBusy = 1;
     sendPhotobotIsNotPaintingToAllClients();
-    sendPhotobotIsPaintingToAllClients();
+    if(mode==1) {
+        sendPhotobotIsPaintingToAllClients();
+    };
+    if(mode==2) {
+        sendPhotobotIsPaintingApaintingToAllClients();
+    };    
     let inputTranslated = await translate.askForTranslation(post).then((translatedInput)=>{
         return translatedInput;
     });
@@ -348,6 +354,12 @@ function sendChatBotIsNotTypingToAllClients(){
 function sendPhotobotIsPaintingToAllClients(){
     // console.log("SENDING EVENT photobotIsPainting");
     clientEvents.sendEvents("photobotIsPainting");
+    return;
+};
+
+function sendPhotobotIsPaintingApaintingToAllClients(){
+    // console.log("SENDING EVENT photobotIsPaintingApainting");
+    clientEvents.sendEvents("photobotIsPaintingApainting");
     return;
 };
 

@@ -518,6 +518,32 @@ function otherSideIsTyping(act){
                 type()
             },1500);
     };
+    if(act==3){
+        
+        photobotIsPainting = 1;
+        let i = 0;
+        const txt = messageUi.photobotIsPaintingPainting;
+        let speed = Math.random() * (500 - 90) + 90;        
+
+        function type(){        
+            if(photobotIsPainting==0){return;};
+            placeholder = txt.substring(0,i+1);
+            if(inputElement != null){
+                inputElement.setAttribute("placeholder",placeholder);
+            };
+            i++;
+            speed = Math.random() * (500 - 90) + 90;
+            if(i>=txt.length){
+                let rndStart = Math.random() * 12;
+                placeholder = "";
+                i=rndStart;
+            };
+            setTimeout(type,speed);            
+            };
+            setTimeout(() => {
+                type()
+            },1500);
+    };
     if(act==0){
         if(inputElement != null){
             inputElement.setAttribute("placeholder",placeholderDefault);
