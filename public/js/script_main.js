@@ -10,6 +10,7 @@ const sideMenuSlideTime = "0.6s";
 const windowFadeTime = 800;
 
 let autoLogoutTime = 90000;
+let closeAppAttempt = 6;
 
 //-----------------RUNTIME PARAMS-----------------//
 const timerClearLoggedUSerTIme = 999999;
@@ -36,6 +37,14 @@ let appendedScriptObjectContent;
 
 window.addEventListener('load', loadUtiliti, true);
 function loadUtiliti() {
+    window.history.pushState({}, '');
+    window.addEventListener('popstate', function() {
+        // console.log(closeAppAttempt);
+        if(closeAppAttempt>0){
+            window.history.pushState({}, '');
+            closeAppAttempt--;
+        };
+    });
     populateUtilities();
     mainDivsAutoRefreshInterval();
     setViewport();
@@ -169,15 +178,18 @@ function displayAbout(content) {
     divAbout.innerHTML = content;
     divFullPage.addEventListener('click',() =>{
         closeAbout();
-    })
+    });
+    window.addEventListener('popstate', function() {
+        closeAbout();
+    });
 };
 function closeAbout(){
     divAbout.className = "divAboutClose";
     divAbout.innerHTML = "";
+    closeAppAttempt = 6;
     divFullPage.removeEventListener('click',() =>{
         closeAbout();
 })};
-
 
 
 //------------------------SEND GET REQUEST TO: url WITH -> callback function AND APPENDED data----------------
@@ -265,7 +277,6 @@ async function postRequest_bk(url, callback, data) {
 
 //------------------------ UI ELEMENTS----------------//
 
-
 function closeWindows(){
     userPageButton.setAttribute('userPageButtonEnableListener', 0);
     enableUserPageButton();
@@ -283,7 +294,8 @@ function closeWindows(){
             window.remove();
         });
         getRequest('./client/windowIsClose/',null,null);
-    },windowFadeTime);    
+    },windowFadeTime);
+    closeAppAttempt = 6;
     return;
 };
 
@@ -304,7 +316,8 @@ function hideWindows(){
             window.className = "hidden";
         });
         getRequest('./client/windowIsClose/',null,null);
-    },windowFadeTime);    
+    },windowFadeTime);
+    closeAppAttempt = 6;
     return;
 };
 
@@ -319,9 +332,9 @@ function openWindows(openWindow){
     openWindow.classList.add("messageBoardWindow");
     divContent.style.transition = "opacity "+seconds+"s ease";
     divContent.classList.add("hidden");
+    closeAppAttempt = 6;
     return;
 };
-
 
 //------------------------FAKE FUNCTION TO NULL RESPONSES----------------
 async function responseToNull(res) {

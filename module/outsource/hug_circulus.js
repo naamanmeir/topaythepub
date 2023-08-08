@@ -49,7 +49,9 @@ exports.askForPhoto = async function(mode,input,item){
     // console.log(input);
     let photo;
     let buffer;
-    input = input.indexOf(' ') == 0 ? input.substring(1) : input;
+    if(input!=null&&input.length>0){
+        input = input.indexOf(' ') == 0 ? input.substring(1) : input;
+    };
     // try {
     if(mode==1){
         photo = await requestImage({"inputs": input})
