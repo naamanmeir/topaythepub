@@ -118,7 +118,8 @@
             "photobotCodeActivate": "צייר לי תמונה של",
             "photobotCodeActivatePainting": "צייר לי ציור של",
             "photobotCodeActivateItemImage": "צייר לי מוצר שנראה כמו",
-            "photobotCodeActivateItemImagePainting": "ציור של"
+            "photobotCodeActivateItemImagePainting": "ציור של",
+            "createQrToRemoteBoard": "דייויד שלח קישור ללוח מודעות"
         }
     ],
     "sideMenu": [

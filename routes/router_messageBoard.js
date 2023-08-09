@@ -17,6 +17,7 @@ const MaxPostLength = 400;
 let chatbot = require("../module/outsource/chatbot");
 let photobot =  require("../module/outsource/hug_circulus")
 let translate =  require("../module/outsource/gpt_translate");
+let qrTools =  require("../module/tools/qrTools");
 
 let chatbotCall = messageUi.chatbotName1;
 
@@ -60,7 +61,8 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     if(findReferences(post,messageUi.chatbotName1Variations)==true){sendPostToChatbot(post);};
     if(findReferences(post,messageUi.photobotCodeActivate)==true){sendPostToPhotobot(1,post);};
     if(findReferences(post,messageUi.photobotCodeActivatePainting)==true){sendPostToPhotobot(2,post);};
-    if(findReferences(post,messageUi.photobotCodeActivateItemImage)==true){sendPostToPhotobotItemPhoto(post);};    
+    if(findReferences(post,messageUi.photobotCodeActivateItemImage)==true){sendPostToPhotobotItemPhoto(post);};
+    if(findReferences(post,messageUi.createQrToRemoteBoard)==true){createQrToRemoteBoard();};
     var img;
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
@@ -177,6 +179,21 @@ async function insertPostWithImage(req,res,post,user,image){
     return; 
 };
 
+async function insertImageDirect(image,user){
+    if(user==null){user=76;}
+    let post = '';
+    console.log(image);
+    image = JSON.stringify(image);
+    let dbResponse = await db.dbInsertPost(post,user,image);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED IMAGE DIRECTLY TO BOARD"
+    `);     
+    sendRefreshPostsEventToAllClients();
+    return; 
+};
+
 function findReferences(source,target){
     if(Array.isArray(target)){
         for(let i = 0;i < target.length;i++){
@@ -190,7 +207,7 @@ function findReferences(source,target){
     return false;
 };
 
-function findReferencesWithIndex(source,target){      
+function findReferencesWithIndex(source,target){
     if(Array.isArray(target)){
         for(let i = 0;i < target.length;i++){
             let find =  source.search(target[i]);
@@ -314,19 +331,27 @@ async function sendPostToChatbot(post){
     return;
 };
 
-async function sendFactToChatbot(fact){    
+async function sendFactToChatbot(fact){
     let dbResponse = db.dbInsertFact(fact);
     return dbResponse;
 };
 
-async function sendRemoveFactToChatbot(fact){    
+async function sendRemoveFactToChatbot(fact){
     let dbResponse = db.dbRemoveFact(fact);
     return dbResponse;
 };
 
-async function sendRemoveAllFactsToChatbot(){    
+async function sendRemoveAllFactsToChatbot(){
     let dbResponse = db.dbRemoveAllFacts();
     return dbResponse;
+};
+
+async function createQrToRemoteBoard(){
+    let qrImg = await qrTools.createQrToRemoteBoard();
+    qrImg = '../qrCode/'+qrImg;
+    console.log(qrImg);
+    insertImageDirect(qrImg);
+    return;
 };
 
 function sendRefreshPostsEventToAllClients(){
