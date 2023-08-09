@@ -23,7 +23,19 @@ let chatbotCall = messageUi.chatbotName1;
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
 
 routerRemoteMessageBoard.get('/', async function (req, res) {
-    res.render('remoteMessage',{
+
+    if (!req || req == null) { res.sendStatus(401).end(); };
+    const clientIp = req.headers['x-forwarded-for'];
+    messageBoardLogger.clientMessageBoard(`
+    LOGIN PAGE VISITED FROM
+    IP: ${clientIp}
+    `);
+  
+    if (req.session != null) {session = req.session};  
+  
+    if (session.userid) {
+    //   res.redirect('./');
+      res.render('remoteMessage',{
         msgHeader:messageUi.remoteMessageBoardHeader,
         msgButtonSend:messageUi.remoteMessageBoardButtonSendMessage,
         msgButtonSendError:messageUi.remoteMessageBoardButtonErrorMessage,
@@ -37,7 +49,87 @@ routerRemoteMessageBoard.get('/', async function (req, res) {
         photobotIsPaintingMessage:messageUi.photobotIsPainting,
         photobotIsPaintingApaintingMessage:messageUi.photobotIsPaintingPainting
     });
+      return;
+    } else {
+        res.redirect('./');
+      return;
+    }
 });
+
+routerRemoteMessageBoard.get("/login", async (req,res) => {
+    const clientIp = req.headers['x-forwarded-for'];
+    res.render('login.ejs', {
+        cssVariable: "../css/login.css",
+        message: messageUi.loginMessage
+    });
+  });
+
+// routerRemoteMessageBoard.post("/login/", async (req, res) => {
+//     console.log("REMOTE BOARD LOGIN PAGE");
+//     const clientIp = req.headers['x-forwarded-for'];
+//     if (!req.body.username || !req.body.password) {
+//       res.redirect('./');    
+//       messageBoardLogger.clientMessageBoard(`
+//       LOGIN ATTAMPTED WITH NO DETAILS
+//       IP: ${clientIp}
+//       `);
+//       return;
+//     }
+//     if (!validator.isAlphanumeric(req.body.username)) { console.log("USERNAME NOT VALID"); loginAction(req, res, 0, null, null); return; }
+//     if (!validator.isAlphanumeric(req.body.password)) { console.log("PASSWORD NOT VALID"); loginAction(req, res, 1, null, null); return; }
+  
+//     const user = req.body.username;
+//     const password = req.body.password;  
+  
+//     let dbResponse = await db.userLogin(user, password);
+  
+//     loginAction(req, res, dbResponse,user,password);
+//     return;
+// });
+  
+// async function loginAction(req, res, reply, user, password) {
+//     const clientIp = req.headers['x-forwarded-for'];
+//     if (reply[0] == 0) {
+//       // console.log("LOGIN ATTAMPTED WITH WRONG USERNAME");
+//       messageBoardLogger.clientMessageBoard(`
+//       LOGIN ATTAMPTED WITH WRONG USERNAME
+//       IP: ${clientIp}
+//       `);
+//       const query = querystring.stringify({ "message": "username invalid" });
+//       res.redirect('./?' + query);
+//       return;
+//     } // WRONG USER
+//     if (reply[0] == 1) {
+//       // console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD");
+//       messageBoardLogger.clientMessageBoard(`
+//       LOGIN ATTAMPTED WITH WRONG PASSWORD
+//       IP: ${clientIp}
+//       `);
+//       const query = querystring.stringify({ "message": "password invalid" });
+//       res.redirect('./?' + query);
+//       return;
+//     } // WRONG PASS
+//     if (reply[0] == 2) {    
+//       const token = generateAccessToken({ user: user });
+//       session = req.session;
+//       let sessionName = req.cookies.sessionName;
+//       session.userid = req.body.username;    
+//       const userClass = await db.getUserClassByName(session.userid);
+//       session.userclass = Number(userClass);    
+//       const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
+//       session.sessionid = Number(sessionStore);
+//       messageBoardLogger.clientMessageBoard(`
+//       CLIENT: ${user}
+//       CLASS: ${userClass}
+//       SESSION ID: ${session.sessionid}
+//       CLIENT IP: ${clientIp}
+//       `);
+//     //   if(userClass==120){res.redirect('./remoteMboard/');return;}
+//       res.redirect('./');
+//       return;
+//     }// LOGIN OK
+//     return;
+// };
 
 //------------------------CLIENT MESSAGEBOARD ACTIONS COMMANDS-------------------//
 
@@ -65,7 +157,7 @@ routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     return;
 });
 
-routerRemoteMessageBoard.post('/pinPost/', async (req, res) => {    
+routerRemoteMessageBoard.post('/pinPost/', async (req, res) => {
     if (!req.body.postid || req.body.postid == null) { res.end(); return; };    
     let postid = JSON.parse(req.body.postid);
     if (!Number.isInteger(postid)) {res.end();return;};

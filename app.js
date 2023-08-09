@@ -185,7 +185,7 @@ app.get('/', async (req, res) => {
   if (req.session != null) {session = req.session};  
 
   if (session.userid) {
-    res.redirect('./app');
+    res.redirect('./');
     return;
   } else {
     res.render('login.ejs', {      
@@ -195,8 +195,15 @@ app.get('/', async (req, res) => {
   }
 });
 
+app.get("/login", async (req,res) => {
+  const clientIp = req.headers['x-forwarded-for'];
+  res.render('login.ejs', {
+    message: messageUi.loginMessage
+  });
+});
+
 app.post("/login", async (req, res) => {
-  const clientIp = req.headers['x-forwarded-for'];  
+  const clientIp = req.headers['x-forwarded-for'];
   if (!req.body.username || !req.body.password) {
     res.redirect('./');    
     clientLogger.clientAttempted(`
@@ -219,6 +226,7 @@ app.post("/login", async (req, res) => {
 
 async function loginAction(req, res, reply, user, password) {
   const clientIp = req.headers['x-forwarded-for'];
+  console.log(req.baseUrl);
   if (reply[0] == 0) {
     // console.log("LOGIN ATTAMPTED WITH WRONG USERNAME");
     clientLogger.clientAttempted(`
@@ -239,11 +247,12 @@ async function loginAction(req, res, reply, user, password) {
     res.redirect('./?' + query);
     return;
   } // WRONG PASS
-  if (reply[0] == 2) {    
+  if (reply[0] == 2) {
     const token = generateAccessToken({ user: user });
     session = req.session;
     let sessionName = req.cookies.sessionName;
-    session.userid = req.body.username;    
+    session.userid = user;
+    // session.userid = req.body.username;
     const userClass = await db.getUserClassByName(session.userid);
     session.userclass = Number(userClass);    
     const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
@@ -258,8 +267,53 @@ async function loginAction(req, res, reply, user, password) {
     res.redirect('./');
     return;
   }// LOGIN OK
+  if (reply[0] == 3) {    
+    const token = generateAccessToken({ user: user });
+    session = req.session;
+    let sessionName = req.cookies.sessionName;
+    session.userid = user;
+    // session.userid = req.body.username;
+    const userClass = await db.getUserClassByName(session.userid);
+    session.userclass = Number(userClass);    
+    const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
+    session.sessionid = Number(sessionStore);
+    clientLogger.clientLogin(`
+    CLIENT: ${user}
+    CLASS: ${userClass}
+    SESSION ID: ${session.sessionid}
+    CLIENT IP: ${clientIp}
+    `);
+    // if(userClass==120){res.redirect('./remoteMboard/');return;}
+    // console.log('going there');    
+    res.redirect('./remoteMboard/');
+    return;
+  }// LOGIN OK
   return;
-}
+};
+
+app.get('/tempLogin', async (req, res) => {
+  // console.log(req.hostname);
+  // console.log(req.query.token);
+  let token = 'gsdgwg4t24t249358762h87686';
+
+  if(req.query.token !== null || typeof req.query.token !== 'undefined'){
+    // console.log(req.query.token);
+    let token = req.query.token;
+    const user = 'pubpub';
+    const password = '12341234';
+    if(token==token){
+      // console.log("login to specific");
+      let dbResponse = await db.userLogin(user,password);
+      // console.log("got db response");
+      // console.log(dbResponse);
+      loginAction(req, res,'3',user,password);      
+      return;
+    };
+  };
+  // console.log("fail");
+  return;
+});
+
 
 app.get("/logout", async (req, res) => {
   if (req.session == null) { res.sendStatus(403); return; }

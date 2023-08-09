@@ -211,6 +211,8 @@ async function checkUserExist(user) {
 };
 
 exports.getUserClassByName = async function getUserClassByName(user) {
+  // console.log('user');
+  // console.log(user);
   const sql = (`SELECT class FROM ${tableUsers} WHERE user = '${user}';`)
   let userClass = await pool.query(sql);
   userClass = userClass[0].class;
