@@ -190,7 +190,7 @@ app.get('/', async (req, res) => {
   if (req.session != null) {session = req.session};  
 
   if (session.userid) {
-    res.redirect('./');
+    res.redirect('./app');
     return;
   } else {
     res.render('login.ejs', {      
