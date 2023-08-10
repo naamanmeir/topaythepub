@@ -300,10 +300,44 @@ app.get('/tempLogin', async (req, res) => {
     let valid = await db.dbFindToken(tokenClient);
     if(valid){
       console.log("login to specific");
-      const user = 'pubpub';
-      const password = '12341234';
+      const user = 'tempBoard';
+      const password = 'temp1Board2';
       let dbResponse = await db.userLogin(user,password);      
       loginAction(req, res,'3',user,password);
+      let dbRemoveToken = db.dbRemoveToken(tokenClient);
+      let dbRemovePosts = db.dbDeletePostByUsername(77);
+      sendRefreshPostsEventToAllClients();
+      return;
+    }else{
+      console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+      res.status(400);
+      res.send(messageUi.createQrToRemoteBoardLinkExpired);
+      res.end();
+      return;      
+    };
+    console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+    res.status(400);
+    res.send(messageUi.createQrToRemoteBoardLinkExpired);
+    res.end();
+    return;
+  };
+  console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+  res.status(400);
+  res.send(messageUi.createQrToRemoteBoardLinkExpired);
+  res.end();
+  return;
+});
+
+app.get('/tempLoginToApp', async (req, res) => {
+  if(req.query.token !== null || typeof req.query.token !== 'undefined'){    
+    let tokenClient = req.query.token;
+    let valid = await db.dbFindToken(tokenClient);
+    if(valid){
+      console.log("login to specific");
+      const user = 'tempMasof';
+      const password = 'temp1Masof2';
+      let dbResponse = await db.userLogin(user,password);      
+      loginAction(req, res,'2',user,password);
       let dbRemoveToken = db.dbRemoveToken(tokenClient);
       let dbRemovePosts = db.dbDeletePostByUsername(77);
       sendRefreshPostsEventToAllClients();
