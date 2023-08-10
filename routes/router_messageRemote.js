@@ -17,13 +17,26 @@ const MaxPostLength = 400;
 let chatbot = require("../module/outsource/chatbot");
 let photobot =  require("../module/outsource/hug_circulus")
 let translate =  require("../module/outsource/gpt_translate");
+let qrTools =  require("../module/tools/qrTools");
 
 let chatbotCall = messageUi.chatbotName1;
 
 //------------------------CLIENT MESSAGEBOARD UI-------------------//
 
 routerRemoteMessageBoard.get('/', async function (req, res) {
-    res.render('remoteMessage',{
+
+    if (!req || req == null) { res.sendStatus(401).end(); };
+    const clientIp = req.headers['x-forwarded-for'];
+    messageBoardLogger.clientMessageBoard(`
+    LOGIN PAGE VISITED FROM
+    IP: ${clientIp}
+    `);
+  
+    if (req.session != null) {session = req.session};  
+  
+    if (session.userid) {
+    //   res.redirect('./');
+      res.render('remoteMessage',{
         msgHeader:messageUi.remoteMessageBoardHeader,
         msgButtonSend:messageUi.remoteMessageBoardButtonSendMessage,
         msgButtonSendError:messageUi.remoteMessageBoardButtonErrorMessage,
@@ -34,9 +47,23 @@ routerRemoteMessageBoard.get('/', async function (req, res) {
         msgButtonSendError:messageUi.remoteMessageBoardButtonErrorMessage,
         mBoardPlaceHolder:messageUi.mBoardPlaceHolder,
         otherSideIsTypingMessage:messageUi.otherSideIsTypingMessage,
-        photobotIsPaintingMessage:messageUi.photobotIsPainting
+        photobotIsPaintingMessage:messageUi.photobotIsPainting,
+        photobotIsPaintingApaintingMessage:messageUi.photobotIsPaintingPainting
     });
+      return;
+    } else {
+        res.redirect('./');
+      return;
+    }
 });
+
+routerRemoteMessageBoard.get("/login", async (req,res) => {
+    const clientIp = req.headers['x-forwarded-for'];
+    res.render('login.ejs', {
+        cssVariable: "../css/login.css",
+        message: messageUi.loginMessage
+    });
+  });
 
 //------------------------CLIENT MESSAGEBOARD ACTIONS COMMANDS-------------------//
 
@@ -44,9 +71,15 @@ routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
     var post = (req.body.post);
     if(post.length > MaxPostLength){ res.end(); return; };
-    if(findReferences(post,messageUi.chatbotName1Variations)){sendPostToChatbot(post);};
-    if(findReferences(post,messageUi.photobotCodeActivate)==true){sendPostToPhotobot(post);};
+    if(findReferences(post,messageUi.chatbotName1Variations)==true){sendPostToChatbot(post);};
+    if(findReferences(post,messageUi.photobotCodeActivate)==true){sendPostToPhotobot(1,post);};
+    if(findReferences(post,messageUi.photobotCodeActivatePainting)==true){sendPostToPhotobot(2,post);};
     if(findReferences(post,messageUi.photobotCodeActivateItemImage)==true){sendPostToPhotobotItemPhoto(post);};
+    if(findReferences(post,messageUi.createQrToRemoteBoard)==true){createQrToRemoteBoard();};
+    if(findReferences(post,messageUi.createQrToRemoteBoard)==true){
+        createQrToRemoteBoard();
+        req.body.user = 77;
+    };
     var img;    
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
@@ -63,7 +96,7 @@ routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     return;
 });
 
-routerRemoteMessageBoard.post('/pinPost/', async (req, res) => {    
+routerRemoteMessageBoard.post('/pinPost/', async (req, res) => {
     if (!req.body.postid || req.body.postid == null) { res.end(); return; };    
     let postid = JSON.parse(req.body.postid);
     if (!Number.isInteger(postid)) {res.end();return;};
@@ -163,6 +196,48 @@ async function insertPostWithImage(req,res,post,user,image){
     return; 
 };
 
+async function insertPostDirect(post,image,user){
+    if(user==null){user=77;}
+    if(post==null){post='';}
+    if(image==null){image='';}    
+    image = JSON.stringify(image);
+    let dbResponse = await db.dbInsertPost(post,user,image);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED POST DIRECTLY TO BOARD"
+    `);     
+    sendRefreshPostsEventToAllClients();
+    return; 
+};
+
+async function insertImageDirect(image,user){
+    if(user==null){user=77;}
+    if(post==null){post='';}
+    if(image==null){image='';}       
+    image = JSON.stringify(image);
+    let dbResponse = await db.dbInsertPost(post,user,image);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED IMAGE DIRECTLY TO BOARD"
+    `);     
+    sendRefreshPostsEventToAllClients();
+    return; 
+};
+
+async function removePostDirectByUser(user){
+    if(user==null){return;}
+    let dbResponse = await db.dbDeletePostByUsername(user);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED IMAGE DIRECTLY TO BOARD"
+    `);     
+    sendRefreshPostsEventToAllClients();
+    return; 
+};
+
 function findReferences(source,target){
     if(Array.isArray(target)){
         for(let i = 0;i < target.length;i++){
@@ -192,18 +267,25 @@ function findReferencesWithIndex(source,target){
     return -1;
 };
 
-async function sendPostToPhotobot(post){
+async function sendPostToPhotobot(mode,post){
     if(photobot.photobotIsBusy == 1){messageBoardLogger.clientMessageBoard(`"PHOTOBOT BUSY"`);return;};
     let messageStart = findReferencesWithIndex(post,messageUi.photobotCodeActivate);
     messageStart = messageStart+messageUi.photobotCodeActivate.length+1;
     post = post.substring(messageStart);
     photobot.photobotIsBusy = 1;
-    sendPhotobotIsNotPaintingToAllClients();
-    sendPhotobotIsPaintingToAllClients();
+    sendPhotobotIsNotPaintingToAllClients();    
     let inputTranslated = await translate.askForTranslation(post).then((translatedInput)=>{
         return translatedInput;
     });
-    let photobotPhoto = await photobot.askForPhoto(inputTranslated);
+    let photobotPhoto;
+    if(mode==1){
+        sendPhotobotIsPaintingToAllClients();
+        photobotPhoto = await photobot.askForPhoto(1,inputTranslated);
+    };
+    if(mode==2){
+        sendPhotobotIsPaintingApaintingToAllClients();
+        photobotPhoto = await photobot.askForPhoto(2,inputTranslated);
+    };    
     let image = JSON.stringify(photobotPhoto);
     let user = 76;
     post = '';
@@ -224,13 +306,21 @@ async function sendPostToPhotobotItemPhoto(post){
     let messageStart = findReferencesWithIndex(post,messageUi.photobotCodeActivate);
     messageStart = messageStart+messageUi.photobotCodeActivateItemImage.length+1;
     post = post.substring(messageStart);
+    post = post.indexOf(' ') == 0 ? post.substring(1) : post;
+    let isPainting = findReferencesWithIndex(post,messageUi.photobotCodeActivateItemImagePainting);    
+    let mode = (isPainting>=0)? 2:1;
     photobot.photobotIsBusy = 1;
     sendPhotobotIsNotPaintingToAllClients();
-    sendPhotobotIsPaintingToAllClients();
+    if(mode==1) {
+        sendPhotobotIsPaintingToAllClients();
+    };
+    if(mode==2) {
+        sendPhotobotIsPaintingApaintingToAllClients();
+    };  
     let inputTranslated = await translate.askForTranslation(post).then((translatedInput)=>{
         return translatedInput;
     });
-    let photobotPhoto = await photobot.askForPhoto(inputTranslated,1);
+    let photobotPhoto = await photobot.askForPhoto(mode,inputTranslated,1);
     let image = JSON.stringify(photobotPhoto);
     let user = 76;
     post = '';
@@ -300,6 +390,18 @@ async function sendRemoveAllFactsToChatbot(){
     return dbResponse;
 };
 
+async function createQrToRemoteBoard(){
+    let qrImg = await qrTools.createQrToRemoteBoard();
+    qrImg = '../../qrCode/'+qrImg;
+    let qRpost = messageUi.qRmessageToRemoteBoard;
+    insertPostDirect(qRpost,qrImg,77);
+    let time = 3 * 60 * 1000;
+    let timer = setTimeout(()=>{
+        removePostDirectByUser(77)
+    },time);
+    return;
+};
+
 function sendRefreshPostsEventToAllClients(){
     clientEvents.sendEvents("reloadPosts");
     return;
@@ -323,6 +425,12 @@ function sendChatBotIsNotTypingToAllClients(){
 function sendPhotobotIsPaintingToAllClients(){
     // console.log("SENDING EVENT photobotIsPainting");
     clientEvents.sendEvents("photobotIsPainting");
+    return;
+};
+
+function sendPhotobotIsPaintingApaintingToAllClients(){
+    // console.log("SENDING EVENT photobotIsPaintingApainting");
+    clientEvents.sendEvents("photobotIsPaintingApainting");
     return;
 };
 

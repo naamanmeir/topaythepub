@@ -453,7 +453,7 @@ function otherSideIsTyping(act){
             };
             setTimeout(() => {
                 type()
-            },1500);
+            },700);
     };
     if(act==2){
         
@@ -477,7 +477,31 @@ function otherSideIsTyping(act){
             };
             setTimeout(() => {
                 type()
-            },1500);
+            },500);
+    };
+    if(act==3){
+        
+        photobotIsPainting = 1;
+        let i = 0;
+        const txt = photobotIsPaintingApaintingMessage;
+        let speed = Math.random() * (500 - 90) + 90;        
+
+        function type(){        
+            if(photobotIsPainting==0){return;};
+            placeholder = txt.substring(0,i+1);
+            inputElement.setAttribute("placeholder",placeholder);
+            i++;
+            speed = Math.random() * (500 - 90) + 90;
+            if(i>=txt.length){
+                let rndStart = Math.random() * 12;
+                placeholder = "";
+                i=rndStart;
+            };
+            setTimeout(type,speed);            
+            };
+            setTimeout(() => {
+                type()
+            },500);
     };
     if(act==0){        
         inputElement.setAttribute("placeholder",placeholderDefault);
@@ -728,6 +752,9 @@ function eventHandler(event) {
     };
     if (JSON.parse(data) == "photobotIsPainting") {
         otherSideIsTyping(2);
+    };
+    if (JSON.parse(data) == "photobotIsPaintingApainting") {
+        otherSideIsTyping(3);
     };
     if (JSON.parse(data) == "photobotIsNotPainting") {
         otherSideIsNotTyping();

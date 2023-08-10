@@ -15,6 +15,7 @@ const tableOrders = process.env.DB_TABLE_ORDERS;
 const tableProducts = process.env.DB_TABLE_PRODUCTS;
 const tableUsers = process.env.DB_TABLE_USERS;
 const tableSessions = process.env.DB_TABLE_SESSIONS;
+const tableTokens = process.env.DB_TABLE_TOKENS;
 const tablePosts = process.env.DB_TABLE_POSTS;
 const tableFacts = process.env.DB_TABLE_FACTS;
 
@@ -62,6 +63,24 @@ exports.createSessionTable = async function () {
       return results;
     })
   return createSessionTable;
+};
+
+exports.createTokenTable = async function () {
+  let createTokenTable;
+  createTokenTable = pool.query("CREATE TABLE IF NOT EXISTS `" + tableTokens +
+    "`(`taokenId` INT NOT NULL AUTO_INCREMENT," +
+    "`time` DATE ," +
+    "`tokenClass` INT NOT NULL DEFAULT '100'," +
+    "`tokenName` VARCHAR(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'token'," +
+    "`tokenExp` INT NOT NULL DEFAULT '15'," +
+    "`token` TEXT(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin ," +
+    "PRIMARY KEY (`taokenId`));"
+  )
+    .catch((err) => { console.log(err) })
+    .then((results) => {
+      return results;
+    })
+  return createTokenTable;
 };
 
 exports.dbCreateTableClients = async function () {
@@ -211,6 +230,8 @@ async function checkUserExist(user) {
 };
 
 exports.getUserClassByName = async function getUserClassByName(user) {
+  // console.log('user');
+  // console.log(user);
   const sql = (`SELECT class FROM ${tableUsers} WHERE user = '${user}';`)
   let userClass = await pool.query(sql);
   userClass = userClass[0].class;
@@ -240,6 +261,33 @@ exports.removeSession = async function removeSession(sessionId) {
   const sql = (`DELETE FROM ${tableSessions} WHERE sessionId = '${sessionId}';`);
   let removeSession = await pool.query(sql);
   return removeSession;
+};
+
+//-------------------------------LOGIN TOKENS----------------//
+
+exports.dbInsertToken = async function (token,tokenClass,tokenName,tokenExp){  
+  if (tokenClass == null){tokenClass=100};  
+  let sql = ('INSERT INTO '+tableTokens+' (token, tokenClass, tokenName, tokenExp) VALUES (?);');
+  let values = [
+    [token,tokenClass,tokenName,tokenExp]
+  ];
+  let messageReturn = await pool.query(sql,values);
+  return messageReturn;
+};
+
+exports.dbFindToken = async function(token){
+  const sql = (`SELECT taokenId FROM ${tableTokens} WHERE token = '${token}'`);
+  let results = await pool.query(sql);  
+  let foundResults = results.length;
+  let valid = (foundResults === 1); 
+  let sessionUserId = results.userId; 
+  return valid;
+};
+
+exports.dbRemoveToken = async function(token) {
+  const sql = (`DELETE FROM ${tableTokens} WHERE token = '${token}';`);
+  let removeToken = await pool.query(sql);
+  return removeToken;
 };
 
 //-----------------------GET PRODUCTS IF YESH----------------------//
@@ -869,6 +917,12 @@ exports.dbDeletePostById = async function (postid){
   return messageReturn;
 };
 
+exports.dbDeletePostByUsername = async function (user){  
+  let sql = ('DELETE FROM '+tablePosts+' WHERE user = '+user+';');  
+  let messageReturn = await pool.query(sql);
+  return messageReturn;
+};
+
 //-------------------------CHATBOT FACTS----------------------//
 exports.dbInsertFact = async function (fact,level){  
   if (level == null){level=0};  
@@ -913,4 +967,5 @@ exports.dbGetDisplayInfoByClient = async function(){
   let messageReturn = await pool.query(sql);
   return messageReturn;
 };
+
 

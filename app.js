@@ -33,12 +33,14 @@ const rateLimitMain = rateLimit({
   }
 });
 
+const startupTools = require('./module/tools/startupClean.js');
 const db = require('./db.js');
 const functions = require('./functions.js');
 const generateAccessToken = require("./module/session/tokenGen");
 const validateToken = require("./module/session/tokenVal");
 const sessionClassMW = require("./module/session/sessionClass.js");
 const validatorClient = require("./module/input/inputValidatorClient.js");
+const clientEvents = require('./routes/router_client_events');
 // const rateLimitMiddle = require("./module/input/inputThresh.js");
 const {errorLogger,clientLogger,actionsLogger,ordersLogger} = require('./module/logger');
 
@@ -55,6 +57,7 @@ const routerClientEvents = require('./routes/router_client_events');
 const routerApp = require('./routes/router_app');
 const routerMessageBoard = require('./routes/router_messageBoard');
 const routerRemoteMessageBoard = require('./routes/router_messageRemote');
+
 
 const appPort = process.env.APP_PORT;
 const appName = process.env.APP_NAME;
@@ -140,6 +143,7 @@ app.use('/css', express.static(__dirname + '/public/css'));
 app.use('/js', sessionClassMW(120), express.static(__dirname + '/public/js'));
 app.use('/img', sessionClassMW(120), express.static(__dirname + '/public/img'));
 app.use('/photobot', express.static(__dirname + '/public/img/photobot'));
+app.use('/qrCode', sessionClassMW(120), express.static(__dirname + '/public/img/qrCode'));
 app.use('/posts', sessionClassMW(120), express.static(__dirname + '/public/img/posts'));
 app.use('/fonts', sessionClassMW(120), express.static(__dirname + '/public/fonts'));
 app.use('/report', sessionClassMW(120), express.static(__dirname + '/public/report'));
@@ -160,6 +164,7 @@ function getSimpleTime() {
 async function dbInit() {  
   await db.createUserTable();
   await db.createSessionTable();
+  await db.createTokenTable();
   await db.dbCreateTableClients();
   await db.dbCreateTableOrders();
   await db.dbCreateTableProducts();
@@ -185,7 +190,7 @@ app.get('/', async (req, res) => {
   if (req.session != null) {session = req.session};  
 
   if (session.userid) {
-    res.redirect('./app');
+    res.redirect('./');
     return;
   } else {
     res.render('login.ejs', {      
@@ -195,8 +200,15 @@ app.get('/', async (req, res) => {
   }
 });
 
+app.get("/login", async (req,res) => {
+  const clientIp = req.headers['x-forwarded-for'];
+  res.render('login.ejs', {
+    message: messageUi.loginMessage
+  });
+});
+
 app.post("/login", async (req, res) => {
-  const clientIp = req.headers['x-forwarded-for'];  
+  const clientIp = req.headers['x-forwarded-for'];
   if (!req.body.username || !req.body.password) {
     res.redirect('./');    
     clientLogger.clientAttempted(`
@@ -219,6 +231,7 @@ app.post("/login", async (req, res) => {
 
 async function loginAction(req, res, reply, user, password) {
   const clientIp = req.headers['x-forwarded-for'];
+  console.log(req.baseUrl);
   if (reply[0] == 0) {
     // console.log("LOGIN ATTAMPTED WITH WRONG USERNAME");
     clientLogger.clientAttempted(`
@@ -239,11 +252,12 @@ async function loginAction(req, res, reply, user, password) {
     res.redirect('./?' + query);
     return;
   } // WRONG PASS
-  if (reply[0] == 2) {    
+  if (reply[0] == 2) {
     const token = generateAccessToken({ user: user });
     session = req.session;
     let sessionName = req.cookies.sessionName;
-    session.userid = req.body.username;    
+    session.userid = user;
+    // session.userid = req.body.username;
     const userClass = await db.getUserClassByName(session.userid);
     session.userclass = Number(userClass);    
     const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
@@ -258,8 +272,61 @@ async function loginAction(req, res, reply, user, password) {
     res.redirect('./');
     return;
   }// LOGIN OK
+  if (reply[0] == 3) {    
+    const token = generateAccessToken({ user: user });
+    session = req.session;
+    let sessionName = req.cookies.sessionName;
+    session.userid = user;
+    // session.userid = req.body.username;
+    const userClass = await db.getUserClassByName(session.userid);
+    session.userclass = Number(userClass);    
+    const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
+    session.sessionid = Number(sessionStore);
+    clientLogger.clientLogin(`
+    CLIENT: ${user}
+    CLASS: ${userClass}
+    SESSION ID: ${session.sessionid}
+    CLIENT IP: ${clientIp}
+    `);
+    res.redirect('./remoteMboard/');
+    return;
+  }// LOGIN OK
   return;
-}
+};
+
+app.get('/tempLogin', async (req, res) => {
+  if(req.query.token !== null || typeof req.query.token !== 'undefined'){    
+    let tokenClient = req.query.token;
+    let valid = await db.dbFindToken(tokenClient);
+    if(valid){
+      console.log("login to specific");
+      const user = 'pubpub';
+      const password = '12341234';
+      let dbResponse = await db.userLogin(user,password);      
+      loginAction(req, res,'3',user,password);
+      let dbRemoveToken = db.dbRemoveToken(tokenClient);
+      let dbRemovePosts = db.dbDeletePostByUsername(77);
+      sendRefreshPostsEventToAllClients();
+      return;
+    }else{
+      console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+      res.status(400);
+      res.send(messageUi.createQrToRemoteBoardLinkExpired);
+      res.end();
+      return;      
+    };
+    console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+    res.status(400);
+    res.send(messageUi.createQrToRemoteBoardLinkExpired);
+    res.end();
+    return;
+  };
+  console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+  res.status(400);
+  res.send(messageUi.createQrToRemoteBoardLinkExpired);
+  res.end();
+  return;
+});
 
 app.get("/logout", async (req, res) => {
   if (req.session == null) { res.sendStatus(403); return; }
@@ -298,6 +365,10 @@ function getTime(){
   return new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
 };
 
+function sendRefreshPostsEventToAllClients(){
+  clientEvents.sendEvents("reloadPosts");
+  return;
+};
 
 //-----A simple dataSource that changes over time-----------------//
 let dataSource = 0;

@@ -17,6 +17,7 @@ const MaxPostLength = 400;
 let chatbot = require("../module/outsource/chatbot");
 let photobot =  require("../module/outsource/hug_circulus")
 let translate =  require("../module/outsource/gpt_translate");
+let qrTools =  require("../module/tools/qrTools");
 
 let chatbotCall = messageUi.chatbotName1;
 
@@ -60,9 +61,14 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     if(findReferences(post,messageUi.chatbotName1Variations)==true){sendPostToChatbot(post);};
     if(findReferences(post,messageUi.photobotCodeActivate)==true){sendPostToPhotobot(1,post);};
     if(findReferences(post,messageUi.photobotCodeActivatePainting)==true){sendPostToPhotobot(2,post);};
-    if(findReferences(post,messageUi.photobotCodeActivateItemImage)==true){sendPostToPhotobotItemPhoto(post);};    
+    if(findReferences(post,messageUi.photobotCodeActivateItemImage)==true){sendPostToPhotobotItemPhoto(post);};
+    if(findReferences(post,messageUi.createQrToRemoteBoard)==true){
+        createQrToRemoteBoard();
+        req.body.user = 77;
+    };
     var img;
-    let dbResponse = await db.dbInsertPost(post,null,img);
+    let user = req.body.user;
+    let dbResponse = await db.dbInsertPost(post,user,img);
     var funcTime = getTime();
     messageBoardLogger.clientMessageBoard(`
     time: ${funcTime} 
@@ -77,7 +83,7 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
     return;
 });
 
-routerMessageBoard.post('/pinPost/', async (req, res) => {    
+routerMessageBoard.post('/pinPost/', async (req, res) => {
     if (!req.body.postid || req.body.postid == null) { res.end(); return; };    
     let postid = JSON.parse(req.body.postid);
     if (!Number.isInteger(postid)) {res.end();return;};
@@ -99,7 +105,7 @@ routerMessageBoard.post('/pinPost/', async (req, res) => {
     return;
 });
 
-routerMessageBoard.post('/deletePost/', async (req, res) => {    
+routerMessageBoard.post('/deletePost/', async (req, res) => {
     if (!req.body.postid || req.body.postid == null) { res.end(); return; };    
     let postid = JSON.parse(req.body.postid);
     if (!Number.isInteger(postid)) {res.end();return;};
@@ -177,6 +183,48 @@ async function insertPostWithImage(req,res,post,user,image){
     return; 
 };
 
+async function insertPostDirect(post,image,user){
+    if(user==null){user=77;}
+    if(post==null){post='';}
+    if(image==null){image='';}    
+    image = JSON.stringify(image);
+    let dbResponse = await db.dbInsertPost(post,user,image);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED POST DIRECTLY TO BOARD"
+    `);     
+    sendRefreshPostsEventToAllClients();
+    return; 
+};
+
+async function insertImageDirect(image,user){
+    if(user==null){user=77;}
+    if(post==null){post='';}
+    if(image==null){image='';}       
+    image = JSON.stringify(image);
+    let dbResponse = await db.dbInsertPost(post,user,image);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED IMAGE DIRECTLY TO BOARD"
+    `);     
+    sendRefreshPostsEventToAllClients();
+    return; 
+};
+
+async function removePostDirectByUser(user){
+    if(user==null){return;}
+    let dbResponse = await db.dbDeletePostByUsername(user);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "DELETE POST DIRECTLY FROM BOARD"
+    `);     
+    sendRefreshPostsEventToAllClients();
+    return; 
+};
+
 function findReferences(source,target){
     if(Array.isArray(target)){
         for(let i = 0;i < target.length;i++){
@@ -190,7 +238,7 @@ function findReferences(source,target){
     return false;
 };
 
-function findReferencesWithIndex(source,target){      
+function findReferencesWithIndex(source,target){
     if(Array.isArray(target)){
         for(let i = 0;i < target.length;i++){
             let find =  source.search(target[i]);
@@ -212,16 +260,17 @@ async function sendPostToPhotobot(mode,post){
     messageStart = messageStart+messageUi.photobotCodeActivate.length+1;
     post = post.substring(messageStart);
     photobot.photobotIsBusy = 1;
-    sendPhotobotIsNotPaintingToAllClients();
-    sendPhotobotIsPaintingToAllClients();
+    sendPhotobotIsNotPaintingToAllClients();    
     let inputTranslated = await translate.askForTranslation(post).then((translatedInput)=>{
         return translatedInput;
     });
     let photobotPhoto;
     if(mode==1){
+        sendPhotobotIsPaintingToAllClients();
         photobotPhoto = await photobot.askForPhoto(1,inputTranslated);
     };
     if(mode==2){
+        sendPhotobotIsPaintingApaintingToAllClients();
         photobotPhoto = await photobot.askForPhoto(2,inputTranslated);
     };    
     let image = JSON.stringify(photobotPhoto);
@@ -246,10 +295,15 @@ async function sendPostToPhotobotItemPhoto(post){
     post = post.substring(messageStart);
     post = post.indexOf(' ') == 0 ? post.substring(1) : post;
     let isPainting = findReferencesWithIndex(post,messageUi.photobotCodeActivateItemImagePainting);    
-    let mode = (isPainting>=0)? 2:1;
+    let mode = (isPainting>=0)? 2:1;    
     photobot.photobotIsBusy = 1;
     sendPhotobotIsNotPaintingToAllClients();
-    sendPhotobotIsPaintingToAllClients();
+    if(mode==1) {
+        sendPhotobotIsPaintingToAllClients();
+    };
+    if(mode==2) {
+        sendPhotobotIsPaintingApaintingToAllClients();
+    };    
     let inputTranslated = await translate.askForTranslation(post).then((translatedInput)=>{
         return translatedInput;
     });
@@ -308,19 +362,31 @@ async function sendPostToChatbot(post){
     return;
 };
 
-async function sendFactToChatbot(fact){    
+async function sendFactToChatbot(fact){
     let dbResponse = db.dbInsertFact(fact);
     return dbResponse;
 };
 
-async function sendRemoveFactToChatbot(fact){    
+async function sendRemoveFactToChatbot(fact){
     let dbResponse = db.dbRemoveFact(fact);
     return dbResponse;
 };
 
-async function sendRemoveAllFactsToChatbot(){    
+async function sendRemoveAllFactsToChatbot(){
     let dbResponse = db.dbRemoveAllFacts();
     return dbResponse;
+};
+
+async function createQrToRemoteBoard(){
+    let qrImg = await qrTools.createQrToRemoteBoard();
+    qrImg = '../qrCode/'+qrImg;
+    let qRpost = messageUi.qRmessageToRemoteBoard;
+    insertPostDirect(qRpost,qrImg,77);
+    let time = 3 * 60 * 1000;
+    let timer = setTimeout(()=>{
+        removePostDirectByUser(77)
+    },time);
+    return;
 };
 
 function sendRefreshPostsEventToAllClients(){
@@ -348,6 +414,12 @@ function sendChatBotIsNotTypingToAllClients(){
 function sendPhotobotIsPaintingToAllClients(){
     // console.log("SENDING EVENT photobotIsPainting");
     clientEvents.sendEvents("photobotIsPainting");
+    return;
+};
+
+function sendPhotobotIsPaintingApaintingToAllClients(){
+    // console.log("SENDING EVENT photobotIsPaintingApainting");
+    clientEvents.sendEvents("photobotIsPaintingApainting");
     return;
 };
 

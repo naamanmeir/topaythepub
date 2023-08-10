@@ -113,12 +113,15 @@
             "chatbotForgetCode": "תשכח",
             "chatbotForgetEverythingCode": "תשכח הכלהכלהכלהכלהכל אבל הכל ממש",
             "otherSideIsTypingMessage": "דייויד כותב...✍...🤔...📡",
-            "photobotIsPainting": " 🎶 מצייר תמונה 📻 ",
-            "photobotIsPaintingPainting": " 🎶 מצייר ציור 📻 ",
+            "photobotIsPainting": "📷מצייר תמונה📸✂📊💾📡🎶",
+            "photobotIsPaintingPainting": "🎨מצייר ציור🎨🎶.🎨.🎨.📩",
             "photobotCodeActivate": "צייר לי תמונה של",
             "photobotCodeActivatePainting": "צייר לי ציור של",
             "photobotCodeActivateItemImage": "צייר לי מוצר שנראה כמו",
-            "photobotCodeActivateItemImagePainting": "ציור של"
+            "photobotCodeActivateItemImagePainting": "ציור של",
+            "createQrToRemoteBoard": "הצג קישור ללוח מודעות",
+            "qRmessageToRemoteBoard": "קישור חד פעמי זה תקף למשך 3 דקות מעכשיו , ומאפשר התחברות עד מחר בערך",
+            "createQrToRemoteBoardLinkExpired": "תוקף קישור זה פג אז זהו הקיצר איפשר לכנס צריך לנסות שוב לאיודע תעשו אחורה או משהו תנסו שוב עזבו אותכם קחו קצת פופקורן ביד ולכו לעשן בחוץ"
         }
     ],
     "sideMenu": [
