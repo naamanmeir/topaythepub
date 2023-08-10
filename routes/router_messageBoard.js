@@ -66,6 +66,10 @@ routerMessageBoard.post('/insertPost/', async (req, res) => {
         createQrToRemoteBoard();
         req.body.user = 77;
     };
+    if(findReferences(post,messageUi.createQrToRemoteApp)==true){
+        createQrToRemoteApp();
+        req.body.user = 77;
+    };
     var img;
     let user = req.body.user;
     let dbResponse = await db.dbInsertPost(post,user,img);
@@ -379,6 +383,19 @@ async function sendRemoveAllFactsToChatbot(){
 
 async function createQrToRemoteBoard(){
     let qrImg = await qrTools.createQrToRemoteBoard();
+    qrImg = '../qrCode/'+qrImg;
+    let qRpost = messageUi.qRmessageToRemoteBoard;
+    insertPostDirect(qRpost,qrImg,77);
+    let time = 3 * 60 * 1000;
+    let timer = setTimeout(()=>{
+        removePostDirectByUser(77)
+    },time);
+    return;
+};
+
+async function createQrToRemoteApp(){
+    console.log("dddddddddddddd");
+    let qrImg = await qrTools.createQrToRemoteApp();
     qrImg = '../qrCode/'+qrImg;
     let qRpost = messageUi.qRmessageToRemoteBoard;
     insertPostDirect(qRpost,qrImg,77);
