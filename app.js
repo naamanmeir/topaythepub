@@ -33,12 +33,14 @@ const rateLimitMain = rateLimit({
   }
 });
 
+const startupTools = require('./module/tools/startupClean.js');
 const db = require('./db.js');
 const functions = require('./functions.js');
 const generateAccessToken = require("./module/session/tokenGen");
 const validateToken = require("./module/session/tokenVal");
 const sessionClassMW = require("./module/session/sessionClass.js");
 const validatorClient = require("./module/input/inputValidatorClient.js");
+const clientEvents = require('./routes/router_client_events');
 // const rateLimitMiddle = require("./module/input/inputThresh.js");
 const {errorLogger,clientLogger,actionsLogger,ordersLogger} = require('./module/logger');
 
@@ -55,6 +57,7 @@ const routerClientEvents = require('./routes/router_client_events');
 const routerApp = require('./routes/router_app');
 const routerMessageBoard = require('./routes/router_messageBoard');
 const routerRemoteMessageBoard = require('./routes/router_messageRemote');
+
 
 const appPort = process.env.APP_PORT;
 const appName = process.env.APP_NAME;
@@ -140,6 +143,7 @@ app.use('/css', express.static(__dirname + '/public/css'));
 app.use('/js', sessionClassMW(120), express.static(__dirname + '/public/js'));
 app.use('/img', sessionClassMW(120), express.static(__dirname + '/public/img'));
 app.use('/photobot', express.static(__dirname + '/public/img/photobot'));
+app.use('/qrCode', sessionClassMW(120), express.static(__dirname + '/public/img/qrCode'));
 app.use('/posts', sessionClassMW(120), express.static(__dirname + '/public/img/posts'));
 app.use('/fonts', sessionClassMW(120), express.static(__dirname + '/public/fonts'));
 app.use('/report', sessionClassMW(120), express.static(__dirname + '/public/report'));
@@ -160,6 +164,7 @@ function getSimpleTime() {
 async function dbInit() {  
   await db.createUserTable();
   await db.createSessionTable();
+  await db.createTokenTable();
   await db.dbCreateTableClients();
   await db.dbCreateTableOrders();
   await db.dbCreateTableProducts();
@@ -283,8 +288,6 @@ async function loginAction(req, res, reply, user, password) {
     SESSION ID: ${session.sessionid}
     CLIENT IP: ${clientIp}
     `);
-    // if(userClass==120){res.redirect('./remoteMboard/');return;}
-    // console.log('going there');    
     res.redirect('./remoteMboard/');
     return;
   }// LOGIN OK
@@ -292,28 +295,38 @@ async function loginAction(req, res, reply, user, password) {
 };
 
 app.get('/tempLogin', async (req, res) => {
-  // console.log(req.hostname);
-  // console.log(req.query.token);
-  let token = 'gsdgwg4t24t249358762h87686';
-
-  if(req.query.token !== null || typeof req.query.token !== 'undefined'){
-    // console.log(req.query.token);
-    let token = req.query.token;
-    const user = 'pubpub';
-    const password = '12341234';
-    if(token==token){
-      // console.log("login to specific");
-      let dbResponse = await db.userLogin(user,password);
-      // console.log("got db response");
-      // console.log(dbResponse);
-      loginAction(req, res,'3',user,password);      
+  if(req.query.token !== null || typeof req.query.token !== 'undefined'){    
+    let tokenClient = req.query.token;
+    let valid = await db.dbFindToken(tokenClient);
+    if(valid){
+      console.log("login to specific");
+      const user = 'pubpub';
+      const password = '12341234';
+      let dbResponse = await db.userLogin(user,password);      
+      loginAction(req, res,'3',user,password);
+      let dbRemoveToken = db.dbRemoveToken(tokenClient);
+      let dbRemovePosts = db.dbDeletePostByUsername(77);
+      sendRefreshPostsEventToAllClients();
       return;
+    }else{
+      console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+      res.status(400);
+      res.send(messageUi.createQrToRemoteBoardLinkExpired);
+      res.end();
+      return;      
     };
+    console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+    res.status(400);
+    res.send(messageUi.createQrToRemoteBoardLinkExpired);
+    res.end();
+    return;
   };
-  // console.log("fail");
+  console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+  res.status(400);
+  res.send(messageUi.createQrToRemoteBoardLinkExpired);
+  res.end();
   return;
 });
-
 
 app.get("/logout", async (req, res) => {
   if (req.session == null) { res.sendStatus(403); return; }
@@ -352,6 +365,10 @@ function getTime(){
   return new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
 };
 
+function sendRefreshPostsEventToAllClients(){
+  clientEvents.sendEvents("reloadPosts");
+  return;
+};
 
 //-----A simple dataSource that changes over time-----------------//
 let dataSource = 0;

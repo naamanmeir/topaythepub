@@ -17,6 +17,7 @@ const MaxPostLength = 400;
 let chatbot = require("../module/outsource/chatbot");
 let photobot =  require("../module/outsource/hug_circulus")
 let translate =  require("../module/outsource/gpt_translate");
+let qrTools =  require("../module/tools/qrTools");
 
 let chatbotCall = messageUi.chatbotName1;
 
@@ -64,73 +65,6 @@ routerRemoteMessageBoard.get("/login", async (req,res) => {
     });
   });
 
-// routerRemoteMessageBoard.post("/login/", async (req, res) => {
-//     console.log("REMOTE BOARD LOGIN PAGE");
-//     const clientIp = req.headers['x-forwarded-for'];
-//     if (!req.body.username || !req.body.password) {
-//       res.redirect('./');    
-//       messageBoardLogger.clientMessageBoard(`
-//       LOGIN ATTAMPTED WITH NO DETAILS
-//       IP: ${clientIp}
-//       `);
-//       return;
-//     }
-//     if (!validator.isAlphanumeric(req.body.username)) { console.log("USERNAME NOT VALID"); loginAction(req, res, 0, null, null); return; }
-//     if (!validator.isAlphanumeric(req.body.password)) { console.log("PASSWORD NOT VALID"); loginAction(req, res, 1, null, null); return; }
-  
-//     const user = req.body.username;
-//     const password = req.body.password;  
-  
-//     let dbResponse = await db.userLogin(user, password);
-  
-//     loginAction(req, res, dbResponse,user,password);
-//     return;
-// });
-  
-// async function loginAction(req, res, reply, user, password) {
-//     const clientIp = req.headers['x-forwarded-for'];
-//     if (reply[0] == 0) {
-//       // console.log("LOGIN ATTAMPTED WITH WRONG USERNAME");
-//       messageBoardLogger.clientMessageBoard(`
-//       LOGIN ATTAMPTED WITH WRONG USERNAME
-//       IP: ${clientIp}
-//       `);
-//       const query = querystring.stringify({ "message": "username invalid" });
-//       res.redirect('./?' + query);
-//       return;
-//     } // WRONG USER
-//     if (reply[0] == 1) {
-//       // console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD");
-//       messageBoardLogger.clientMessageBoard(`
-//       LOGIN ATTAMPTED WITH WRONG PASSWORD
-//       IP: ${clientIp}
-//       `);
-//       const query = querystring.stringify({ "message": "password invalid" });
-//       res.redirect('./?' + query);
-//       return;
-//     } // WRONG PASS
-//     if (reply[0] == 2) {    
-//       const token = generateAccessToken({ user: user });
-//       session = req.session;
-//       let sessionName = req.cookies.sessionName;
-//       session.userid = req.body.username;    
-//       const userClass = await db.getUserClassByName(session.userid);
-//       session.userclass = Number(userClass);    
-//       const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
-//       session.sessionid = Number(sessionStore);
-//       messageBoardLogger.clientMessageBoard(`
-//       CLIENT: ${user}
-//       CLASS: ${userClass}
-//       SESSION ID: ${session.sessionid}
-//       CLIENT IP: ${clientIp}
-//       `);
-//     //   if(userClass==120){res.redirect('./remoteMboard/');return;}
-//       res.redirect('./');
-//       return;
-//     }// LOGIN OK
-//     return;
-// };
-
 //------------------------CLIENT MESSAGEBOARD ACTIONS COMMANDS-------------------//
 
 routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
@@ -141,6 +75,11 @@ routerRemoteMessageBoard.post('/insertPost/', async (req, res) => {
     if(findReferences(post,messageUi.photobotCodeActivate)==true){sendPostToPhotobot(1,post);};
     if(findReferences(post,messageUi.photobotCodeActivatePainting)==true){sendPostToPhotobot(2,post);};
     if(findReferences(post,messageUi.photobotCodeActivateItemImage)==true){sendPostToPhotobotItemPhoto(post);};
+    if(findReferences(post,messageUi.createQrToRemoteBoard)==true){createQrToRemoteBoard();};
+    if(findReferences(post,messageUi.createQrToRemoteBoard)==true){
+        createQrToRemoteBoard();
+        req.body.user = 77;
+    };
     var img;    
     let dbResponse = await db.dbInsertPost(post,null,img);
     var funcTime = getTime();
@@ -253,6 +192,48 @@ async function insertPostWithImage(req,res,post,user,image){
     // let html = renderMessageBoard.buildHtml(messageUi,posts);
     // res.json(html);
     res.end();
+    sendRefreshPostsEventToAllClients();
+    return; 
+};
+
+async function insertPostDirect(post,image,user){
+    if(user==null){user=77;}
+    if(post==null){post='';}
+    if(image==null){image='';}    
+    image = JSON.stringify(image);
+    let dbResponse = await db.dbInsertPost(post,user,image);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED POST DIRECTLY TO BOARD"
+    `);     
+    sendRefreshPostsEventToAllClients();
+    return; 
+};
+
+async function insertImageDirect(image,user){
+    if(user==null){user=77;}
+    if(post==null){post='';}
+    if(image==null){image='';}       
+    image = JSON.stringify(image);
+    let dbResponse = await db.dbInsertPost(post,user,image);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED IMAGE DIRECTLY TO BOARD"
+    `);     
+    sendRefreshPostsEventToAllClients();
+    return; 
+};
+
+async function removePostDirectByUser(user){
+    if(user==null){return;}
+    let dbResponse = await db.dbDeletePostByUsername(user);
+    var funcTime = getTime();
+    messageBoardLogger.clientMessageBoard(`
+    time: ${funcTime} 
+    "INSERTED IMAGE DIRECTLY TO BOARD"
+    `);     
     sendRefreshPostsEventToAllClients();
     return; 
 };
@@ -407,6 +388,18 @@ async function sendRemoveFactToChatbot(fact){
 async function sendRemoveAllFactsToChatbot(){    
     let dbResponse = db.dbRemoveAllFacts();
     return dbResponse;
+};
+
+async function createQrToRemoteBoard(){
+    let qrImg = await qrTools.createQrToRemoteBoard();
+    qrImg = '../../qrCode/'+qrImg;
+    let qRpost = messageUi.qRmessageToRemoteBoard;
+    insertPostDirect(qRpost,qrImg,77);
+    let time = 3 * 60 * 1000;
+    let timer = setTimeout(()=>{
+        removePostDirectByUser(77)
+    },time);
+    return;
 };
 
 function sendRefreshPostsEventToAllClients(){
