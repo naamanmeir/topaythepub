@@ -324,7 +324,7 @@ function postImgFull(imgSrc){
 };
 
 function postSend(){
-    if (postInput.value == ""){return;};
+    if (postInput.value == "" && imageSelector.files[0]==null){return;};
     let img;
     let post = postInput.value;
     if(imageSelector.files[0]!=null){        
@@ -346,7 +346,7 @@ function postSend(){
 };
 
 function postSendImage(){
-    if (postInput.value == ""){return;};    
+    if (postInput.value == "" && imageSelector.files[0]==null){return;};
     let post = postInput.value;
     const formData = new FormData();    
     formData.append("img",imageSelector.files[0]);

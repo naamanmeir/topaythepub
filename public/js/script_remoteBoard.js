@@ -298,16 +298,14 @@ function postImgFull(imgSrc){
 };
 
 function postSend(){
-    if (postInput.value == ""){return;};
-    if (postInput.value.length < 1){return;};
-    if (postInput.value.length > 800){return;};    
+    if (postInput.value == "" && imageSelector.files[0]==null){return;}; 
     let img;
-    let post = postInput.value;
-    if(imageSelector.files[0]!=null){        
+    if(imageSelector.files[0]!=null){
         img = imageSelector.files[0].name;
         postSendImage();
         return;
     }
+    let post = postInput.value;
     let postJSON = JSON.stringify({
         'post': post,
         'img': img
@@ -321,7 +319,7 @@ function postSend(){
 };
 
 function postSendImage(){
-    if (postInput.value == ""){return;};    
+    if (postInput.value == "" && imageSelector.files[0]==null){return;};
     let post = postInput.value;
     const formData = new FormData();    
     formData.append("img",imageSelector.files[0]);
