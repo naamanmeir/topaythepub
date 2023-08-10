@@ -1,7 +1,7 @@
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 5;
 const messageTimeoutTime = 3000;
-const displaySpeed = 9;
+const displaySpeed = 10;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 

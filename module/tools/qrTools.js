@@ -31,7 +31,7 @@ exports.createQrToRemoteBoard = async function(){
   // console.log(dbInsertToken);
   let target = `${link1}?token=${randomString}`
   let date = Date.now();
-  let filename = `remoteBoardQr${date}.png`
+  let filename = `${date}${randomString}.png`
   let qrFile = (__dirname) + (qrFolder)+(filename);    
   let qrData;
   // console.log(target);
