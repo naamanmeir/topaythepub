@@ -133,11 +133,11 @@ exports.dbCreateTableProducts = async function () {
     .then(conn => {
       conn.query("CREATE TABLE IF NOT EXISTS `" + tableProducts +
         "`(`itemid` INT NOT NULL AUTO_INCREMENT," +
-        "`itemnumber` INT NOT NULL DEFAULT '0'," +
+        "`itemorder` INT NOT NULL DEFAULT '1'," +
         "`stock` INT NOT NULL DEFAULT '0'," +
         "`price` INT NOT NULL DEFAULT '10'," +
         "`itemname` CHAR(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'beer'," +
-        "`itemimgpath` VARCHAR(1024) NOT NULL DEFAULT 'img/items/2.png'," +
+        "`itemimgpath` VARCHAR(1024) NOT NULL DEFAULT 'img/items/1.png'," +
         "PRIMARY KEY (`itemid`));"
       )
         .then((results) => { 
@@ -292,14 +292,14 @@ exports.dbRemoveToken = async function(token) {
 
 //-----------------------GET PRODUCTS IF YESH----------------------//
 exports.dbGetProducts = async function () {
-  products = await pool.query("SELECT itemid,itemnumber,itemname,price,itemimgpath,stock FROM " + tableProducts +
-    " WHERE stock > 0 ORDER BY itemid ASC;");
+  products = await pool.query("SELECT * FROM " + tableProducts +
+    " WHERE stock > 0 ORDER BY itemorder ASC;");
   return products;
 };
 
 exports.dbGetProductsAll = async function () {
-  products = await pool.query("SELECT itemid,itemnumber,itemname,price,itemimgpath,stock FROM " + tableProducts +
-    " ORDER BY itemid ASC;");
+  products = await pool.query("SELECT * FROM " + tableProducts +
+    " ORDER BY itemorder ASC;");
   return products;
 };
 
@@ -787,16 +787,19 @@ exports.dbInsertProduct = async function (newProduct) {
 //--------------------EDIT PRODUCT IN DB----------------//
 exports.dbEditProduct = async function (values) {
   console.log("DB EDIT PRODUCT");
-  console.log(values);
+  // console.log(values);
   let productId = values[0];
-  let newName = values[1].replace(/\'/g, "''");;
-  let newPrice = values[2].replace(/\'/g, "''");;
+  let newName = values[1].replace(/\'/g, "''");
+  let newPrice = values[2].replace(/\'/g, "''");
   let newImage = "img/items/" + values[3];
-  let newStock = values[4].replace(/\'/g, "''");;
+  let newStock = values[4].replace(/\'/g, "''");
+  // if(values[5]!=null||typeof values[5]!='undefined'){
+    let newOrder = values[5].replace(/\'/g, "''");
+  // };  
   let editProductRes;
   editProductRes = await pool.query("UPDATE " + tableProducts +
     " SET itemname = '" + newName + "' ,price = '" + newPrice + "' ,itemimgpath = '" + newImage + "' ,stock = '" + newStock +
-    "' WHERE itemid = " + productId + ";")
+    "' ,itemorder = '" + newOrder + "' WHERE itemid = " + productId + ";")
     .catch((err) => {
       console.log(err)
       return ("הייתה תקלה");
@@ -854,7 +857,7 @@ exports.dbGetItemsBought = async function () {
 //----------------------GET PRODUCTS INFO FOR ORDER---------------------//
 
 exports.dbGetProductDetailsById = async function (itemId) {
-  itemDetails = await pool.query(`SELECT itemnumber,itemname,price,itemimgpath FROM ${tableProducts}
+  itemDetails = await pool.query(`SELECT itemorder,itemname,price,itemimgpath FROM ${tableProducts}
  WHERE itemid = ${itemId};`);
   return itemDetails;
 }; 
