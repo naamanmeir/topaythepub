@@ -151,7 +151,8 @@ routerManage.post('/uploadItemImgOld', async (req, res) => {
         });
     });
     functions.itemImgArray();
-    res.send('עלה אבל יש תקלה אז צריך לחזור דף אחורה זהו התמונה שם');
+    // res.send('עלה אבל יש תקלה אז צריך לחזור דף אחורה זהו התמונה שם');
+    res.redirect('referer');
     res.end();
 });
 

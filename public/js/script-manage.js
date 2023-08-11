@@ -7,10 +7,13 @@ let productName;
 let productPrice;
 let productImage;
 let productStock;
+let productOrder;
 let productId;
 
 let progBarDiv;
 let progBar;
+
+let passVerificationCheat = 0;
 
 // ------------  REQUEST MANAGE FUNCTION -------------------------------------//
 
@@ -538,6 +541,7 @@ async function getProducts() {
                 var productDisplay = document.createElement("input");
                 var productPrice = document.createElement("input");
                 var productImage = document.createElement("image");
+                var productOrder = document.createElement("input");
                 // var imageSelect = document.createElement("option"); 
 
                 productImage.innerHTML = `<img src="${table.itemimgpath}"/>`;
@@ -549,35 +553,48 @@ async function getProducts() {
                 productPrice.setAttribute("type", "number");
                 productPrice.setAttribute("min", "0");
                 productPrice.setAttribute("max", "99");
+                productOrder.setAttribute("min", "1");
+                productOrder.setAttribute("type", "number");                                
 
                 productId.value = table.itemid;
+                productOrder.value = table.itemorder;
                 productName.value = table.itemname;
                 productDisplay.checked = (table.stock > 0);
                 productPrice.value = table.price;
                 productPrice.style.width = ("3rem");
+                productOrder.style.width = ("3rem");
 
+                productRow.appendChild(productOrder);
                 productRow.appendChild(productName);
                 productRow.appendChild(productPrice);
                 productRow.appendChild(productImage);
-                productRow.appendChild(productDisplay);
+                productRow.appendChild(productDisplay);                
                 productDiv.appendChild(productRow);
 
                 productName.onchange = function () {
                     editProductFields(
-                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked)
+                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked,productOrder.value)
                 };
                 productPrice.onchange = function () {
                     editProductFields(
-                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked)
+                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked,productOrder.value)
                 };
                 productImage.onchange = function () {
                     editProductFields(
-                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked)
+                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked,productOrder.value)
                 };
                 productDisplay.onchange = function () {
+                    passVerificationCheat=1;
                     editProductFields(
-                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked)
+                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked,productOrder.value)
                 };
+                productOrder.onchange = function () {
+                    passVerificationCheat=1;
+                    console.log(passVerificationCheat)
+                    editProductFields(
+                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked,productOrder.value)                
+                };
+
             });
             products.forEach(table => {
                 var opt = document.createElement("option");
@@ -589,6 +606,10 @@ async function getProducts() {
         }
     };
 };
+
+function changeItemOrder(){
+
+}
 
 function editProductLoad() {
     let itemSelect = document.getElementById("selectProduct");
@@ -602,6 +623,7 @@ function editProductLoad() {
     console.log(products[i].itemname);
     console.log(products[i].price);
     console.log(products[i].stock);
+    console.log(products[i].order);
     productId = products[i].itemid;
     productName = products[i].itemname;
     textName.value = products[i].itemname;
@@ -610,14 +632,15 @@ function editProductLoad() {
     textStock.value = products[i].stock;
 };
 
-function editProductFields(thisProductId, name, price, image, stock) {
+function editProductFields(thisProductId, name, price, image, stock, itemOrder) {
     stock = stock ? 1 : 0;
-    let data = [thisProductId, name, price, image, stock];
+    let data = [thisProductId, name, price, image, stock, itemOrder];
     // console.log(data);
     document.getElementById("productName").value = name;
     document.getElementById("productPrice").value = price;
     document.getElementById("productImage").src = image;
     document.getElementById("productStock").value = stock;
+    document.getElementById("productOrder").value = itemOrder;
     productId = thisProductId;
     productName = name;
     editProduct();
@@ -629,13 +652,21 @@ function editProduct() {
     let newPrice = document.getElementById("productPrice");
     // let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/','').replace('.png','');
     let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/', '');
-    let newStock = document.getElementById("productStock");    
-    let data = [productId, newName.value, newPrice.value, newImage, newStock.value];
+    let newStock = document.getElementById("productStock");
+    let newOrder = document.getElementById("productOrder");
+    let data = [productId, newName.value, newPrice.value, newImage, newStock.value, newOrder.value];
     // console.log(data);
-    if (window.confirm("לערוך נתונים של " + productName + "?")) {
+    if (passVerificationCheat==1) {
         xhttp.open("POST", "./manage/editProduct/" + data, true);
-        xhttp.send();
+        xhttp.send();        
     };
+    if(passVerificationCheat==0){
+        if (window.confirm("לערוך נתונים של " + productName + "?")) {
+            xhttp.open("POST", "./manage/editProduct/" + data, true);
+            xhttp.send();        
+        };
+    };
+    passVerificationCheat=0;
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             editLog(this.response);
