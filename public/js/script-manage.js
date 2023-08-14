@@ -591,6 +591,7 @@ async function getProducts() {
                 productOrder.onchange = function () {
                     passVerificationCheat=1;
                     console.log(passVerificationCheat)
+                    
                     editProductFields(
                         table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked,productOrder.value)                
                 };
