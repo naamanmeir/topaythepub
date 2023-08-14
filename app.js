@@ -22,15 +22,15 @@ var sse = new SSE(["array", "containing", "initial", "content", "(optional)"]);
 //--------------RATE LIMIT------------------------//
 const rateLimit = require('express-rate-limit');
 const rateLimitMain = rateLimit({
-	windowMs: 1 * 15 * 1000,
-	max: 1000,
-	standardHeaders: true,
-	legacyHeaders: false,  
-  handler: function(req,res){
-    console.log(getTime());
-    console.log("--------RATE LIMIT---------");
-    return res.end();
-  }
+    windowMs: 1 * 15 * 1000,
+    max: 1000,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: function(req, res) {
+        console.log(getTime());
+        console.log("--------RATE LIMIT---------");
+        return res.end();
+    }
 });
 
 const startupTools = require('./module/tools/startupClean.js');
@@ -42,7 +42,7 @@ const sessionClassMW = require("./module/session/sessionClass.js");
 const validatorClient = require("./module/input/inputValidatorClient.js");
 const clientEvents = require('./routes/router_client_events');
 // const rateLimitMiddle = require("./module/input/inputThresh.js");
-const {errorLogger,clientLogger,actionsLogger,ordersLogger} = require('./module/logger');
+const { errorLogger, clientLogger, actionsLogger, ordersLogger } = require('./module/logger');
 
 let messagesJson = require('./messages.json');
 let messageUi = messagesJson.ui[0];
@@ -75,45 +75,46 @@ const port = appPort;
 
 app.set('trust proxy', 1);
 
-app.use(express.json({limit: '50mb'}));
+app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: false, limit:'50mb' }));
+app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 
 //--------------SESSION CONFIG------------------------//
 
 const sqlSessionStoreOptions = {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DB,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DB,
 };
 
 const sessionStore = new sqlStore(sqlSessionStoreOptions);
 
 app.use(sessions({
-  name: SESSION_NAME,
-  userid: `userId`,
-  sessionid: ``,
-  secret: ACCESS_TOKEN_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: sessionStore,
-  expires: COOKIE_EXPIRATION,
-  cookie: {
     name: SESSION_NAME,
-    secure: false,
-    httpOnly: true,
-    maxAge: COOKIE_EXPIRATION    
-  }
+    userid: `userId`,
+    sessionid: ``,
+    secret: ACCESS_TOKEN_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
+    expires: COOKIE_EXPIRATION,
+    cookie: {
+        name: SESSION_NAME,
+        secure: false,
+        httpOnly: true,
+        maxAge: COOKIE_EXPIRATION
+    }
 }));
 
-if(!production){
-  sessionStore.onReady().then(() => {
-	console.log('MySQLStore ready');
-  }).catch(error => {
-	console.error(error);
-});};
+if (!production) {
+    sessionStore.onReady().then(() => {
+        console.log('MySQLStore ready');
+    }).catch(error => {
+        console.error(error);
+    });
+};
 
 var session;
 
@@ -121,16 +122,16 @@ let clientsSSE = [];
 
 //--------------HELMET CONFIG------------------------//
 app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-hashes'"],
-        "script-src-attr": ["'self'", "'unsafe-inline'"],
-        "img-src": ["'self'", "blob: https: data:"],
-      },
-    },
-  })
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+                "script-src": ["'self'", "'unsafe-inline'", "'unsafe-hashes'"],
+                "script-src-attr": ["'self'", "'unsafe-inline'"],
+                "img-src": ["'self'", "blob: https: data:"],
+            },
+        },
+    })
 );
 
 app.use(rateLimitMain);
@@ -155,228 +156,237 @@ app.set('views', './views');
 app.set('view engine', 'ejs');
 
 function getSimpleTime() {
-  const now = new Date();
-  const simpleTime = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
-  return simpleTime;
+    const now = new Date();
+    const simpleTime = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+    return simpleTime;
 };
 
 // ---------------------- DB INIT ----------------------------------- //
-async function dbInit() {  
-  await db.createUserTable();
-  await db.createSessionTable();
-  await db.createTokenTable();
-  await db.dbCreateTableClients();
-  await db.dbCreateTableOrders();
-  await db.dbCreateTableProducts();
-  await db.dbCreateTablePosts();
-  await db.dbCreateTableFacts();
+async function dbInit() {
+    await db.createUserTable();
+    await db.createSessionTable();
+    await db.createTokenTable();
+    await db.dbCreateTableClients();
+    await db.dbCreateTableOrders();
+    await db.dbCreateTableProducts();
+    await db.dbCreateTablePosts();
+    await db.dbCreateTableFacts();
 
-  const connectionTestTimeout = setTimeout(callDbStatus, 1000);
-  function callDbStatus() {
-    // db.connectionStatus();
-  };
+    const connectionTestTimeout = setTimeout(callDbStatus, 1000);
+
+    function callDbStatus() {
+        // db.connectionStatus();
+    };
 };
 dbInit();
 
 //------------------------------USER SESSION-------------------------------------//
-app.get('/', async (req, res) => {
-  if (!req || req == null) { res.sendStatus(401).end(); };
-  const clientIp = req.headers['x-forwarded-for'];
-  clientLogger.clientAttempted(`
+app.get('/', async(req, res) => {
+    if (!req || req == null) { res.sendStatus(401).end(); };
+    const clientIp = req.headers['x-forwarded-for'];
+    clientLogger.clientAttempted(`
   LOGIN PAGE VISITED FROM
   IP: ${clientIp}
   `);
 
-  if (req.session != null) {session = req.session};  
+    if (req.session != null) { session = req.session };
 
-  if (session.userid) {
-    res.redirect('./app');
-    return;
-  } else {
-    res.render('login.ejs', {      
-      message: messageUi.loginMessage
+    if (session.userid) {
+        res.redirect('./app');
+        return;
+    } else {
+        res.render('login.ejs', {
+            message: messageUi.loginMessage
+        });
+        return;
+    }
+});
+
+app.get("/login", async(req, res) => {
+    const clientIp = req.headers['x-forwarded-for'];
+    res.render('login.ejs', {
+        message: messageUi.loginMessage
     });
-    return;
-  }
 });
 
-app.get("/login", async (req,res) => {
-  const clientIp = req.headers['x-forwarded-for'];
-  res.render('login.ejs', {
-    message: messageUi.loginMessage
-  });
-});
-
-app.post("/login", async (req, res) => {
-  const clientIp = req.headers['x-forwarded-for'];
-  if (!req.body.username || !req.body.password) {
-    res.redirect('./');    
-    clientLogger.clientAttempted(`
+app.post("/login", async(req, res) => {
+    const clientIp = req.headers['x-forwarded-for'];
+    if (!req.body.username || !req.body.password) {
+        res.redirect('./');
+        clientLogger.clientAttempted(`
     LOGIN ATTAMPTED WITH NO DETAILS
     IP: ${clientIp}
     `);
+        return;
+    }
+    if (!validator.isAlphanumeric(req.body.username)) {
+        console.log("USERNAME NOT VALID");
+        loginAction(req, res, 0, null, null);
+        return;
+    }
+    if (!validator.isAlphanumeric(req.body.password)) {
+        console.log("PASSWORD NOT VALID");
+        loginAction(req, res, 1, null, null);
+        return;
+    }
+
+    const user = req.body.username;
+    const password = req.body.password;
+
+    let dbResponse = await db.userLogin(user, password);
+
+    loginAction(req, res, dbResponse, user, password);
     return;
-  }
-  if (!validator.isAlphanumeric(req.body.username)) { console.log("USERNAME NOT VALID"); loginAction(req, res, 0, null, null); return; }
-  if (!validator.isAlphanumeric(req.body.password)) { console.log("PASSWORD NOT VALID"); loginAction(req, res, 1, null, null); return; }
-
-  const user = req.body.username;
-  const password = req.body.password;  
-
-  let dbResponse = await db.userLogin(user, password);
-
-  loginAction(req, res, dbResponse,user,password);
-  return;
 });
 
 async function loginAction(req, res, reply, user, password) {
-  const clientIp = req.headers['x-forwarded-for'];
-  console.log(req.baseUrl);
-  if (reply[0] == 0) {
-    // console.log("LOGIN ATTAMPTED WITH WRONG USERNAME");
-    clientLogger.clientAttempted(`
+    const clientIp = req.headers['x-forwarded-for'];
+    console.log(req.baseUrl);
+    if (reply[0] == 0) {
+        // console.log("LOGIN ATTAMPTED WITH WRONG USERNAME");
+        clientLogger.clientAttempted(`
     LOGIN ATTAMPTED WITH WRONG USERNAME
     IP: ${clientIp}
     `);
-    const query = querystring.stringify({ "message": "username invalid" });
-    res.redirect('./?' + query);
-    return;
-  } // WRONG USER
-  if (reply[0] == 1) {
-    // console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD");
-    clientLogger.clientAttempted(`
+        const query = querystring.stringify({ "message": "username invalid" });
+        res.redirect('./?' + query);
+        return;
+    } // WRONG USER
+    if (reply[0] == 1) {
+        // console.log("LOGIN ATTAMPTED WITH WRONG PASSWORD");
+        clientLogger.clientAttempted(`
     LOGIN ATTAMPTED WITH WRONG PASSWORD
     IP: ${clientIp}
     `);
-    const query = querystring.stringify({ "message": "password invalid" });
-    res.redirect('./?' + query);
-    return;
-  } // WRONG PASS
-  if (reply[0] == 2) {
-    const token = generateAccessToken({ user: user });
-    session = req.session;
-    let sessionName = req.cookies.sessionName;
-    session.userid = user;
-    // session.userid = req.body.username;
-    const userClass = await db.getUserClassByName(session.userid);
-    session.userclass = Number(userClass);    
-    const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
-    session.sessionid = Number(sessionStore);
-    clientLogger.clientLogin(`
+        const query = querystring.stringify({ "message": "password invalid" });
+        res.redirect('./?' + query);
+        return;
+    } // WRONG PASS
+    if (reply[0] == 2) {
+        const token = generateAccessToken({ user: user });
+        session = req.session;
+        let sessionName = req.cookies.sessionName;
+        session.userid = user;
+        // session.userid = req.body.username;
+        const userClass = await db.getUserClassByName(session.userid);
+        session.userclass = Number(userClass);
+        const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
+        session.sessionid = Number(sessionStore);
+        clientLogger.clientLogin(`
     CLIENT: ${user}
     CLASS: ${userClass}
     SESSION ID: ${session.sessionid}
     CLIENT IP: ${clientIp}
     `);
-    if(userClass==120){res.redirect('./remoteMboard/');return;}
-    res.redirect('./');
-    return;
-  }// LOGIN OK
-  if (reply[0] == 3) {    
-    const token = generateAccessToken({ user: user });
-    session = req.session;
-    let sessionName = req.cookies.sessionName;
-    session.userid = user;
-    // session.userid = req.body.username;
-    const userClass = await db.getUserClassByName(session.userid);
-    session.userclass = Number(userClass);    
-    const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
-    session.sessionid = Number(sessionStore);
-    clientLogger.clientLogin(`
+        if (userClass == 120) { res.redirect('./remoteMboard/'); return; }
+        res.redirect('./');
+        return;
+    } // LOGIN OK
+    if (reply[0] == 3) {
+        const token = generateAccessToken({ user: user });
+        session = req.session;
+        let sessionName = req.cookies.sessionName;
+        session.userid = user;
+        // session.userid = req.body.username;
+        const userClass = await db.getUserClassByName(session.userid);
+        session.userclass = Number(userClass);
+        const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
+        session.sessionid = Number(sessionStore);
+        clientLogger.clientLogin(`
     CLIENT: ${user}
     CLASS: ${userClass}
     SESSION ID: ${session.sessionid}
     CLIENT IP: ${clientIp}
     `);
-    res.redirect('./remoteMboard/');
+        res.redirect('./remoteMboard/');
+        return;
+    } // LOGIN OK
     return;
-  }// LOGIN OK
-  return;
 };
 
-app.get('/tempLogin', async (req, res) => {
-  if(req.query.token !== null || typeof req.query.token !== 'undefined'){    
-    let tokenClient = req.query.token;
-    let valid = await db.dbFindToken(tokenClient);
-    if(valid){
-      console.log("login to specific");
-      const user = 'tempBoard';
-      const password = 'temp1Board2';
-      let dbResponse = await db.userLogin(user,password);      
-      loginAction(req, res,'3',user,password);
-      let dbRemoveToken = db.dbRemoveToken(tokenClient);
-      let dbRemovePosts = db.dbDeletePostByUsername(77);
-      sendRefreshPostsEventToAllClients();
-      return;
-    }else{
-      console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
-      res.status(400);
-      res.send(messageUi.createQrToRemoteBoardLinkExpired);
-      res.end();
-      return;      
+app.get('/tempLogin', async(req, res) => {
+    if (req.query.token !== null || typeof req.query.token !== 'undefined') {
+        let tokenClient = req.query.token;
+        let valid = await db.dbFindToken(tokenClient);
+        if (valid) {
+            console.log("login to specific");
+            const user = 'tempBoard';
+            const password = 'temp1Board2';
+            let dbResponse = await db.userLogin(user, password);
+            loginAction(req, res, '3', user, password);
+            let dbRemoveToken = db.dbRemoveToken(tokenClient);
+            let dbRemovePosts = db.dbDeletePostByUsername(77);
+            sendRefreshPostsEventToAllClients();
+            return;
+        } else {
+            console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+            res.status(400);
+            res.send(messageUi.createQrToRemoteBoardLinkExpired);
+            res.end();
+            return;
+        };
+        console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+        res.status(400);
+        res.send(messageUi.createQrToRemoteBoardLinkExpired);
+        res.end();
+        return;
     };
     console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
     res.status(400);
     res.send(messageUi.createQrToRemoteBoardLinkExpired);
     res.end();
     return;
-  };
-  console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
-  res.status(400);
-  res.send(messageUi.createQrToRemoteBoardLinkExpired);
-  res.end();
-  return;
 });
 
-app.get('/tempLoginToApp', async (req, res) => {
-  if(req.query.token !== null || typeof req.query.token !== 'undefined'){    
-    let tokenClient = req.query.token;
-    let valid = await db.dbFindToken(tokenClient);
-    if(valid){
-      console.log("login to specific");
-      const user = 'tempMasof';
-      const password = 'temp1Masof2';
-      let dbResponse = await db.userLogin(user,password);      
-      loginAction(req, res,'2',user,password);
-      let dbRemoveToken = db.dbRemoveToken(tokenClient);
-      let dbRemovePosts = db.dbDeletePostByUsername(77);
-      sendRefreshPostsEventToAllClients();
-      return;
-    }else{
-      console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
-      res.status(400);
-      res.send(messageUi.createQrToRemoteBoardLinkExpired);
-      res.end();
-      return;      
+app.get('/tempLoginToApp', async(req, res) => {
+    if (req.query.token !== null || typeof req.query.token !== 'undefined') {
+        let tokenClient = req.query.token;
+        let valid = await db.dbFindToken(tokenClient);
+        if (valid) {
+            console.log("login to specific");
+            const user = 'tempMasof';
+            const password = 'temp1Masof2';
+            let dbResponse = await db.userLogin(user, password);
+            loginAction(req, res, '2', user, password);
+            let dbRemoveToken = db.dbRemoveToken(tokenClient);
+            let dbRemovePosts = db.dbDeletePostByUsername(77);
+            sendRefreshPostsEventToAllClients();
+            return;
+        } else {
+            console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+            res.status(400);
+            res.send(messageUi.createQrToRemoteBoardLinkExpired);
+            res.end();
+            return;
+        };
+        console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
+        res.status(400);
+        res.send(messageUi.createQrToRemoteBoardLinkExpired);
+        res.end();
+        return;
     };
     console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
     res.status(400);
     res.send(messageUi.createQrToRemoteBoardLinkExpired);
     res.end();
     return;
-  };
-  console.log("FAILED TOKEN ON TEMPORARY LOGIN LINK");
-  res.status(400);
-  res.send(messageUi.createQrToRemoteBoardLinkExpired);
-  res.end();
-  return;
 });
 
-app.get("/logout", async (req, res) => {
-  if (req.session == null) { res.sendStatus(403); return; }
-  const clientIp = req.headers['x-forwarded-for'];
-  if (req.session.sessionid != null) {
-    const sessionRemove = await db.removeSession(req.session.sessionid);
-  };
-  console.log(`USER ${req.session.userid} HAS LOGGED OUT`);
-  clientLogger.clientLogout(`
+app.get("/logout", async(req, res) => {
+    if (req.session == null) { res.sendStatus(403); return; }
+    const clientIp = req.headers['x-forwarded-for'];
+    if (req.session.sessionid != null) {
+        const sessionRemove = await db.removeSession(req.session.sessionid);
+    };
+    console.log(`USER ${req.session.userid} HAS LOGGED OUT`);
+    clientLogger.clientLogout(`
   CLIENT: ${req.session.userid}  
   SESSION ID: ${req.session.sessionid}
   CLIENT IP: ${clientIp}
   `);
-  req.session.destroy();
-  res.redirect('./');
-  return;
+    req.session.destroy();
+    res.redirect('./');
+    return;
 });
 
 // ------------------------ ROUTERS ----------------------- //
@@ -395,20 +405,20 @@ app.listen(port, () => console.info(`App ${appName} is listening on port ${port}
 
 //-------------------------SOME UTILITIES-----------------------------------//
 
-function getTime(){
-  return new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
+function getTime() {
+    return new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
 };
 
-function sendRefreshPostsEventToAllClients(){
-  clientEvents.sendEvents("reloadPosts");
-  return;
+function sendRefreshPostsEventToAllClients() {
+    clientEvents.sendEvents("reloadPosts");
+    return;
 };
 
 //-----A simple dataSource that changes over time-----------------//
 let dataSource = 0;
 const updateDataSource = () => {
-  const delta = Math.random();
-  dataSource += delta;
-  console.log(dataSource);
-}
-// setInterval(() => updateDataSource(), 5000);
+        const delta = Math.random();
+        dataSource += delta;
+        console.log(dataSource);
+    }
+    // setInterval(() => updateDataSource(), 5000);
