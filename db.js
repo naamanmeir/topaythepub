@@ -241,6 +241,13 @@ exports.getUserClassByName = async function getUserClassByName(user) {
     return userClass;
 };
 
+exports.getUserTableLength = async function getUserTableLength() {
+    const sql = (`SELECT * FROM ${tableUsers};`)
+    let userLength = await pool.query(sql);
+    userLength = userLength.length;
+    return userLength;
+};
+
 //----------------------------------------SESSION MANAGE-----------------------//
 
 exports.storeSession = async function storeSession(username, userclass, session) {
