@@ -296,12 +296,12 @@ async function loginAction(req, res, reply, user, password) {
         session.userclass = Number(userClass);
         const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
         session.sessionid = Number(sessionStore);
-        clientLogger.clientLogin(`
-    CLIENT: ${user}
-    CLASS: ${userClass}
-    SESSION ID: ${session.sessionid}
-    CLIENT IP: ${clientIp}
-    `);
+        //     clientLogger.clientLogin(`
+        // CLIENT: ${user}
+        // CLASS: ${userClass}
+        // SESSION ID: ${session.sessionid}
+        // CLIENT IP: ${clientIp}
+        // `);
         if (userClass == 120) { res.redirect('./remoteMboard/'); return; }
         res.redirect('./');
         return;
@@ -316,12 +316,12 @@ async function loginAction(req, res, reply, user, password) {
         session.userclass = Number(userClass);
         const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
         session.sessionid = Number(sessionStore);
-        clientLogger.clientLogin(`
-    CLIENT: ${user}
-    CLASS: ${userClass}
-    SESSION ID: ${session.sessionid}
-    CLIENT IP: ${clientIp}
-    `);
+        //     clientLogger.clientLogin(`
+        // CLIENT: ${user}
+        // CLASS: ${userClass}
+        // SESSION ID: ${session.sessionid}
+        // CLIENT IP: ${clientIp}
+        // `);
         res.redirect('./remoteMboard/');
         return;
     } // LOGIN OK

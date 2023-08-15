@@ -1,10 +1,10 @@
 const { createLogger, format, transports, config } = require('winston');
-const { combine, timestamp, label, prettyPrint,json ,simple,printf} = format;
+const { combine, timestamp, label, prettyPrint, json, simple, printf } = format;
 const logLevels = {
-    levels:{
+    levels: {
         error: 0,
         login: 1,
-        logout:11,
+        logout: 11,
         order: 2,
         userAction: 3,
         clientLogin: 4,
@@ -36,24 +36,24 @@ const errorLogger = createLogger({
         simple(),
     ),
     transports: [
-        new transports.Console({level:'error'}),
-        new transports.File({ filename: 'errors.log',level:'error' })
+        new transports.Console({ level: 'error' }),
+        new transports.File({ filename: 'errors.log', level: 'error' })
     ]
 });
 
 const clientLogger = createLogger({
     levels: logLevels.levels,
     format: format.combine(
-        format.timestamp({format:'MM-DD-YY : HH:MM'}),
+        format.timestamp({ format: 'MM-DD-YY : HH:MM' }),
         simple(),
     ),
     transports: [
-        new transports.Console({level:'clientLogin'}),        
-        new transports.File({ filename: 'clientLogin.log',level:'clientLogin' }),
-        new transports.File({ filename: 'clientLogin.log',level:'clientAttempted' }),
-        new transports.File({ filename: 'clientLogin.log',level:'clientRegistered' }),
-        new transports.File({ filename: 'clientLogin.log',level:'clientUnregistered' }),
-        new transports.File({ filename: 'clientLogin.log',level:'clientLogout' }),
+        new transports.Console({ level: 'clientLogin' }),
+        new transports.File({ filename: 'clientLogin.log', level: 'clientLogin' }),
+        new transports.File({ filename: 'clientLogin.log', level: 'clientAttempted' }),
+        new transports.File({ filename: 'clientLogin.log', level: 'clientRegistered' }),
+        new transports.File({ filename: 'clientLogin.log', level: 'clientUnregistered' }),
+        new transports.File({ filename: 'clientLogin.log', level: 'clientLogout' }),
     ]
 });
 
@@ -64,12 +64,12 @@ const actionsLogger = createLogger({
         simple(),
     ),
     transports: [
-        new transports.Console({level:'login'}),
-        new transports.File({ filename: 'login.log',level:'login' }),
-        new transports.Console({level:'logout'}),
-        new transports.File({ filename: 'login.log',level:'logout' }),
+        new transports.Console({ level: 'login' }),
+        new transports.File({ filename: 'login.log', level: 'login' }),
+        new transports.Console({ level: 'logout' }),
+        new transports.File({ filename: 'login.log', level: 'logout' }),
         // new transports.Console({level:'userAction'}),
-        new transports.File({ filename: 'actions.log',level:'userAction' })
+        new transports.File({ filename: 'actions.log', level: 'userAction' })
     ]
 });
 const ordersLogger = createLogger({
@@ -80,9 +80,9 @@ const ordersLogger = createLogger({
     ),
     transports: [
         // new transports.Console({level:'order'}),
-        new transports.File({ filename: 'orders.log' , level:'order'}),
+        new transports.File({ filename: 'orders.log', level: 'order', level: 'orderDelete' }),
         // new transports.Console({level:'orderDelete'}),
-        new transports.File({ filename: 'orders.log' , level:'orderDelete'})
+        // new transports.File({ filename: 'orders.log' , level:'orderDelete'})
     ]
 });
 const messageBoardLogger = createLogger({
@@ -93,10 +93,10 @@ const messageBoardLogger = createLogger({
     ),
     transports: [
         // new transports.Console({level:'clientMessageBoard'}),
-        new transports.File({ filename: 'messageBoard.log' , level:'clientMessageBoard'})
+        new transports.File({ filename: 'messageBoard.log', level: 'clientMessageBoard' })
     ]
 });
- 
+
 module.exports = {
     errorLogger: errorLogger,
     clientLogger: clientLogger,

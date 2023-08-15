@@ -2,7 +2,7 @@ const express = require('express');
 const routerClient = express.Router();
 const functions = require('../functions');
 const db = require('../db');
-const {actionsLogger, ordersLogger, errorLogger} = require('../module/logger');
+const { actionsLogger, ordersLogger, errorLogger } = require('../module/logger');
 const validatorClient = require("../module/input/inputValidatorClient.js");
 let messagesJson = require('../messages.json');
 let messageUi = messagesJson.ui[0];
@@ -14,7 +14,7 @@ let messageError = messagesJson.error[0];
 
 //------------------------CLIENT USER COMMANDS-------------------//
 
-routerClient.post('/searchName/', async (req, res) => {
+routerClient.post('/searchName/', async(req, res) => {
     if (!req.body || req.body == null) { res.end(); return; };
     var query = (req.body.name);
     let names = [];
@@ -22,16 +22,16 @@ routerClient.post('/searchName/', async (req, res) => {
     if (names.length == 0) {
         res.send(JSON.stringify({ 'errorClient': messageClient.notExist }));
         return;
-    };    
+    };
     res.send(JSON.stringify(names));
     return;
 });
 
-routerClient.post('/userLogin/', async (req, res) => {
+routerClient.post('/userLogin/', async(req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let loggedUserDetails = [];
-    actionsLogger.login(actionsLogger.login(req.body.id));
-    loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);    
+    // actionsLogger.login(actionsLogger.login(req.body.id));
+    loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
     loggedUserDetails = JSON.stringify({
         'id': req.body.id,
         'name': loggedUserDetails[0].name,
@@ -43,13 +43,13 @@ routerClient.post('/userLogin/', async (req, res) => {
     return;
 });
 
-routerClient.post('/userLogout/', async (req,res)=>{    
-    if(req.body.id){
-        if(req.body.id > 0 && req.body.id < 1000){
-            console.log("CLIENT USER LOGOUT:");
-            console.log(req.body.id);
-            actionsLogger.logout(`id: ${req.body.id}`);
-            res.send(JSON.stringify({"message":`userId ${req.body.id}LogOut Verifyed on Server`}));
+routerClient.post('/userLogout/', async(req, res) => {
+    if (req.body.id) {
+        if (req.body.id > 0 && req.body.id < 1000) {
+            // console.log("CLIENT USER LOGOUT:");
+            // console.log(req.body.id);
+            // actionsLogger.logout(`id: ${req.body.id}`);
+            res.send(JSON.stringify({ "message": `userId ${req.body.id}LogOut Verifyed on Server` }));
             return;
         };
     };
@@ -57,13 +57,13 @@ routerClient.post('/userLogout/', async (req,res)=>{
     return;
 });
 
-routerClient.post('/getUserPage/', async (req, res) => {
+routerClient.post('/getUserPage/', async(req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let reqId = req.body.id;
     let userPageModule = require("../module/html/content/userPage");
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
-    if(loggedUserDetails.length<1){
+    if (loggedUserDetails.length < 1) {
         console.log("ATTEMPTED INFO FOR INVALID USER ID");
         res.end();
         return;
@@ -77,22 +77,22 @@ routerClient.post('/getUserPage/', async (req, res) => {
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
     let userDataFromDb = await db.dbGetClientInfoById(reqId);
-    let html = JSON.stringify(userPageModule.buildHtml(messageUi,loggedUserDetails, userDataFromDb));
+    let html = JSON.stringify(userPageModule.buildHtml(messageUi, loggedUserDetails, userDataFromDb));
     res.send(html);
     delete require.cache[require.resolve("../module/html/content/userPage")];
     return;
 });
 
-routerClient.post('/userAutoLogout/', async (req, res) => {
+routerClient.post('/userAutoLogout/', async(req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let autoLoggedOutUserDetails = [];
     autoLoggedOutUserDetails = await db.dbGetClientDetailsById(req.body.id);
-    actionsLogger.userAction(`
-    message: AUTOLOGGEDOUT FROM USER : 
-    name:${autoLoggedOutUserDetails[0].name}
-    nick:${autoLoggedOutUserDetails[0].nick}
-    account:${autoLoggedOutUserDetails[0].account}
-    `);
+    // actionsLogger.userAction(`
+    // message: AUTOLOGGEDOUT FROM USER : 
+    // name:${autoLoggedOutUserDetails[0].name}
+    // nick:${autoLoggedOutUserDetails[0].nick}
+    // account:${autoLoggedOutUserDetails[0].account}
+    // `);
 
     autoLoggedOutUserDetails = JSON.stringify({
         'id': req.body.id,
@@ -105,22 +105,22 @@ routerClient.post('/userAutoLogout/', async (req, res) => {
     return;
 });
 
-routerClient.post('/changeNick/', validatorClient(), async (req, res) => {
+routerClient.post('/changeNick/', validatorClient(), async(req, res) => {
     if (!req.body.id || req.body.id == null || req.body.newNick == null || req.body.newNick == "") { res.end(); return; }
     let newNick = req.body.newNick;
     let id = req.body.id;
     let existingUserDetails = await db.dbGetClientDetailsById(id);
-    
+
     let isNickExist = await db.dbGetNameByNickExact(newNick);
 
-    if(isNickExist.length != 0){
-        res.json({'errorClient':messageClient.clientChangeNickExist});
+    if (isNickExist.length != 0) {
+        res.json({ 'errorClient': messageClient.clientChangeNickExist });
         return;
     };
 
-    let newUserNickNameResults = await db.dbChangeNickById(newNick,id);
-    console.log(messageClient.clientChangeNickOk +''+ newNick)
-    res.json({'errorClient':messageClient.clientChangeNickOk + newNick});
+    let newUserNickNameResults = await db.dbChangeNickById(newNick, id);
+    console.log(messageClient.clientChangeNickOk + '' + newNick)
+    res.json({ 'errorClient': messageClient.clientChangeNickOk + newNick });
     actionsLogger.userAction(`
     message: CHANGE NICKNAME OF USER : 
     id: ${req.body.id} ,
@@ -133,7 +133,7 @@ routerClient.post('/changeNick/', validatorClient(), async (req, res) => {
 });
 //------------------------CLIENT USER ACTIONS-------------------//
 
-routerClient.post('/requestOrderPage/', async (req, res) => {
+routerClient.post('/requestOrderPage/', async(req, res) => {
     if (!req.body.order && !req.body.userId) { res.end(); return; };
     let orderDataRaw = req.body;
     let orderData = Object.entries(req.body.order);
@@ -167,7 +167,7 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
         'message': messageClient.orderMessage
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
-    let html = orderConfirmPage.buildHtml(messageUi,loggedUserDetails, orderBuiltData, orderPriceSum);
+    let html = orderConfirmPage.buildHtml(messageUi, loggedUserDetails, orderBuiltData, orderPriceSum);
     orderBuiltData = JSON.stringify(orderBuiltData);
     let htmlOrderData = { "html": html, "orderData": orderDataRaw, "totalSum": orderPriceSum };
     orderBuiltData = JSON.stringify(htmlOrderData);
@@ -176,7 +176,7 @@ routerClient.post('/requestOrderPage/', async (req, res) => {
     return;
 });
 
-routerClient.post('/placeOrder/', async function (req, res) {
+routerClient.post('/placeOrder/', async function(req, res) {
     if (!req.body.order && !req.body.userId) { res.end(); return; };
     var orderTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
     orderTime = orderTime.slice(0, 19).replace('T', ' ');
@@ -192,7 +192,7 @@ routerClient.post('/placeOrder/', async function (req, res) {
     let loggedUserDetails = [];
     loggedUserDetails = await db.dbGetClientDetailsById(userId);
     let orderResult;
-    orderResult = await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) });    
+    orderResult = await db.dbInsertOrderToOrders(orderTime, userId, orderInfo, orderPriceSum).then((orderResult) => { return (orderResult) });
     let orderClient;
     orderClient = await db.dbInsertOrderToClient(orderTime, userId, orderPriceSum).then((orderResult) => { return (orderResult) });
     ordersLogger.order(`
@@ -220,19 +220,19 @@ routerClient.post('/placeOrder/', async function (req, res) {
     return;
 });
 
-routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {    
+routerClient.post('/deleteLastOrderConfirm/', async(req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let userId = JSON.parse(req.body.id);
     let orderInfo;
-    orderInfo = await db.dbConfirmDeleteLastOrderById(userId);    
+    orderInfo = await db.dbConfirmDeleteLastOrderById(userId);
     orderInfo = JSON.stringify({
         'sign': orderInfo.sign,
         'orderId': orderInfo.orderid,
         'sum': orderInfo.sum,
         'info': orderInfo.info,
         'time': orderInfo.time
-    });    
-    orderInfo = JSON.parse(orderInfo);    
+    });
+    orderInfo = JSON.parse(orderInfo);
     loggedUserDetails = await db.dbGetClientDetailsById(userId);
     loggedUserDetails = JSON.stringify({
         'id': userId,
@@ -246,13 +246,13 @@ routerClient.post('/deleteLastOrderConfirm/', async (req, res) => {
     contains: ${orderInfo.info}
     `);
     let deleteOrderConfirmPage = require("../module/html/content/orderDeleteConfirm");
-    let html = JSON.stringify(deleteOrderConfirmPage.buildHtml(messageClient,messageUi,loggedUserDetails, orderInfo));    
+    let html = JSON.stringify(deleteOrderConfirmPage.buildHtml(messageClient, messageUi, loggedUserDetails, orderInfo));
     res.send(html);
     delete require.cache[require.resolve("../module/html/content/orderDeleteConfirm")];
     return;
 });
 
-routerClient.post('/deleteLastOrder/', async (req, res) => {    
+routerClient.post('/deleteLastOrder/', async(req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; };
     let clientId = JSON.parse(req.body.id);
     let deleteLastOrderResponse;
@@ -263,7 +263,7 @@ routerClient.post('/deleteLastOrder/', async (req, res) => {
 
 //------------------------CLIENT UI ACTIONS-------------------//
 
-routerClient.post('/getDisplayInfo/', async (req, res) => {
+routerClient.post('/getDisplayInfo/', async(req, res) => {
     if (!req.body.id || req.body.id == null) { res.end(); return; }
     let reqId = req.body.id;
 
@@ -277,7 +277,7 @@ routerClient.post('/getDisplayInfo/', async (req, res) => {
     return;
 });
 
-routerClient.get('/windowIsOpen/', async(req,res) => {
+routerClient.get('/windowIsOpen/', async(req, res) => {
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
     // actionsLogger.userAction(`
     // time: ${funcTime} 
@@ -286,7 +286,7 @@ routerClient.get('/windowIsOpen/', async(req,res) => {
     res.end();
 });
 
-routerClient.get('/windowIsClose/', async(req,res) => {
+routerClient.get('/windowIsClose/', async(req, res) => {
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
     // actionsLogger.userAction(`
     // time: ${funcTime} 
