@@ -68,6 +68,9 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const COOKIE_EXPIRATION = Number(process.env.COOKIE_EXPIRATION);
 const SESSION_NAME = process.env.SESSION_NAME;
 
+const DEFAULTADMIN = process.env.DEFAULTADMIN;
+const DEFAULTADMINPASS = process.env.DEFAULTADMINPASS;
+
 const OPENAI_KEY = process.env.OPENAI_API_KEY;
 
 const app = express();
@@ -172,6 +175,11 @@ async function dbInit() {
     await db.dbCreateTablePosts();
     await db.dbCreateTableFacts();
 
+    let dbDefaultUser = await db.getUserTableLength();
+    if (dbDefaultUser == 0) {
+        dbCreateAdmin();
+    };
+
     const connectionTestTimeout = setTimeout(callDbStatus, 1000);
 
     function callDbStatus() {
@@ -179,6 +187,22 @@ async function dbInit() {
     };
 };
 dbInit();
+
+async function dbCreateAdmin() {
+    const username = DEFAULTADMIN;
+    const password = await bcrypt.hash(DEFAULTADMINPASS, 10);
+    const userclass = 0;
+
+    let dbResponse = await db.createUser(username, password, userclass);
+
+    console.log("DB response: " + dbResponse[2]);
+    if (dbResponse[0] == 0) {
+        console.log("user creation failed");
+    }
+    if (dbResponse[0] == 1) {
+        console.log("user created");
+    }
+};
 
 //------------------------------USER SESSION-------------------------------------//
 app.get('/', async(req, res) => {
@@ -272,12 +296,12 @@ async function loginAction(req, res, reply, user, password) {
         session.userclass = Number(userClass);
         const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
         session.sessionid = Number(sessionStore);
-        clientLogger.clientLogin(`
-    CLIENT: ${user}
-    CLASS: ${userClass}
-    SESSION ID: ${session.sessionid}
-    CLIENT IP: ${clientIp}
-    `);
+        //     clientLogger.clientLogin(`
+        // CLIENT: ${user}
+        // CLASS: ${userClass}
+        // SESSION ID: ${session.sessionid}
+        // CLIENT IP: ${clientIp}
+        // `);
         if (userClass == 120) { res.redirect('./remoteMboard/'); return; }
         res.redirect('./');
         return;
@@ -292,12 +316,12 @@ async function loginAction(req, res, reply, user, password) {
         session.userclass = Number(userClass);
         const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
         session.sessionid = Number(sessionStore);
-        clientLogger.clientLogin(`
-    CLIENT: ${user}
-    CLASS: ${userClass}
-    SESSION ID: ${session.sessionid}
-    CLIENT IP: ${clientIp}
-    `);
+        //     clientLogger.clientLogin(`
+        // CLIENT: ${user}
+        // CLASS: ${userClass}
+        // SESSION ID: ${session.sessionid}
+        // CLIENT IP: ${clientIp}
+        // `);
         res.redirect('./remoteMboard/');
         return;
     } // LOGIN OK
