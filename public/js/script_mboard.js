@@ -1,8 +1,8 @@
 const PostLengthMax = 400;
-const pressTimerTime = 400;
+const pressTimerTime = 700;
 const pressTimerDelete = 1000;
-const pressTimerPost = 400;
-const pressTimerPin = 400;
+const pressTimerPost = 600;
+const pressTimerPin = 600;
 
 let postInput;
 let postsDiv;
