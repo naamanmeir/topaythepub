@@ -69,7 +69,7 @@ exports.createTokenTable = async function() {
     let createTokenTable;
     createTokenTable = pool.query("CREATE TABLE IF NOT EXISTS `" + tableTokens +
             "`(`tokenId` INT NOT NULL AUTO_INCREMENT," +
-            "`time` DATE ," +
+            "`time` DATE DEFAULT NOW()," +
             "`tokenClass` INT NOT NULL DEFAULT '100'," +
             "`tokenName` VARCHAR(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'token'," +
             "`tokenExp` INT NOT NULL DEFAULT '15'," +
