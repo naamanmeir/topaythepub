@@ -200,7 +200,7 @@ async function dbCreateAdmin() {
         console.log("user creation failed");
     }
     if (dbResponse[0] == 1) {
-        console.log("user created");
+        console.log("admin user created");
     }
 };
 
@@ -209,8 +209,7 @@ app.get('/', async(req, res) => {
     if (!req || req == null) { res.sendStatus(401).end(); };
     const clientIp = req.headers['x-forwarded-for'];
     clientLogger.clientAttempted(`
-  LOGIN PAGE VISITED FROM
-  IP: ${clientIp}
+  LOGIN ATTEMPT FROM ${clientIp}
   `);
 
     if (req.session != null) { session = req.session };
