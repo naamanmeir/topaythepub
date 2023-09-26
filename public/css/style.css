@@ -583,7 +583,7 @@ p {
 }
 
 .postInput {
-    resize: none;
+    resize: vertical;
     width: 90%;
     height: 3rem;
     box-sizing: border-box;
