@@ -838,7 +838,7 @@ p {
 .windowbuttons {
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: 99%;
     margin: auto auto 5% auto;
     margin-bottom: 1rem;
     bottom: 0px;
