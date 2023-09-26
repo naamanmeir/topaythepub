@@ -1,5 +1,5 @@
-exports.buildHtml = function (message) {    
-    let html = ``;    
+exports.buildHtml = function(message) {
+    let html = ``;
     html +=
         `
         <div class="sideMenuDiv">
@@ -12,11 +12,4 @@ exports.buildHtml = function (message) {
         </div>      
     `;
     return html;
-    };
-
-    // <p id="closeSideMenu" class="closeSideMenu">${message.SideMenuCloseSideMenu}</p>
-    // <p id="openAbout" onclick="populateAbout()">${message.sideMenuOpenAbout}</p>
-    // <p id="fullScreenButton">${message.sideMenuFullScreen}</p>
-    // <p onclick="refreshCss()">${message.sideMenuRefreshCss}</p>
-    // <p onclick="refreshPage()">${message.SideMenuRefreshPage}</p>
-    // <p onclick="clientLogout()">${message.SideMenuLogOutClient}</p>
+};
