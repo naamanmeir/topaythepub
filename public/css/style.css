@@ -825,7 +825,7 @@ p {
     margin: 0px 0px 0px 0px;
     padding: 5px 5px 5px 5px;
     background-color: rgb(0, 0, 0);
-    border: 2px groove var(--border01);
+    border: 5px groove var(--border01);
     /* border-radius: 3rem; */
     margin: auto;
     text-align: right;
@@ -849,21 +849,21 @@ p {
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 2rem;
-    padding: 2rem;
+    font-size: 4rem;
+    padding: 4rem;
     width: 90%;
     height: 1rem;
     min-height: fit-content;
     max-height: 20rem;
     margin: auto;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
     color: black;
-    border: 3px outset var(--border01);
+    border: 5px outset var(--border01);
 }
 
 .windowButton:active {
-    border: 3px inset grey;
+    border: 5px inset grey;
 }
 
 .no {
