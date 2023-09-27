@@ -255,7 +255,7 @@ p {
     width: fit-content;
     max-width: 7rem;
     z-index: 40;
-    bottom: 25%;
+    bottom: 17%;
     left: 1%;
     border-radius: 50%;
     border: 1px outset var(--border02);
