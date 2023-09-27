@@ -260,7 +260,7 @@ p {
     border-radius: 50%;
     border: 1px outset var(--border02);
     transition: 0.5s;
-    background-color: #00629788;
+    background-color: #c300ff88;
 }
 
 .floatMenuDiv:active {
@@ -273,7 +273,7 @@ p {
     color: var(--text03);
     font-size: 1.2rem;
     margin: auto;
-    padding: 0.6rem;
+    padding: 1.2rem;
     color: yellow;
 }
 
