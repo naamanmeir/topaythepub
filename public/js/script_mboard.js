@@ -517,7 +517,7 @@ function displayPostsInDivNoScroll(content){
 
 function scrollPosts(){
     postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: smooth";
-    postsDiv.scrollTop = postsDiv.scrollHeight;
+    setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;},250);    
     setTimeout(() => {postsDiv.scrollTop = postsDiv.scrollHeight;postsDiv.style = "scroll-behavior: auto";}, 500);
 };
 

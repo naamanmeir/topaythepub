@@ -59,7 +59,9 @@ async function requestPainting(data) {
     try {
 
         const response = await fetch(
-            "https://api-inference.huggingface.co/models/nitrosocke/Ghibli-Diffusion", {
+            "https://api-inference.huggingface.co/models/gsdf/Counterfeit-V2.5",
+            // "https://api-inference.huggingface.co/models/nitrosocke/Ghibli-Diffusion",
+             {
                 headers: { Authorization: "Bearer " + HUG_CIRCULUS },
                 method: "POST",
                 body: JSON.stringify(data),
