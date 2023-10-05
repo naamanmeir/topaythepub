@@ -465,6 +465,8 @@ p {
 }
 
 .postInputDiv {
+    position: absolute;
+    bottom: 50px;
     display: flex;
     flex-direction: row;
     margin: auto;
@@ -472,7 +474,6 @@ p {
     margin-bottom: 0px;
     margin-right: 5%;
     width: 95%;
-    bottom: 0.2rem;
 }
 
 .postInputDivRemote {
@@ -488,15 +489,15 @@ p {
 }
 
 .postInputTypes {
-    position: relative;
+    position: absolute;
     display: flex;
     flex-direction: row;
     width: 80%;
     margin: auto;
+    margin-right: 10%;
     margin-top: 0px;
     margin-bottom: 1rem;
     bottom: 0.1vh;
-    width: 80%;
 }
 
 .postInputTypesRemote {
@@ -585,21 +586,23 @@ p {
 .postInput {
     resize: vertical;
     width: 90%;
-    height: 3rem;
+    /* height: 3rem; */
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 3%;
-    padding: 10px;
-    background-color: #1e44578c;
+    padding: 0px;
+    background-color: #1e4457;
     font-size: 1.2rem;
     color: var(--itemPrice);
     overflow: hidden;
     user-select: auto;
+    line-height: 20px;
+    margin: 0px;
 }
 
 .posts {
     position: relative;
-    height: 75%;
+    height: 80%;
     width: 95%;
     flex-wrap: nowrap;
     justify-content: center;

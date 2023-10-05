@@ -408,7 +408,10 @@ app.get("/logout", async(req, res) => {
   CLIENT IP: ${clientIp}
   `);
     req.session.destroy();
-    res.redirect('./');
+    setTimeout(()=>{
+        res.redirect('./');
+    },2500)
+    
     return;
 });
 
