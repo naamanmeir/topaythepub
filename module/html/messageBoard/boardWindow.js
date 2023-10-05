@@ -20,7 +20,7 @@ exports.buildHtml = function (messageUi,posts) {
 
     html +=
         `
-        <div class="postInputDiv">
+        <div class="postInputDiv" id="postInputDiv">
             <textarea id="postInput" class="postInput" name="postInput" placeholder="${messageUi.mBoardPlaceHolder}"></textarea>
             <img class="postImgPreview" id="postImgPreview" src="#">            
         </div>
