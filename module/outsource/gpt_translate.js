@@ -12,7 +12,8 @@ exports.askForTranslation = async function(input){
     
   try {
     const answer = await openai.createCompletion({
-      model: "text-davinci-003",
+      // model: "text-davinci-003",      
+      model: "gpt-3.5-turbo-instruct",
       prompt: `Translate this into english:\n\ ${input} \n\n1.`,
       temperature: 0.3,
       max_tokens: 100,
@@ -23,7 +24,9 @@ exports.askForTranslation = async function(input){
     return (answer.data.choices[0].text);
   }
   catch(error) {
-    return next(error);
+    console.log(error);
+    // return next(error);
+    return;
   }
   return answer;
 }
