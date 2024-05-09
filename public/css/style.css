@@ -74,6 +74,7 @@ body {
     /* padding: 0px; */
     /* top: 0px; */
     height: -webkit-fill-available;
+    max-height: 100%;
     /* width: -webkit-fill-available; */
     overflow: hidden;
     overscroll-behavior: contain;
@@ -91,6 +92,7 @@ body {
     /* display: flex; */
     /* flex-direction: column; */
     background-color: var(--bg01);
+    max-height: 100%;
 }
 
 p {

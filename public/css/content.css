@@ -1,6 +1,6 @@
 .content {
     z-index: 5;
-    height: 90vh;
+    height: 90%;
     width: 98%;
     left: 1%;
     right: 1%;
@@ -230,49 +230,7 @@
     display: none;
 }
 
-@media screen and (max-height: 700px),
-(max-width: 500px) {
-    .items {
-        /* border: 1px outset rgb(240, 152, 0); */
-        top: 0px;
-        /* margin-top: 0px; */
-        max-height: 69vh;
-        width: 100%;
-    }
 
-    .item itemName {
-        font-size: 1.3rem;
-    }
-
-    .item itemPrice {
-        font-size: 1.7rem;
-    }
-
-    .item img {
-        /* max-height: 80%; */
-    }
-
-    /* .itemCount {
-        font-size: 4rem;
-    } */
-
-    .searchBoxDiv {
-        height: 3rem;
-        margin-bottom: 0rem;
-    }
-
-    .searchBox {
-        height: fit-content;
-        width: 100%;
-        font-size: 1.5rem;
-        padding: 0.2rem;
-        padding-bottom: 0px;
-    }
-
-    .autocomplete-items {
-        font-size: 2rem;
-    }
-}
 
 /* ------------------scrollbar--------------------- */
 ::-webkit-scrollbar {
@@ -480,5 +438,83 @@
     100% {
         opacity: 0;
         transform: scale(0);
+    }
+}
+
+@media screen and (max-height: 721px),
+(max-width: 500x) {
+    .content {
+    height:80%;
+    }
+    .items {
+        border: 1px outset rgb(240, 152, 0);
+        top: 0px;
+        /* margin-top: 0px; */
+        /* max-height: 75%; */
+        width: 100%;
+        height: 50%;
+        padding: 0px;
+        margin-bottom: 0px;
+        min-height: 80%;
+        /* border: 2px solid orange; */
+    }
+
+    .item {
+        height: fit-content;
+        padding: 0.rem;
+        margin-top: 0.rem;
+        margin-bottom: 0px;
+    }
+
+    .item itemName {
+        font-size: 1.3rem;
+    }
+
+    .item itemPrice {
+        font-size: 1.5rem;
+    }
+
+    .item img {
+        max-height: 80%;
+    }
+
+    /* .itemCount {
+        font-size: 4rem;
+    } */
+
+    .searchBoxDiv {
+        height: 3rem;
+        margin-bottom: 0rem;
+    }
+
+    .searchBox {
+        height: fit-content;
+        width: 100%;
+        font-size: 1.5rem;
+        padding: 0.2rem;
+        padding-bottom: 0px;
+    }
+
+    .autocomplete-items {
+        font-size: 2rem;
+    }
+
+    .buttons {
+        /* position: relative; */
+        border: 1px outset rgb(240, 152, 0);
+    }
+    .buttons button {
+        font-size: 1.3rem;
+        text-shadow: 4px 1px 5px #a49c9c;
+        border: 3px outset rgba(230, 145, 9, 0.495);
+    }
+}
+
+@media screen and (min-height: 720px),(max-height: 900px) {
+    .content {
+        height:83%;
+        }
+    .items {
+        height: auto;
     }
 }

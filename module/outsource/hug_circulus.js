@@ -13,11 +13,11 @@ async function requestImage(data) {
     try {
 
         const response = await fetch(
-            "https://api-inference.huggingface.co/models/stabilityai/stable-cascade",
+            // "https://api-inference.huggingface.co/models/stabilityai/stable-cascade",
             // "https://api-inference.huggingface.co/models/nitrosocke/Ghibli-Diffusion",
             // "https://api-inference.huggingface.co/models/prompthero/openjourney-v4",
             // "https://api-inference.huggingface.co/models/xyn-ai/anything-v4.0",
-            // "https://api-inference.huggingface.co/models/circulus/sd-photoreal-v2.5",
+            "https://api-inference.huggingface.co/models/circulus/sd-photoreal-v2.5",
             // "https://api-inference.huggingface.co/models/WarriorMama777/OrangeMixs",
             // "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
             // "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5",
