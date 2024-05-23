@@ -17,9 +17,9 @@ async function requestImage(data) {
             // "https://api-inference.huggingface.co/models/nitrosocke/Ghibli-Diffusion",
             // "https://api-inference.huggingface.co/models/prompthero/openjourney-v4",
             // "https://api-inference.huggingface.co/models/xyn-ai/anything-v4.0",
-            "https://api-inference.huggingface.co/models/circulus/sd-photoreal-v2.5",
+            // "https://api-inference.huggingface.co/models/circulus/sd-photoreal-v2.5",
             // "https://api-inference.huggingface.co/models/WarriorMama777/OrangeMixs",
-            // "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
+            "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
             // "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5",
             // "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-refiner-1.0",
             {
@@ -31,6 +31,7 @@ async function requestImage(data) {
         const result = await response.blob();
         // console.log(response);
         // console.log(result);
+        console.log("test");
         return result;
 
     } catch (error) {

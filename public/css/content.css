@@ -264,7 +264,7 @@
     min-height: 1rem;
     margin: auto;
     margin-top: 0px;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
     bottom: 1rem;
     left: -50%;
     right: -50%;
@@ -444,8 +444,9 @@
 @media screen and (max-height: 721px),
 (max-width: 500x) {
     .content {
-    height:80%;
+        height: 80%;
     }
+
     .items {
         border: 1px outset rgb(240, 152, 0);
         top: 0px;
@@ -503,6 +504,7 @@
         /* position: relative; */
         border: 1px outset rgb(240, 152, 0);
     }
+
     .buttons button {
         font-size: 1.3rem;
         text-shadow: 4px 1px 5px #a49c9c;
@@ -510,10 +512,12 @@
     }
 }
 
-@media screen and (min-height: 720px),(max-height: 900px) {
+@media screen and (min-height: 720px),
+(max-height: 900px) {
     .content {
-        height:83%;
-        }
+        height: 83%;
+    }
+
     .items {
         height: auto;
     }

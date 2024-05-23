@@ -396,7 +396,7 @@ async function createQrToRemoteBoard() {
 };
 
 async function createQrToRemoteApp() {
-    console.log("dddddddddddddd");
+    console.log("CREATED QR CODE TO REMOTE MASOF");
     let qrImg = await qrTools.createQrToRemoteApp();
     qrImg = '../qrCode/' + qrImg;
     let qRpost = messageUi.qRmessageToRemoteBoard;

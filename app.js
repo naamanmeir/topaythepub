@@ -332,7 +332,7 @@ app.get('/tempLogin', async(req, res) => {
         let tokenClient = req.query.token;
         let valid = await db.dbFindToken(tokenClient);
         if (valid) {
-            console.log("login to specific");
+            console.log("TEMP LOGIN");
             const user = 'tempBoard';
             const password = 'temp1Board2';
             let dbResponse = await db.userLogin(user, password);
@@ -366,7 +366,7 @@ app.get('/tempLoginToApp', async(req, res) => {
         let tokenClient = req.query.token;
         let valid = await db.dbFindToken(tokenClient);
         if (valid) {
-            console.log("login to specific");
+            console.log("TEMP LOGIN");
             const user = 'tempMasof';
             const password = 'temp1Masof2';
             let dbResponse = await db.userLogin(user, password);

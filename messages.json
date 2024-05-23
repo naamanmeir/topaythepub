@@ -120,8 +120,8 @@
             "photobotCodeActivateItemImage": "צייר מוצר שנראה כמו",
             "photobotCodeActivateItemImagePainting": "ציור של",
             "createQrToRemoteBoard": "הצג קישור ללוח מודעות",
-            "createQrToRemoteApp": "הצג קישור למסוף מרוחק",
-            "qRmessageToRemoteBoard": "קישור חד פעמי זה תקף למשך 3 דקות מעכשיו , ומאפשר התחברות עד מחר בערך",
+            "createQrToRemoteApp": "הצג קישור",
+            "qRmessageToRemoteBoard": "קישור חד פעמי זה תקף למשך 3 דקות מעכשיו",
             "createQrToRemoteBoardLinkExpired": "תוקף קישור זה פג אז זהו הקיצר איפשר לכנס צריך לנסות שוב תעשו אחורה או משהו תנסו שוב עזבו אותכם קחו קצת פופקורן"
         }
     ],
