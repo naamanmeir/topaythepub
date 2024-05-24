@@ -41,8 +41,9 @@ exports.createQrToRemoteBoard = async function(){
     var data = qr.substr(qr.indexOf('base64') + 7)
     var buffer = Buffer.from(data, 'base64');
     fs.writeFileSync(qrFile, buffer);
-  });  
-  return filename;    
+  });
+  let data = {filename:filename,link:target};
+  return data;
 };
 
 exports.createQrToRemoteApp = async function(){   
@@ -76,6 +77,7 @@ exports.createQrToRemoteApp = async function(){
     var data = qr.substr(qr.indexOf('base64') + 7)
     var buffer = Buffer.from(data, 'base64');
     fs.writeFileSync(qrFile, buffer);
-  });  
-  return filename;    
+  });
+  let data = {filename:filename,link:target};
+  return data;    
 };

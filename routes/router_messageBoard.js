@@ -191,8 +191,9 @@ async function insertPostWithImage(req, res, post, user, image) {
 async function insertPostDirect(post, image, user) {
     if (user == null) { user = 77; }
     if (post == null) { post = ''; }
-    if (image == null) { image = ''; }
-    image = JSON.stringify(image);
+    if (image != null){
+        image = JSON.stringify(image);
+    };    
     let dbResponse = await db.dbInsertPost(post, user, image);
     var funcTime = getTime();
     // messageBoardLogger.clientMessageBoard(`
@@ -397,10 +398,13 @@ async function createQrToRemoteBoard() {
 
 async function createQrToRemoteApp() {
     console.log("CREATED QR CODE TO REMOTE MASOF");
-    let qrImg = await qrTools.createQrToRemoteApp();
+    let qrData = await qrTools.createQrToRemoteApp();    
+    let link = qrData.link;
+    let qrImg = qrData.filename;
     qrImg = '../qrCode/' + qrImg;
-    let qRpost = messageUi.qRmessageToRemoteBoard;
-    insertPostDirect(qRpost, qrImg, 77);
+    let qrPost = messageUi.qRmessageToRemoteBoard;
+    insertPostDirect(link, qrImg, 77);
+    insertPostDirect(qrPost, null, 77);
     let time = 3 * 60 * 1000;
     let timer = setTimeout(() => {
         removePostDirectByUser(77)
