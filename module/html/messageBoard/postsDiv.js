@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('node:path');
+
 exports.buildHtml = function (messageUi,posts) {  
 
     let html = ``;
@@ -30,13 +33,11 @@ exports.buildHtml = function (messageUi,posts) {
         }
         if(posts[i].img != 0){
             let img;
-            try {
-                img = JSON.parse(posts[i].img);
-            } catch (e) {
-                console.log("error on image loading");
-            };            
-            html += `<div class="postDisplay" id="postImg${posts[i].postid}">
-            <div class="postDisplayImg"><img src="img/posts/${img}"></div></div>`
+            img = JSON.parse(posts[i].img);
+            if((fs.existsSync(path.resolve(`public/img/posts/${img}`)))){
+                html += `<div class="postDisplay" id="postImg${posts[i].postid}">
+                <div class="postDisplayImg"><img src="img/posts/${img}"></div></div>`
+            };
         };
         if(posts[i].post==''){continue;};
         if(i%2==0){

@@ -238,7 +238,7 @@ var calculateHeight = function() {
     // console.log(taHeight);
     // console.log(numberOfLines);
     // textDiv.style.bottom = 50 + (numberOfLines)+"px";
-    console.log(textDiv.style.bottom);
+    // console.log(textDiv.style.bottom);
     ta.style.height = (numberOfLines * 20)+"px";
 };
 

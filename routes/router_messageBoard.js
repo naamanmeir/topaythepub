@@ -143,6 +143,12 @@ function renameFileIfExist(file) {
     }
 };
 
+function checkNameForChars(file) {
+    let index = file.indexOf(/\?/g);
+    if (index > -1){file = file.substring(0,index) + file.substring(0,index+1)}        
+    return file;    
+};
+
 routerMessageBoard.post('/insertImage', async(req, res) => {
     const options = {
         uploadDir: __dirname + '/../public/img/posts/',
