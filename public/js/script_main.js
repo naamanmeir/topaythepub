@@ -19,6 +19,8 @@ let messageUi;
 let messageClient;
 let regexBlock;
 
+var fs = false;
+
 const divFullPage = document.getElementById("divFullPage");
 const divHeader = document.getElementById("divHeader");
 const divTopMenu = document.getElementById("divTopMenu");
@@ -334,6 +336,43 @@ function openWindows(openWindow){
     divContent.classList.add("hidden");
     closeAppAttempt = 6;
     return;
+};
+
+
+function fullScreenOn() {
+    if (!fs) {
+        document.body.requestFullscreen();
+        setTimeout(function () {
+            // document.getElementById("fs_mark").style.backgroundImage = "url(img/ui/fs1.png)";
+            // document.getElementById("fs_mark").innerText = ("חלון");
+            // window.scrollTo(0,1);
+            closeSideMenuFunc();
+            fs = true;
+            viewport.setAttribute("content", "width=" + window.innerWidth + ", height=" + window.innerHeight + ", initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+        }, 300);
+    }
+    if (fs) {
+        setTimeout(function () {
+            // document.getElementById("fs_mark").style.backgroundImage = "url(img/ui/fs2.png)";
+            // document.getElementById("fs_mark").innerText = ("מסך מלא");
+            document.exitFullscreen();
+            // window.scrollTo(0,200);
+            closeSideMenuFunc();
+            fs = false;
+        }, 300);
+    }
+};
+
+function fullScreenOff() {
+    window.addEventListener("click", function () {
+        setTimeout(function () {
+            document.body.requestFullscreen();
+            window.scrollTo(0, 200);
+        }, 100);
+        setTimeout(function () {
+            window.scrollTo(0, 1);
+        }, 200);
+    });
 };
 
 //------------------------FAKE FUNCTION TO NULL RESPONSES----------------
