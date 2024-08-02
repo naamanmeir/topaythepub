@@ -161,16 +161,20 @@ routerMessageBoard.post('/insertImage', async(req, res) => {
     let originalName;
     let post;
     let finalImageName;
+    console.log("you are here");
     form.parse(req, function(err, fields, files) {
         newName = files.img.filepath;
         originalName = (__dirname + '/../public/img/posts/') + (files.img.originalFilename);
         originalName = renameFileIfExist(originalName);
         fs.rename(newName, originalName, function(err) {
             if (err) console.log(err);
+            console.log(newName);
+            console.log(originalName);
         });
         post = fields.post;
         finalImageName = (path.parse(originalName).name) + path.parse(originalName).ext;
         finalImageName = JSON.stringify(finalImageName);
+        console.log(finalImageName);
         insertPostWithImage(req, res, post, null, finalImageName);
     });
 
