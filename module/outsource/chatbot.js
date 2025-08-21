@@ -6,7 +6,7 @@ const { Configuration, OpenAIApi } = require("openai");
   });
 const openai = new OpenAIApi(openAiConfig);
 
-const CharLimitOnMessages = 1800;
+const CharLimitOnMessages = 6000;
 
 let facts;
 
@@ -40,7 +40,7 @@ exports.talkToDavid = async function(user_input){
   try {
   
   const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       messages: messages,
     });
 
