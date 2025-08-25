@@ -1,5 +1,18 @@
 # ToPayThePub Analysis & WhatsApp Integration Plan
 
+## 🚨 **IMPORTANT: Remote Server Development Setup**
+
+**Your Current Architecture (OPTIMAL!):**
+- **Remote Server**: All development happens on remote server via SSH
+- **Test Environment**: Separate test instance with different database on same server
+- **No File Transfers**: Code stays centralized, access from any computer via SSH
+- **Version Control**: Git for code management
+- **Database Separation**: Production and test databases isolated
+
+**See `REMOTE_SERVER_WORKFLOW.md` for detailed workflow instructions.**
+
+---
+
 ## Complete App Analysis Summary
 
 ### **App Purpose & Usage Overview**
