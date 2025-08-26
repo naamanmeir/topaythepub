@@ -1,17 +1,16 @@
 require("dotenv").config();
 const db = require('../../db');
-const { Configuration, OpenAIApi } = require("openai");
-  const openAiConfig = new Configuration({
+const OpenAI = require("openai");
+const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
-  });
-const openai = new OpenAIApi(openAiConfig);
+});
 
 const CharLimitOnMessages = 1800;
 
 exports.askForTranslation = async function(input){
     
   try {
-    const answer = await openai.createCompletion({
+    const answer = await openai.completions.create({
       // model: "text-davinci-003",      
       model: "gpt-3.5-turbo-instruct",
       prompt: `Translate this into english:\n\ ${input} \n\n1.`,
@@ -21,7 +20,7 @@ exports.askForTranslation = async function(input){
       frequency_penalty: 0.0,
       presence_penalty: 0.0,
     });
-    return (answer.data.choices[0].text);
+    return (answer.choices[0].text);
   }
   catch(error) {
     console.log(error);
@@ -62,12 +61,12 @@ exports.talkToDavid = async function(user_input){
 
   try {
   
-  const completion = await openai.createChatCompletion({
+  const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: messages,
     });
 
-  const completion_text = completion.data.choices[0].message.content;
+  const completion_text = completion.choices[0].message.content;
 
   lastMessage = ({ role: "user", content: user_input},
   {role: "assistant", content: completion_text });    

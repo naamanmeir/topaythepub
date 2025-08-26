@@ -1,10 +1,9 @@
 require("dotenv").config();
 const db = require('../../db');
-const { Configuration, OpenAIApi } = require("openai");
-  const openAiConfig = new Configuration({
+const OpenAI = require("openai");
+const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
-  });
-const openai = new OpenAIApi(openAiConfig);
+});
 
 const CharLimitOnMessages = 6000;
 
@@ -39,12 +38,12 @@ exports.talkToDavid = async function(user_input){
 
   try {
   
-  const completion = await openai.createChatCompletion({
+  const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: messages,
     });
 
-  const completion_text = completion.data.choices[0].message.content;
+  const completion_text = completion.choices[0].message.content;
 
   lastMessage = ({ role: "user", content: user_input},
   {role: "assistant", content: completion_text });    
