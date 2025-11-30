@@ -31,75 +31,110 @@ routerManage.get('/getItemImgs',(req,res) => {
 //---------------------UI FUNCTIONS-----------------------------//
 
 routerManage.post('/searchNameManage/:data', async (req, res) => {
-    var clientName = (req.params.data).replace(/\"/g, '');
-    clientName = clientName.replace(/\'/g, "''");
-    if (clientName == "-") {
-        res.send(JSON.stringify("clear"));
-        return;
-    };
-    let clientsFound = [];
-    clientsFound = (await db.dbGetNameBySearchName(clientName));
-    res.send(clientsFound);
+    try {
+        var clientName = (req.params.data).replace(/\"/g, '');
+        clientName = clientName.replace(/\'/g, "''");
+        if (clientName == "-") {
+            res.send(JSON.stringify("clear"));
+            return;
+        };
+        let clientsFound = [];
+        clientsFound = (await db.dbGetNameBySearchName(clientName));
+        res.send(clientsFound);
+    } catch (err) {
+        console.error("Error in searchNameManage:", err);
+        res.status(500).send("Server Error");
+    }
 });
 
 routerManage.get('/getProducts/', async (req, res) => {
-    let products = [];
-    let listFromDb;
-    listFromDb = await db.dbGetProductsAll();
-    listFromDb.forEach(element => {
-        products.push([JSON.parse(JSON.stringify(element.itemname))]);
-    });
-    // console.log(JSON.stringify(listFromDb));
-    // console.log(listFromDb);
-    res.send(listFromDb);
+    try {
+        let products = [];
+        let listFromDb;
+        listFromDb = await db.dbGetProductsAll();
+        listFromDb.forEach(element => {
+            products.push([JSON.parse(JSON.stringify(element.itemname))]);
+        });
+        // console.log(JSON.stringify(listFromDb));
+        // console.log(listFromDb);
+        res.send(listFromDb);
+    } catch (err) {
+        console.error("Error in getProducts:", err);
+        res.status(500).send("Server Error");
+    }
 });
 
 //---------------------DATA QUERY FUNCTIONS-----------------------------//
 
 routerManage.post('/getAllData/:data', async (req, res) => {
-    let scope = JSON.parse(req.params.data);
-    // let itemsBought;
-    // itemsBought = await db.dbGetItemsBought().then((dbData) => {return (dbData)});
-    // console.log(itemsBought);
-    let dbData;
-    dbData = await db.dbGetDataByScope(scope).then((dbData) => { return (dbData) });
-    // console.log(dbData);
-    res.send(dbData)
+    try {
+        let scope = JSON.parse(req.params.data);
+        // let itemsBought;
+        // itemsBought = await db.dbGetItemsBought().then((dbData) => {return (dbData)});
+        // console.log(itemsBought);
+        let dbData;
+        dbData = await db.dbGetDataByScope(scope);
+        // console.log(dbData);
+        res.send(dbData)
+    } catch (err) {
+        console.error("Error in getAllData:", err);
+        res.status(500).send("Server Error");
+    }
 });
 
 routerManage.get('/getItemsBought/', async (req, res) => {
-    console.log("GET ITEMS BOUGHT AT APP: ");
-    let itemsBought;
-    itemsBought = await db.dbGetItemsBought().then((dbData) => { return (dbData) });
-    console.log(itemsBought);
-    res.send(itemsBought);
+    try {
+        console.log("GET ITEMS BOUGHT AT APP: ");
+        let itemsBought;
+        itemsBought = await db.dbGetItemsBought();
+        console.log(itemsBought);
+        res.send(itemsBought);
+    } catch (err) {
+        console.error("Error in getItemsBought:", err);
+        res.status(500).send("Server Error");
+    }
 });
 
 routerManage.post('/requestReportArchive/:data', async (req, res) => {
-    let tableName = req.params.data;
-    console.log("GETTING ARCHIVE DATA FROM: " + tableName);
-    dbData = await db.dbGetDataFromArchiveByDate(tableName).then((dbData) => { return (dbData) });
-    res.send(dbData);
+    try {
+        let tableName = req.params.data;
+        console.log("GETTING ARCHIVE DATA FROM: " + tableName);
+        dbData = await db.dbGetDataFromArchiveByDate(tableName);
+        res.send(dbData);
+    } catch (err) {
+        console.error("Error in requestReportArchive:", err);
+        res.status(500).send("Server Error");
+    }
 });
 
 routerManage.post('/getUserOrders/:data', async (req, res) => {
-    if (req.params.data == null || isNaN(req.params.data)) { console.log("ID IS NOT A NUMBER"); return; };
-    let clientId = JSON.parse(req.params.data);
-    let dbData;
-    dbData = await db.dbGetClientOrdersById(clientId).then((dbData) => { return (dbData) });
-    res.send(dbData)
+    try {
+        if (req.params.data == null || isNaN(req.params.data)) { console.log("ID IS NOT A NUMBER"); return; };
+        let clientId = JSON.parse(req.params.data);
+        let dbData;
+        dbData = await db.dbGetClientOrdersById(clientId);
+        res.send(dbData)
+    } catch (err) {
+        console.error("Error in getUserOrders:", err);
+        res.status(500).send("Server Error");
+    }
 });
 
 routerManage.get('/getListOfArchiveReport/', async (req, res) => {
-    let archiveList = [];
-    let listFromDb;
-    listFromDb = await db.dbGetListOfArchiveReport().then((archiveList) => { return (archiveList) });
-    listFromDb.forEach(element => {
-        // console.log(JSON.parse(JSON.stringify(element).split(':')[1].replace('}','')));  
-        archiveList.push(JSON.parse(JSON.stringify(element).split(':')[1].replace('}', '')));
-    });
-    // console.log(archiveList);
-    res.send(archiveList);
+    try {
+        let archiveList = [];
+        let listFromDb;
+        listFromDb = await db.dbGetListOfArchiveReport();
+        listFromDb.forEach(element => {
+            // console.log(JSON.parse(JSON.stringify(element).split(':')[1].replace('}','')));  
+            archiveList.push(JSON.parse(JSON.stringify(element).split(':')[1].replace('}', '')));
+        });
+        // console.log(archiveList);
+        res.send(archiveList);
+    } catch (err) {
+        console.error("Error in getListOfArchiveReport:", err);
+        res.status(500).send("Server Error");
+    }
 });
 
 //-------------------------PRODUCTS-----------------------------------------//

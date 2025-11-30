@@ -78,9 +78,9 @@ const port = appPort;
 
 app.set('trust proxy', 1);
 
-app.use(express.json({ limit: '50mb' }));
+app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: false, limit: '50mb' }));
+app.use(express.urlencoded({ extended: false, limit: '1mb' }));
 
 //--------------SESSION CONFIG------------------------//
 

@@ -95,25 +95,35 @@ routerApp.get('/footer', function (req, res) {
 //--------------------------------ELEMENTS-------------------------------//
 
 routerApp.get('/getProducts/', async (req, res) => {
-    let itemArrayToHtml = require("../module/html/content/productItem");
-    let listFromDb = await db.dbGetProducts();
-    const messages = getMessages(req);
-    let html = itemArrayToHtml.buildHtml(messages.ui[0],listFromDb);
-    res.send(html);
-    // console.log("SENT PRODUCTS")
-    delete require.cache[require.resolve("../module/html/content/productItem")];
-    return;
+    try {
+        let itemArrayToHtml = require("../module/html/content/productItem");
+        let listFromDb = await db.dbGetProducts();
+        const messages = getMessages(req);
+        let html = itemArrayToHtml.buildHtml(messages.ui[0],listFromDb);
+        res.send(html);
+        // console.log("SENT PRODUCTS")
+        delete require.cache[require.resolve("../module/html/content/productItem")];
+        return;
+    } catch (err) {
+        console.error("Error in getProducts:", err);
+        res.status(500).send("Server Error");
+    }
 });
 
 routerApp.get('/getProductsJson/', async (req, res) => {
-    let products = [];
-    let listFromDb;
-    listFromDb = await db.dbGetProducts();
-    listFromDb.forEach(item => {
-        let row = [item.itemid, item.itemname, item.price, item.itemimgpath];
-        products.push(JSON.parse(JSON.stringify(row)));
-    });
-    res.send(products);
+    try {
+        let products = [];
+        let listFromDb;
+        listFromDb = await db.dbGetProducts();
+        listFromDb.forEach(item => {
+            let row = [item.itemid, item.itemname, item.price, item.itemimgpath];
+            products.push(JSON.parse(JSON.stringify(row)));
+        });
+        res.send(products);
+    } catch (err) {
+        console.error("Error in getProductsJson:", err);
+        res.status(500).send("Server Error");
+    }
 });
 
 //--------------------------------USERS-------------------------------//
