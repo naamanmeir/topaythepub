@@ -1,4 +1,4 @@
-const db = require('../../db.js');
+const db = require('../database/db.js');
 const clientEvents = require('./../../routes/router_client_events');
 
 async function removeSystemPosts(){    

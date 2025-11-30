@@ -34,8 +34,7 @@ const rateLimitMain = rateLimit({
 });
 
 const startupTools = require('./module/tools/startupClean.js');
-const db = require('./db.js');
-const functions = require('./functions.js');
+const db = require('./module/database/db.js');
 const generateAccessToken = require("./module/session/tokenGen");
 const validateToken = require("./module/session/tokenVal");
 const sessionClassMW = require("./module/session/sessionClass.js");
@@ -44,7 +43,8 @@ const clientEvents = require('./routes/router_client_events');
 // const rateLimitMiddle = require("./module/input/inputThresh.js");
 const { errorLogger, clientLogger, actionsLogger, ordersLogger } = require('./module/logger');
 
-let messagesJson = require('./messages.json');
+const localizationService = require('./module/localization/LocalizationService');
+let messagesJson = localizationService.getMessages();
 let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
 let messageError = messagesJson.error[0];
@@ -110,6 +110,20 @@ app.use(sessions({
         maxAge: COOKIE_EXPIRATION
     }
 }));
+
+app.get('/lang/:lang', (req, res) => {
+    const lang = req.params.lang;
+    if (['he', 'en'].includes(lang)) {
+        req.session.lang = lang;
+        console.log(`Language switched to: ${lang}`);
+    }
+    const referer = req.get('Referer');
+    if (referer) {
+        res.redirect(referer);
+    } else {
+        res.redirect('/');
+    }
+});
 
 if (!production) {
     sessionStore.onReady().then(() => {

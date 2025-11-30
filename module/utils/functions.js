@@ -5,7 +5,7 @@ const fs = require('fs');
 
 // READS IMG FILES OF ITEMS IN MANAGE VIEW
 exports.itemImgArray = function () {
-    const itemsFolder = path.join(__dirname, './public/img/items');
+    const itemsFolder = path.join(__dirname, '../../public/img/items');
     var itemImgArray = [];
     itemImgArray = fs.readdirSync(itemsFolder);
     return itemImgArray;

@@ -1,14 +1,16 @@
 const express = require('express');
 const routerApp = express.Router();
-const functions = require('../functions');
-const db = require('../db');
+const functions = require('../module/utils/functions');
+const db = require('../module/database/db');
 const {actionsLogger, ordersLogger} = require('../module/logger');
 // const { json } = require('stream/consumers');
 
-let messagesJson = require('../messages.json');
-let messageUi = messagesJson.ui[0];
-let messageClient = messagesJson.client[0];
-let messageError = messagesJson.error[0];
+const localizationService = require('../module/localization/LocalizationService');
+
+function getMessages(req) {
+    const lang = req.session && req.session.lang ? req.session.lang : 'he';
+    return localizationService.getMessages(lang);
+}
 
 var now = new Date();
 
@@ -22,39 +24,43 @@ routerApp.get('/', async function (req, res) {
 
 routerApp.get('/messages', async function (req, res) {
     // console.log("SEND MESSAGES OBJECT");
-    messageUi = (messageUi);
-    res.send(messagesJson);
+    const messages = getMessages(req);
+    res.send(messages);
 });
 
 routerApp.get('/header', function (req, res) {
     // console.log("SEND HEADER");
     // res.render('header');
+    const messages = getMessages(req);
     let renderHeader = require("../module/html/main/header");
-    let html = renderHeader.buildHtml(messageUi);
+    let html = renderHeader.buildHtml(messages.ui[0]);
     res.send(html);
 });
 
 routerApp.get('/topMenu', function (req, res) {
     // console.log("SEND SIDEMENU");    
     // res.render('topMenu');
+    const messages = getMessages(req);
     let renderTopMenu = require("../module/html/main/topMenu");
-    let html = renderTopMenu.buildHtml(messageUi);
+    let html = renderTopMenu.buildHtml(messages.ui[0]);
     res.send(html);
 });
 
 routerApp.get('/sideMenu', function (req, res) {
     // console.log("SEND TOPMENU");
     // res.render('sideMenu');
+    const messages = getMessages(req);
     let renderSideMenu = require("../module/html/main/sideMenu");
-    let html = renderSideMenu.buildHtml(messageUi);
+    let html = renderSideMenu.buildHtml(messages.ui[0]);
     res.send(html);
 });
 
 routerApp.get('/floatMenu', function (req, res) {
     // console.log("SEND FLOATMENU");
     // res.render('floatMenu');
+    const messages = getMessages(req);
     let renderFloatMenu = require("../module/html/main/floatMenu");
-    let html = renderFloatMenu.buildHtml(messageUi);
+    let html = renderFloatMenu.buildHtml(messages.ui[0]);
     res.send(html);
 });
 
@@ -71,16 +77,18 @@ routerApp.get('/contentScript', function (req, res) {
 routerApp.get('/about', function (req, res) {
     // console.log("SEND ABOUT");
     // res.render('about');
+    const messages = getMessages(req);
     let renderAbout = require("../module/html/main/about");
-    let html = renderAbout.buildHtml(messageUi);
+    let html = renderAbout.buildHtml(messages.ui[0]);
     res.send(html);
 });
 
 routerApp.get('/footer', function (req, res) {
     // console.log("SEND FOOTER");
     // res.render('footer');
+    const messages = getMessages(req);
     let renderFooter = require("../module/html/main/footer");
-    let html = renderFooter.buildHtml(messageUi);
+    let html = renderFooter.buildHtml(messages.ui[0]);
     res.send(html);
 });
 
@@ -89,7 +97,8 @@ routerApp.get('/footer', function (req, res) {
 routerApp.get('/getProducts/', async (req, res) => {
     let itemArrayToHtml = require("../module/html/content/productItem");
     let listFromDb = await db.dbGetProducts();
-    let html = itemArrayToHtml.buildHtml(messageUi,listFromDb);
+    const messages = getMessages(req);
+    let html = itemArrayToHtml.buildHtml(messages.ui[0],listFromDb);
     res.send(html);
     // console.log("SENT PRODUCTS")
     delete require.cache[require.resolve("../module/html/content/productItem")];

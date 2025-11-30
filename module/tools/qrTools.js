@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 var QRCode = require('qrcode');
 let crypto = require('crypto');
-const db = require('../../db.js');
+const db = require('../database/db.js');
 
 let qrFolder = '/../../public/img/qrCode/';
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const routerClientEvents = express.Router();
-const functions = require('../functions');
-const db = require('../db');
+const functions = require('../module/utils/functions');
+const db = require('../module/database/db');
 const sessionClassMW = require("../module/session/sessionClass");
 const {clientLogger, errorLogger} = require('../module/logger');
 

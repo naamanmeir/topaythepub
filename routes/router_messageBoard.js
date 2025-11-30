@@ -1,16 +1,19 @@
 const express = require('express');
 const routerMessageBoard = express.Router();
-const functions = require('../functions');
-const db = require('../db');
+const functions = require('../module/utils/functions');
+const db = require('../module/database/db');
 const fs = require('fs');
 const path = require('path');
 const formidable = require('formidable');
 const { messageBoardLogger, actionsLogger, errorLogger } = require('../module/logger');
-let messagesJson = require('../messages.json');
+const localizationService = require('../module/localization/LocalizationService');
+
+function getMessages(req) {
+    const lang = req.session && req.session.lang ? req.session.lang : 'he';
+    return localizationService.getMessages(lang);
+}
+
 const clientEvents = require('./router_client_events');
-let messageUi = messagesJson.ui[0];
-let messageClient = messagesJson.client[0];
-let messageError = messagesJson.error[0];
 
 const MaxPostLength = 400;
 
@@ -18,8 +21,6 @@ let chatbot = require("../module/outsource/chatbot");
 let photobot = require("../module/outsource/hug_circulus")
 let translate = require("../module/outsource/gpt_translate");
 let qrTools = require("../module/tools/qrTools");
-
-let chatbotCall = messageUi.chatbotName1;
 
 //------------------------REMOTE CLIENT BOARD-------------------//
 
@@ -41,8 +42,9 @@ let chatbotCall = messageUi.chatbotName1;
 
 routerMessageBoard.get('/openBoard', async function(req, res) {
     let posts = await db.dbGetAllPosts();
+    const messages = getMessages(req);
     let renderMessageBoard = require("../module/html/messageBoard/boardWindow");
-    let html = renderMessageBoard.buildHtml(messageUi, posts);
+    let html = renderMessageBoard.buildHtml(messages.ui[0], posts);
     res.send(html);
     var funcTime = new Date().toLocaleString("HE", { timeZone: "Asia/Jerusalem" });
     // messageBoardLogger.clientMessageBoard(`
@@ -58,16 +60,20 @@ routerMessageBoard.post('/insertPost/', async(req, res) => {
     if (!req.body.post || req.body.post == null || req.body.post == "") { res.end(); return; };
     var post = (req.body.post);
     if (post.length > MaxPostLength) { res.end(); return; };
-    if (findReferences(post, messageUi.chatbotName1Variations) == true) { sendPostToChatbot(post); };
-    if (findReferences(post, messageUi.photobotCodeActivate) == true) { sendPostToPhotobot(1, post); };
-    if (findReferences(post, messageUi.photobotCodeActivatePainting) == true) { sendPostToPhotobot(2, post); };
-    if (findReferences(post, messageUi.photobotCodeActivateItemImage) == true) { sendPostToPhotobotItemPhoto(post); };
+    
+    const messages = getMessages(req);
+    const messageUi = messages.ui[0];
+
+    if (findReferences(post, messageUi.chatbotName1Variations) == true) { sendPostToChatbot(post, messageUi); };
+    if (findReferences(post, messageUi.photobotCodeActivate) == true) { sendPostToPhotobot(1, post, messageUi); };
+    if (findReferences(post, messageUi.photobotCodeActivatePainting) == true) { sendPostToPhotobot(2, post, messageUi); };
+    if (findReferences(post, messageUi.photobotCodeActivateItemImage) == true) { sendPostToPhotobotItemPhoto(post, messageUi); };
     if (findReferences(post, messageUi.createQrToRemoteBoard) == true) {
-        createQrToRemoteBoard();
+        createQrToRemoteBoard(messageUi);
         req.body.user = 77;
     };
     if (findReferences(post, messageUi.createQrToRemoteApp) == true) {
-        createQrToRemoteApp();
+        createQrToRemoteApp(messageUi);
         req.body.user = 77;
     };
     var img;
@@ -122,8 +128,9 @@ routerMessageBoard.post('/deletePost/', async(req, res) => {
     // "DELETED POST"
     // `); 
     let posts = await db.dbGetAllPosts();
+    const messages = getMessages(req);
     let renderMessageBoard = require("../module/html/messageBoard/postsDiv");
-    let html = renderMessageBoard.buildHtml(messageUi, posts);
+    let html = renderMessageBoard.buildHtml(messages.ui[0], posts);
     res.json(html);
     res.end();
     sendRefreshPostsNoScrollEventToAllClients();
@@ -175,14 +182,16 @@ routerMessageBoard.post('/insertImage', async(req, res) => {
         finalImageName = (path.parse(originalName).name) + path.parse(originalName).ext;
         finalImageName = JSON.stringify(finalImageName);
         console.log(finalImageName);
-        insertPostWithImage(req, res, post, null, finalImageName);
+        const messages = getMessages(req);
+        const messageUi = messages.ui[0];
+        insertPostWithImage(req, res, post, null, finalImageName, messageUi);
     });
 
 });
 
-async function insertPostWithImage(req, res, post, user, image) {
+async function insertPostWithImage(req, res, post, user, image, messageUi) {
     post = post.substring(0, MaxPostLength);
-    if (findReferences(post, messageUi.chatbotName1Variations) == true) { sendPostToChatbot(post); };
+    if (findReferences(post, messageUi.chatbotName1Variations) == true) { sendPostToChatbot(post, messageUi); };
     let dbResponse = await db.dbInsertPost(post, user, image);
     var funcTime = getTime();
     // messageBoardLogger.clientMessageBoard(`
@@ -271,7 +280,7 @@ function findReferencesWithIndex(source, target) {
     return -1;
 };
 
-async function sendPostToPhotobot(mode, post) {
+async function sendPostToPhotobot(mode, post, messageUi) {
     if (photobot.photobotIsBusy == 1) { messageBoardLogger.clientMessageBoard(`"PHOTOBOT BUSY"`); return; };
     let messageStart = findReferencesWithIndex(post, messageUi.photobotCodeActivate);
     messageStart = messageStart + messageUi.photobotCodeActivate.length + 1;
@@ -305,7 +314,7 @@ async function sendPostToPhotobot(mode, post) {
     return;
 };
 
-async function sendPostToPhotobotItemPhoto(post) {
+async function sendPostToPhotobotItemPhoto(post, messageUi) {
     if (photobot.photobotIsBusy == 1) { messageBoardLogger.clientMessageBoard(`"PHOTOBOT BUSY"`); return; };
     let messageStart = findReferencesWithIndex(post, messageUi.photobotCodeActivate);
     messageStart = messageStart + messageUi.photobotCodeActivateItemImage.length + 1;
@@ -340,7 +349,7 @@ async function sendPostToPhotobotItemPhoto(post) {
     return;
 };
 
-async function sendPostToChatbot(post) {
+async function sendPostToChatbot(post, messageUi) {
     let findChatbotCodeRemember = findReferencesWithIndex(post, messageUi.chatbotRememberCode);
     let findChatbotCodeForget = findReferencesWithIndex(post, messageUi.chatbotForgetCode);
     let findChatbotCodeForgetEverything = findReferencesWithIndex(post, messageUi.chatbotForgetEverythingCode);
@@ -394,7 +403,7 @@ async function sendRemoveAllFactsToChatbot() {
     return dbResponse;
 };
 
-async function createQrToRemoteBoard() {
+async function createQrToRemoteBoard(messageUi) {
     let qrImg = await qrTools.createQrToRemoteBoard();
     qrImg = '../qrCode/' + qrImg;
     let qRpost = messageUi.qRmessageToRemoteBoard;
@@ -406,7 +415,7 @@ async function createQrToRemoteBoard() {
     return;
 };
 
-async function createQrToRemoteApp() {
+async function createQrToRemoteApp(messageUi) {
     console.log("CREATED QR CODE TO REMOTE MASOF");
     let qrData = await qrTools.createQrToRemoteApp();    
     let link = qrData.link;
@@ -469,8 +478,9 @@ routerMessageBoard.get('/reloadPosts/', async(req, res) => {
     // time: ${funcTime} 
     // "SENT ALL POSTS TO CLIENT"
     // `); 
+    const messages = getMessages(req);
     let renderMessageBoard = require("../module/html/messageBoard/postsDiv");
-    let html = renderMessageBoard.buildHtml(messageUi, posts);
+    let html = renderMessageBoard.buildHtml(messages.ui[0], posts);
     res.json(html);
     res.end();
     return;

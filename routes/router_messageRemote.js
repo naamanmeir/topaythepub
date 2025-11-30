@@ -1,13 +1,14 @@
 const express = require('express');
 const routerRemoteMessageBoard = express.Router();
-const functions = require('../functions');
-const db = require('../db');
+const functions = require('../module/utils/functions');
+const db = require('../module/database/db');
 const fs = require('fs');
 const path = require('path');
 const formidable = require('formidable');
 const clientEvents = require('./router_client_events');
 const { messageBoardLogger, actionsLogger, errorLogger } = require('../module/logger');
-let messagesJson = require('../messages.json');
+const localizationService = require('../module/localization/LocalizationService');
+let messagesJson = localizationService.getMessages();
 let messageUi = messagesJson.ui[0];
 let messageClient = messagesJson.client[0];
 let messageError = messagesJson.error[0];

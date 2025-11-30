@@ -1,5 +1,5 @@
 require("dotenv").config();
-const db = require('../../db');
+const db = require('../database/db');
 const { Configuration, OpenAIApi } = require("openai");
   const openAiConfig = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,

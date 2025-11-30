@@ -1,5 +1,6 @@
 const { createLogger, format, transports, config } = require('winston');
 const { combine, timestamp, label, prettyPrint, json, simple, printf } = format;
+
 const logLevels = {
     levels: {
         error: 0,
@@ -18,7 +19,7 @@ const logLevels = {
     colors: {
         error: 'red',
         login: 'blue',
-        order: 'gren',
+        order: 'green',
         userAction: 'yellow',
         clientLogin: 'orange',
         clientAttempted: 'red',
@@ -29,71 +30,65 @@ const logLevels = {
     }
 };
 
+// Custom format for more informative logs
+const customFormat = format.combine(
+    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    format.printf(({ level, message, timestamp }) => {
+        return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+    })
+);
+
 const errorLogger = createLogger({
     levels: logLevels.levels,
-    format: format.combine(
-        format.timestamp(),
-        simple(),
-    ),
+    format: customFormat,
     transports: [
         new transports.Console({ level: 'error' }),
-        new transports.File({ filename: 'errors.log', level: 'error' })
+        new transports.File({ filename: 'log/errors.log', level: 'error' })
     ]
 });
 
 const clientLogger = createLogger({
     levels: logLevels.levels,
-    format: format.combine(
-        format.timestamp({ format: 'MM-DD-YY : HH:MM' }),
-        simple(),
-    ),
+    format: customFormat,
     transports: [
         new transports.Console({ level: 'clientLogin' }),
-        new transports.File({ filename: 'clientLogin.log', level: 'clientLogin' }),
-        new transports.File({ filename: 'clientLogin.log', level: 'clientAttempted' }),
-        new transports.File({ filename: 'clientLogin.log', level: 'clientRegistered' }),
-        new transports.File({ filename: 'clientLogin.log', level: 'clientUnregistered' }),
-        new transports.File({ filename: 'clientLogin.log', level: 'clientLogout' }),
+        new transports.File({ filename: 'log/clientLogin.log', level: 'clientLogin' }),
+        new transports.File({ filename: 'log/clientLogin.log', level: 'clientAttempted' }),
+        new transports.File({ filename: 'log/clientLogin.log', level: 'clientRegistered' }),
+        new transports.File({ filename: 'log/clientLogin.log', level: 'clientUnregistered' }),
+        new transports.File({ filename: 'log/clientLogin.log', level: 'clientLogout' }),
     ]
 });
 
 const actionsLogger = createLogger({
     levels: logLevels.levels,
-    format: format.combine(
-        // format.timestamp(),
-        simple(),
-    ),
+    format: customFormat,
     transports: [
         new transports.Console({ level: 'login' }),
-        new transports.File({ filename: 'login.log', level: 'login' }),
+        new transports.File({ filename: 'log/login.log', level: 'login' }),
         new transports.Console({ level: 'logout' }),
-        new transports.File({ filename: 'login.log', level: 'logout' }),
+        new transports.File({ filename: 'log/login.log', level: 'logout' }),
         // new transports.Console({level:'userAction'}),
-        new transports.File({ filename: 'actions.log', level: 'userAction' })
+        new transports.File({ filename: 'log/actions.log', level: 'userAction' })
     ]
 });
+
 const ordersLogger = createLogger({
     levels: logLevels.levels,
-    format: format.combine(
-        format.timestamp(),
-        simple(),
-    ),
+    format: customFormat,
     transports: [
         // new transports.Console({level:'order'}),
-        new transports.File({ filename: 'orders.log', level: 'order', level: 'orderDelete' }),
-        // new transports.Console({level:'orderDelete'}),
-        // new transports.File({ filename: 'orders.log' , level:'orderDelete'})
+        new transports.File({ filename: 'log/orders.log', level: 'order' }),
+        new transports.File({ filename: 'log/orders.log', level: 'orderDelete' })
     ]
 });
+
 const messageBoardLogger = createLogger({
     levels: logLevels.levels,
-    format: format.combine(
-        format.timestamp(),
-        simple(),
-    ),
+    format: customFormat,
     transports: [
         // new transports.Console({level:'clientMessageBoard'}),
-        new transports.File({ filename: 'messageBoard.log', level: 'clientMessageBoard' })
+        new transports.File({ filename: 'log/messageBoard.log', level: 'clientMessageBoard' })
     ]
 });
 

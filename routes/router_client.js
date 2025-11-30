@@ -1,14 +1,15 @@
 const express = require('express');
 const routerClient = express.Router();
-const functions = require('../functions');
-const db = require('../db');
+const functions = require('../module/utils/functions');
+const db = require('../module/database/db');
 const { actionsLogger, ordersLogger, errorLogger } = require('../module/logger');
 const validatorClient = require("../module/input/inputValidatorClient.js");
-let messagesJson = require('../messages.json');
-let messageUi = messagesJson.ui[0];
-let messageClient = messagesJson.client[0];
-let messageError = messagesJson.error[0];
+const localizationService = require('../module/localization/LocalizationService');
 
+function getMessages(req) {
+    const lang = req.session && req.session.lang ? req.session.lang : 'he';
+    return localizationService.getMessages(lang);
+}
 
 //------------------------CLIENT UI COMMANDS-------------------//
 
@@ -19,8 +20,9 @@ routerClient.post('/searchName/', async(req, res) => {
     var query = (req.body.name);
     let names = [];
     names = await db.dbGetNameByNick(query);
+    const messages = getMessages(req);
     if (names.length == 0) {
-        res.send(JSON.stringify({ 'errorClient': messageClient.notExist }));
+        res.send(JSON.stringify({ 'errorClient': messages.client[0].notExist }));
         return;
     };
     res.send(JSON.stringify(names));
@@ -32,12 +34,13 @@ routerClient.post('/userLogin/', async(req, res) => {
     let loggedUserDetails = [];
     // actionsLogger.login(actionsLogger.login(req.body.id));
     loggedUserDetails = await db.dbGetClientDetailsById(req.body.id);
+    const messages = getMessages(req);
     loggedUserDetails = JSON.stringify({
         'id': req.body.id,
         'name': loggedUserDetails[0].name,
         'nick': loggedUserDetails[0].nick,
         'account': loggedUserDetails[0].account,
-        'message': messageClient.logged
+        'message': messages.client[0].logged
     });
     res.send(loggedUserDetails);
     return;
@@ -68,16 +71,17 @@ routerClient.post('/getUserPage/', async(req, res) => {
         res.end();
         return;
     };
+    const messages = getMessages(req);
     loggedUserDetails = JSON.stringify({
         'id': req.body.id,
         'name': loggedUserDetails[0].name,
         'nick': loggedUserDetails[0].nick,
         'account': loggedUserDetails[0].account,
-        'message': messageClient.logged
+        'message': messages.client[0].logged
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
     let userDataFromDb = await db.dbGetClientInfoById(reqId);
-    let html = JSON.stringify(userPageModule.buildHtml(messageUi, loggedUserDetails, userDataFromDb));
+    let html = JSON.stringify(userPageModule.buildHtml(messages.ui[0], loggedUserDetails, userDataFromDb));
     res.send(html);
     delete require.cache[require.resolve("../module/html/content/userPage")];
     return;
@@ -94,6 +98,7 @@ routerClient.post('/userAutoLogout/', async(req, res) => {
     // account:${autoLoggedOutUserDetails[0].account}
     // `);
 
+    const messages = getMessages(req);
     autoLoggedOutUserDetails = JSON.stringify({
         'id': req.body.id,
         'name': autoLoggedOutUserDetails[0].name,
@@ -113,14 +118,16 @@ routerClient.post('/changeNick/', validatorClient(), async(req, res) => {
 
     let isNickExist = await db.dbGetNameByNickExact(newNick);
 
+    const messages = getMessages(req);
+
     if (isNickExist.length != 0) {
-        res.json({ 'errorClient': messageClient.clientChangeNickExist });
+        res.json({ 'errorClient': messages.client[0].clientChangeNickExist });
         return;
     };
 
     let newUserNickNameResults = await db.dbChangeNickById(newNick, id);
-    console.log(messageClient.clientChangeNickOk + '' + newNick)
-    res.json({ 'errorClient': messageClient.clientChangeNickOk + newNick });
+    console.log(messages.client[0].clientChangeNickOk + '' + newNick)
+    res.json({ 'errorClient': messages.client[0].clientChangeNickOk + newNick });
     actionsLogger.userAction(`
     message: CHANGE NICKNAME OF USER : 
     id: ${req.body.id} ,
@@ -137,12 +144,13 @@ routerClient.post('/requestOrderPage/', async(req, res) => {
     if (!req.body.order && !req.body.userId) { res.end(); return; };
     let orderDataRaw = req.body;
     let orderData = Object.entries(req.body.order);
+    const messages = getMessages(req);
     for (i = 0; i < orderData.length; i++) {
         if (orderData[i][1] < 0 ||
             orderData[i][1] > 99 ||
             !Number.isInteger(orderData[i][1])) {
             console.log("ERROR WITH ITEMS QUANTITY");
-            res.send(JSON.stringify({ 'errorClient': messageError.orderQuantity }));
+            res.send(JSON.stringify({ 'errorClient': messages.error[0].orderQuantity }));
             res.end();
             return;
         };
@@ -164,10 +172,10 @@ routerClient.post('/requestOrderPage/', async(req, res) => {
         'name': loggedUserDetails[0].name,
         'nick': loggedUserDetails[0].nick,
         'account': loggedUserDetails[0].account,
-        'message': messageClient.orderMessage
+        'message': messages.client[0].orderMessage
     });
     loggedUserDetails = JSON.parse(loggedUserDetails);
-    let html = orderConfirmPage.buildHtml(messageUi, loggedUserDetails, orderBuiltData, orderPriceSum);
+    let html = orderConfirmPage.buildHtml(messages.ui[0], loggedUserDetails, orderBuiltData, orderPriceSum);
     orderBuiltData = JSON.stringify(orderBuiltData);
     let htmlOrderData = { "html": html, "orderData": orderDataRaw, "totalSum": orderPriceSum };
     orderBuiltData = JSON.stringify(htmlOrderData);
@@ -201,19 +209,20 @@ routerClient.post('/placeOrder/', async function(req, res) {
         sum: ${orderPriceSum} 
         contains: ${orderInfo}
         `);
+    const messages = getMessages(req);
     let orderResponse = `
-    ${messageClient.orderResponse1}
+    ${messages.client[0].orderResponse1}
     <br>
     ${orderInfo}
     <br>
-    ${messageClient.orderResponse2}
+    ${messages.client[0].orderResponse2}
     ${orderPriceSum}
-    ${messageClient.orderResponse3}
+    ${messages.client[0].orderResponse3}
     <br>
-    ${messageClient.orderResponse4}
+    ${messages.client[0].orderResponse4}
     ${loggedUserDetails[0].name}
     <br>
-    ${messageClient.orderResponse5}
+    ${messages.client[0].orderResponse5}
     `;
     orderResponse = JSON.stringify(orderResponse);
     res.send(orderResponse);
@@ -245,8 +254,9 @@ routerClient.post('/deleteLastOrderConfirm/', async(req, res) => {
     user: ${userId} 
     contains: ${orderInfo.info}
     `);
+    const messages = getMessages(req);
     let deleteOrderConfirmPage = require("../module/html/content/orderDeleteConfirm");
-    let html = JSON.stringify(deleteOrderConfirmPage.buildHtml(messageClient, messageUi, loggedUserDetails, orderInfo));
+    let html = JSON.stringify(deleteOrderConfirmPage.buildHtml(messages.client[0], messages.ui[0], loggedUserDetails, orderInfo));
     res.send(html);
     delete require.cache[require.resolve("../module/html/content/orderDeleteConfirm")];
     return;

@@ -1,6 +1,6 @@
 const { Client, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
-const db = require('../../db.js');
+const db = require('../database/db.js');
 
 class WhatsAppPubBot {
     constructor() {
