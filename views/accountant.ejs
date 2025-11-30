@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,84 +8,86 @@
     <link rel="stylesheet" href="css/accountant.css">
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 </head>
-<body>
+
+<body class="fade-in">
 
     <%- include('./partials/headerStatic'); %>
 
-    <div class="row linebreak"></div>
+        <div class="row linebreak"></div>
 
-    <!-- TEXT FIELDS -->
-    <div class="content column">  
+        <!-- TEXT FIELDS -->
+        <div class="content column">
 
             <!-- BUTTONS -->
-    <div class="content row">
+            <div class="content row">
 
-        <div id="getAccountData">
-            <button class="buttonBig" onclick="createReportFileOrders()">הורדת דו"ח עסקאות</button>
-        </div>
+                <div id="getAccountData">
+                    <button class="buttonBig" onclick="createReportFileOrders()">הורדת דו"ח עסקאות</button>
+                </div>
 
-        <div class="buttonSmall" id="getAccountData">
-            <button onclick="getAllData(5)">הצגת דו"ח עסקאות</button>
-        </div>
+                <div class="buttonSmall" id="getAccountData">
+                    <button onclick="getAllData(5)">הצגת דו"ח עסקאות</button>
+                </div>
 
-        <div class="function" id="resetDbData">
-            <button class="red" onclick="resetAfterReport()">איפוס נתונים לאחר קריאה</button>
-        </div>
+                <div class="function" id="resetDbData">
+                    <button class="red" onclick="resetAfterReport()">איפוס נתונים לאחר קריאה</button>
+                </div>
 
-    </div>
+            </div>
 
-    <div class="row linebreak"></div>
+            <div class="row linebreak"></div>
 
-    <div class="content row">
+            <div class="content row">
 
-        <div id="getAccountData">
-            <button class="buttonBig" onclick="createReportFileClients()">הורדת דו"ח סך הכל למשתמש</button>
-        </div>
-
-
-        <div class="buttonSmall" id="getAccountData">
-            <button onclick="getAllData(4)">הצגת דו"ח סך הכל למשתמש</button>
-        </div>
-        
-    </div>
-
-    <div class="row linebreak"></div>
+                <div id="getAccountData">
+                    <button class="buttonBig" onclick="createReportFileClients()">הורדת דו"ח סך הכל למשתמש</button>
+                </div>
 
 
-    <div class="content row">
+                <div class="buttonSmall" id="getAccountData">
+                    <button onclick="getAllData(4)">הצגת דו"ח סך הכל למשתמש</button>
+                </div>
 
-        <div class="buttonSmall" id="getOrdersData">
-            <button onclick="getAllData(1)">הצגת כל העסקאות</button>
-        </div>
+            </div>
 
-        <div class="buttonSmall" id="getClientData">
-            <button onclick="getAllData(2)">הצגת נתוני משתמשים</button>
-        </div>
+            <div class="row linebreak"></div>
 
-        <div class="function" id="backupTable">
-            <button onclick="backupTable()">יצירת גיבוי חדש לפי תאריך עכשווי</button>
-        </div>
 
-        <!-- <div class="buttonSmall" id="getClientData">
+            <div class="content row">
+
+                <div class="buttonSmall" id="getOrdersData">
+                    <button onclick="getAllData(1)">הצגת כל העסקאות</button>
+                </div>
+
+                <div class="buttonSmall" id="getClientData">
+                    <button onclick="getAllData(2)">הצגת נתוני משתמשים</button>
+                </div>
+
+                <div class="function" id="backupTable">
+                    <button onclick="backupTable()">יצירת גיבוי חדש לפי תאריך עכשווי</button>
+                </div>
+
+                <!-- <div class="buttonSmall" id="getClientData">
             <button onclick="getAllData(3)">הצגת נתוני משתמשים</button>
         </div> -->
 
-    </div>
+            </div>
 
-    <div class="row linebreak"></div>
+            <div class="row linebreak"></div>
 
-    <div class="archive">
-        <p>ארכיון טבלאות  </p>
-        <select name="reportArchive" id="reportArchive">
-        </select>
-        <button class="green" onclick="requestReportArchive()">הצג נתוני ארכיון</button>
-    </div>    
+            <div class="archive">
+                <p>ארכיון טבלאות </p>
+                <select name="reportArchive" id="reportArchive">
+                </select>
+                <button class="green" onclick="requestReportArchive()">הצג נתוני ארכיון</button>
+            </div>
 
-    <div class="row linebreak"></div>
-    
-    <%- include('./partials/footer'); %>
+            <div class="row linebreak"></div>
 
-    <script src="js/script-accountant.js"></script>
-    
+            <%- include('./partials/footer'); %>
+
+                <script src="js/script-accountant.js"></script>
+
 </body>
+
 </html>

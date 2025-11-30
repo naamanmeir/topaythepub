@@ -11,7 +11,22 @@ body,
     scroll-behavior: smooth;
     /* float: center; */
 }
-.header{
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.header {
     grid-area: header;
     text-align: center;
     right: 0px;
@@ -19,7 +34,8 @@ body,
     padding: 0px;
     padding-top: 1%;
 }
-.header p{
+
+.header p {
     color: blue;
     font-size: 2rem;
     line-height: 0.5rem;
@@ -28,67 +44,77 @@ body,
     padding-top: 3%;
     padding-bottom: 3%;
 }
+
 .content {
-    height: fit-content;        
+    height: fit-content;
     max-width: 1200px;
     /* float: center; */
     left: 50%;
-    right: 50%;    
+    right: 50%;
     display: flex;
     margin: auto;
     /* gap: 10px 10px; */
 }
-.column{
+
+.column {
     flex-direction: column;
 }
-.row{
+
+.row {
     padding-top: 1%;
     flex-direction: row;
 }
-.tableStyle{
+
+.tableStyle {
     width: 100%;
     font-size: 3rem;
     color: aqua;
     background-color: rgb(223, 14, 14);
     color: lightblue;
 }
-.logText{
+
+.logText {
     direction: ltr;
 }
+
 button {
     margin: 0.8rem;
-    height: 4rem;    
+    height: 4rem;
     width: fit-content;
     height: fit-content;
-    min-height: 3rem;    
+    min-height: 3rem;
 }
-.buttonBig{
+
+.buttonBig {
     background-color: green;
     font-size: larger;
     color: whitesmoke;
 }
-.buttonSmall{
+
+.buttonSmall {
     width: fit-content;
 }
-.red{
+
+.red {
     background-color: red;
 }
-.footer{
-    color: black;    
+
+.footer {
+    color: black;
     position: sticky;
     text-align: center;
     font-size: x-small;
     /* line-height: 50px; */
     height: 1px;
-    bottom: 0px;    
+    bottom: 0px;
     padding: 0px 0px 0px 0px;
     padding-bottom: 0px;
     padding-top: 10px;
-    margin: 0px 0px 0px 0px;    
+    margin: 0px 0px 0px 0px;
     margin-bottom: 3%;
 }
 
-.linebreak{
+.linebreak {
     background-color: green;
     width: 100%;
     margin-top: 1rem;
