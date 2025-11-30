@@ -1,45 +1,32 @@
 :root {
-    /* Modern Dark Theme Palette */
-    --bg01: #121212;
-    /* Softer black */
-    --bg02: rgba(255, 255, 255, 0.1);
-    /* More subtle overlay */
-    --bg03: rgba(1, 30, 40, 0.2);
+    --bg01: black;
+    --bg02: rgba(104, 99, 99, 0.283);
+    --bg03: rgba(1, 30, 40, 0.093);
 
-    /* Brighter Text Colors */
-    --text01: #FFD54F;
-    /* Brighter Amber */
-    --text02: #FFFF8D;
-    /* Brighter Yellow */
-    --text03: #CFD8DC;
-    /* Brighter Blue Grey */
-    --text04: #69F0AE;
-    /* Green Accent */
-    --textBlack: #212121;
+    --text01: rgb(225, 168, 10);
+    --text02: rgb(255, 255, 0);
+    --text03: rgb(148, 158, 158);
+    --text04: rgb(55, 227, 58);
+    --textBlack: black;
 
-    --border01: rgba(255, 193, 7, 0.5);
-    /* More visible border */
-    --border02: #8D6E63;
-    --border03: #4CAF50;
+    --border01: rgba(194, 172, 4, 0.353);
+    --border02: rgb(162, 146, 123);
+    --border03: rgb(29, 182, 50);
 
-    --buttonYes: #4CAF50;
-    --buttonNo: #FF5722;
+    --buttonYes: rgb(3, 183, 3);
+    --buttonNo: rgb(255, 116, 3);
 
-    --buttonBgYes: #43A047;
-    --buttonBgNo: #E64A19;
+    --buttonBgYes: rgb(3, 183, 3);
+    --buttonBgNo: rgb(255, 94, 0);
 
-    --listItemOdd: #ECEFF1;
-    --listItemEven: #CFD8DC;
-    --listItemSelected: #90CAF9;
+    --listItemOdd: #b9c1c3;
+    --listItemEven: #d4d4d4;
+    --listItemSelected: #699db7;
 
-    --itemPrice: #2E7D32;
-    --itemCount: #1B5E20;
-    --itemName: #F57F17;
+    --itemPrice: #19e607;
+    --itemCount: rgb(2, 255, 2);
+    --itemName: #ffd000;
 
-    /* Font Parameter */
-    --main-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* --main-font: 'DanaYad', sans-serif; */
-    /* Uncomment to use handwriting font */
 }
 
 input:-webkit-autofill,
@@ -47,25 +34,25 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:blur,
 input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px var(--bg01) inset !important;
-    -webkit-text-fill-color: var(--text01) !important;
-    transition: background-color 5000s ease-in-out 0s;
+    -webkit-box-shadow: 0 0 0 30px rgba(18, 13, 13, 0) inset !important;
 }
 
 /* ------------------scrollbar--------------------- */
 ::-webkit-scrollbar {
-    width: 6px;
-    /* Thinner scrollbar */
+    width: 8px;
 }
 
 ::-webkit-scrollbar-corner,
 ::-webkit-scrollbar-track {
-    background-color: var(--bg01);
+    background-color: rgba(64, 64, 64, 0.7);
+    border-radius: 50%;
+    padding-left: 1rem;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--text01);
-    border-radius: 10px;
+    background: rgba(255, 132, 0, 0.591);
+    border-radius: 40%;
+    background-clip: padding-box;
 }
 
 /* ------------------scrollbar--------------------- */
@@ -76,17 +63,19 @@ input:-webkit-autofill:active {
     src: url('../fonts/danaYad/DanaYadAlefAlefAlef-Normal.eot') format('embedded-opentype'),
         url('../fonts/danaYad/DanaYadAlefAlefAlef-Normal.woff') format('woff'),
         url('../fonts/danaYad/DanaYadAlefAlefAlef-Normal.otf') format('truetype');
-    font-display: swap;
-    /* Improve loading performance */
 }
 
 
 html,
 body {
-    height: 100%;
-    /* Fallback */
+    /* height: 100%; */
+    /* width: 100vw; */
+    /* margin: 0px; */
+    /* padding: 0px; */
+    /* top: 0px; */
     height: -webkit-fill-available;
     max-height: 100%;
+    /* width: -webkit-fill-available; */
     overflow: hidden;
     overscroll-behavior: contain;
     direction: rtl;
@@ -96,23 +85,14 @@ body {
     -o-user-select: none;
     user-select: none;
     scroll-behavior: smooth;
-    font-family: var(--main-font);
-    font-size: 16px;
-    /* Base font size */
+    /* white-space: nowrap; */
 }
 
 body {
+    /* display: flex; */
+    /* flex-direction: column; */
     background-color: var(--bg01);
-    color: var(--text01);
-    margin: 0;
-    padding: 0;
-}
-
-/* Responsive Typography */
-@media (max-width: 768px) {
-    html {
-        font-size: 14px;
-    }
+    max-height: 100%;
 }
 
 p {
@@ -272,65 +252,67 @@ p {
 }
 
 .floatMenuDiv {
-    position: fixed;
-    /* Fixed to screen */
+    position: absolute;
     height: fit-content;
     width: fit-content;
-    min-width: 5rem;
-    max-width: 8rem;
-    z-index: 60;
-    /* Above input (48), below windows (80+) */
-    top: 100px;
-    /* Moved to top-left */
-    left: 10px;
-    border-radius: 15px;
-    border: 1px solid var(--border02);
-    transition: 0.3s;
-    background-color: rgba(103, 58, 183, 0.7);
-    /* Deep Purple, semi-transparent */
-    padding: 0.5rem;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    max-width: 7rem;
+    z-index: 40;
+    bottom: 17%;
+    left: 1%;
+    border-radius: 50%;
+    border: 1px outset var(--border02);
+    transition: 0.5s;
+    background-color: #c300ff88;
 }
 
 .floatMenuDiv:active {
     border: 1px inset var(--border02);
-    background-color: rgba(103, 58, 183, 0.9);
+
 }
 
-.floatMenuDiv p,
+.floatMenuDiv p {
+    z-index: 40;
+    color: var(--text03);
+    font-size: 1.2rem;
+    margin: auto;
+    padding: 1.2rem;
+    color: yellow;
+}
+
 .floatMenuDiv a {
     z-index: 40;
-    color: #FFF;
-    /* White text for readability */
-    font-size: 1rem;
-    margin: auto;
-    padding: 0.5rem;
+    color: var(--text03);
     text-decoration: none;
+    padding: 8px 32px 18px 8px;
+    text-decoration: none;
+    font-size: 100%;
+    text-align: center;
+    margin: auto;
     display: block;
-    font-weight: 500;
+    transition: 0.3s;
+    border-radius: 50%;
 }
 
 .floatMenuDiv a:hover {
+    border-radius: 50%;
+    z-index: 40;
+    background-color: var(--bg02);
     color: var(--text02);
 }
 
 @media screen and (max-height: 700px),
 (max-width: 500px) {
     .floatMenuDiv {
-        top: 80px;
-        /* Adjust for mobile header */
-        left: 10px;
-        padding: 0.3rem;
+        bottom: 40%;
+        left: 1%;
     }
 
-    .floatMenuDiv p,
-    .floatMenuDiv a {
-        font-size: 0.9rem;
+    .floatMenuDiv p {
+        font-size: 1rem;
+
     }
+
 }
-
-
 
 .messageWindow {
     z-index: 200;
@@ -838,49 +820,33 @@ p {
 
 
 .window {
-    z-index: 200;
-    /* High z-index for modal */
-    position: fixed;
-    /* Fixed position to stay on screen */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* Center exactly */
+    z-index: 50;
+    position: absolute;
+    max-height: 90%;
+    height: 95%;
     width: 90%;
-    max-width: 600px;
-    /* Don't get too wide on desktop */
-    height: auto;
-    max-height: 90vh;
-    /* Prevent overflow */
-    overflow-y: auto;
-    /* Scroll if content is too tall */
-    padding: 2rem;
-    background-color: var(--bg01);
-    border: 2px solid var(--border01);
-    border-radius: 1rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
-    text-align: center;
-    /* Center text by default */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    top: 3%;
+    left: 5%;
+    margin: 0px 0px 0px 0px;
+    padding: 5px 5px 5px 5px;
+    background-color: rgb(0, 0, 0);
+    border: 5px groove var(--border01);
+    /* border-radius: 3rem; */
+    margin: auto;
+    text-align: right;
 }
 
 .fontLarge {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    font-size: xx-large;
 }
 
 .windowbuttons {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    /* Allow wrapping on small screens */
-    justify-content: center;
-    gap: 1rem;
-    /* Space between buttons */
     width: 100%;
-    margin-top: 2rem;
+    margin: auto auto 5% auto;
+    margin-bottom: 1rem;
+    bottom: 0px;
 }
 
 .windowButton {
@@ -888,28 +854,21 @@ p {
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 1.5rem;
-    /* Reasonable font size */
-    padding: 1rem 2rem;
-    width: auto;
-    flex: 1;
-    /* Grow to fill space */
-    min-width: 120px;
-    /* Minimum width for touch targets */
-    height: auto;
-    min-height: 3rem;
-    margin: 0;
-    /* Reset margins */
+    font-size: 4rem;
+    padding: 4rem;
+    width: 90%;
+    height: 1rem;
+    min-height: fit-content;
+    max-height: 20rem;
+    margin: auto;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
     color: black;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: transform 0.1s, filter 0.1s;
+    border: 5px outset var(--border01);
 }
 
 .windowButton:active {
-    transform: scale(0.95);
-    filter: brightness(0.9);
+    border: 5px inset grey;
 }
 
 .no {

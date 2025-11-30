@@ -1,23 +1,14 @@
 .content {
     z-index: 5;
     height: 90%;
-    width: 100%;
-    /* Full width on mobile */
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 98%;
+    left: 1%;
+    right: 1%;
+    margin: auto;
     display: flex;
     flex-direction: column;
+    max-width: 1200px;
     transition: background-color 0.8s ease;
-    padding: 0 10px;
-    /* Add side padding */
-    box-sizing: border-box;
-}
-
-@media (min-width: 768px) {
-    .content {
-        width: 95%;
-        padding: 0;
-    }
 }
 
 .hidden {
@@ -27,59 +18,56 @@
 
 .searchBoxDiv {
     z-index: 48;
-    margin: 0 auto;
+    margin: auto;
     width: 100%;
     margin-top: 0.5rem;
-    height: auto;
-    /* Allow flexible height */
-    min-height: 4rem;
-    display: flex;
+    height: 6rem;
+    top: 0px;
+    margin-bottom: 0px;
     align-items: center;
-    justify-content: center;
     text-align: center;
-    position: relative;
-    /* Anchor for absolute positioning */
 }
 
 .searchBox {
-    color: var(--text01);
+    color: rgb(245, 191, 90);
     text-shadow: 1px 0px 0px var(--bg01);
-    border-radius: 8px;
-    /* Softer corners */
-    border: 1px solid var(--text01);
+    border-radius: 1%;
+    border: 1px double orange;
     background-color: var(--bg01);
-    height: 3.5rem;
-    /* Fixed reasonable height */
+    height: 100%;
+    min-height: 4rem;
+    flex-shrink: 0;
     width: 100%;
-    font-size: 1.5rem;
-    /* Smaller font for mobile */
-    padding: 0 1rem;
-    margin: 0;
+    font-size: 2.1rem;
+    margin: auto;
+    padding-top: 0px;
+    padding-right: 1em;
+    padding-left: 1em;
+    padding-bottom: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
     user-select: none;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.searchBox:focus {
-    border-color: var(--text04);
-    box-shadow: 0 0 5px var(--text04);
-}
-
-@media (min-width: 768px) {
-    .searchBox {
-        font-size: 2rem;
-        height: 4rem;
-    }
 }
 
 ::placeholder {
-    color: var(--text03);
-    opacity: 0.7;
+    color: var(--text04);
+    opacity: 1;
+    padding-right: 2%;
 }
 
 *:focus {
     outline: none;
 }
+
+
+/* .searchBoxLogged {
+    border-color: green;
+    transition: all 0.2s;
+}
+
+.searchBoxNotLogged {
+    border-color: orange;
+} */
 
 .autoCompleteNone {
     display: none;
@@ -87,53 +75,29 @@
 }
 
 .autoCompleteSuggestions {
-    z-index: 100;
-    /* Ensure it floats above everything */
-    position: absolute;
-    /* Float under the input */
-    top: 100%;
-    /* Position directly below */
-    left: 0;
-    right: 0;
+    z-index: 30;
+    position: relative;
+    /* height: 3em; */
     width: 100%;
-    margin: 0 auto;
-    border-radius: 0 0 8px 8px;
-    overflow-y: auto;
-    /* Scroll if too long */
-    max-height: 50vh;
-    /* Limit height */
-    background-color: var(--bg01);
-    /* Opaque background */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    /* Drop shadow */
-    border: 1px solid var(--text01);
-    border-top: none;
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    border-radius: 25px;
 }
 
 .autocomplete-items {
     z-index: 31;
-    padding: 12px 15px;
-    /* More padding for touch targets */
-    margin: 0;
-    font-size: 1.2rem;
-    /* Much smaller base size */
+    left: 0;
+    right: 0;
+    padding: 0px;
+    margin: 0px;
+    font-size: 3.5rem;
     white-space: normal;
     color: var(--textBlack);
     background-color: var(--listItemOdd);
-    border-bottom: 1px solid var(--bg01);
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.autocomplete-items:hover {
-    background-color: var(--listItemSelected);
-}
-
-@media (min-width: 768px) {
-    .autocomplete-items {
-        font-size: 1.5rem;
-    }
-}
+    border: 2px solid var(--textBlack);
 }
 
 .autocomplete-itemsEven {

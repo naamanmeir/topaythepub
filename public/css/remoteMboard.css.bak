@@ -1,40 +1,32 @@
 :root {
-    /* Modern Dark Theme Palette (Synced with style.css) */
-    --bg01: #121212;
-    --bg02: rgba(255, 255, 255, 0.1);
-    --bg03: rgba(1, 30, 40, 0.2);
+    --bg01: black;
+    --bg02: rgba(104, 99, 99, 0.283);
+    --bg03: rgba(1, 30, 40, 0.093);
 
-    /* Brighter Text Colors */
-    --text01: #FFD54F;
-    /* Brighter Amber */
-    --text02: #FFFF8D;
-    /* Brighter Yellow */
-    --text03: #CFD8DC;
-    /* Brighter Blue Grey */
-    --text04: #69F0AE;
-    /* Green Accent */
-    --textBlack: #212121;
+    --text01: rgb(225, 168, 10);
+    --text02: rgb(255, 255, 0);
+    --text03: rgb(148, 158, 158);
+    --text04: rgb(55, 227, 58);
+    --textBlack: black;
 
-    --border01: rgba(255, 193, 7, 0.5);
-    --border02: #8D6E63;
-    --border03: #4CAF50;
+    --border01: rgba(194, 172, 4, 0.353);
+    --border02: rgb(162, 146, 123);
+    --border03: rgb(29, 182, 50);
 
-    --buttonYes: #4CAF50;
-    --buttonNo: #FF5722;
+    --buttonYes: rgb(3, 183, 3);
+    --buttonNo: rgb(255, 116, 3);
 
-    --buttonBgYes: #43A047;
-    --buttonBgNo: #E64A19;
+    --buttonBgYes: rgb(3, 183, 3);
+    --buttonBgNo: rgb(255, 94, 0);
 
-    --listItemOdd: #ECEFF1;
-    --listItemEven: #CFD8DC;
-    --listItemSelected: #90CAF9;
+    --listItemOdd: #b9c1c3;
+    --listItemEven: #d4d4d4;
+    --listItemSelected: #699db7;
 
-    --itemPrice: #2E7D32;
-    --itemCount: #1B5E20;
-    --itemName: #F57F17;
+    --itemPrice: #19e607;
+    --itemCount: rgb(2, 255, 2);
+    --itemName: #ffd000;
 
-    /* Font Parameter */
-    --main-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 input:-webkit-autofill,
@@ -42,23 +34,25 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:blur,
 input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px var(--bg01) inset !important;
-    -webkit-text-fill-color: var(--text01) !important;
+    -webkit-box-shadow: 0 0 0 30px rgba(18, 13, 13, 0) inset !important;
 }
 
 /* ------------------scrollbar--------------------- */
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-corner,
 ::-webkit-scrollbar-track {
-    background-color: var(--bg01);
+    background-color: rgba(64, 64, 64, 0.7);
+    border-radius: 50%;
+    padding-left: 1rem;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--text01);
-    border-radius: 10px;
+    background: rgba(255, 132, 0, 0.591);
+    border-radius: 40%;
+    background-clip: padding-box;
 }
 
 /* ------------------scrollbar--------------------- */
@@ -69,15 +63,19 @@ input:-webkit-autofill:active {
     src: url('../fonts/danaYad/DanaYadAlefAlefAlef-Normal.eot') format('embedded-opentype'),
         url('../fonts/danaYad/DanaYadAlefAlefAlef-Normal.woff') format('woff'),
         url('../fonts/danaYad/DanaYadAlefAlefAlef-Normal.otf') format('truetype');
-    font-display: swap;
 }
 
 
 html,
 body {
-    height: 100%;
+    /* height: 100vh; */
+    /* width: 100vw; */
+    /* margin: 0px; */
+    /* padding: 0px; */
+    /* top: 0px; */
     height: -webkit-fill-available;
-    width: 100%;
+    width: -webkit-fill-available;
+    /* overflow: hidden; */
     overscroll-behavior: contain;
     direction: rtl;
     -webkit-user-select: none;
@@ -86,20 +84,13 @@ body {
     -o-user-select: none;
     user-select: none;
     scroll-behavior: smooth;
-    font-family: var(--main-font);
-    font-size: 16px;
+    /* white-space: nowrap; */
 }
 
 body {
+    /* display: flex; */
+    /* flex-direction: column; */
     background-color: var(--bg01);
-    color: var(--text01);
-    margin: 0;
-}
-
-@media (max-width: 768px) {
-    html {
-        font-size: 14px;
-    }
 }
 
 p {

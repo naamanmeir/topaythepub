@@ -4,18 +4,13 @@
     --bg02: rgba(255, 255, 255, 0.1);
     --bg03: rgba(1, 30, 40, 0.2);
 
-    /* Brighter Text Colors */
-    --text01: #FFD54F;
-    /* Brighter Amber */
-    --text02: #FFFF8D;
-    /* Brighter Yellow */
-    --text03: #CFD8DC;
-    /* Brighter Blue Grey */
+    --text01: #FFC107;
+    --text02: #FFEB3B;
+    --text03: #B0BEC5;
     --text04: #69F0AE;
-    /* Green Accent */
     --textBlack: #212121;
 
-    --border01: rgba(255, 193, 7, 0.5);
+    --border01: rgba(255, 193, 7, 0.3);
     --border02: #8D6E63;
     --border03: #4CAF50;
 
@@ -32,9 +27,6 @@
     --itemPrice: #2E7D32;
     --itemCount: #1B5E20;
     --itemName: #F57F17;
-
-    /* Font Parameter */
-    --main-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 input:-webkit-autofill,
@@ -86,7 +78,7 @@ body {
     -o-user-select: none;
     user-select: none;
     scroll-behavior: smooth;
-    font-family: var(--main-font);
+    font-family: 'DanaYad', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 16px;
 }
 

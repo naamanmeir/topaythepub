@@ -347,8 +347,8 @@ app.get('/tempLogin', async(req, res) => {
         let valid = await db.dbFindToken(tokenClient);
         if (valid) {
             console.log("TEMP LOGIN");
-            const user = 'tempBoard';
-            const password = 'temp1Board2';
+            const user = process.env.TEMP_BOARD_USER;
+            const password = process.env.TEMP_BOARD_PASS;
             let dbResponse = await db.userLogin(user, password);
             loginAction(req, res, '3', user, password);
             let dbRemoveToken = db.dbRemoveToken(tokenClient);
@@ -381,8 +381,8 @@ app.get('/tempLoginToApp', async(req, res) => {
         let valid = await db.dbFindToken(tokenClient);
         if (valid) {
             console.log("TEMP LOGIN");
-            const user = 'tempMasof';
-            const password = 'temp1Masof2';
+            const user = process.env.TEMP_MASOF_USER;
+            const password = process.env.TEMP_MASOF_PASS;
             let dbResponse = await db.userLogin(user, password);
             loginAction(req, res, '2', user, password);
             let dbRemoveToken = db.dbRemoveToken(tokenClient);

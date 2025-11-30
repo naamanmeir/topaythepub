@@ -3,85 +3,100 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: #000000;
-    color: rgb(245, 4, 4);
+    align-items: center;
+    /* Center horizontally */
+    background-color: var(--bg01);
+    color: var(--text01);
     font-size: 1rem;
-
-    /* left: -50%; */
-    /* right: 50%; */
+    min-height: 100vh;
 }
 
 .header {
     display: flex;
+    flex-direction: column;
     text-align: center;
-    right: 0px;
-    margin: auto;
-    margin-bottom: 0px;
-    padding: 0px;
-    margin-top: 1.6em;
-    padding-bottom: 0.2em;
+    margin: 0 auto 2rem auto;
+    padding: 1rem;
     border-radius: 1em;
+    background: var(--bg02);
+    /* Subtle background for header */
+    width: 90%;
+    max-width: 400px;
 }
 
 .shadow1 {
-    text-shadow: 3px 1px 2px rgba(163, 130, 69, 0.616);
+    text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .header p {
-    border-radius: 2rem;
-    color: rgba(225, 170, 68, 0.896);
-    font-size: 2.2rem;
-    line-height: 0.4rem;
-    margin: 0px;
-    margin-bottom: 0.2rem;
-    padding: 0px;
-    padding-top: 3%;
-    padding-bottom: 3%;
+    color: var(--text01);
+    font-size: 1.8rem;
+    line-height: 1.2;
+    margin: 0.5rem 0;
 }
 
 .inputButton {
-    width: 50%;
+    width: 100%;
+    /* Full width buttons */
 }
 
-h1 {
-    margin: 1%;
-}
-
-h2 {
-    margin: 1%;
-}
-
+h1,
+h2,
 h3 {
-    margin: 1%;
+    margin: 0.5rem 0;
 }
 
 form {
     display: flex;
     flex-direction: column;
-    color: rgb(211, 243, 224);
-    margin: 1%;
+    color: var(--text03);
+    margin: 1rem;
+    width: 90%;
+    max-width: 400px;
+    background: var(--bg02);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .input-field {
     position: relative;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .input-field input {
     direction: ltr;
-    font-size: larger;
+    font-size: 1.2rem;
     padding: 0.8rem;
+    border-radius: 6px;
+    border: 1px solid var(--text03);
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+}
+
+.input-field input:focus {
+    border-color: var(--text04);
+    box-shadow: 0 0 0 2px rgba(105, 240, 174, 0.3);
 }
 
 form .input-field:first-child {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 form input[type="submit"] {
-    background: rgb(59, 225, 73);
-    color: rgb(0, 0, 0);
-    border-radius: 4px;
+    background: var(--buttonBgYes);
+    color: white;
+    border: none;
+    border-radius: 6px;
     margin-top: 2rem;
-    font-size: larger;
-    padding: 0.4rem;
+    font-size: 1.2rem;
+    padding: 0.8rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+form input[type="submit"]:hover {
+    background: var(--buttonYes);
 }

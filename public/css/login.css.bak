@@ -1,0 +1,87 @@
+body {
+    direction: rtl;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #000000;
+    color: rgb(245, 4, 4);
+    font-size: 1rem;
+
+    /* left: -50%; */
+    /* right: 50%; */
+}
+
+.header {
+    display: flex;
+    text-align: center;
+    right: 0px;
+    margin: auto;
+    margin-bottom: 0px;
+    padding: 0px;
+    margin-top: 1.6em;
+    padding-bottom: 0.2em;
+    border-radius: 1em;
+}
+
+.shadow1 {
+    text-shadow: 3px 1px 2px rgba(163, 130, 69, 0.616);
+}
+
+.header p {
+    border-radius: 2rem;
+    color: rgba(225, 170, 68, 0.896);
+    font-size: 2.2rem;
+    line-height: 0.4rem;
+    margin: 0px;
+    margin-bottom: 0.2rem;
+    padding: 0px;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+.inputButton {
+    width: 50%;
+}
+
+h1 {
+    margin: 1%;
+}
+
+h2 {
+    margin: 1%;
+}
+
+h3 {
+    margin: 1%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    color: rgb(211, 243, 224);
+    margin: 1%;
+}
+
+.input-field {
+    position: relative;
+    margin-top: 2rem;
+}
+
+.input-field input {
+    direction: ltr;
+    font-size: larger;
+    padding: 0.8rem;
+}
+
+form .input-field:first-child {
+    margin-bottom: 1.5rem;
+}
+
+form input[type="submit"] {
+    background: rgb(59, 225, 73);
+    color: rgb(0, 0, 0);
+    border-radius: 4px;
+    margin-top: 2rem;
+    font-size: larger;
+    padding: 0.4rem;
+}
