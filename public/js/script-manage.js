@@ -3,17 +3,10 @@ var xhttp = new XMLHttpRequest();
 var limit = 0; // throttle limiter for db
 
 let products = [];
-let productName;
-let productPrice;
-let productImage;
-let productStock;
-let productOrder;
-let productId;
 
 let progBarDiv;
 let progBar;
 
-let passVerificationCheat = 0;
 
 // ------------  REQUEST MANAGE FUNCTION -------------------------------------//
 
@@ -82,14 +75,60 @@ function isJson(input) {
 };
 
 //-----------------------------UI-------------------------//
-function navtab(select) {
+function navtab(select, buttonEl) {
     var i;
     var x = document.getElementsByClassName("page");
     for (i = 0; i < x.length; i++) {
         x[i].style.display = "none";
     }
     document.getElementById(select).style.display = "block";
+    const buttons = document.querySelectorAll(".manageNavBtn[data-target]");
+    buttons.forEach(btn => btn.classList.remove("is-active"));
+    const targetBtn = buttonEl || document.querySelector(`.manageNavBtn[data-target="${select}"]`);
+    if (targetBtn) {
+        targetBtn.classList.add("is-active");
+    }
 };
+
+function initBackToTop() {
+    const btn = document.getElementById("manageBackToTop");
+    if (!btn) {
+        return;
+    }
+    const toggleVisibility = function () {
+        const docHeight = Math.max(
+            document.documentElement.scrollHeight,
+            document.body ? document.body.scrollHeight : 0
+        );
+        const canScroll = docHeight > window.innerHeight + 10;
+        if (canScroll) {
+            btn.classList.add("is-visible");
+            return;
+        }
+        btn.classList.remove("is-visible");
+    };
+    btn.addEventListener('click', function () {
+        const scroller = document.scrollingElement || document.documentElement;
+        if (scroller && typeof scroller.scrollTo === 'function') {
+            scroller.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (document.body && typeof document.body.scrollTo === 'function') {
+            document.body.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (scroller) {
+            scroller.scrollTop = 0;
+        }
+        if (document.body) {
+            document.body.scrollTop = 0;
+        }
+    });
+    window.addEventListener('scroll', toggleVisibility, { passive: true });
+    window.addEventListener('resize', toggleVisibility);
+    toggleVisibility();
+}
+
+window.addEventListener('load', initBackToTop, false);
 function addImgDropdown() {
     let imgDiv = document.getElementById("imgDiv");
 };
@@ -465,6 +504,415 @@ async function createTable() {
 
 // ------------------------------ PRODUCTS DATA EDIT ADD DELETE -----------------------------//
 
+let draggedProductRow = null;
+let hideOutOfStock = false;
+let lastUndoAction = null;
+let undoTimer = null;
+let touchDragRow = null;
+let touchDragActive = false;
+let touchDragStartY = 0;
+
+function normalizeImageFilename(imagePath) {
+    if (!imagePath) {
+        return "";
+    }
+    return imagePath.replace(/^img\/items\//, "");
+}
+
+function buildProductRow(product) {
+    const row = document.createElement("div");
+    row.className = "productsRow";
+    row.setAttribute("draggable", "true");
+    row.dataset.id = product.itemid;
+    row.dataset.image = product.itemimgpath || "";
+    row.dataset.prevName = product.itemname || "";
+    row.dataset.prevPrice = product.price || 0;
+    row.dataset.prevStock = product.stock > 0 ? 1 : 0;
+    row.dataset.prevOrder = product.itemorder || 1;
+
+    const dragCell = document.createElement("div");
+    dragCell.className = "cell dragCell";
+    dragCell.dataset.label = "גרור";
+    dragCell.innerHTML = '<span class="dragHandle">⋮⋮</span>';
+    const dragHandle = dragCell.querySelector(".dragHandle");
+
+    const orderCell = document.createElement("div");
+    orderCell.className = "cell orderCell";
+    orderCell.dataset.label = "סדר";
+    const orderInput = document.createElement("input");
+    orderInput.className = "productInput orderInput";
+    orderInput.type = "number";
+    orderInput.min = "1";
+    orderInput.value = product.itemorder || 1;
+    orderCell.appendChild(orderInput);
+
+    const nameCell = document.createElement("div");
+    nameCell.className = "cell nameCell";
+    nameCell.dataset.label = "שם";
+    const nameInput = document.createElement("input");
+    nameInput.className = "productInput nameInput";
+    nameInput.type = "text";
+    nameInput.value = product.itemname || "";
+    nameCell.appendChild(nameInput);
+
+    const priceCell = document.createElement("div");
+    priceCell.className = "cell priceCell";
+    priceCell.dataset.label = "מחיר";
+    const priceInput = document.createElement("input");
+    priceInput.className = "productInput priceInput";
+    priceInput.type = "number";
+    priceInput.min = "0";
+    priceInput.value = product.price || 0;
+    priceCell.appendChild(priceInput);
+
+    const stockCell = document.createElement("div");
+    stockCell.className = "cell stockCell";
+    stockCell.dataset.label = "בתפריט";
+    const stockInput = document.createElement("input");
+    stockInput.className = "stockInput";
+    stockInput.type = "checkbox";
+    stockInput.checked = product.stock > 0;
+    stockCell.appendChild(stockInput);
+
+    const imageCell = document.createElement("div");
+    imageCell.className = "cell imageCell";
+    imageCell.dataset.label = "תמונה";
+    const image = document.createElement("img");
+    image.className = "productImageThumb";
+    image.src = product.itemimgpath || "";
+    image.alt = product.itemname || "product";
+    imageCell.appendChild(image);
+
+    const actionsCell = document.createElement("div");
+    actionsCell.className = "cell actionsCell";
+    actionsCell.dataset.label = "פעולות";
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "red productActionBtn";
+    deleteButton.textContent = "מחיקה";
+    actionsCell.appendChild(deleteButton);
+
+    row.appendChild(dragCell);
+    row.appendChild(orderCell);
+    row.appendChild(nameCell);
+    row.appendChild(priceCell);
+    row.appendChild(stockCell);
+    row.appendChild(imageCell);
+    row.appendChild(actionsCell);
+
+    nameInput.addEventListener("change", () => updateProductRow(row, false));
+    priceInput.addEventListener("change", () => updateProductRow(row, false));
+    orderInput.addEventListener("change", () => updateProductRow(row, false));
+    stockInput.addEventListener("change", () => updateProductRow(row, false));
+    deleteButton.addEventListener("click", () => deleteProductById(product.itemid, product.itemname));
+
+    row.addEventListener("dragstart", onProductDragStart);
+    row.addEventListener("dragover", onProductDragOver);
+    row.addEventListener("drop", onProductDrop);
+    row.addEventListener("dragend", onProductDragEnd);
+    if (dragHandle) {
+        dragHandle.addEventListener("touchstart", onProductTouchStart, { passive: false });
+    }
+
+    return row;
+}
+
+function onProductTouchStart(event) {
+    if (!event.touches || event.touches.length !== 1) {
+        return;
+    }
+    const row = event.currentTarget.closest(".productsRow");
+    if (!row) {
+        return;
+    }
+    touchDragStartY = event.touches[0].clientY;
+    touchDragActive = true;
+    touchDragRow = row;
+    touchDragRow.classList.add("dragging");
+    document.body.classList.add("dragging-products");
+    document.addEventListener("touchmove", onProductTouchMove, { passive: false });
+    document.addEventListener("touchend", onProductTouchEnd);
+    document.addEventListener("touchcancel", onProductTouchEnd);
+    event.preventDefault();
+}
+
+function onProductTouchMove(event) {
+    if (!touchDragActive || !touchDragRow) {
+        return;
+    }
+    const touch = event.touches && event.touches[0];
+    if (!touch) {
+        return;
+    }
+    if (Math.abs(touch.clientY - touchDragStartY) < 2) {
+        event.preventDefault();
+        return;
+    }
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    const targetRow = target ? target.closest(".productsRow") : null;
+    if (targetRow && targetRow !== touchDragRow) {
+        const rect = targetRow.getBoundingClientRect();
+        const shouldInsertAfter = (touch.clientY - rect.top) > rect.height / 2;
+        const parent = targetRow.parentNode;
+        if (shouldInsertAfter) {
+            parent.insertBefore(touchDragRow, targetRow.nextSibling);
+        } else {
+            parent.insertBefore(touchDragRow, targetRow);
+        }
+    }
+    event.preventDefault();
+}
+
+function onProductTouchEnd() {
+    if (!touchDragRow) {
+        return;
+    }
+    touchDragRow.classList.remove("dragging");
+    touchDragRow = null;
+    touchDragActive = false;
+    document.body.classList.remove("dragging-products");
+    document.removeEventListener("touchmove", onProductTouchMove);
+    document.removeEventListener("touchend", onProductTouchEnd);
+    document.removeEventListener("touchcancel", onProductTouchEnd);
+    updateProductOrdersFromDom();
+}
+
+function renderProductRows(productList) {
+    const tableBody = document.getElementById("productsTableBody");
+    if (!tableBody) {
+        return;
+    }
+    tableBody.innerHTML = "";
+    const filtered = hideOutOfStock
+        ? productList.filter(product => product.stock > 0)
+        : productList;
+    filtered.forEach(product => {
+        tableBody.appendChild(buildProductRow(product));
+    });
+}
+
+function onProductDragStart(event) {
+    draggedProductRow = event.currentTarget;
+    event.dataTransfer.effectAllowed = "move";
+    setTimeout(() => {
+        draggedProductRow.classList.add("dragging");
+    }, 0);
+}
+
+function onProductDragOver(event) {
+    event.preventDefault();
+    const targetRow = event.currentTarget;
+    if (!draggedProductRow || targetRow === draggedProductRow) {
+        return;
+    }
+    const rect = targetRow.getBoundingClientRect();
+    const shouldInsertAfter = (event.clientY - rect.top) > rect.height / 2;
+    const parent = targetRow.parentNode;
+    if (shouldInsertAfter) {
+        parent.insertBefore(draggedProductRow, targetRow.nextSibling);
+    } else {
+        parent.insertBefore(draggedProductRow, targetRow);
+    }
+}
+
+function onProductDrop(event) {
+    event.preventDefault();
+}
+
+function onProductDragEnd() {
+    if (!draggedProductRow) {
+        return;
+    }
+    draggedProductRow.classList.remove("dragging");
+    draggedProductRow = null;
+    updateProductOrdersFromDom();
+}
+
+function updateProductOrdersFromDom() {
+    const rows = document.querySelectorAll("#productsTableBody .productsRow");
+    rows.forEach((row, index) => {
+        const orderInput = row.querySelector(".orderInput");
+        const newOrder = index + 1;
+        if (orderInput && Number(orderInput.value) !== newOrder) {
+            orderInput.value = newOrder;
+            updateProductRow(row, true);
+        }
+    });
+}
+
+function updateProductRow(row, silent) {
+    if (!row) {
+        return;
+    }
+    const prevState = {
+        name: row.dataset.prevName || "",
+        price: row.dataset.prevPrice || 0,
+        stock: row.dataset.prevStock || 0,
+        order: row.dataset.prevOrder || 1,
+        image: row.dataset.image || ""
+    };
+    const id = row.dataset.id;
+    const name = row.querySelector(".nameInput").value.trim();
+    const price = row.querySelector(".priceInput").value;
+    const order = row.querySelector(".orderInput").value;
+    const stock = row.querySelector(".stockInput").checked ? 1 : 0;
+    const image = normalizeImageFilename(row.dataset.image || "");
+    const data = [id, name, price, image, stock, order];
+    sendProductUpdate(data, silent);
+
+    row.dataset.prevName = name;
+    row.dataset.prevPrice = price;
+    row.dataset.prevStock = stock;
+    row.dataset.prevOrder = order;
+
+    if (!silent) {
+        showUndoToast("בוצע עדכון למוצר", () => undoProductChange(row, prevState));
+    }
+}
+
+function sendProductUpdate(data, silent) {
+    const req = new XMLHttpRequest();
+    req.open("POST", "./manage/editProduct/" + data, true);
+    req.send();
+    req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            if (!silent) {
+                const log = document.getElementById("productsEditLog");
+                if (log) {
+                    log.innerText = this.response;
+                }
+            }
+            return;
+        }
+    };
+}
+
+function showUndoToast(message, undoAction) {
+    const toast = document.getElementById("productUndoToast");
+    const messageEl = document.getElementById("undoMessage");
+    if (!toast || !messageEl) {
+        return;
+    }
+    messageEl.textContent = message;
+    lastUndoAction = undoAction;
+    toast.classList.add("show");
+    if (undoTimer) {
+        clearTimeout(undoTimer);
+    }
+    undoTimer = setTimeout(() => {
+        hideUndoToast();
+    }, 5000);
+}
+
+function hideUndoToast() {
+    const toast = document.getElementById("productUndoToast");
+    if (!toast) {
+        return;
+    }
+    toast.classList.remove("show");
+    lastUndoAction = null;
+}
+
+function undoLastProductChange() {
+    if (lastUndoAction) {
+        lastUndoAction();
+    }
+    hideUndoToast();
+}
+
+function undoProductChange(row, prevState) {
+    if (!row) {
+        return;
+    }
+    row.querySelector(".nameInput").value = prevState.name;
+    row.querySelector(".priceInput").value = prevState.price;
+    row.querySelector(".orderInput").value = prevState.order;
+    row.querySelector(".stockInput").checked = Number(prevState.stock) > 0;
+    row.dataset.prevName = prevState.name;
+    row.dataset.prevPrice = prevState.price;
+    row.dataset.prevStock = prevState.stock;
+    row.dataset.prevOrder = prevState.order;
+    updateProductRow(row, true);
+}
+
+function toggleHideOutOfStock(input) {
+    hideOutOfStock = input.checked;
+    renderProductRows(products);
+}
+
+function quickAddProduct() {
+    const nameInput = document.getElementById("quickProductName");
+    const priceInput = document.getElementById("quickProductPrice");
+    if (!nameInput || !priceInput) {
+        return;
+    }
+    const name = nameInput.value.trim();
+    const price = priceInput.value.trim();
+    if (!name || !price) {
+        return;
+    }
+    if (!imgSelect) {
+        imgSelect = getDefaultImageFilename();
+    }
+    if (!imgSelect) {
+        alert("בחר תמונה למוצר");
+        return;
+    }
+    const insertName = document.getElementById("insertProduct");
+    const insertPrice = document.getElementById("insertPrice");
+    if (insertName && insertPrice) {
+        insertName.value = name;
+        insertPrice.value = price;
+    }
+    insertProduct();
+    nameInput.value = "";
+    priceInput.value = "";
+}
+
+function getDefaultImageFilename() {
+    const firstImage = document.querySelector("#imgDiv img");
+    if (!firstImage) {
+        return "";
+    }
+    const src = firstImage.getAttribute("src") || "";
+    return normalizeImageFilename(src);
+}
+
+function scrollToImagePicker() {
+    const imgDiv = document.getElementById("imgDiv");
+    if (imgDiv) {
+        imgDiv.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+}
+
+function scrollToAddProduct() {
+    const addProduct = document.querySelector('.addProduct');
+    if (addProduct) {
+        addProduct.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+}
+
+function deleteProductById(id, name) {
+    if (!id) {
+        return;
+    }
+    if (!window.confirm("למחוק " + name + "?")) {
+        return;
+    }
+    const req = new XMLHttpRequest();
+    req.open("POST", "./manage/deleteProduct/" + id, true);
+    req.send();
+    req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const log = document.getElementById("productsEditLog");
+            if (log) {
+                log.innerText = this.response;
+            }
+            getProducts();
+            return;
+        }
+    };
+}
+
 async function getAllData(scope) {
     console.log("GET ALL DATA FUNC: ");
     let itemsBought;
@@ -502,6 +950,11 @@ async function getItemImagesAsHtml(){
 function displayItemImagesInDiv(content){    
     let imgDiv = document.getElementById('imgDiv');
     imgDiv.innerHTML = content;
+    const firstImage = imgDiv.querySelector('.imgSelector');
+    if (firstImage && !imgSelect) {
+        const filename = firstImage.id.replace('image-', '');
+        setSelectedImage(firstImage, filename);
+    }
     return;
 }
 
@@ -525,79 +978,17 @@ async function getProducts() {
             // console.log(this.response);
             products = JSON.parse(this.response);
             let selectBar = document.getElementById("selectProduct");
-            let productDiv = document.getElementById("displayProducts");
-            while (selectBar.childElementCount > 1) {
-                selectBar.removeChild(selectBar.lastChild);
-            };
-            while (productDiv.childElementCount > 1) {
-                productDiv.removeChild(productDiv.lastChild);
-            };
+            if (selectBar) {
+                while (selectBar.childElementCount > 1) {
+                    selectBar.removeChild(selectBar.lastChild);
+                };
+            }
             // console.log(products);
+            renderProductRows(products);
             products.forEach(table => {
-                var productRow = document.createElement("div");
-                productRow.className = ("productRow")
-                var productId = document.createElement("input");
-                var productName = document.createElement("input");
-                var productDisplay = document.createElement("input");
-                var productPrice = document.createElement("input");
-                var productImage = document.createElement("image");
-                var productOrder = document.createElement("input");
-                // var imageSelect = document.createElement("option"); 
-
-                productImage.innerHTML = `<img src="${table.itemimgpath}"/>`;
-
-                // productImage.appendChild(imageSelect);
-                productId.setAttribute("type", "number");
-                productName.setAttribute("type", "text");
-                productDisplay.setAttribute("type", "checkbox");
-                productPrice.setAttribute("type", "number");
-                productPrice.setAttribute("min", "0");
-                productPrice.setAttribute("max", "99");
-                productOrder.setAttribute("min", "1");
-                productOrder.setAttribute("type", "number");                                
-
-                productId.value = table.itemid;
-                productOrder.value = table.itemorder;
-                productName.value = table.itemname;
-                productDisplay.checked = (table.stock > 0);
-                productPrice.value = table.price;
-                productPrice.style.width = ("3rem");
-                productOrder.style.width = ("3rem");
-
-                productRow.appendChild(productOrder);
-                productRow.appendChild(productName);
-                productRow.appendChild(productPrice);
-                productRow.appendChild(productImage);
-                productRow.appendChild(productDisplay);                
-                productDiv.appendChild(productRow);
-
-                productName.onchange = function () {
-                    editProductFields(
-                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked,productOrder.value)
-                };
-                productPrice.onchange = function () {
-                    editProductFields(
-                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked,productOrder.value)
-                };
-                productImage.onchange = function () {
-                    editProductFields(
-                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked,productOrder.value)
-                };
-                productDisplay.onchange = function () {
-                    passVerificationCheat=1;
-                    editProductFields(
-                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked,productOrder.value)
-                };
-                productOrder.onchange = function () {
-                    passVerificationCheat=1;
-                    console.log(passVerificationCheat)
-                    
-                    editProductFields(
-                        table.itemid, productName.value, productPrice.value, table.itemimgpath, productDisplay.checked,productOrder.value)                
-                };
-
-            });
-            products.forEach(table => {
+                if (!selectBar) {
+                    return;
+                }
                 var opt = document.createElement("option");
                 opt.value = table.itemname;
                 opt.innerHTML = table.itemname;
@@ -608,89 +999,30 @@ async function getProducts() {
     };
 };
 
-function changeItemOrder(){
-
-}
-
-function editProductLoad() {
-    let itemSelect = document.getElementById("selectProduct");
-    let textName = document.getElementById("productName");
-    let textPrice = document.getElementById("productPrice");
-    let itemImage = document.getElementById("productImage");
-    let textStock = document.getElementById("productStock");
-    let i = itemSelect.selectedIndex - 1;
-    // console.log(i);
-    console.log(products[i].itemid);
-    console.log(products[i].itemname);
-    console.log(products[i].price);
-    console.log(products[i].stock);
-    console.log(products[i].order);
-    productId = products[i].itemid;
-    productName = products[i].itemname;
-    textName.value = products[i].itemname;
-    textPrice.value = products[i].price;
-    itemImage.src = products[i].itemimgpath;
-    textStock.value = products[i].stock;
-};
-
-function editProductFields(thisProductId, name, price, image, stock, itemOrder) {
-    stock = stock ? 1 : 0;
-    let data = [thisProductId, name, price, image, stock, itemOrder];
-    // console.log(data);
-    document.getElementById("productName").value = name;
-    document.getElementById("productPrice").value = price;
-    document.getElementById("productImage").src = image;
-    document.getElementById("productStock").value = stock;
-    document.getElementById("productOrder").value = itemOrder;
-    productId = thisProductId;
-    productName = name;
-    editProduct();
-}
-
-function editProduct() {
-    if (productId == null || productId == "") { console.log("this is stupid"); return };
-    let newName = document.getElementById("productName");
-    let newPrice = document.getElementById("productPrice");
-    // let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/','').replace('.png','');
-    let newImage = document.getElementById("productImage").getAttribute("src").replace('img/items/', '');
-    let newStock = document.getElementById("productStock");
-    let newOrder = document.getElementById("productOrder");
-    let data = [productId, newName.value, newPrice.value, newImage, newStock.value, newOrder.value];
-    // console.log(data);
-    if (passVerificationCheat==1) {
-        xhttp.open("POST", "./manage/editProduct/" + data, true);
-        xhttp.send();        
-    };
-    if(passVerificationCheat==0){
-        if (window.confirm("לערוך נתונים של " + productName + "?")) {
-            xhttp.open("POST", "./manage/editProduct/" + data, true);
-            xhttp.send();        
-        };
-    };
-    passVerificationCheat=0;
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            editLog(this.response);
-            getProducts();
-            return;
-        }
-    };
-};
 
 let imgSelect;
 function imgClickSelect(img, imgId) {
-    imgSelect = img;
-    let imgSelector = document.getElementsByClassName("imgSelector");
-    var arr = [...imgSelector];
-    arr.forEach(element => {
-        element.style.backgroundColor = "transparent";
-        element.style.border = "none";
-    });
-    window.onclick = e => {
-        document.getElementById(imgId).style.backgroundColor = "green";
-        document.getElementById(imgId).style.border = "5px solid orange";
+    const imgEl = document.getElementById(imgId);
+    if (!imgEl) {
+        return;
     }
+    setSelectedImage(imgEl, img);
+}
 
+function setSelectedImage(imgEl, filename) {
+    const images = document.querySelectorAll(".imgSelector");
+    images.forEach(element => element.classList.remove("selected"));
+    imgEl.classList.add("selected");
+    imgSelect = filename;
+    updateSelectedImageLabel(filename);
+}
+
+function updateSelectedImageLabel(filename) {
+    const label = document.getElementById("selectedImageLabel");
+    if (!label) {
+        return;
+    }
+    label.textContent = filename ? ("תמונה נבחרת: " + filename) : "תמונה נבחרת: -";
 }
 
 function insertProduct() {
@@ -718,21 +1050,6 @@ function insertProduct() {
     };
 };
 
-function deleteProduct() {
-    if (!productId) return;
-    if (window.confirm("למחוק " + productName + "?")) {
-        xhttp.open("POST", "./manage/deleteProduct/" + productId, true);
-        xhttp.send();
-    };
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);
-            document.getElementById("productsEditLog").innerText = this.response;
-            getProducts();
-            return;
-        }
-    };
-};
 
 // ------------------------------UPLOAD PRODUCT IMAGE----------------------------------------------- //
 
@@ -1031,6 +1348,7 @@ function inputFilter(e) {
     return t;
 };
 
+
 function login(name) {
     // console.log(name);
 
@@ -1065,8 +1383,812 @@ function loadUtiliti() {
         createProgressBar();
     }, 800);
     getItemImagesAsHtml();
+    loadThemeSelection();
+    loadDisplayMessages();
 
 };
+
+let backgroundImages = [];
+let backgroundSelected = '';
+let backgroundRandomPool = new Set();
+let backgroundRandomAll = false;
+let backgroundFolders = [];
+let backgroundFolderAllowList = new Set();
+const backgroundRootKey = '__root__';
+
+function loadThemeSelection() {
+    const select = document.getElementById("themeSelect");
+    const backgroundSelect = document.getElementById("backgroundSelect");
+    const backgroundRandomEnabled = document.getElementById("backgroundRandomEnabled");
+    const backgroundRandomAllToggle = document.getElementById("backgroundRandomAll");
+    const backgroundRandomIntervalMin = document.getElementById("backgroundRandomIntervalMin");
+    const backgroundImageOpacity = document.getElementById("backgroundImageOpacity");
+    const backgroundImageOpacityValue = document.getElementById("backgroundImageOpacityValue");
+    const backgroundOverlayColor = document.getElementById("backgroundOverlayColor");
+    const backgroundPattern = document.getElementById("backgroundPattern");
+    const backgroundFoldersAllToggle = document.getElementById("backgroundFoldersAll");
+    const scrollEnabled = document.getElementById("scrollEnabled");
+    const scrollLocation = document.getElementById("scrollLocation");
+    const scrollTextColor = document.getElementById("scrollTextColor");
+    const scrollTextColorCustom = document.getElementById("scrollTextColorCustom");
+    const scrollTextSize = document.getElementById("scrollTextSize");
+    const scrollTextSizeValue = document.getElementById("scrollTextSizeValue");
+    const scrollTextSpacing = document.getElementById("scrollTextSpacing");
+    const scrollTextSpacingValue = document.getElementById("scrollTextSpacingValue");
+    const scrollTextWeight = document.getElementById("scrollTextWeight");
+    const scrollOrderMode = document.getElementById("scrollOrderMode");
+    const scrollDelayMs = document.getElementById("scrollDelayMs");
+    const scrollDelayValue = document.getElementById("scrollDelayValue");
+    if (!select) {
+        return;
+    }
+    getRequest("./manage/ui-config", function (response) {
+        try {
+            const data = JSON.parse(response);
+            select.value = data.theme || 'default';
+            if (backgroundSelect) {
+                backgroundSelect.value = data.backgroundMode || 'none';
+            }
+            if (backgroundRandomEnabled) {
+                backgroundRandomEnabled.checked = Boolean(data.backgroundRandomEnabled);
+            }
+            if (backgroundRandomAllToggle) {
+                backgroundRandomAllToggle.checked = Boolean(data.backgroundRandomAll);
+            }
+            if (backgroundRandomIntervalMin) {
+                backgroundRandomIntervalMin.value = clampIntervalMinutes(data.backgroundRandomIntervalMin);
+            }
+            if (backgroundImageOpacity) {
+                backgroundImageOpacity.value = opacityToPercent(data.backgroundImageOpacity);
+            }
+            updateBackgroundOpacityLabel(backgroundImageOpacityValue, backgroundImageOpacity);
+            if (backgroundOverlayColor) {
+                backgroundOverlayColor.value = data.backgroundOverlayColor || '';
+            }
+            if (backgroundPattern) {
+                backgroundPattern.value = data.backgroundPattern || 'none';
+            }
+            if (scrollEnabled) {
+                scrollEnabled.checked = data.scrollEnabled !== false;
+            }
+            if (scrollLocation) {
+                scrollLocation.value = data.scrollLocation || 'bottom';
+            }
+            if (scrollTextColor) {
+                scrollTextColor.value = data.scrollTextColor || 'default';
+            }
+            if (scrollTextColorCustom) {
+                scrollTextColorCustom.value = data.scrollTextColorCustom || '#f09e06';
+            }
+            if (scrollTextSize) {
+                scrollTextSize.value = clampScrollTextSize(data.scrollTextSizePx);
+            }
+            updateScrollTextSizeLabel(scrollTextSize, scrollTextSizeValue);
+            if (scrollTextSpacing) {
+                scrollTextSpacing.value = clampScrollTextSpacing(data.scrollTextSpacing);
+            }
+            updateScrollTextSpacingLabel(scrollTextSpacing, scrollTextSpacingValue);
+            if (scrollTextWeight) {
+                scrollTextWeight.value = String(data.scrollTextWeight || '400');
+            }
+            if (scrollOrderMode) {
+                scrollOrderMode.value = data.scrollOrderMode || 'random';
+            }
+            if (scrollDelayMs) {
+                scrollDelayMs.value = normalizeDelayValue(data.scrollDelayMs, data.scrollSpeed);
+            }
+            updateScrollDelayLabel(scrollDelayMs, scrollDelayValue);
+            backgroundSelected = data.backgroundImage || '';
+            backgroundRandomPool = new Set(Array.isArray(data.backgroundRandomPool) ? data.backgroundRandomPool : []);
+            backgroundRandomAll = Boolean(data.backgroundRandomAll);
+            backgroundFolderAllowList = new Set(Array.isArray(data.backgroundFolderAllowList) ? data.backgroundFolderAllowList : []);
+            if (backgroundFoldersAllToggle) {
+                backgroundFoldersAllToggle.checked = backgroundFolderAllowList.size === 0;
+            }
+            loadBackgroundFolders();
+            loadBackgroundImages();
+        } catch (error) {
+            select.value = 'default';
+            if (backgroundSelect) {
+                backgroundSelect.value = 'none';
+            }
+            if (backgroundRandomEnabled) {
+                backgroundRandomEnabled.checked = false;
+            }
+            if (backgroundRandomAllToggle) {
+                backgroundRandomAllToggle.checked = false;
+            }
+            if (backgroundRandomIntervalMin) {
+                backgroundRandomIntervalMin.value = 10;
+            }
+            if (backgroundImageOpacity) {
+                backgroundImageOpacity.value = opacityToPercent(null);
+            }
+            updateBackgroundOpacityLabel(backgroundImageOpacityValue, backgroundImageOpacity);
+            if (backgroundOverlayColor) {
+                backgroundOverlayColor.value = '';
+            }
+            if (backgroundPattern) {
+                backgroundPattern.value = 'none';
+            }
+            if (scrollEnabled) {
+                scrollEnabled.checked = true;
+            }
+            if (scrollLocation) {
+                scrollLocation.value = 'bottom';
+            }
+            if (scrollTextColor) {
+                scrollTextColor.value = 'default';
+            }
+            if (scrollTextColorCustom) {
+                scrollTextColorCustom.value = '#f09e06';
+            }
+            if (scrollTextSize) {
+                scrollTextSize.value = 18;
+            }
+            updateScrollTextSizeLabel(scrollTextSize, scrollTextSizeValue);
+            if (scrollTextSpacing) {
+                scrollTextSpacing.value = 0;
+            }
+            updateScrollTextSpacingLabel(scrollTextSpacing, scrollTextSpacingValue);
+            if (scrollTextWeight) {
+                scrollTextWeight.value = '400';
+            }
+            if (scrollOrderMode) {
+                scrollOrderMode.value = 'random';
+            }
+            if (scrollDelayMs) {
+                scrollDelayMs.value = 10;
+            }
+            updateScrollDelayLabel(scrollDelayMs, scrollDelayValue);
+            backgroundSelected = '';
+            backgroundRandomPool = new Set();
+            backgroundRandomAll = false;
+            backgroundFolderAllowList = new Set();
+            if (backgroundFoldersAllToggle) {
+                backgroundFoldersAllToggle.checked = true;
+            }
+            loadBackgroundFolders();
+            loadBackgroundImages();
+        }
+    }, null);
+    attachOpacitySliderHandlers(backgroundImageOpacity, backgroundImageOpacityValue);
+    attachScrollDelayHandlers(scrollDelayMs, scrollDelayValue);
+    attachScrollTextHandlers(scrollTextSize, scrollTextSizeValue, scrollTextSpacing, scrollTextSpacingValue);
+}
+
+function clampIntervalMinutes(value) {
+    const parsed = Math.round(Number(value));
+    if (!Number.isFinite(parsed)) {
+        return 10;
+    }
+    if (parsed < 1) {
+        return 1;
+    }
+    if (parsed > 180) {
+        return 180;
+    }
+    return parsed;
+}
+
+function opacityToPercent(value) {
+    const normalized = normalizeOpacity(value);
+    return Math.round(normalized * 100);
+}
+
+function normalizeOpacity(value) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) {
+        return 0.08;
+    }
+    if (parsed < 0) {
+        return 0;
+    }
+    if (parsed > 1) {
+        return 1;
+    }
+    return parsed;
+}
+
+function clampOpacityPercent(value) {
+    const parsed = Math.round(Number(value));
+    if (!Number.isFinite(parsed)) {
+        return 8;
+    }
+    if (parsed < 0) {
+        return 0;
+    }
+    if (parsed > 100) {
+        return 100;
+    }
+    return parsed;
+}
+
+function updateBackgroundOpacityLabel(labelEl, sliderEl) {
+    if (!labelEl || !sliderEl) {
+        return;
+    }
+    const percent = clampOpacityPercent(sliderEl.value);
+    sliderEl.value = percent;
+    labelEl.textContent = percent + '%';
+}
+
+function attachOpacitySliderHandlers(sliderEl, labelEl) {
+    if (!sliderEl) {
+        return;
+    }
+    sliderEl.addEventListener('input', function () {
+        updateBackgroundOpacityLabel(labelEl, sliderEl);
+    });
+}
+
+function loadBackgroundImages() {
+    const gallery = document.getElementById("backgroundGallery");
+    if (!gallery) {
+        return;
+    }
+    getRequest("./manage/background-images", function (response) {
+        try {
+            const data = JSON.parse(response);
+            backgroundImages = Array.isArray(data) ? data : [];
+        } catch (error) {
+            backgroundImages = [];
+        }
+        renderBackgroundGallery();
+    }, null);
+}
+
+function loadBackgroundFolders() {
+    const list = document.getElementById("backgroundFolderList");
+    if (!list) {
+        return;
+    }
+    getRequest("./manage/background-folders", function (response) {
+        try {
+            const data = JSON.parse(response);
+            backgroundFolders = Array.isArray(data) ? data : [];
+        } catch (error) {
+            backgroundFolders = [];
+        }
+        if (backgroundFolderAllowList.size === 0 && backgroundFolders.length) {
+            backgroundFolderAllowList = new Set(backgroundFolders);
+        }
+        renderBackgroundFolderList();
+        renderBackgroundGallery();
+    }, null);
+}
+
+function renderBackgroundFolderList() {
+    const list = document.getElementById("backgroundFolderList");
+    if (!list) {
+        return;
+    }
+    if (!backgroundFolders.length) {
+        list.innerHTML = '<span class="hintText">אין תיקיות רקע זמינות.</span>';
+        return;
+    }
+    const html = backgroundFolders.map((folder) => {
+        const label = folder === backgroundRootKey ? 'root' : folder;
+        const checked = backgroundFolderAllowList.has(folder) ? 'checked' : '';
+        return (
+            '<label class="folderChip">' +
+                '<input type="checkbox" class="folderToggle" data-folder="' + folder + '" ' + checked + '>' +
+                '<span>' + label + '</span>' +
+            '</label>'
+        );
+    }).join('');
+    list.innerHTML = html;
+    attachFolderHandlers();
+}
+
+function attachFolderHandlers() {
+    const list = document.getElementById("backgroundFolderList");
+    if (!list) {
+        return;
+    }
+    const toggles = list.querySelectorAll('.folderToggle');
+    toggles.forEach((toggle) => {
+        toggle.addEventListener('change', function () {
+            const folder = toggle.getAttribute('data-folder');
+            if (!folder) {
+                return;
+            }
+            if (toggle.checked) {
+                backgroundFolderAllowList.add(folder);
+            } else {
+                backgroundFolderAllowList.delete(folder);
+            }
+            syncFoldersAllToggle();
+            renderBackgroundGallery();
+        });
+    });
+}
+
+function syncFoldersAllToggle() {
+    const toggle = document.getElementById("backgroundFoldersAll");
+    if (!toggle) {
+        return;
+    }
+    toggle.checked = backgroundFolderAllowList.size === 0 || backgroundFolderAllowList.size === backgroundFolders.length;
+}
+
+function toggleBackgroundFoldersAll() {
+    const toggle = document.getElementById("backgroundFoldersAll");
+    if (!toggle) {
+        return;
+    }
+    if (toggle.checked) {
+        backgroundFolderAllowList = new Set(backgroundFolders);
+    } else {
+        backgroundFolderAllowList = new Set();
+    }
+    renderBackgroundFolderList();
+    renderBackgroundGallery();
+}
+
+function renderBackgroundGallery() {
+    const gallery = document.getElementById("backgroundGallery");
+    if (!gallery) {
+        return;
+    }
+    const filteredImages = getFilteredBackgroundImages();
+    if (!filteredImages.length) {
+        gallery.innerHTML = '<div class="hintText">לא נמצאו תמונות רקע.</div>';
+        return;
+    }
+    if (backgroundSelected && !filteredImages.includes(backgroundSelected)) {
+        backgroundSelected = '';
+    }
+    const html = filteredImages.map((path) => {
+        const fileName = path.split('/').pop();
+        const isSelected = path === backgroundSelected ? 'selected' : '';
+        const randomChecked = backgroundRandomAll || backgroundRandomPool.has(path) ? 'checked' : '';
+        const randomDisabled = backgroundRandomAll ? 'disabled' : '';
+        return (
+            '<div class="backgroundThumb ' + isSelected + '" data-path="' + path + '">' +
+                '<img src="/' + path + '" alt="' + fileName + '">' +
+                '<div class="thumbFooter">' +
+                    '<span class="thumbLabel">' + fileName + '</span>' +
+                    '<label class="thumbRandom">' +
+                        '<input type="checkbox" class="thumbRandomInput" data-path="' + path + '" ' + randomChecked + ' ' + randomDisabled + '>רנדום' +
+                    '</label>' +
+                '</div>' +
+            '</div>'
+        );
+    }).join('');
+    gallery.innerHTML = html;
+    attachBackgroundHandlers();
+}
+
+function getFilteredBackgroundImages() {
+    if (!backgroundImages.length) {
+        return [];
+    }
+    if (!backgroundFolderAllowList.size || backgroundFolderAllowList.size === backgroundFolders.length) {
+        return backgroundImages.slice();
+    }
+    return backgroundImages.filter((path) => backgroundFolderAllowList.has(getImageFolderKey(path)));
+}
+
+function getImageFolderKey(path) {
+    const parts = String(path).split('/');
+    if (parts.length < 2) {
+        return backgroundRootKey;
+    }
+    if (parts[0] !== 'img') {
+        return backgroundRootKey;
+    }
+    return parts.length >= 3 ? parts[1] : backgroundRootKey;
+}
+
+function toggleBackgroundRandomAll() {
+    const toggle = document.getElementById("backgroundRandomAll");
+    backgroundRandomAll = toggle ? toggle.checked : false;
+    renderBackgroundGallery();
+}
+
+function attachBackgroundHandlers() {
+    const gallery = document.getElementById("backgroundGallery");
+    if (!gallery) {
+        return;
+    }
+    const thumbs = gallery.querySelectorAll('.backgroundThumb');
+    thumbs.forEach((thumb) => {
+        thumb.addEventListener('click', function () {
+            const path = thumb.getAttribute('data-path');
+            if (!path) {
+                return;
+            }
+            const randomEnabledToggle = document.getElementById("backgroundRandomEnabled");
+            const randomAllToggle = document.getElementById("backgroundRandomAll");
+            if (randomEnabledToggle && randomEnabledToggle.checked) {
+                randomEnabledToggle.checked = false;
+            }
+            if (randomAllToggle && randomAllToggle.checked) {
+                randomAllToggle.checked = false;
+                backgroundRandomAll = false;
+            }
+            backgroundSelected = path;
+            updateBackgroundSelection();
+        });
+    });
+    const randomInputs = gallery.querySelectorAll('.thumbRandomInput');
+    randomInputs.forEach((input) => {
+        input.addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+        input.addEventListener('change', function () {
+            const path = input.getAttribute('data-path');
+            if (!path) {
+                return;
+            }
+            if (input.checked) {
+                backgroundRandomPool.add(path);
+                return;
+            }
+            backgroundRandomPool.delete(path);
+        });
+    });
+}
+
+function updateBackgroundSelection() {
+    const gallery = document.getElementById("backgroundGallery");
+    if (!gallery) {
+        return;
+    }
+    const thumbs = gallery.querySelectorAll('.backgroundThumb');
+    thumbs.forEach((thumb) => {
+        const path = thumb.getAttribute('data-path');
+        if (path === backgroundSelected) {
+            thumb.classList.add('selected');
+            return;
+        }
+        thumb.classList.remove('selected');
+    });
+}
+
+function normalizeDelayValue(value, speedFallback) {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) {
+        return clampDelay(parsed);
+    }
+    if (speedFallback === 'slow') {
+        return 20;
+    }
+    if (speedFallback === 'fast') {
+        return 5;
+    }
+    return 10;
+}
+
+function clampDelay(value) {
+    const rounded = Math.round(value);
+    if (rounded < 5) {
+        return 5;
+    }
+    if (rounded > 50) {
+        return 50;
+    }
+    return rounded;
+}
+
+function clampScrollTextSize(value) {
+    const parsed = Math.round(Number(value));
+    if (!Number.isFinite(parsed)) {
+        return 18;
+    }
+    if (parsed < 12) {
+        return 12;
+    }
+    if (parsed > 32) {
+        return 32;
+    }
+    return parsed;
+}
+
+function clampScrollTextSpacing(value) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) {
+        return 0;
+    }
+    if (parsed < 0) {
+        return 0;
+    }
+    if (parsed > 4) {
+        return 4;
+    }
+    return parsed;
+}
+
+function updateScrollTextSizeLabel(sliderEl, labelEl) {
+    if (!sliderEl || !labelEl) {
+        return;
+    }
+    const value = clampScrollTextSize(sliderEl.value);
+    sliderEl.value = value;
+    labelEl.textContent = String(value);
+}
+
+function updateScrollTextSpacingLabel(sliderEl, labelEl) {
+    if (!sliderEl || !labelEl) {
+        return;
+    }
+    const value = clampScrollTextSpacing(sliderEl.value);
+    sliderEl.value = value;
+    labelEl.textContent = String(value);
+}
+
+function attachScrollTextHandlers(sizeEl, sizeLabel, spacingEl, spacingLabel) {
+    if (sizeEl) {
+        sizeEl.addEventListener('input', function () {
+            updateScrollTextSizeLabel(sizeEl, sizeLabel);
+        });
+    }
+    if (spacingEl) {
+        spacingEl.addEventListener('input', function () {
+            updateScrollTextSpacingLabel(spacingEl, spacingLabel);
+        });
+    }
+}
+
+function updateScrollDelayLabel(sliderEl, labelEl) {
+    if (!sliderEl || !labelEl) {
+        return;
+    }
+    const value = clampDelay(sliderEl.value);
+    sliderEl.value = value;
+    labelEl.textContent = String(value);
+}
+
+function attachScrollDelayHandlers(sliderEl, labelEl) {
+    if (!sliderEl) {
+        return;
+    }
+    sliderEl.addEventListener('input', function () {
+        updateScrollDelayLabel(sliderEl, labelEl);
+    });
+}
+
+let displayMessagesList = [];
+
+function loadDisplayMessages() {
+    const table = document.getElementById("displayMessagesTable");
+    if (!table) {
+        return;
+    }
+    getRequest("./manage/message-board/posts", function (response) {
+        try {
+            displayMessagesList = JSON.parse(response) || [];
+        } catch (error) {
+            displayMessagesList = [];
+        }
+        renderDisplayMessages();
+    }, null);
+}
+
+function renderDisplayMessages() {
+    const table = document.getElementById("displayMessagesTable");
+    if (!table) {
+        return;
+    }
+    if (!displayMessagesList.length) {
+        table.innerHTML = '<div class="hintText">אין הודעות זמינות.</div>';
+        return;
+    }
+    const html = displayMessagesList.map((post) => {
+        const text = String(post.post || '').trim();
+        const shortText = text.length > 120 ? text.substring(0, 117) + '...' : text;
+        const enabledChecked = post.display_enabled ? 'checked' : '';
+        const tempChecked = post.display_is_temporary ? 'checked' : '';
+        const pinChecked = post.pin ? 'checked' : '';
+        const duration = Number.isFinite(Number(post.display_duration_min)) ? Number(post.display_duration_min) : 5;
+        const orderValue = Number.isFinite(Number(post.display_order)) ? Number(post.display_order) : 0;
+        const priorityValue = Number.isFinite(Number(post.display_priority)) ? Number(post.display_priority) : 1;
+        const expiresAt = post.display_expires_at ? String(post.display_expires_at) : '-';
+        return (
+            '<div class="messageRow" data-postid="' + post.postid + '">' +
+                '<div>' +
+                    '<div class="messageText" title="' + text.replace(/"/g, '&quot;') + '">' + shortText + '</div>' +
+                    '<div class="messageMeta">ID ' + post.postid + ' | תפוגה: ' + expiresAt + '</div>' +
+                '</div>' +
+                '<label class="toggleGroup">' +
+                    '<input type="checkbox" class="messageToggle" data-field="display_enabled" ' + enabledChecked + '>תצוגה' +
+                '</label>' +
+                '<label class="toggleGroup">' +
+                    '<input type="checkbox" class="messageToggle" data-field="display_is_temporary" ' + tempChecked + '>זמני' +
+                '</label>' +
+                '<label class="toggleGroup">' +
+                    '<input type="checkbox" class="messageToggle" data-field="pin" ' + pinChecked + '>נעוץ' +
+                '</label>' +
+                '<select class="select messagePriority" data-field="display_priority">' +
+                    '<option value="2" ' + (priorityValue === 2 ? 'selected' : '') + '>גבוהה</option>' +
+                    '<option value="1" ' + (priorityValue === 1 ? 'selected' : '') + '>רגילה</option>' +
+                    '<option value="0" ' + (priorityValue === 0 ? 'selected' : '') + '>נמוכה</option>' +
+                '</select>' +
+                '<input type="number" class="textboxNumber messageDuration" min="1" max="180" value="' + duration + '">' +
+                '<input type="number" class="textboxNumber messageOrder" min="0" max="999" value="' + orderValue + '">' +
+                '<button class="outline messageSaveBtn">שמירה</button>' +
+                '<button class="outline messageDeleteBtn">מחיקה</button>' +
+            '</div>'
+        );
+    }).join('');
+    table.innerHTML = html;
+    attachDisplayMessageHandlers();
+}
+
+function attachDisplayMessageHandlers() {
+    const table = document.getElementById("displayMessagesTable");
+    if (!table) {
+        return;
+    }
+    const rows = table.querySelectorAll('.messageRow');
+    rows.forEach((row) => {
+        const saveBtn = row.querySelector('.messageSaveBtn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', function () {
+                saveDisplayMessageRow(row);
+            });
+        }
+        const deleteBtn = row.querySelector('.messageDeleteBtn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function () {
+                deleteDisplayMessageRow(row);
+            });
+        }
+    });
+}
+
+function addCustomDisplayMessage() {
+    const textInput = document.getElementById("customMessageText");
+    if (!textInput) {
+        return;
+    }
+    const text = String(textInput.value || '').trim();
+    if (!text) {
+        return;
+    }
+    const tempToggle = document.getElementById("customMessageTemporary");
+    const prioritySelect = document.getElementById("customMessagePriority");
+    const durationInput = document.getElementById("customMessageDuration");
+    const orderInput = document.getElementById("customMessageOrder");
+    const duration = durationInput ? Number(durationInput.value) : 5;
+    const orderValue = orderInput ? Number(orderInput.value) : 0;
+    const priorityValue = prioritySelect ? Number(prioritySelect.value) : 1;
+    const payload = JSON.stringify({
+        text: text,
+        display_is_temporary: tempToggle ? tempToggle.checked : false,
+        display_priority: priorityValue,
+        display_duration_min: duration,
+        display_order: orderValue
+    });
+    postRequest("./manage/message-board/custom", function () {
+        textInput.value = '';
+        const log = document.getElementById("displayMessagesLog");
+        if (log) {
+            log.innerText = 'נוספה הודעה חדשה';
+        }
+        loadDisplayMessages();
+    }, payload);
+}
+
+function deleteDisplayMessageRow(row) {
+    const postid = Number(row.getAttribute('data-postid'));
+    if (!Number.isInteger(postid)) {
+        return;
+    }
+    if (!window.confirm('למחוק את ההודעה?')) {
+        return;
+    }
+    const payload = JSON.stringify({ postid: postid });
+    postRequest("./manage/message-board/delete", function () {
+        const log = document.getElementById("displayMessagesLog");
+        if (log) {
+            log.innerText = 'נמחקה הודעה #' + postid;
+        }
+        loadDisplayMessages();
+    }, payload);
+}
+
+function saveDisplayMessageRow(row) {
+    const postid = Number(row.getAttribute('data-postid'));
+    if (!Number.isInteger(postid)) {
+        return;
+    }
+    const enabledToggle = row.querySelector('.messageToggle[data-field="display_enabled"]');
+    const tempToggle = row.querySelector('.messageToggle[data-field="display_is_temporary"]');
+    const pinToggle = row.querySelector('.messageToggle[data-field="pin"]');
+    const prioritySelect = row.querySelector('[data-field="display_priority"]');
+    const durationInput = row.querySelector('.messageDuration');
+    const orderInput = row.querySelector('.messageOrder');
+    const duration = durationInput ? Number(durationInput.value) : 5;
+    const orderValue = orderInput ? Number(orderInput.value) : 0;
+    const priorityValue = prioritySelect ? Number(prioritySelect.value) : 1;
+    const payload = JSON.stringify({
+        postid: postid,
+        display_enabled: enabledToggle ? enabledToggle.checked : false,
+        display_is_temporary: tempToggle ? tempToggle.checked : false,
+        display_priority: priorityValue,
+        display_duration_min: duration,
+        display_order: orderValue,
+        pin: pinToggle ? (pinToggle.checked ? 1 : 0) : 0
+    });
+    postRequest("./manage/message-board/post", function () {
+        const log = document.getElementById("displayMessagesLog");
+        if (log) {
+            log.innerText = 'נשמרה הודעה #' + postid;
+        }
+        loadDisplayMessages();
+    }, payload);
+}
+
+function saveThemeSelection() {
+    const select = document.getElementById("themeSelect");
+    const backgroundSelect = document.getElementById("backgroundSelect");
+    const backgroundRandomEnabled = document.getElementById("backgroundRandomEnabled");
+    const backgroundRandomAllToggle = document.getElementById("backgroundRandomAll");
+    const backgroundFoldersAllToggle = document.getElementById("backgroundFoldersAll");
+    const backgroundRandomIntervalMin = document.getElementById("backgroundRandomIntervalMin");
+    const backgroundImageOpacity = document.getElementById("backgroundImageOpacity");
+    const backgroundOverlayColor = document.getElementById("backgroundOverlayColor");
+    const backgroundPattern = document.getElementById("backgroundPattern");
+    const scrollEnabled = document.getElementById("scrollEnabled");
+    const scrollLocation = document.getElementById("scrollLocation");
+    const scrollTextColor = document.getElementById("scrollTextColor");
+    const scrollTextColorCustom = document.getElementById("scrollTextColorCustom");
+    const scrollTextSize = document.getElementById("scrollTextSize");
+    const scrollTextSpacing = document.getElementById("scrollTextSpacing");
+    const scrollTextWeight = document.getElementById("scrollTextWeight");
+    const scrollOrderMode = document.getElementById("scrollOrderMode");
+    const scrollDelayMs = document.getElementById("scrollDelayMs");
+    const log = document.getElementById("themeLog");
+    if (!select) {
+        return;
+    }
+    const delayValue = scrollDelayMs ? clampDelay(scrollDelayMs.value) : 10;
+    const textSizeValue = scrollTextSize ? clampScrollTextSize(scrollTextSize.value) : 18;
+    const textSpacingValue = scrollTextSpacing ? clampScrollTextSpacing(scrollTextSpacing.value) : 0;
+    const randomInterval = backgroundRandomIntervalMin
+        ? clampIntervalMinutes(backgroundRandomIntervalMin.value)
+        : 10;
+    const imageOpacityPercent = backgroundImageOpacity
+        ? clampOpacityPercent(backgroundImageOpacity.value)
+        : 8;
+    const imageOpacity = imageOpacityPercent / 100;
+    const randomAll = backgroundRandomAllToggle ? backgroundRandomAllToggle.checked : false;
+    const filteredImages = getFilteredBackgroundImages();
+    const randomPool = randomAll ? filteredImages.slice() : Array.from(backgroundRandomPool);
+    if (backgroundFoldersAllToggle && backgroundFoldersAllToggle.checked) {
+        backgroundFolderAllowList = new Set(backgroundFolders);
+    }
+    const payload = JSON.stringify({
+        theme: select.value,
+        backgroundMode: backgroundSelect ? backgroundSelect.value : 'none',
+        backgroundImage: backgroundSelected || '',
+        backgroundRandomEnabled: backgroundRandomEnabled ? backgroundRandomEnabled.checked : false,
+        backgroundRandomAll: randomAll,
+        backgroundRandomIntervalMin: randomInterval,
+        backgroundRandomPool: randomPool,
+        backgroundFolderAllowList: Array.from(backgroundFolderAllowList),
+        backgroundImageOpacity: imageOpacity,
+        backgroundOverlayColor: backgroundOverlayColor ? backgroundOverlayColor.value : '',
+        backgroundPattern: backgroundPattern ? backgroundPattern.value : 'none',
+        scrollEnabled: scrollEnabled ? scrollEnabled.checked : true,
+        scrollLocation: scrollLocation ? scrollLocation.value : 'bottom',
+        scrollTextColor: scrollTextColor ? scrollTextColor.value : 'default',
+        scrollTextColorCustom: scrollTextColorCustom ? scrollTextColorCustom.value : '',
+        scrollTextSizePx: textSizeValue,
+        scrollTextWeight: scrollTextWeight ? scrollTextWeight.value : '400',
+        scrollTextSpacing: textSpacingValue,
+        scrollDelayMs: delayValue,
+        scrollOrderMode: scrollOrderMode ? scrollOrderMode.value : 'random'
+    });
+    postRequest("./manage/ui-config", function (response) {
+        if (log) {
+            const mode = response.backgroundMode || (backgroundSelect ? backgroundSelect.value : 'none');
+            log.innerText = "נשמר: " + (response.theme || select.value) + " | רקע: " + mode;
+        }
+    }, payload);
+}
 
 function refreshAllClients() {
     if (window.confirm("לטעון מחדש את המסופים המחוברים?")) {

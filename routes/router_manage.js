@@ -9,6 +9,58 @@ const getItemImgs = require("../module/html/elements/manageGetItemImg.js");
 const formidable = require('formidable');
 const { stringify } = require("csv-stringify");
 const clientEvents = require('./router_client_events');
+const uiConfigStore = require('../module/tools/uiConfigStore');
+
+const publicDir = path.join(__dirname, '../public');
+const imgDir = path.join(publicDir, 'img');
+const allowedImageExts = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']);
+const rootFolderKey = '__root__';
+
+function listBackgroundImages(dirPath) {
+    let results = [];
+    if (!fs.existsSync(dirPath)) {
+        return results;
+    }
+    const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+    entries.forEach((entry) => {
+        const fullPath = path.join(dirPath, entry.name);
+        if (entry.isDirectory()) {
+            results = results.concat(listBackgroundImages(fullPath));
+            return;
+        }
+        const ext = path.extname(entry.name).toLowerCase();
+        if (!allowedImageExts.has(ext)) {
+            return;
+        }
+        const relative = path.relative(publicDir, fullPath).split(path.sep).join('/');
+        results.push(relative);
+    });
+    return results;
+}
+
+function listBackgroundFolders() {
+    const folders = new Set();
+    let hasRootImages = false;
+    if (!fs.existsSync(imgDir)) {
+        return [];
+    }
+    const entries = fs.readdirSync(imgDir, { withFileTypes: true });
+    entries.forEach((entry) => {
+        if (entry.isDirectory()) {
+            folders.add(entry.name);
+            return;
+        }
+        const ext = path.extname(entry.name).toLowerCase();
+        if (allowedImageExts.has(ext)) {
+            hasRootImages = true;
+        }
+    });
+    const sorted = Array.from(folders).sort();
+    if (hasRootImages) {
+        sorted.unshift(rootFolderKey);
+    }
+    return sorted;
+}
 
 //---------------------MANAGE MAIN PAGE-----------------------------//
 
@@ -19,6 +71,148 @@ routerManage.get('/', (req, res) => {
     res.render('manage', {
         imgArray: itemImgArray
     })
+});
+
+routerManage.get('/theme', (req, res) => {
+    const config = uiConfigStore.getConfig();
+    res.json({
+        theme: config.theme,
+        backgroundMode: config.backgroundMode
+    });
+});
+
+routerManage.post('/theme', (req, res) => {
+    const theme = req.body && req.body.theme ? String(req.body.theme) : 'default';
+    const backgroundMode = req.body && req.body.backgroundMode
+        ? String(req.body.backgroundMode)
+        : 'none';
+    const saved = uiConfigStore.setConfig({
+        ...uiConfigStore.getConfig(),
+        theme,
+        backgroundMode
+    });
+    clientEvents.sendEvents("uiConfig");
+    res.json(saved);
+});
+
+routerManage.get('/ui-config', (req, res) => {
+    res.json(uiConfigStore.getConfig());
+});
+
+routerManage.get('/background-images', (req, res) => {
+    try {
+        const images = listBackgroundImages(imgDir).sort();
+        res.json(images);
+    } catch (error) {
+        console.error('Error listing background images:', error);
+        res.status(500).json([]);
+    }
+});
+
+routerManage.get('/background-folders', (req, res) => {
+    try {
+        res.json(listBackgroundFolders());
+    } catch (error) {
+        console.error('Error listing background folders:', error);
+        res.status(500).json([]);
+    }
+});
+
+routerManage.post('/ui-config', (req, res) => {
+    const current = uiConfigStore.getConfig();
+    const next = {
+        ...current,
+        ...req.body
+    };
+    const saved = uiConfigStore.setConfig(next);
+    clientEvents.sendEvents("uiConfig");
+    res.json(saved);
+});
+
+//---------------------MESSAGE DISPLAY MANAGEMENT-----------------------------//
+
+routerManage.get('/message-board/posts', async (req, res) => {
+    try {
+        const posts = await db.dbGetManagePinnedPosts();
+        res.json(posts);
+    } catch (err) {
+        console.error('Error loading manage posts:', err);
+        res.status(500).json([]);
+    }
+});
+
+routerManage.post('/message-board/post', async (req, res) => {
+    try {
+        const postid = Number(req.body && req.body.postid);
+        if (!Number.isInteger(postid)) {
+            res.status(400).json({ error: 'Invalid post id' });
+            return;
+        }
+        const displayEnabled = req.body && req.body.display_enabled ? 1 : 0;
+        const displayTemporary = req.body && req.body.display_is_temporary ? 1 : 0;
+        const rawDuration = Number(req.body && req.body.display_duration_min);
+        const durationMin = Number.isFinite(rawDuration)
+            ? Math.min(180, Math.max(1, Math.round(rawDuration)))
+            : 5;
+        const rawOrder = Number(req.body && req.body.display_order);
+        const displayOrder = Number.isFinite(rawOrder) ? Math.round(rawOrder) : 0;
+        const rawPriority = Number(req.body && req.body.display_priority);
+        const displayPriority = Number.isFinite(rawPriority)
+            ? Math.min(2, Math.max(0, Math.round(rawPriority)))
+            : 1;
+        const pinValue = Number.isInteger(Number(req.body && req.body.pin))
+            ? Number(req.body.pin)
+            : null;
+        await db.dbUpdateDisplayPost(postid, displayEnabled, displayTemporary, durationMin, displayOrder, displayPriority, pinValue);
+        clientEvents.sendEvents('reloadPosts');
+        res.json({ ok: true });
+    } catch (err) {
+        console.error('Error updating manage post:', err);
+        res.status(500).json({ ok: false });
+    }
+});
+
+routerManage.post('/message-board/custom', async (req, res) => {
+    try {
+        const text = req.body && req.body.text ? String(req.body.text).trim() : '';
+        if (!text) {
+            res.status(400).json({ ok: false, error: 'Empty message' });
+            return;
+        }
+        const rawDuration = Number(req.body && req.body.display_duration_min);
+        const durationMin = Number.isFinite(rawDuration)
+            ? Math.min(180, Math.max(1, Math.round(rawDuration)))
+            : 5;
+        const rawOrder = Number(req.body && req.body.display_order);
+        const displayOrder = Number.isFinite(rawOrder) ? Math.round(rawOrder) : 0;
+        const rawPriority = Number(req.body && req.body.display_priority);
+        const displayPriority = Number.isFinite(rawPriority)
+            ? Math.min(2, Math.max(0, Math.round(rawPriority)))
+            : 1;
+        const displayTemporary = req.body && req.body.display_is_temporary ? 1 : 0;
+        await db.dbInsertManagePost(text, durationMin, displayOrder, displayPriority, displayTemporary);
+        clientEvents.sendEvents('reloadPosts');
+        res.json({ ok: true });
+    } catch (err) {
+        console.error('Error adding custom post:', err);
+        res.status(500).json({ ok: false });
+    }
+});
+
+routerManage.post('/message-board/delete', async (req, res) => {
+    try {
+        const postid = Number(req.body && req.body.postid);
+        if (!Number.isInteger(postid)) {
+            res.status(400).json({ ok: false });
+            return;
+        }
+        await db.dbDeletePostById(postid);
+        clientEvents.sendEvents('reloadPosts');
+        res.json({ ok: true });
+    } catch (err) {
+        console.error('Error deleting post:', err);
+        res.status(500).json({ ok: false });
+    }
 });
 
 routerManage.get('/getItemImgs',(req,res) => {    

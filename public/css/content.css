@@ -13,6 +13,39 @@
     box-sizing: border-box;
 }
 
+#divContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+body.scroll-display-off #divContent {
+    gap: 0.15rem;
+}
+
+body.scroll-display-off #divContent .searchBoxDiv {
+    margin-top: 0;
+}
+
+#divContent>#searchBoxDiv {
+    order: 2;
+}
+
+#divContent>#productsDiv {
+    order: 3;
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: calc(100svh - 18rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+#divContent>#buttons {
+    order: 4;
+    margin-top: auto;
+}
+
+
 @media (min-width: 768px) {
     .content {
         width: 95%;
@@ -29,16 +62,16 @@
     z-index: 48;
     margin: 0 auto;
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: 0.35rem;
     height: auto;
     /* Allow flexible height */
-    min-height: 4rem;
+    min-height: 5.8rem;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    direction: rtl;
     position: relative;
-    /* Anchor for absolute positioning */
 }
 
 .searchBox {
@@ -48,27 +81,57 @@
     /* Softer corners */
     border: 1px solid var(--text01);
     background-color: var(--bg01);
-    height: 3.5rem;
+    height: 4.8rem;
     /* Fixed reasonable height */
     width: 100%;
-    font-size: 1.5rem;
-    /* Smaller font for mobile */
-    padding: 0 1rem;
+    font-size: 2rem;
+    /* Larger for primary input */
+    padding: 0 1.4rem;
     margin: 0;
     user-select: none;
     box-sizing: border-box;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    direction: rtl;
 }
 
 .searchBox:focus {
     border-color: var(--text04);
-    box-shadow: 0 0 5px var(--text04);
+    box-shadow: 0 0 8px var(--text04);
+    transform: scale(1.01);
 }
 
 @media (min-width: 768px) {
     .searchBox {
-        font-size: 2rem;
-        height: 4rem;
+        font-size: 2.6rem;
+        height: 5.2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .searchBoxDiv {
+        min-height: 6rem;
+    }
+
+    .searchBox {
+        height: 4.6rem;
+        font-size: 1.9rem;
+        padding: 0 1.2rem;
+    }
+
+    .autoCompleteSuggestions {
+        max-height: 55vh;
+    }
+
+    .autocomplete-items {
+        font-size: 1.4rem;
+        padding: 14px 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .searchBox::placeholder {
+        font-size: 1.4rem;
     }
 }
 
@@ -100,7 +163,7 @@
     border-radius: 0 0 8px 8px;
     overflow-y: auto;
     /* Scroll if too long */
-    max-height: 50vh;
+    max-height: 45vh;
     /* Limit height */
     background-color: var(--bg01);
     /* Opaque background */
@@ -108,6 +171,8 @@
     /* Drop shadow */
     border: 1px solid var(--text01);
     border-top: none;
+    text-align: right;
+    direction: rtl;
 }
 
 .autocomplete-items {
@@ -115,10 +180,12 @@
     padding: 12px 15px;
     /* More padding for touch targets */
     margin: 0;
-    font-size: 1.2rem;
-    /* Much smaller base size */
+    font-size: 1.3rem;
+    /* Slightly larger for quicker scanning */
     white-space: normal;
-    color: var(--textBlack);
+    text-align: right;
+    direction: rtl;
+    color: var(--text01);
     background-color: var(--listItemOdd);
     border-bottom: 1px solid var(--bg01);
     cursor: pointer;
@@ -131,7 +198,7 @@
 
 @media (min-width: 768px) {
     .autocomplete-items {
-        font-size: 1.5rem;
+        font-size: 1.7rem;
     }
 }
 }
@@ -164,14 +231,57 @@
     justify-content: center;
     margin: auto;
     width: 100%;
-    height: 100%;
+    height: auto;
+    max-height: none;
     margin-top: 1rem;
     margin-bottom: 1rem;
     transition: background-color 0.8s ease;
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
     clear: both;
+    padding-bottom: calc(var(--buttons-height, 3.6rem) + 0.6rem);
     /* border: 2px solid orange; */
+}
+
+@media (max-height: 720px) {
+    #divContent>#productsDiv {
+        max-height: calc(100svh - 16rem);
+    }
+}
+
+@media (max-height: 600px) {
+    #divContent>#productsDiv {
+        max-height: calc(100svh - 14rem);
+    }
+}
+
+.display {
+    position: static;
+    overflow: hidden;
+    height: 2.6rem;
+    margin: 0.4rem auto 0.6rem;
+    width: 100%;
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border01);
+    z-index: 1;
+}
+
+.displayMessage {
+    position: absolute;
+    white-space: nowrap;
+    width: 100%;
+    display: flex;
+    gap: 2rem;
+    color: var(--scroll-text-color, var(--text02));
+    font-size: 1rem;
+    align-items: center;
+    padding: 0px;
+}
+
+.displayPs {
+    position: relative;
+    white-space: nowrap;
 }
 
 .item {
@@ -297,21 +407,48 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    min-height: 1rem;
+    min-height: 3rem;
     /* margin: auto;
     margin-top: 0px;
     margin-bottom: 3rem; */
-    bottom: 1rem;
-    left: -50%;
-    right: -50%;
+    bottom: env(safe-area-inset-bottom, 0px);
+    left: 0;
+    right: 0;
     text-align: center;
     /* border: 5px solid orange; */
+    background-color: var(--bg01);
+    padding-bottom: calc(0.3rem + env(safe-area-inset-bottom, 0px));
+    z-index: 20;
+}
+
+:root {
+    --buttons-height: 3.6rem;
+}
+
+@media (max-width: 900px) {
+    :root {
+        --buttons-height: 3.2rem;
+    }
+
+    #divContent>#productsDiv {
+        max-height: calc(100svh - 16rem);
+    }
+}
+
+@media (max-width: 600px) {
+    :root {
+        --buttons-height: 3rem;
+    }
+
+    #divContent>#productsDiv {
+        max-height: calc(100svh - 15rem);
+    }
 }
 
 .buttons button {
     margin: auto;
     min-width: 0px;
-    min-height: 1rem;
+    min-height: 2.6rem;
     width: 100%;
     height: fit-content;
     color: black;
@@ -319,6 +456,51 @@
     padding: 0rem 1rem 0rem 1rem;
     text-shadow: 5px 1px 10px #a49c9c;
     border: 3px outset rgba(230, 145, 9, 0.495);
+}
+
+@media (max-height: 720px) {
+    .buttons {
+        min-height: 2.6rem;
+        padding-bottom: calc(0.2rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    .buttons button {
+        min-height: 2.2rem;
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 900px) {
+    #divContent {
+        padding-bottom: 3.4rem;
+    }
+
+    .buttons {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: env(safe-area-inset-bottom, 0px);
+    }
+}
+
+@media (max-height: 580px) {
+    .buttons {
+        position: fixed;
+        left: 0;
+        right: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .buttons {
+        min-height: 2.6rem;
+        padding-bottom: calc(0.2rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    .buttons button {
+        min-height: 2.2rem;
+        font-size: 1.6rem;
+    }
 }
 
 .buttons button:active {
@@ -520,13 +702,13 @@
     } */
 
     .searchBoxDiv {
-        height: 3rem;
+        /* height: 3rem; */
         margin-bottom: 0rem;
     }
 
     .searchBox {
-        height: fit-content;
-        width: 100%;
+        /* height: fit-content; */
+        /* width: 100%; */
         font-size: 1.5rem;
         padding: 0.2rem;
         padding-bottom: 0px;

@@ -122,6 +122,60 @@ body {
     padding: 0;
 }
 
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: var(--bg-image, none);
+    background-size: cover;
+    background-position: center;
+    opacity: var(--bg-image-opacity, 0.08);
+    transition: opacity 1.6s ease;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-color: var(--bg-overlay-color, transparent);
+    background-image: var(--bg-pattern, none);
+    background-size: var(--bg-pattern-size, 20px 20px);
+    opacity: var(--bg-overlay-opacity, 0.18);
+    transition: background-color 1.6s ease, opacity 1.6s ease;
+}
+
+body[data-bg-mode="none"]::before {
+    opacity: 0;
+}
+
+body[data-bg-mode="static"]::before {
+    opacity: var(--bg-image-opacity, 0.08);
+}
+
+body[data-bg-mode="animated"]::before {
+    opacity: var(--bg-image-opacity, 0.08);
+    animation: bgDrift 40s ease-in-out infinite;
+    background-size: 120% 120%;
+}
+
+@keyframes bgDrift {
+    0% {
+        background-position: 50% 50%;
+    }
+
+    50% {
+        background-position: 60% 40%;
+    }
+
+    100% {
+        background-position: 50% 50%;
+    }
+}
+
 /* Responsive Typography */
 @media (max-width: 768px) {
     html {
@@ -436,6 +490,8 @@ p {
     /* width: 100vw; */
     margin: 0px;
     padding: 0px;
+    position: relative;
+    z-index: 1;
 }
 
 .divAbout {
@@ -470,16 +526,15 @@ p {
 /* --------------------------MESSAGE BOARD------------------------------ */
 
 .messageBoardWindow {
-    z-index: 80;
-    position: relative;
-    /* display: inline-block; */
-    /* top: 10%; */
-    /* left: 5%; */
-    /* right: 5%; */
+    z-index: 200;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     width: 95vw;
     max-width: 650px;
     height: 88vh;
-    margin: 0 auto 0 auto;
+    margin: 0.6rem auto 0 auto;
     background-color: var(--bg01);
     border: 1px solid var(--border02);
     /* padding: 1rem; */
@@ -1407,17 +1462,16 @@ p {
 /* ----------------Display----------------- */
 .display {
     overflow-x: hidden;
-    position: absolute;
     text-align: left;
-    height: 2rem;
-    width: 100dvw;
-    /* min-width: fit-content; */
-    left: 0px;
-    margin-bottom: 0.5rem;
-    /* display: flex; */
+    height: 2.6rem;
+    width: 100%;
+    margin: 0.4rem auto 0.6rem;
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border01);
     flex-direction: row;
     white-space: nowrap;
-    z-index: -1;
+    z-index: 1;
 }
 
 .displayPs {
@@ -1426,8 +1480,10 @@ p {
     position: relative;
     text-align: right;
     font-style: italic;
-    color: rgb(240, 158, 6);
-    font-size: 1.8rem;
+    color: var(--scroll-text-color, rgb(240, 158, 6));
+    font-size: var(--scroll-text-size, 1.8rem);
+    font-weight: var(--scroll-text-weight, 400);
+    letter-spacing: var(--scroll-text-spacing, 0px);
     padding-bottom: 0.3rem;
     padding-left: 2rem;
     margin-left: 2rem;
@@ -1438,12 +1494,17 @@ p {
 .display p {}
 
 .displayMessage {
+    position: absolute;
     min-width: fit-content;
     text-align: right;
     min-width: fit-content;
-    height: 2rem;
+    /* height: 2rem; */
     padding-left: 0px;
     display: flex;
     flex-direction: row-reverse;
     /* white-space: pre-line; */
+}
+
+body.scroll-display-off .display {
+    display: none;
 }

@@ -60,3 +60,17 @@ The new structure separates concerns into distinct layers:
 - **Migration Guide**: See `03_MIGRATION_GUIDE.md`
 - **Validation**: See `04_VALIDATION_REFERENCE.md`
 - **Future Plans**: See `05_FUTURE_PLANS.md`
+
+---
+
+## 2026-02-13 Addendum
+
+This is a current runtime map and workflow summary based on app.js, routes, controllers, and module.
+
+- See `../PROJECT_OVERVIEW_2026-02-13.md`
+
+### Version Tracking (New)
+
+All future code changes should update the version log defined here:
+
+- See `../VERSION_TRACKING.md`

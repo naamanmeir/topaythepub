@@ -140,12 +140,43 @@ exports.dbCreateTablePosts = async function() {
             "`post` TEXT(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin," +
             "`img` VARCHAR(1024)," +
             "`pin` INT," +
+            "`display_enabled` TINYINT NOT NULL DEFAULT 1," +
+            "`display_order` INT NOT NULL DEFAULT 0," +
+            "`display_priority` INT NOT NULL DEFAULT 1," +
+            "`display_duration_min` INT NOT NULL DEFAULT 5," +
+            "`display_is_temporary` TINYINT NOT NULL DEFAULT 0," +
+            "`display_expires_at` DATETIME NULL," +
             "PRIMARY KEY (`postid`)" +
             ");"
         );
     } catch (err) {
         console.error("Error creating posts table:", err);
         throw err;
+    }
+};
+
+async function columnExists(table, column) {
+    const sql = "SELECT COUNT(*) AS count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?;";
+    const rows = await pool.query(sql, [table, column]);
+    return rows && rows[0] && rows[0].count > 0;
+}
+
+exports.dbEnsurePostColumns = async function() {
+    const columns = [
+        { name: 'display_enabled', definition: 'TINYINT NOT NULL DEFAULT 1' },
+        { name: 'display_order', definition: 'INT NOT NULL DEFAULT 0' },
+        { name: 'display_priority', definition: 'INT NOT NULL DEFAULT 1' },
+        { name: 'display_duration_min', definition: 'INT NOT NULL DEFAULT 5' },
+        { name: 'display_is_temporary', definition: 'TINYINT NOT NULL DEFAULT 0' },
+        { name: 'display_expires_at', definition: 'DATETIME NULL' }
+    ];
+    for (const column of columns) {
+        const exists = await columnExists(tablePosts, column.name);
+        if (exists) {
+            continue;
+        }
+        const sql = `ALTER TABLE ${tablePosts} ADD COLUMN ${column.name} ${column.definition};`;
+        await pool.query(sql);
     }
 };
 
@@ -794,6 +825,32 @@ exports.dbGetPindPosts = async function() {
     return await pool.query(sql);
 };
 
+exports.dbGetDisplayPosts = async function() {
+    let sql = (`SELECT postid, post, display_priority FROM ${tablePosts}
+        WHERE pin = 1
+          AND display_enabled = 1
+          AND (display_expires_at IS NULL OR display_expires_at > NOW())
+        ORDER BY display_order ASC, postid ASC;`);
+    return await pool.query(sql);
+};
+
+exports.dbGetManagePosts = async function() {
+    let sql = (`SELECT postid, post, user, pin, display_enabled, display_order, display_priority, display_is_temporary,
+        display_duration_min, display_expires_at
+        FROM ${tablePosts}
+        ORDER BY postid DESC;`);
+    return await pool.query(sql);
+};
+
+exports.dbGetManagePinnedPosts = async function() {
+    let sql = (`SELECT postid, post, user, pin, display_enabled, display_order, display_priority, display_is_temporary,
+        display_duration_min, display_expires_at
+        FROM ${tablePosts}
+        WHERE pin = 1
+        ORDER BY display_order ASC, postid DESC;`);
+    return await pool.query(sql);
+};
+
 exports.dbGetPostById = async function(postid) {
     let sql = (`SELECT * FROM ${tablePosts} WHERE postid = ?;`);
     let values = [
@@ -812,9 +869,42 @@ exports.dbIsPostPindById = async function(postid) {
 
 exports.dbPinPostById = async function(pin, postid) {
     let sql = (`UPDATE ${tablePosts} SET pin=? WHERE postid=?;`);
-    let values = [
-        [pin, postid]
+    return await pool.query(sql, [pin, postid]);
+};
+
+exports.dbUpdateDisplayPost = async function(postid, displayEnabled, displayTemporary, durationMin, displayOrder, displayPriority, pinValue) {
+    const setPin = Number.isInteger(pinValue);
+    const sql = `UPDATE ${tablePosts}
+        SET display_enabled = ?,
+            display_is_temporary = ?,
+            display_duration_min = ?,
+            display_order = ?,
+            display_priority = ?,
+            display_expires_at = CASE WHEN ? = 1 AND ? = 1 THEN DATE_ADD(NOW(), INTERVAL ? MINUTE) ELSE NULL END
+            ${setPin ? ', pin = ?' : ''}
+        WHERE postid = ?;`;
+    const values = [
+        displayEnabled,
+        displayTemporary,
+        durationMin,
+        displayOrder,
+        displayPriority,
+        displayEnabled,
+        displayTemporary,
+        durationMin
     ];
+    if (setPin) {
+        values.push(pinValue);
+    }
+    values.push(postid);
+    return await pool.query(sql, values);
+};
+
+exports.dbInsertManagePost = async function(post, durationMin, displayOrder, displayPriority, displayTemporary) {
+    const sql = (`INSERT INTO ${tablePosts}
+        (user, post, img, pin, display_enabled, display_is_temporary, display_duration_min, display_order, display_priority, display_expires_at)
+        VALUES (?, ?, 0, 1, 1, ?, ?, ?, ?, CASE WHEN ? = 1 THEN DATE_ADD(NOW(), INTERVAL ? MINUTE) ELSE NULL END);`);
+    const values = [77, post, displayTemporary, durationMin, displayOrder, displayPriority, displayTemporary, durationMin];
     return await pool.query(sql, values);
 };
 

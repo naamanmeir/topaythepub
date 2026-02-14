@@ -78,7 +78,7 @@
             "SideMenuLogOutClient": "נתק מסוף",
             "SideMenuGotoManage": "דף ניהול",
             "SideMenuCloseSideMenu": "⟹",
-            "floatMenuButton": "הפורום של הפאב לחצו כאן",
+            "floatMenuButton": "לוח מודעות",
             "footerText": " זה של הפאב ונוצר על ידי ניבה גבינהצהובה",
             "mBoardHeader": "פורום או משהו כזה",
             "mBoardPlaceHolder": "כיתבו פה משהו",
@@ -137,7 +137,7 @@
     ],
     "client": [
         {
-            "inputPlaceholder": "לחצו כאן להכנסת שם משתמש",
+            "inputPlaceholder": "לחצו כאן כדי להתחיל",
             "inputPlaceholderFocus": "כיתבו שם משתמש",
             "logged": "🙌מחובר🙋",
             "notExist": "؟שם👨‍💻לא🧑‍🔧ידוע؟",

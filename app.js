@@ -57,6 +57,7 @@ const routerClientEvents = require('./routes/router_client_events');
 const routerApp = require('./routes/router_app');
 const routerMessageBoard = require('./routes/router_messageBoard');
 const routerRemoteMessageBoard = require('./routes/router_messageRemote');
+const appPackage = require('./package.json');
 
 
 const appPort = process.env.APP_PORT;
@@ -72,9 +73,12 @@ const DEFAULTADMIN = process.env.DEFAULTADMIN;
 const DEFAULTADMINPASS = process.env.DEFAULTADMINPASS;
 
 const OPENAI_KEY = process.env.OPENAI_API_KEY;
+const appVersion = process.env.APP_VERSION || appPackage.version || '0.0.0';
 
 const app = express();
 const port = appPort;
+
+app.locals.appVersion = appVersion;
 
 app.set('trust proxy', 1);
 
@@ -187,6 +191,7 @@ async function dbInit() {
     await db.dbCreateTableOrders();
     await db.dbCreateTableProducts();
     await db.dbCreateTablePosts();
+    await db.dbEnsurePostColumns();
     await db.dbCreateTableFacts();
 
     let dbDefaultUser = await db.getUserTableLength();

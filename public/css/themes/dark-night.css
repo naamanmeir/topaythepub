@@ -1,0 +1,154 @@
+:root {
+    --bg01: #0b0f1a;
+    --bg02: rgba(255, 255, 255, 0.06);
+    --bg03: rgba(10, 12, 22, 0.7);
+
+    --text01: #e6f6ff;
+    --text02: #8fe3ff;
+    --text03: #9aa6c9;
+    --text04: #ff7bd4;
+    --textBlack: #0b0f1a;
+
+    --border01: rgba(143, 227, 255, 0.4);
+    --border02: #ffb84d;
+    --border03: #00f5d4;
+
+    --buttonYes: #00f5d4;
+    --buttonNo: #ff5b6b;
+
+    --buttonBgYes: #00c2a8;
+    --buttonBgNo: #ff5b6b;
+
+    --listItemOdd: #162035;
+    --listItemEven: #1b2942;
+    --listItemSelected: #263a5d;
+
+    --itemPrice: #00f5d4;
+    --itemCount: #ff7bd4;
+    --itemName: #e6f6ff;
+
+    --main-font: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+    --bg-image: url('/img/bgAnim/mushrooms/mushroom03.png');
+    --bg-image-opacity: 0.06;
+}
+
+body {
+    background: radial-gradient(circle at top, #1a2340, #0b0f1a 55%, #05060c 100%);
+    color: var(--text01);
+    background-attachment: fixed;
+}
+
+@keyframes neonPulse {
+    0% {
+        box-shadow: 0 0 0 rgba(0, 245, 212, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 18px rgba(255, 123, 212, 0.6);
+    }
+
+    100% {
+        box-shadow: 0 0 0 rgba(0, 245, 212, 0.3);
+    }
+}
+
+@keyframes discoGlow {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.header {
+    background: linear-gradient(120deg, rgba(0, 245, 212, 0.2), rgba(255, 123, 212, 0.18));
+    border-radius: 18px;
+    animation: discoGlow 16s linear infinite;
+}
+
+.header p {
+    color: var(--text01);
+    text-shadow: 0 0 12px rgba(0, 245, 212, 0.45);
+}
+
+.searchBox {
+    background-color: #10162a;
+    color: var(--text01);
+    border: 2px solid rgba(0, 245, 212, 0.4);
+    box-shadow: 0 8px 20px rgba(0, 245, 212, 0.1);
+}
+
+.items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.9rem;
+    padding: 0.5rem 0.2rem 1rem;
+}
+
+.item {
+    background: linear-gradient(160deg, rgba(18, 26, 46, 0.9), rgba(10, 12, 22, 0.9));
+    border-radius: 16px;
+    border: 1px solid rgba(0, 245, 212, 0.3);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+    padding: 0.8rem;
+    min-height: 9rem;
+    animation: neonPulse 6s ease-in-out infinite;
+}
+
+.item img {
+    position: static;
+    width: 100%;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 0.4rem;
+    border: 1px solid rgba(255, 123, 212, 0.4);
+}
+
+.itemName {
+    font-size: 1rem;
+    color: var(--itemName);
+}
+
+.itemPrice {
+    font-size: 0.95rem;
+    color: var(--itemPrice);
+}
+
+.itemCount {
+    font-size: 0.95rem;
+    color: var(--itemCount);
+}
+
+.item:hover {
+    transform: translateY(-3px);
+    transition: transform 0.2s ease;
+}
+
+.placeOrder,
+.cancel {
+    border-radius: 999px;
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+}
+
+.placeOrder {
+    background-color: var(--buttonYes);
+    color: #0b0f1a;
+}
+
+.cancel {
+    background-color: transparent;
+    color: var(--buttonNo);
+    border: 1px solid var(--buttonNo);
+}
+
+@media (max-width: 600px) {
+    .searchBox {
+        font-size: 1.2rem;
+        height: 3.2rem;
+    }
+}

@@ -10,7 +10,8 @@
   "nodemonConfig": {
     "ignore": [
       "./public/*",
-      "./module/*"
+      "./module/*",
+      "./config/ui-config.json"
     ]
   },
   "keywords": [],

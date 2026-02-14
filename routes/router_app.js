@@ -4,6 +4,7 @@ const functions = require('../module/utils/functions');
 const db = require('../module/database/db');
 const {actionsLogger, ordersLogger} = require('../module/logger');
 // const { json } = require('stream/consumers');
+const uiConfigStore = require('../module/tools/uiConfigStore');
 
 const localizationService = require('../module/localization/LocalizationService');
 
@@ -26,6 +27,18 @@ routerApp.get('/messages', async function (req, res) {
     // console.log("SEND MESSAGES OBJECT");
     const messages = getMessages(req);
     res.send(messages);
+});
+
+routerApp.get('/theme', async function (req, res) {
+    const config = uiConfigStore.getConfig();
+    res.json({
+        theme: config.theme,
+        backgroundMode: config.backgroundMode
+    });
+});
+
+routerApp.get('/ui-config', async function (req, res) {
+    res.json(uiConfigStore.getConfig());
 });
 
 routerApp.get('/header', function (req, res) {

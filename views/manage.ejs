@@ -13,16 +13,21 @@
 
     <%- include('./partials/headerStatic'); %>
 
-        <div class="nav nav-links" id="navbar">
-            <button class="nav-link" onclick="navtab('products')">מוצרים</button></li>
-            <button class="nav-link" onclick="navtab('clients')">משתמשים</button></li>
-            <button class="nav-link" onclick="navtab('data')">נתונים</button></li>
-            <button class="nav-link" onclick="navtab('manage')">ניהול</button></li>
-            <button class="nav-link" onclick="navtab('chatbot')">אוטומטים</button></li>
-            <button class="nav-link"><a href="./accountant" target="_blank">דף הנהלת חשבונות</a></button>
-            <button class="nav-link"><a href="./app">מסך משתמש</a></button>
-            </li>
-        </div>
+        <nav class="manageNav" id="navbar">
+            <div class="manageNavInner">
+                <button class="manageNavBtn is-active" data-target="products"
+                    onclick="navtab('products', this)">מוצרים</button>
+                <button class="manageNavBtn" data-target="clients" onclick="navtab('clients', this)">משתמשים</button>
+                <button class="manageNavBtn" data-target="data" onclick="navtab('data', this)">נתונים</button>
+                <button class="manageNavBtn" data-target="manage" onclick="navtab('manage', this)">ניהול</button>
+                <button class="manageNavBtn" data-target="messages" onclick="navtab('messages', this)">הודעות</button>
+                <button class="manageNavBtn" data-target="shopTheme" onclick="navtab('shopTheme', this)">עיצוב
+                    חנות</button>
+                <button class="manageNavBtn" data-target="chatbot" onclick="navtab('chatbot', this)">אוטומטים</button>
+                <a class="manageNavBtn manageNavLink" href="./accountant" target="_blank">דף הנהלת חשבונות</a>
+                <a class="manageNavBtn manageNavLink" href="./app">מסך משתמש</a>
+            </div>
+        </nav>
 
         <!-- products -->
 
@@ -32,54 +37,41 @@
 
             <div class="row linebreak"></div>
 
-            <div class="displayProducts" id="displayProducts">
-                <div class="productRow">
-                    <p>מיקום</p>
-                    <p>שם</p>
-                    <p>מחיר</p>
-                    <p>תמונה</p>
-                    <p>הצגה בתפריט</p>
+            <div class="productManager">
+                <div class="productToolbar">
+                    <p class="sectionTitle">רשימת מוצרים</p>
+                    <div class="toolbarActions">
+                        <button class="green" onclick="getProducts()">רענן רשימה</button>
+                        <button class="outline jumpAddBtn" onclick="scrollToAddProduct()">הוסף מוצר</button>
+                        <label class="toggleGroup">
+                            <input type="checkbox" id="hideOutOfStock" onchange="toggleHideOutOfStock(this)">
+                            <span>הסתר פריטים שלא בתפריט</span>
+                        </label>
+                        <span class="hintText">גרור שורות כדי לשנות סדר</span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row linebreak"></div>
+                <div class="productsTable" id="productsTable">
+                    <div class="productsRow productsHeader">
+                        <div class="cell dragCell">גרור</div>
+                        <div class="cell orderCell">סדר</div>
+                        <div class="cell nameCell">שם</div>
+                        <div class="cell priceCell">מחיר</div>
+                        <div class="cell stockCell">בתפריט</div>
+                        <div class="cell imageCell">תמונה</div>
+                        <div class="cell actionsCell">פעולות</div>
+                    </div>
+                    <div id="productsTableBody"></div>
+                </div>
 
-            <div class="editProduct">
-                <div class="row">
-                    <p>עריכת מוצר קיים</p>
-                    <!-- <input type="search" class="searchBoxNoLogged" id="getProductName" spellcheck="false" placeholder=" מצא מוצר מהרשימה"> -->
-                    <select class="select" id="selectProduct" onchange="editProductLoad()">
-                        <option>בחר מוצר</option>
-                    </select>
-                </div>
-                <div class="row">
-                    <input type="search" class="textboxShort" id="productName" spellcheck="false"
-                        placeholder="ערוך שם מוצר">
-                    <div class="row"></div>
-                </div>
-                <div class="row">
-                    <input type="number" class="textboxNumber" id="productPrice" spellcheck="false"
-                        placeholder="ערוך מחיר">
-                </div>
-                <div class="row">
-                    <input type="number" class="textboxNumber" id="productStock" spellcheck="false"
-                        placeholder="ערוך כמות">
-                </div>
-                <div class="row">
-                    <input type="number" class="textboxNumber" id="productOrder" spellcheck="false"
-                        placeholder="ערוך סדר">
-                </div>
-                <div class="row">
-                    <img class="productImage" id="productImage">
-                </div>
-                <div class="row">
-                    <button class="green" onclick="editProduct()">עדכן נתונים</button>
-                    <button class="red" onclick="deleteProduct()">מחיקת מוצר</button>
-                </div>
-                <br>
                 <div class="row">
                     <div class="logText" id="productsEditLog">-</div>
                 </div>
+            </div>
+
+            <div class="undoToast" id="productUndoToast">
+                <span id="undoMessage"></span>
+                <button class="undoBtn" onclick="undoLastProductChange()">בטל</button>
             </div>
 
             <div class="row linebreak"></div>
@@ -94,6 +86,7 @@
                         pattern="\d{4}" required spellcheck="false" placeholder=" הכנס מחיר  ">
                     <p> תמונה : </p>
                     <div class="imgDiv row" id="imgDiv"></div>
+                    <div class="selectedImageLabel" id="selectedImageLabel">תמונה נבחרת: -</div>
                     <button class="green" onclick="insertProduct()">הכנס מוצר</button>
                     </p>
                 </div>
@@ -120,6 +113,84 @@
                 <div id="progBarDiv" class="progBarDiv">
                     <div id="progBar" class="progBar"></div>
                 </div>
+            </div>
+
+            <div class="row linebreak"></div>
+
+        </div>
+
+        <!-- messages -->
+
+        <div class="content column manage page" id="messages">
+
+            <p2>הודעות רצות</p2>
+
+            <div class="row linebreak"></div>
+
+            <div class="messageControlBar">
+                <button class="green" onclick="loadDisplayMessages()">רענון הודעות</button>
+                <span class="hintText">סמן הודעה לתצוגה, קבע זמני והזן סדר ידני.</span>
+            </div>
+
+            <div class="messageControlBar">
+                <label class="rangeGroup">
+                    <span>מהירות גלילה</span>
+                    <input type="range" id="scrollDelayMs" min="5" max="50" step="1">
+                    <span class="rangeValue" id="scrollDelayValue">10</span>
+                </label>
+                <select class="select" id="scrollTextColor">
+                    <option value="default">צבע רגיל</option>
+                    <option value="mint">מנטה</option>
+                    <option value="amber">ענבר</option>
+                    <option value="rose">ורוד</option>
+                </select>
+                <input type="color" id="scrollTextColorCustom" value="#f09e06" title="צבע מותאם">
+                <select class="select" id="scrollOrderMode">
+                    <option value="random">סדר אקראי</option>
+                    <option value="order">סדר ידני</option>
+                </select>
+                <button class="outline" onclick="saveThemeSelection()">שמירת הגדרות תצוגה</button>
+                <span class="hintText">5 = מהיר, 50 = איטי</span>
+            </div>
+
+            <div class="messageControlBar">
+                <label class="rangeGroup">
+                    <span>גודל טקסט</span>
+                    <input type="range" id="scrollTextSize" min="12" max="32" step="1">
+                    <span class="rangeValue" id="scrollTextSizeValue">18</span>
+                </label>
+                <label class="rangeGroup">
+                    <span>ריווח אותיות</span>
+                    <input type="range" id="scrollTextSpacing" min="0" max="4" step="0.5">
+                    <span class="rangeValue" id="scrollTextSpacingValue">0</span>
+                </label>
+                <select class="select" id="scrollTextWeight">
+                    <option value="400">רגיל</option>
+                    <option value="600">חצי מודגש</option>
+                    <option value="700">מודגש</option>
+                </select>
+            </div>
+
+            <div class="messageControlBar messageAddBar">
+                <textarea class="messageInput" id="customMessageText" rows="2" placeholder="הוסף הודעה חדשה"></textarea>
+                <label class="toggleGroup">
+                    <input type="checkbox" id="customMessageTemporary">
+                    <span>זמני</span>
+                </label>
+                <select class="select messagePriority" id="customMessagePriority">
+                    <option value="2">עדיפות גבוהה</option>
+                    <option value="1" selected>עדיפות רגילה</option>
+                    <option value="0">עדיפות נמוכה</option>
+                </select>
+                <input type="number" class="textboxNumber" id="customMessageDuration" min="1" max="180" value="5">
+                <input type="number" class="textboxNumber" id="customMessageOrder" min="0" max="999" value="0">
+                <button class="green" onclick="addCustomDisplayMessage()">הוספה</button>
+            </div>
+
+            <div class="messageTable" id="displayMessagesTable"></div>
+
+            <div class="row">
+                <div class="logText" id="displayMessagesLog">-</div>
             </div>
 
             <div class="row linebreak"></div>
@@ -283,6 +354,128 @@
 
         </div>
 
+        <!-- shop theme editor -->
+
+        <div class="content column manage page" id="shopTheme">
+
+            <p2>עיצוב חנות</p2>
+
+            <div class="row linebreak"></div>
+
+            <div class="themeEditor">
+                <div class="editorSection">
+                    <p>ערכת תצוגה</p>
+                    <div class="row">
+                        <select class="select" id="themeSelect">
+                            <option value="default">ברירת מחדל</option>
+                            <option value="aurora">Aurora</option>
+                            <option value="dark-night">Dark Night Disco</option>
+                            <option value="earth-bound">Earth Bound</option>
+                            <option value="forest-mist">Forest Mist</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="editorSection">
+                    <p>רקע עדין</p>
+                    <div class="row">
+                        <select class="select" id="backgroundSelect">
+                            <option value="none">ללא</option>
+                            <option value="static">סטטי</option>
+                            <option value="animated">תנועה עדינה</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="editorSection">
+                    <p>רקע תמונה</p>
+                    <div class="row">
+                        <label class="toggleGroup">
+                            <input type="checkbox" id="backgroundRandomEnabled">
+                            <span>החלפה אוטומטית</span>
+                        </label>
+                        <label class="toggleGroup">
+                            <input type="checkbox" id="backgroundRandomAll" onchange="toggleBackgroundRandomAll()">
+                            <span>רנדום מכל התמונות</span>
+                        </label>
+                        <input type="number" class="textboxNumber" id="backgroundRandomIntervalMin" min="1" max="180"
+                            step="1" placeholder="10">
+                        <span class="hintText">דקות להחלפה</span>
+                    </div>
+                    <div class="row">
+                        <label class="toggleGroup">
+                            <input type="checkbox" id="backgroundFoldersAll" onchange="toggleBackgroundFoldersAll()">
+                            <span>כל התיקיות</span>
+                        </label>
+                    </div>
+                    <div class="backgroundFolderList" id="backgroundFolderList"></div>
+                    <div class="hintText">בחר תמונה ראשית ולסמן מאגר לרנדום.</div>
+                    <div class="backgroundGallery" id="backgroundGallery"></div>
+                </div>
+
+                <div class="editorSection">
+                    <p>שכבות רקע</p>
+                    <div class="row backgroundControlRow">
+                        <label class="rangeGroup">
+                            <span>עוצמת תמונה</span>
+                            <input type="range" id="backgroundImageOpacity" min="0" max="100" step="1">
+                            <span class="rangeValue" id="backgroundImageOpacityValue">8%</span>
+                        </label>
+                    </div>
+                    <div class="row backgroundControlRow">
+                        <select class="select" id="backgroundOverlayColor">
+                            <option value="">ללא צבע</option>
+                            <option value="#f1f5f9">אפור בהיר</option>
+                            <option value="#0f172a">כחול לילה</option>
+                            <option value="#1f2937">גרפיט</option>
+                            <option value="#1f4d2b">יער</option>
+                            <option value="#7a2e1d">נחושת</option>
+                            <option value="#5b3b8a">סגול עמוק</option>
+                            <option value="#0b3f4b">טורקיז כהה</option>
+                        </select>
+                        <select class="select" id="backgroundPattern">
+                            <option value="none">ללא דוגמה</option>
+                            <option value="dots">נקודות</option>
+                            <option value="grid">רשת</option>
+                            <option value="diagonal">אלכסונים</option>
+                            <option value="waves">גלים</option>
+                        </select>
+                    </div>
+                    <div class="hintText">צבע ודוגמה נשארים גם כשאין תמונה.</div>
+                </div>
+
+                <div class="editorSection">
+                    <p>תצוגת הודעות רצות</p>
+                    <div class="row">
+                        <label class="toggleGroup">
+                            <input type="checkbox" id="scrollEnabled" onchange="saveThemeSelection()">
+                            <span>הפעל</span>
+                        </label>
+                    </div>
+                    <div class="row">
+                        <select class="select" id="scrollLocation">
+                            <option value="top">מיקום: למעלה</option>
+                            <option value="bottom">מיקום: למטה</option>
+                        </select>
+                        <select class="select" id="scrollTextColor">
+                            <option value="default">צבע רגיל</option>
+                            <option value="mint">מנטה</option>
+                            <option value="amber">ענבר</option>
+                            <option value="rose">ורוד</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="editorSection">
+                    <button class="green" onclick="saveThemeSelection()">שמירה והחלה</button>
+                    <div class="logText" id="themeLog">-</div>
+                </div>
+            </div>
+
+            <div class="row linebreak"></div>
+
+        </div>
+
         <!-- chatbot -->
 
         <div class="content column manage page" id="chatbot">
@@ -306,6 +499,8 @@
         </div>
 
         </div>
+
+        <button class="backToTopBtn" id="manageBackToTop" title="חזרה למעלה" aria-label="חזרה למעלה">↑</button>
 
         <%- include('./partials/footer'); %>
 

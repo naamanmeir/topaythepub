@@ -1,7 +1,7 @@
 //------------------------ PARAMETERS ------------------------//
 const maxAutoCompleteResults = 5;
 const messageTimeoutTime = 3000;
-const displaySpeed = 10;
+let displaySpeed = 10;
 
 //------------------------ UI ELEMENTS DECLATE ------------------------//
 
@@ -20,6 +20,103 @@ const display = document.getElementById("display");
 let displayMessages;
 let displayRefreshTimer;
 let displayIsScrolling = 0;
+
+window.applyScrollConfig = function (config) {
+    if (!display) {
+        return;
+    }
+    const enabled = config && config.scrollEnabled !== false;
+    setScrollVisibility(enabled);
+    setScrollLocation(config && config.scrollLocation ? config.scrollLocation : 'top');
+    const customColor = config && config.scrollTextColorCustom ? String(config.scrollTextColorCustom).trim() : '';
+    const resolvedColor = customColor || resolveScrollTextColor(config && config.scrollTextColor) || '';
+    document.documentElement.style.setProperty('--scroll-text-color', resolvedColor);
+    if (config && Number.isFinite(Number(config.scrollTextSizePx))) {
+        document.documentElement.style.setProperty('--scroll-text-size', Number(config.scrollTextSizePx) + 'px');
+    }
+    if (config && config.scrollTextWeight) {
+        document.documentElement.style.setProperty('--scroll-text-weight', String(config.scrollTextWeight));
+    }
+    if (config && Number.isFinite(Number(config.scrollTextSpacing))) {
+        document.documentElement.style.setProperty('--scroll-text-spacing', Number(config.scrollTextSpacing) + 'px');
+    }
+    window.scrollOrderMode = config && config.scrollOrderMode ? String(config.scrollOrderMode) : 'random';
+    if (config && Number.isFinite(Number(config.scrollDelayMs))) {
+        setScrollDelayMs(config.scrollDelayMs);
+    } else {
+        setScrollSpeed(config && config.scrollSpeed);
+    }
+};
+
+function setScrollVisibility(enabled) {
+    if (!document.body) {
+        return;
+    }
+    if (enabled) {
+        document.body.classList.remove('scroll-display-off');
+        return;
+    }
+    document.body.classList.add('scroll-display-off');
+}
+
+function setScrollLocation(choice) {
+    const fullPage = document.getElementById('divFullPage');
+    const header = document.getElementById('divHeader');
+    const topMenu = document.getElementById('divTopMenu');
+    const footer = document.getElementById('divFooter');
+    if (!fullPage || !display) {
+        return;
+    }
+    if (choice === 'bottom') {
+        if (footer) {
+            fullPage.insertBefore(display, footer);
+            return;
+        }
+        fullPage.appendChild(display);
+        return;
+    }
+    if (topMenu) {
+        fullPage.insertBefore(display, topMenu);
+        return;
+    }
+    if (header) {
+        header.insertAdjacentElement('afterend', display);
+    }
+}
+
+function resolveScrollTextColor(choice) {
+    if (choice === 'mint') {
+        return '#6fffd7';
+    }
+    if (choice === 'amber') {
+        return '#ffcc66';
+    }
+    if (choice === 'rose') {
+        return '#ff9dbb';
+    }
+    return '';
+}
+
+function setScrollSpeed(choice) {
+    if (choice === 'slow') {
+        displaySpeed = 20;
+        return;
+    }
+    if (choice === 'fast') {
+        displaySpeed = 5;
+        return;
+    }
+    displaySpeed = 10;
+}
+
+function setScrollDelayMs(value) {
+    const parsed = Math.round(Number(value));
+    if (!Number.isFinite(parsed)) {
+        displaySpeed = 10;
+        return;
+    }
+    displaySpeed = Math.min(50, Math.max(5, parsed));
+}
 
 let userWindow;
 let messageWindow;
@@ -615,6 +712,9 @@ function openDisplayInfo() {
     // console.log("open display");
     // console.log(displayMessages.length);
     if(displayMessages.length == 0 || displayMessages == ''){displayIsScrolling = 0;return;};
+    if (window.scrollOrderMode === 'random') {
+        displayMessages = shuffleDisplayMessages(displayMessages);
+    }
     document.getElementById('displayMessage').innerHTML = '';
     let pDiv = document.getElementById('displayMessage');  
     pDiv.innerHTML = '';
@@ -632,6 +732,32 @@ function openDisplayInfo() {
     scrollScrollBar();
     return;
 };
+
+function shuffleDisplayMessages(messages) {
+    const groups = {};
+    messages.forEach((msg) => {
+        const priority = Number.isFinite(Number(msg.display_priority)) ? Number(msg.display_priority) : 1;
+        if (!groups[priority]) {
+            groups[priority] = [];
+        }
+        groups[priority].push(msg);
+    });
+    const priorities = Object.keys(groups)
+        .map((value) => Number(value))
+        .sort((a, b) => b - a);
+    const result = [];
+    priorities.forEach((priority) => {
+        const list = groups[priority];
+        for (let i = list.length - 1; i > 0; i -= 1) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
+        }
+        result.push(...list);
+    });
+    return result;
+}
 
 function scrollScrollBar(){
     let items = [...document.getElementsByClassName('displayPs')];
@@ -663,7 +789,7 @@ function scrollScrollBar(){
             };
         };
         left = left+amnt;
-        displayRefreshTimer = setTimeout(moveLoop,displaySpeed);
+        displayRefreshTimer = setTimeout(moveLoop, displaySpeed);
     };
     return moveLoop();    
 };

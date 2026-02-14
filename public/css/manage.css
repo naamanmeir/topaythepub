@@ -18,7 +18,7 @@ html {
 
 html,
 body {
-    width: 95vw;
+    width: 100%;
     height: 100vh;
     /* left: 1%; */
     /* right: 1%; */
@@ -26,6 +26,7 @@ body {
     direction: rtl;
     user-select: none;
     scroll-behavior: smooth;
+    overflow-x: hidden;
     float: center;
     /* margin: auto; */
     /* overflow:scroll; */
@@ -62,38 +63,817 @@ p2 {
     padding-bottom: 3%;
 }
 
-.nav {
-    background-color: green;
+.manageNav {
+    position: static;
+    z-index: 40;
+    padding: 0.15rem 0.2rem;
+    background: #e7eef6;
+    border-bottom: 1px solid #c5d2e2;
+    width: fit-content;
+    height: fit-content;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.manageNavInner {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 0.12rem;
+    max-width: 100%;
+    box-sizing: border-box;
+    width: fit-content;
+    height: fit-content;
+}
+
+.manageNavBtn {
+    appearance: none;
+    border: 1px solid #b9c8d8;
+    background-color: #f4f8fc;
+    color: #1e2a36;
+    padding: clamp(0.24rem, 0.2vw, 1.14rem) clamp(0.18rem, 0.55vw, 0.36rem);
+    border-radius: 3px;
+    font-size: clamp(0.54rem, 1.5vw, 0.72rem);
+    line-height: 0.95;
+    white-space: nowrap;
+    min-width: 0;
+    height: 2rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.manageNavBtn:hover {
+    background-color: #e9f1f9;
+    border-color: #9fb4c8;
+}
+
+.manageNavBtn.is-active {
+    background-color: #cfe1f4;
+    border-color: #8da8c2;
+    color: #15202b;
+}
+
+.backToTopBtn {
+    position: fixed;
+    right: 0.6rem;
+    bottom: 0.7rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid #b9c8d8;
+    background-color: #f4f8fc;
+    color: #1e2a36;
+    font-size: 0.9rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 60;
+}
+
+.backToTopBtn.is-visible {
+    opacity: 0.9;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.manageNavLink {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 900px) {
+    .manageNavInner {
+        gap: 0.1rem;
+    }
+
+    .manageNavBtn {
+        font-size: 0.62rem;
+        padding: 0.06rem 0.22rem;
+    }
+}
+
+@media (max-width: 720px) {
+    .manageNavInner {
+        gap: 0.08rem;
+    }
+
+    .manageNavBtn {
+        white-space: normal;
+        text-align: center;
+        padding: 0.03rem 0.18rem;
+    }
+}
+
+@media (max-width: 520px) {
+    .manageNavInner {
+        gap: 0.06rem;
+    }
+
+    .manageNavBtn {
+        font-size: 0.58rem;
+        padding: 0.02rem 0.16rem;
+        border-radius: 2px;
+    }
+}
+
+@media (max-width: 600px) {
+    .manageNav {
+        padding: 0.1rem 0.15rem;
+    }
+
+    .manageNavInner {
+        gap: 0.05rem;
+    }
+
+    .manageNavBtn {
+        font-size: 0.54rem;
+        padding: 0.02rem 0.12rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .manageNavBtn {
+        font-size: 0.5rem;
+        padding: 0.01rem 0.1rem;
+    }
+}
+
+.productToolbar {
+    /* display: flex; */
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    border-radius: 8px;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid #d7e2f3;
+    margin-top: 0.4rem;
+}
+
+.sectionTitle {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.toolbarActions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+}
+
+.toggleGroup {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    color: #2f3a4a;
+    white-space: nowrap;
+}
+
+.jumpAddBtn {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+.quickInput {
+    flex: 1 1 180px;
+    min-height: 2.4rem;
+}
+
+.outline {
+    background-color: transparent;
+    border: 1px solid #4a6fb3;
+    color: #1c2a44;
+}
+
+.hintText {
+    font-size: 0.8rem;
+    color: #2f3a4a;
+}
+
+.productsTable {
+    margin-top: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.productsRow {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-items: start;
+    gap: clamp(0.06rem, 0.35vw, 0.18rem);
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 0.2rem 0.35rem;
+    box-shadow: 0 4px 12px rgba(10, 20, 30, 0.08);
+    min-height: 0;
+    overflow-x: hidden;
+}
+
+.productsHeader {
+    background-color: #e3ecf8;
+    font-weight: bold;
+    box-shadow: none;
+}
+
+.productsRow.dragging {
+    opacity: 0.5;
+}
+
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.2rem;
+    flex-wrap: nowrap;
+    flex: 0 0 auto;
+}
+
+.dragCell,
+.imageCell {
+    justify-content: flex-start;
+}
+
+.nameCell {
+    flex: 1 1 auto;
+    min-width: 100px;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.dragCell {
+    width: clamp(18px, 2.4vw, 32px);
+    justify-content: center;
+}
+
+.orderCell {
+    width: clamp(30px, 3.8vw, 52px);
+}
+
+.priceCell {
+    width: clamp(50px, 6vw, 74px);
+}
+
+.stockCell {
+    width: clamp(42px, 5vw, 64px);
+}
+
+.imageCell {
+    width: clamp(42px, 5vw, 64px);
+    justify-content: center;
+}
+
+.actionsCell {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 0.2rem;
+    flex: 0 0 auto;
+}
+
+.dragHandle {
+    cursor: grab;
+    font-size: 0.85rem;
+    user-select: none;
+    padding: 0.08rem 0.22rem;
+    border-radius: 6px;
+    background-color: #f0f4fb;
+    touch-action: none;
+}
+
+body.dragging-products {
+    overflow: hidden;
+    touch-action: none;
+}
+
+.productInput {
+    width: 100%;
+    min-width: 0;
+    min-height: 1.2rem;
+    padding: clamp(0.06rem, 0.4vw, 0.12rem) clamp(0.18rem, 0.7vw, 0.3rem);
+}
+
+.productImageThumb {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #c9d6ea;
+}
+
+.productActionBtn {
+    padding: 0.08rem 0.36rem;
+    font-size: 0.66rem;
+    line-height: 1;
+    min-height: auto;
+    height: auto;
+    white-space: nowrap;
+}
+
+@media (max-width: 1200px) {
+    .productsRow {
+        padding: 0.16rem 0.26rem;
+        gap: clamp(0.1rem, 0.45vw, 0.22rem);
+    }
+
+    .productImageThumb {
+        width: 28px;
+        height: 28px;
+    }
+
+    .productInput {
+        font-size: 0.78rem;
+        min-height: 1.2rem;
+    }
+
+    .productActionBtn {
+        font-size: 0.62rem;
+        padding: 0.06rem 0.32rem;
+    }
+
+    .dragHandle {
+        font-size: 0.76rem;
+        padding: 0.06rem 0.2rem;
+    }
+}
+
+@media (max-width: 1050px) {
+    .productsRow {
+        padding: 0.14rem 0.24rem;
+    }
+
+    .productInput {
+        font-size: 0.74rem;
+        min-height: 1.15rem;
+    }
+
+    .productActionBtn {
+        font-size: 0.58rem;
+        padding: 0.05rem 0.28rem;
+    }
+}
+
+
+.undoToast {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    background-color: #1c2a44;
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 9999;
+}
+
+.undoToast.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.undoBtn {
+    background-color: #f5b82f;
+    border: none;
+    border-radius: 6px;
+    padding: 0.35rem 0.7rem;
+    font-weight: bold;
+}
+
+
+@media (max-width: 600px) {
+    .productsTable {
+        gap: 0.4rem;
+    }
+
+    .productsRow {
+        gap: 0.25rem;
+        padding: 0.3rem 0.4rem;
+        align-items: center;
+    }
+
+    .productsRow .cell {
+        gap: 0.1rem;
+        align-items: center;
+    }
+
+    .productsRow .cell::before {
+        display: none;
+    }
+
+    .dragHandle {
+        font-size: 0.85rem;
+        padding: 0.12rem 0.25rem;
+    }
+
+    .orderCell {
+        display: none;
+    }
+
+    .productImageThumb {
+        width: 40px;
+        height: 40px;
+    }
+
+    .nameInput {
+        min-width: 0;
+    }
+
+    .priceInput {
+        width: 100%;
+        max-width: 44px;
+        text-align: center;
+    }
+
+    .productActionBtn {
+        width: auto;
+        font-size: 0.56rem;
+        padding: 0.12rem 0.3rem;
+        min-height: 1.2rem;
+    }
+
+    .actionsCell {
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .productInput {
+        font-size: 0.82rem;
+        padding: 0.15rem 0.3rem;
+        min-height: 1.6rem;
+    }
+
+    .nav-link {
+        flex: 1 0 45%;
+        font-size: 0.9rem;
+    }
+
+    .undoToast {
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 820px) and (max-height: 1000px) {
+    .productsRow {
+        grid-template-columns: 18px minmax(0, 1fr) 36px 36px 34px 28px;
+        gap: 0.18rem;
+        padding: 0.22rem 0.32rem;
+    }
+
+    .productImageThumb {
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+
+    .productInput {
+        font-size: 0.74rem;
+        min-height: 1.3rem;
+    }
+
+    .productActionBtn {
+        font-size: 0.48rem;
+        min-height: 1rem;
+        padding: 0.08rem 0.22rem;
+    }
+
+    .dragHandle {
+        font-size: 0.75rem;
+        padding: 0.08rem 0.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .productsRow {
+        grid-template-columns: 28px 1fr;
+        padding: 0.45rem;
+    }
+
+    .productsRow .cell {
+        gap: 0.2rem;
+    }
+
+    .orderCell,
+    .priceCell,
+    .stockCell,
+    .imageCell,
+    .actionsCell {
+        grid-column: span 2;
+    }
+
+    .productInput {
+        font-size: 0.95rem;
+    }
+}
+
+.manageVersion,
+.footerVersion {
+    margin: 0.5rem auto 0 auto;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #1a1a1a;
+}
+
+.manageTheme {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 0.6rem;
+}
+
+.themeEditor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    max-width: 900px;
+}
+
+.editorSection {
+    background-color: #f5f8ff;
+    border: 1px solid #d3e0f4;
+    border-radius: 12px;
+    padding: 0.8rem;
+}
+
+.backgroundControlRow {
     display: flex;
     flex-wrap: wrap;
-    overflow: hidden;
-    width: 100%;
+    gap: 0.6rem;
+    align-items: center;
 }
 
-.nav a {
-    text-decoration: none;
-    color: yellow;
-}
-
-.nav-links {
+.rangeGroup {
     display: flex;
-    flex: 2;
-    list-style: none;
-    margin: auto;
+    align-items: center;
+    gap: 0.6rem;
     width: 100%;
+    flex-wrap: wrap;
 }
 
-.nav-links button {
-    text-decoration: none;
-    background-color: green;
-    height: fit-content;
-    border: none;
+.rangeGroup input[type="range"] {
+    flex: 1 1 220px;
+    min-width: 160px;
 }
 
-.nav-link {
-    flex: 1 0 21%;
-    font-size: 1rem;
-    color: yellow;
+.rangeValue {
+    min-width: 3.2rem;
+    text-align: center;
+    font-weight: 600;
+    color: #1c2a44;
+}
+
+.backgroundGallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 0.3rem;
+    border: 1px dashed #c7d7f3;
+    border-radius: 12px;
+    background-color: #f9fbff;
+}
+
+.backgroundThumb {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    background-color: #e9effa;
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.backgroundThumb img {
+    display: block;
+    width: 100%;
+    height: 76px;
+    object-fit: cover;
+}
+
+.backgroundThumb.selected {
+    border-color: #2b6cb0;
+    transform: translateY(-2px);
+}
+
+.backgroundThumb .thumbFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.3rem 0.4rem;
+    font-size: 0.75rem;
+    color: #1c2a44;
+    background-color: rgba(245, 248, 255, 0.95);
+}
+
+.backgroundThumb .thumbLabel {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 70%;
+}
+
+.backgroundThumb .thumbRandom {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.7rem;
+}
+
+.backgroundFolderList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.4rem 0 0.6rem;
+}
+
+.messageControlBar {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.6rem;
+    max-width: 980px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.4rem 0.5rem;
+    border: 1px solid #d2dbe7;
+    border-radius: 10px;
+    background-color: #f7f9fc;
+}
+
+.messageControlBar .rangeGroup {
+    width: auto;
+    flex: 1 1 220px;
+}
+
+.messageControlBar #scrollTextColorCustom {
+    width: 42px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid #b9c8d8;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.messageControlBar .rangeGroup input[type="range"] {
+    min-width: 140px;
+}
+
+.messageAddBar {
+    align-items: flex-start;
+}
+
+.messageInput {
+    flex: 1 1 260px;
+    min-height: 2.1rem;
+    padding: 0.3rem 0.45rem;
+    border: 1px solid #c9d6ea;
+    border-radius: 8px;
+    resize: vertical;
+}
+
+.messagePriority {
+    min-width: 130px;
+}
+
+.messageTable {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-width: 980px;
+    width: 100%;
+    max-height: clamp(260px, 42vh, 380px);
+    overflow-y: auto;
+    padding-right: 0.3rem;
+    box-sizing: border-box;
+}
+
+.messageRow {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+    align-items: center;
+    background-color: #f7f9fc;
+    border: 1px solid #d2dbe7;
+    border-radius: 10px;
+    padding: 0.22rem 0.4rem;
+    overflow-x: hidden;
+}
+
+.messageText {
+    font-size: 0.82rem;
+    color: #1e2a36;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1 1 auto;
+    min-width: 160px;
+}
+
+.messageMeta {
+    font-size: 0.68rem;
+    color: #52616f;
+}
+
+.messageRow .textboxNumber {
+    height: 1.4rem;
+    padding: 0 0.3rem;
+}
+
+.messageSaveBtn {
+    padding: 0.02rem 0.35rem;
+    font-size: 0.68rem;
+    line-height: 1;
+    min-height: auto;
+    height: auto;
+    justify-self: end;
+}
+
+.messageDeleteBtn {
+    padding: 0.02rem 0.35rem;
+    font-size: 0.68rem;
+    line-height: 1;
+    min-height: auto;
+    height: auto;
+    justify-self: end;
+    color: #8b1f1f;
+    border-color: #d7b2b2;
+}
+
+.messageRow .messageSaveBtn,
+.messageRow .messageDeleteBtn {
+    align-self: center;
+}
+
+@media (max-width: 720px) {
+    .messageRow {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        align-items: flex-start;
+    }
+
+    .messageText {
+        min-width: 100%;
+    }
+
+    .messageControlBar {
+        padding: 0.35rem 0.4rem;
+    }
+
+    .messageInput {
+        flex: 1 1 100%;
+        min-height: 2rem;
+    }
+
+    .messageRow .textboxNumber {
+        width: 4.5rem;
+    }
+
+    .messageSaveBtn,
+    .messageDeleteBtn {
+        font-size: 0.66rem;
+    }
+}
+
+@media (max-width: 900px) {
+
+    .messageSaveBtn,
+    .messageDeleteBtn {
+        font-size: 0.66rem;
+        padding: 0.12rem 0.4rem;
+    }
+}
+
+.folderChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    background-color: #e5eefc;
+    border: 1px solid #c7d7f3;
+    font-size: 0.8rem;
+    color: #1c2a44;
 }
 
 body {}
@@ -268,12 +1048,11 @@ button {
 
 .footer {
     color: black;
-    position: sticky;
+    position: static;
     text-align: center;
     font-size: x-small;
-    /* line-height: 50px; */
-    height: 1px;
-    bottom: 0px;
+    height: auto;
+    line-height: 1.4;
     padding: 0px 0px 0px 0px;
     padding-bottom: 0px;
     padding-top: 10px;
@@ -351,11 +1130,34 @@ button {
     min-height: fit-content;
     max-height: 16rem;
     overflow-y: scroll;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.4rem;
+    background-color: #f7f9fd;
+    border-radius: 10px;
+    border: 1px solid #d4dfef;
 }
 
 .imgDropdownDiv {}
 
-.imgSelector {}
+.imgSelector {
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.imgSelector.selected {
+    border-color: #2c7be5;
+    transform: scale(1.04);
+}
+
+.selectedImageLabel {
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+    color: #2f3a4a;
+}
 
 .uploadImg {
     width: 100%;

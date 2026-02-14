@@ -323,7 +323,7 @@ routerClient.post('/getDisplayInfo/', async(req, res) => {
         if (!req.body.id || req.body.id == null) { res.end(); return; }
         let reqId = req.body.id;
 
-        let displayInfo = await db.dbGetPindPosts();
+        let displayInfo = await db.dbGetDisplayPosts();
         // console.log(displayInfo);
         // let displayInfoHtml = require("../module/html/content/getDisplayInfo");
         // console.log(displayInfo)

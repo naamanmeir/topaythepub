@@ -48,11 +48,233 @@ function loadUtiliti() {
         };
     });
     populateUtilities();
+    loadTheme();
+    loadUiConfig();
     mainDivsAutoRefreshInterval();
     setViewport();
     // populateMainDivs();
     // populateElements();
 };
+
+function loadTheme() {
+    var req = new XMLHttpRequest();
+    req.open("GET", "./app/theme", true);
+    req.send();
+    req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            try {
+                const response = JSON.parse(this.response);
+                applyTheme(response.theme || 'default');
+                applyBackgroundMode(response.backgroundMode || 'none');
+            } catch (error) {
+                applyTheme('default');
+                applyBackgroundMode('none');
+            }
+        }
+    };
+}
+
+function loadUiConfig() {
+    var req = new XMLHttpRequest();
+    req.open("GET", "./app/ui-config", true);
+    req.send();
+    req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            try {
+                const response = JSON.parse(this.response);
+                applyTheme(response.theme || 'default');
+                applyBackgroundMode(response.backgroundMode || 'none');
+                applyUiConfig(response);
+            } catch (error) {
+                applyUiConfig({});
+            }
+        }
+    };
+}
+
+function applyUiConfig(config) {
+    window.latestUiConfig = config || {};
+    const keepCurrentBackground = Boolean(
+        config && config.backgroundRandomEnabled && !config.backgroundImage && window.currentBackgroundImage
+    );
+    window.shopUiConfig = {
+        scrollEnabled: config.scrollEnabled !== false,
+        scrollSpeed: config.scrollSpeed || 'medium',
+        scrollTextColor: config.scrollTextColor || 'default',
+        scrollTextColorCustom: config.scrollTextColorCustom || '',
+        scrollTextSizePx: config.scrollTextSizePx,
+        scrollTextWeight: config.scrollTextWeight,
+        scrollTextSpacing: config.scrollTextSpacing,
+        scrollOrderMode: config.scrollOrderMode || 'random',
+        scrollLocation: config.scrollLocation || 'top',
+        scrollDelayMs: config.scrollDelayMs,
+        backgroundImage: config.backgroundImage || '',
+        backgroundImageOpacity: normalizeOpacityValue(config.backgroundImageOpacity),
+        backgroundOverlayColor: config.backgroundOverlayColor || '',
+        backgroundPattern: config.backgroundPattern || 'none',
+        backgroundRandomEnabled: Boolean(config.backgroundRandomEnabled),
+        backgroundRandomIntervalMin: config.backgroundRandomIntervalMin,
+        backgroundRandomPool: Array.isArray(config.backgroundRandomPool) ? config.backgroundRandomPool : [],
+        backgroundFolderAllowList: Array.isArray(config.backgroundFolderAllowList) ? config.backgroundFolderAllowList : []
+    };
+    if (!keepCurrentBackground) {
+        applyBackgroundImage(window.shopUiConfig.backgroundImage);
+    }
+    applyBackgroundImageOpacity(window.shopUiConfig.backgroundImageOpacity);
+    applyBackgroundOverlayColor(window.shopUiConfig.backgroundOverlayColor);
+    applyBackgroundPattern(window.shopUiConfig.backgroundPattern);
+    startBackgroundRotation(window.shopUiConfig);
+    if (typeof window.applyScrollConfig === 'function') {
+        window.applyScrollConfig(window.shopUiConfig);
+    }
+}
+
+function applyBackgroundImage(path) {
+    const normalized = normalizeImagePath(path);
+    if (!normalized) {
+        document.body.style.removeProperty('--bg-image');
+        window.currentBackgroundImage = '';
+        return;
+    }
+    document.body.style.setProperty('--bg-image', `url('${normalized}')`);
+    window.currentBackgroundImage = normalized;
+}
+
+function normalizeImagePath(path) {
+    if (!path) {
+        return '';
+    }
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+        return path;
+    }
+    if (path.startsWith('/')) {
+        return path;
+    }
+    return `/${path}`;
+}
+
+function normalizeOpacityValue(value) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) {
+        return 0.08;
+    }
+    if (parsed < 0) {
+        return 0;
+    }
+    if (parsed > 1) {
+        return 1;
+    }
+    return parsed;
+}
+
+function applyBackgroundImageOpacity(value) {
+    const normalized = normalizeOpacityValue(value);
+    document.body.style.setProperty('--bg-image-opacity', normalized);
+}
+
+function applyBackgroundOverlayColor(value) {
+    if (!value) {
+        document.body.style.removeProperty('--bg-overlay-color');
+        return;
+    }
+    document.body.style.setProperty('--bg-overlay-color', value);
+}
+
+function applyBackgroundPattern(patternKey) {
+    const patterns = {
+        none: { image: 'none', size: 'auto' },
+        dots: {
+            image: 'radial-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 1px)',
+            size: '14px 14px'
+        },
+        grid: {
+            image: 'linear-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px)',
+            size: '18px 18px'
+        },
+        diagonal: {
+            image: 'repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.2) 0 2px, transparent 2px 8px)',
+            size: 'auto'
+        },
+        waves: {
+            image: 'repeating-radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 10px)',
+            size: '20px 20px'
+        }
+    };
+    const selected = patterns[patternKey] || patterns.none;
+    document.body.style.setProperty('--bg-pattern', selected.image);
+    document.body.style.setProperty('--bg-pattern-size', selected.size);
+}
+
+let backgroundRandomTimer = null;
+let backgroundFadeTimeout = null;
+
+function startBackgroundRotation(config) {
+    if (backgroundRandomTimer) {
+        clearInterval(backgroundRandomTimer);
+        backgroundRandomTimer = null;
+    }
+    if (!config || !config.backgroundRandomEnabled) {
+        return;
+    }
+    const pool = Array.isArray(config.backgroundRandomPool) ? config.backgroundRandomPool : [];
+    if (!pool.length) {
+        return;
+    }
+    const intervalMin = Number(config.backgroundRandomIntervalMin) || 10;
+    const intervalMs = Math.max(1, intervalMin) * 60 * 1000;
+    if (!window.currentBackgroundImage) {
+        setRandomBackground(pool);
+    }
+    backgroundRandomTimer = setInterval(function () {
+        setRandomBackground(pool);
+    }, intervalMs);
+}
+
+function setRandomBackground(pool) {
+    if (!pool.length) {
+        return;
+    }
+    const next = pool[Math.floor(Math.random() * pool.length)];
+    fadeToBackgroundImage(next);
+}
+
+function fadeToBackgroundImage(path) {
+    const normalized = normalizeImagePath(path);
+    const targetOpacity = normalizeOpacityValue(window.shopUiConfig && window.shopUiConfig.backgroundImageOpacity);
+    if (backgroundFadeTimeout) {
+        clearTimeout(backgroundFadeTimeout);
+        backgroundFadeTimeout = null;
+    }
+    applyBackgroundImageOpacity(0);
+    backgroundFadeTimeout = setTimeout(function () {
+        if (!normalized) {
+            document.body.style.removeProperty('--bg-image');
+            window.currentBackgroundImage = '';
+        } else {
+            document.body.style.setProperty('--bg-image', `url('${normalized}')`);
+            window.currentBackgroundImage = normalized;
+        }
+        applyBackgroundImageOpacity(targetOpacity);
+    }, 700);
+}
+
+function applyTheme(theme) {
+    const themeLink = document.getElementById("themeStylesheet");
+    if (!themeLink) {
+        return;
+    }
+    if (!theme || theme === 'default') {
+        themeLink.setAttribute('href', '');
+        document.body.dataset.theme = '';
+        return;
+    }
+    themeLink.setAttribute('href', `./css/themes/${theme}.css?version=${new Date().getTime()}`);
+    document.body.dataset.theme = theme;
+}
+
+function applyBackgroundMode(mode) {
+    document.body.dataset.bgMode = mode || 'none';
+}
 
 function setViewport(){
     setTimeout(()=>
@@ -153,6 +375,9 @@ function appendScriptContent() {
     scriptSrc.remove();
     divContent.append(script);
     populateProducts();
+    if (window.latestUiConfig && typeof window.applyScrollConfig === 'function') {
+        window.applyScrollConfig(window.latestUiConfig);
+    }
 };
 
 function displayFooter(content) {
@@ -474,6 +699,9 @@ function eventHandler(event) {
     if (JSON.parse(data) == "reloadPostsNoScroll") {
         messageBoardRefreshPostsNoScroll();
         otherSideIsTyping(0);
+    };
+    if (JSON.parse(data) == "uiConfig") {
+        loadUiConfig();
     };
     if (JSON.parse(data) == "chatbotIsTyping") {
         otherSideIsTyping(1);
