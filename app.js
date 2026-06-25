@@ -227,6 +227,7 @@ async function dbCreateAdmin() {
 app.get('/', async(req, res) => {
     if (!req || req == null) { res.sendStatus(401).end(); };
     const clientIp = req.headers['x-forwarded-for'];
+    console.log(`LOGIN PAGE REQUEST FROM ${clientIp}`);
     clientLogger.clientAttempted(`
   LOGIN ATTEMPT FROM ${clientIp}
   `);
@@ -245,6 +246,7 @@ app.get('/', async(req, res) => {
 });
 
 app.get("/login", async(req, res) => {
+    console.log("LOGIN PAGE");
     const clientIp = req.headers['x-forwarded-for'];
     res.render('login.ejs', {
         message: messageUi.loginMessage
@@ -252,6 +254,7 @@ app.get("/login", async(req, res) => {
 });
 
 app.post("/login", async(req, res) => {
+    
     const clientIp = req.headers['x-forwarded-for'];
     if (!req.body.username || !req.body.password) {
         res.redirect('./');
@@ -276,7 +279,7 @@ app.post("/login", async(req, res) => {
     const password = req.body.password;
 
     let dbResponse = await db.userLogin(user, password);
-
+    
     loginAction(req, res, dbResponse, user, password);
     return;
 });
@@ -306,14 +309,16 @@ async function loginAction(req, res, reply, user, password) {
     } // WRONG PASS
     if (reply[0] == 2) {
         const token = generateAccessToken({ user: user });
-        session = req.session;
-        let sessionName = req.cookies.sessionName;
+        session = req.session;        
+        let sessionName = req.cookies.sessionName;        
         session.userid = user;
         // session.userid = req.body.username;
         const userClass = await db.getUserClassByName(session.userid);
         session.userclass = Number(userClass);
-        const sessionStore = await db.storeSession(session.userid, userClass, sessionName);
+        // console.log(`USER ${user} HAS LOGGED IN`);
+        const sessionStore = await db.storeSession(session.userid, userClass, session);
         session.sessionid = Number(sessionStore);
+        // console.log(`USER ${user} HAS LOGGED IN`);
         //     clientLogger.clientLogin(`
         // CLIENT: ${user}
         // CLASS: ${userClass}

@@ -11,6 +11,8 @@ const sessionMiddleware = async (req, res, next) => {
     
     try {
       // Query the session database to verify the session
+            console.log('Session data:', session);
+
       const session = await sessionDB.getSessionById(sessionId);
 
       if (session) {

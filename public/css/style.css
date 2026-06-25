@@ -1267,7 +1267,7 @@ p {
 .openSideMenu img {
     width: 55%;
     height: 55%;
-    filter: invert(0.6);
+    filter: invert(0.2);
 }
 
 .sideMenu {
@@ -1351,7 +1351,7 @@ p {
     text-align: center;
     justify-content: center;
     width: 100vw;
-    height: 2rem;
+    height: 0.2rem;
 }
 
 .topMenuDiv>div {
@@ -1480,7 +1480,7 @@ p {
     position: relative;
     text-align: right;
     font-style: italic;
-    color: var(--scroll-text-color, rgb(240, 158, 6));
+    color: var(--scroll-text-color, rgb(46, 46, 44));
     font-size: var(--scroll-text-size, 1.8rem);
     font-weight: var(--scroll-text-weight, 400);
     letter-spacing: var(--scroll-text-spacing, 0px);
